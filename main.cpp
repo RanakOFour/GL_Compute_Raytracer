@@ -14,10 +14,7 @@ int main(int argc, char* argv[])
 	{
 		return -1;
 	}
-
-
-
-
+	
 	// Preparing a position to draw a pixel
 	glm::ivec2 pixelPosition = winSize / 2;
 

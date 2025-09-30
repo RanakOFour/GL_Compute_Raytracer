@@ -1,8 +1,6 @@
 
 #include "GCP_GFX_Framework.h"
-
-
-#include <GL/glew.h>
+#include "glew.h"
 
 // Handles local (CPU side) and OpenGL framebuffer functionality
 class Framebuffer
@@ -64,9 +62,10 @@ bool InitGL()
 	if (GLEW_OK != err)
 	{
 		/* Problem: glewInit failed, something is seriously wrong. */
-		std::cerr << "Error: GLEW failed to initialise with message: " << glewGetErrorString(err) << std::endl;
+		std::cerr << "Error: GLEW failed to initialise with message: " << glewGetErrorString(err) << std::endl << "Err num: " << err << std::endl;
 		return false;
 	}
+
 	std::cout << "INFO: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
 
 	std::cout << "INFO: OpenGL Vendor: " << glGetString(GL_VENDOR) << std::endl;
@@ -358,9 +357,6 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	// This means we are using the latest version and cannot use the deprecated functions
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-
-
-
 	// Now we have got SDL initialised, we are ready to create a window!
 	// These are some variables to help show you what the parameters are for this function
 	// You can experiment with the numbers to see what they do
@@ -381,8 +377,6 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	// This is a structure which contains all the data about our window (size, position, etc)
 	// We will also need this when we want to draw things to the window
 	// This is therefore quite important we don't lose it!
-
-
 
 	// The SDL_Renderer is a structure that handles rendering
 	// It will store all of SDL's internal rendering related settings
