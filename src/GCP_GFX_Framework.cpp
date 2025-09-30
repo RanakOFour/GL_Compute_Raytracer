@@ -63,6 +63,8 @@ bool InitGL()
 	glewExperimental = GL_TRUE;
 
 	GLenum err = glewInit();
+
+	// Ignores no glx on wayland display
 	if (err != GLEW_OK && err != GLEW_ERROR_NO_GLX_DISPLAY)
 	{
 		/* Problem: glewInit failed, something is seriously wrong. */
