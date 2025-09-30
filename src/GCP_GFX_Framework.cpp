@@ -63,7 +63,7 @@ bool InitGL()
 	glewExperimental = GL_TRUE;
 
 	GLenum err = glewInit();
-	if (GLEW_OK != err)
+	if (err != GLEW_OK && err != GLEW_ERROR_NO_GLX_DISPLAY)
 	{
 		/* Problem: glewInit failed, something is seriously wrong. */
 		std::cerr << "Error: GLEW failed to initialise with message: " << glewGetErrorString(err) << std::endl << "Err num: " << err << std::endl;
@@ -343,6 +343,7 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 		std::cout << "Whoops! Something went very wrong, cannot initialise SDL :(" << std::endl;
 		return false;
 	}
+	printf("SDL initialised\n");
 
 
 
@@ -393,6 +394,7 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	// Now that the SDL renderer is created for the window, we can create an OpenGL context for it!
 	// This will allow us to actually use OpenGL to draw to the window
 	_SDLglcontext = SDL_GL_CreateContext(_SDLwindow);
+	printf("SDL_GL Context created\n");
 
 	// Call our initialisation function to set up GLEW and print out some GL info to console
 	if (!InitGL())
