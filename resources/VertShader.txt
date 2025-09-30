@@ -1,0 +1,13 @@
+#version 430 core
+layout(location = 0) in vec4 vPosition;
+
+out vec2 pixelPos;
+
+
+void main()
+{
+	gl_Position = vPosition;
+
+	// Incoming position ranges from -1 to +1, so change range to 0 to 1
+	pixelPos = (vPosition.xy + 1.0) * 0.5;
+}
