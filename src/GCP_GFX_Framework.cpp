@@ -1,6 +1,10 @@
-
 #include "GCP_GFX_Framework.h"
 #include "glew.h"
+
+#include <SDL/SDL.h>
+
+
+#include <GLM/glm.hpp>
 
 // Handles local (CPU side) and OpenGL framebuffer functionality
 class Framebuffer
@@ -205,12 +209,12 @@ GLuint LoadShaders(std::string vertFilename, std::string fragFilename)
 		vertFile.read(vShaderText, length);
 
 		// Check it reached the end of the file
-		if (!vertFile.eof())
-		{
-			vertFile.close();
-			std::cerr << "WARNING: could not read vertex shader from file: " << vertFilename << std::endl;
-			return false;
-		}
+		// if (!vertFile.eof())
+		// {
+		// 	vertFile.close();
+		// 	std::cerr << "WARNING: could not read vertex shader from file: " << vertFilename << std::endl;
+		// 	return false;
+		// }
 
 		// Find out how many characters were actually read
 		length = (int)vertFile.gcount();
@@ -244,12 +248,12 @@ GLuint LoadShaders(std::string vertFilename, std::string fragFilename)
 		fragFile.read(fShaderText, length);
 
 		// Check it reached the end of the file
-		if (!fragFile.eof())
-		{
-			fragFile.close();
-			std::cerr << "WARNING: could not read fragment shader from file: " << fragFilename << std::endl;
-			return false;
-		}
+		// if (!fragFile.eof())
+		// {
+		// 	fragFile.close();
+		// 	std::cerr << "WARNING: could not read fragment shader from file: " << fragFilename << std::endl;
+		// 	return false;
+		// }
 
 		// Find out how many characters were actually read
 		length = (int)fragFile.gcount();
@@ -402,7 +406,7 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	_triangleVAO = CreateTriangleVAO();
 
 	// Create the shaders and link them together into the shader program
-	_shaderProgram = LoadShaders("VertShader.txt", "FragShader.txt");
+	_shaderProgram = LoadShaders("./resources/VertShader.txt", "./resources/FragShader.txt");
 
 	_mainBuffer = new Framebuffer(winWidth, winHeight);
 
