@@ -1,5 +1,5 @@
 #include "GCP_GFX_Framework.h"
-#include "glew.h"
+#include "GL/glew.h"
 
 #include <SDL/SDL.h>
 

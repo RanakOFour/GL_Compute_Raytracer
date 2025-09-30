@@ -36,7 +36,7 @@
 #include "SDL_sensor.h"
 #include "SDL_joystick.h"
 
-#include "SDL/begin_code.h"
+#include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
 extern "C" {
