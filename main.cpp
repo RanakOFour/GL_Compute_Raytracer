@@ -30,13 +30,8 @@ int main(int argc, char* argv[])
 	_myFramework.DrawPixel(pixelPosition, pixelColour);
 
 
-
-
-
 	// Pushes the framebuffer to OpenGL and renders to screen
 	// Also contains an event loop that keeps the window going until it's closed
 	_myFramework.ShowAndHold();
 	return 0;
-
-
 }

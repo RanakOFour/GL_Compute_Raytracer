@@ -1,7 +1,7 @@
 #include "GCP_GFX_Framework.h"
 #include "GL/glew.h"
 
-#include <SDL/SDL.h>
+#include "SDL/SDL.h"
 
 
 #include <GLM/glm.hpp>
