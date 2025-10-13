@@ -162,6 +162,8 @@ void DrawVAOTris(GLuint VAO, int numVertices, GLuint shaderProgram)
 
 	// Technically we can do this, but it makes no real sense because we must always have a valid shader program to draw geometry
 	glUseProgram(0);
+
+	printf("Drawn triangles\n");
 }
 
 // Useful little function to just check for compiler errors
@@ -322,6 +324,7 @@ GLuint LoadShaders(std::string vertFilename, std::string fragFilename)
 		return 0;
 	}
 
+	printf("Shader compiled\n");
 
 	return _shaderProgram;
 }
@@ -459,8 +462,7 @@ void GCP_Framework::ShowAndHold()
 
 		// This tells the renderer to actually show its contents to the screen
 		SDL_GL_SwapWindow(_SDLwindow);
-
-
+		
 
 	// Hold
 
