@@ -30,14 +30,16 @@ int main(int argc, char* argv[])
 
 	glm::vec3 pixelColour(1, 0, 0);
 
-	int dataOffset = 0;
-
 	unsigned char* img_data = stbi_load("./triangle.png", &width, &height, NULL, 4);
 
 	if (!img_data || img_data == NULL)
 	{
 		printf("Failed to load texture\n");
 		throw std::exception();
+	}
+	else
+	{
+		printf("Loaded image\n");
 	}
 
 	std::vector<unsigned char> data = std::vector<unsigned char>();
@@ -48,36 +50,36 @@ int main(int argc, char* argv[])
 
 	unsigned char* dataPtr = &(data[0]);
 
-	for(int i = winSize.y; i > -1; --i)
-	{
-		for(int j = 0; j < width; ++j)
-		{
-			pixelPosition = glm::ivec2(j, i);
+	// for(int i = winSize.y; i > -1; --i)
+	// {
+	// 	for(int j = 0; j < width; ++j)
+	// 	{
+	// 		pixelPosition = glm::ivec2(j, i);
 
-			int newColChannel = 0;
-			// Iterate once for each channel (3)
-			for (int k = 0; k < 3; k++)
-			{
-				newColChannel = (int)*dataPtr;
-				// if(newColChannel != 0)
-				// {
-				// 	printf("Color channel %i: %i\n", k, newColChannel);
-				// }
-				pixelColour[k] = (float)newColChannel / 255.0f;
-				++dataPtr;
-			}
+	// 		int newColChannel = 0;
+	// 		// Iterate once for each channel (3)
+	// 		for (int k = 0; k < 3; k++)
+	// 		{
+	// 			newColChannel = (int)*dataPtr;
+	// 			// if(newColChannel != 0)
+	// 			// {
+	// 			// 	printf("Color channel %i: %i\n", k, newColChannel);
+	// 			// }
+	// 			pixelColour[k] = (float)newColChannel / 255.0f;
+	// 			++dataPtr;
+	// 		}
 
-			// Increment data one last time to skip alpha channel
-			++dataPtr;
+	// 		// Increment data one last time to skip alpha channel
+	// 		++dataPtr;
 
-			// if(pixelColour[0] != 0 || pixelColour[1] != 0 || pixelColour[2] != 0)
-			// {
-			// 	std::cout << "Drawing pixel with color: " << pixelColour[0] << " " << pixelColour[1] << " " << pixelColour[2] << " at (" << pixelPosition.x << ", " << pixelPosition.y << ")" << std::endl;
-			// }
+	// 		// if(pixelColour[0] != 0 || pixelColour[1] != 0 || pixelColour[2] != 0)
+	// 		// {
+	// 		// 	std::cout << "Drawing pixel with color: " << pixelColour[0] << " " << pixelColour[1] << " " << pixelColour[2] << " at (" << pixelPosition.x << ", " << pixelPosition.y << ")" << std::endl;
+	// 		// }
 
-			_myFramework.DrawPixel(pixelPosition, pixelColour);
-		}
-	}
+	// 		_myFramework.DrawPixel(pixelPosition, pixelColour);
+	// 	}
+	// }
 
 	// Draws a single pixel
 	pixelPosition = glm::ivec2(250, 250);

@@ -50,6 +50,8 @@ protected:
 	// OpenGL drawing variables
 		unsigned int _triangleVAO = 0;
 		unsigned int _shaderProgram = 0;
+		unsigned int _vaoId;
+		unsigned int _vboId;
 
 };
 
