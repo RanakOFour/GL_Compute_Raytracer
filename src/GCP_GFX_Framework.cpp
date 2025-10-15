@@ -406,7 +406,7 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	_triangleVAO = CreateTriangleVAO();
 
 	// Create the shaders and link them together into the shader program
-	_shaderProgram = LoadShaders("./resources/VertShader.txt", "./resources/FragShader.txt");
+	_shaderProgram = LoadShaders("./resources/shaders/VertShader.txt", "./resources/shaders/FragShader.txt");
 
 	_mainBuffer = new Framebuffer(winWidth, winHeight);
 
