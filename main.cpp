@@ -1,5 +1,8 @@
 
 #include "GCP_GFX_Framework.h"
+#include "Camera.h"
+#include "RayTracer.h"
+#include "Ray.h"
 
 int main(int argc, char* argv[])
 {
@@ -27,9 +30,27 @@ int main(int argc, char* argv[])
 	_myFramework.SetAllPixels( glm::vec3(0.1f,0.1f,0.3f) );
 
 	// Draws a single pixel
-	_myFramework.DrawPixel(pixelPosition, pixelColour);
+	//_myFramework.DrawPixel(pixelPosition, pixelColour);
 
+	RayTracer rayTracer;
+	Camera camera;
+	Ray r;
+	for(int i = 0; i < 480; ++i)
+	{
+		pixelPosition.y = i;
+		for(int j = 0; j < 640; ++j)
+		{
+			pixelPosition.x = j;
+			r = camera.GetRay(pixelPosition);
+			pixelColour = rayTracer.TraceRay(&r);
+			if(pixelColour != glm::vec3(0))
+			{
+				printf("Ray hit sphere at (%i, %i)\n", j, i);
+			}
 
+			_myFramework.DrawPixel(pixelPosition, pixelColour);
+		}
+	}
 
 
 

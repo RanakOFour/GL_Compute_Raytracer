@@ -457,7 +457,7 @@ void GCP_Framework::ShowAndHold()
 
 		// This tells the renderer to actually show its contents to the screen
 		SDL_GL_SwapWindow(_SDLwindow);
-
+		printf("Drawn window\n");
 
 
 	// Hold
