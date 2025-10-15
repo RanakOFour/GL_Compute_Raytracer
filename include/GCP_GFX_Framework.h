@@ -38,6 +38,9 @@ public:
 	// SDL is uninitialised, you are expected to exit the program
 	void ShowAndHold();
 
+	// Draws the buffer on OpenGL once
+	void Show();
+
 	GLuint GetShaderProgram() const { return _shaderProgram; };
 
 protected:

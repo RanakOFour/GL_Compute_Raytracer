@@ -72,7 +72,38 @@ int main(int argc, char* argv[])
 
     // Pushes the framebuffer to OpenGL and renders to screen
     // Also contains an event loop that keeps the window going until it's closed
-    _myFramework.ShowAndHold();
+
+	bool keepGoing = true;
+	SDL_Event e;
+	while(keepGoing)
+	{
+		while(SDL_PollEvent(&e))
+		{
+			switch(e.type)
+			{
+				case SDL_QUIT:
+					keepGoing = false;
+					break;
+			}
+		}
+
+		float time = (float)SDL_GetTicks64() * 0.001f;
+		//printf("Delta: %f\n", time); 
+		glUseProgram(shaderProgram);
+		
+		for (int i = 0; i < spheres.size(); i++) 
+		{
+			std::string base = "spheres[" + std::to_string(i) + "].";
+			
+			GLuint colorLoc = glGetUniformLocation(shaderProgram, (base + "color").c_str());
+		}
+
+		glUseProgram(0);
+
+		_myFramework.Show();
+	}
+
+
     return 0;
 
 

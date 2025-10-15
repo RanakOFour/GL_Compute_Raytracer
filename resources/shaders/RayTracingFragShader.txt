@@ -33,7 +33,6 @@ struct RaycastResult {
     int sphereIndex;
 };
 
-// Sphere intersection function
 RaycastResult intersectSphere(Ray ray, Sphere sphere, int index) {
     RaycastResult result;
     result.hit = false;
@@ -67,7 +66,6 @@ RaycastResult intersectSphere(Ray ray, Sphere sphere, int index) {
     return result;
 }
 
-// Simple lighting calculation
 vec3 calculateShading(RaycastResult hit, Ray ray) {
     if (!hit.hit) {
         return vec3(0.1, 0.1, 0.3); // Background color
@@ -106,12 +104,10 @@ void main()
                            uv.x * cameraRight * fov * aspect + 
                            uv.y * cameraUp * fov);
     
-    // Create ray
     Ray ray;
     ray.origin = cameraPos;
     ray.direction = rayDir;
     
-    // Raytrace against all spheres
     RaycastResult closestHit;
     closestHit.hit = false;
     closestHit.distance = 1e10;
@@ -123,6 +119,5 @@ void main()
         }
     }
     
-    // Calculate final color
     fColour = calculateShading(closestHit, ray);
 }

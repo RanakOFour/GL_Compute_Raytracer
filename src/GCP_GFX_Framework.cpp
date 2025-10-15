@@ -48,7 +48,6 @@ protected:
 	void GenLocalFramebuffer();
 
 	void GenGLFramebuffer();
-
 };
 
 
@@ -444,11 +443,11 @@ void GCP_Framework::ShowAndHold()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Send offline framebuffer to the OpenGL texture
-		//_mainBuffer->UpdateGL();
+		_mainBuffer->UpdateGL();
 
 		// Binds OpenGL Texture
 		glActiveTexture(GL_TEXTURE0);
-		//_mainBuffer->BindGLTex();
+		_mainBuffer->BindGLTex();
 
 		// Call our drawing function to draw that triangle!
 		DrawVAOTris(_triangleVAO, 6, _shaderProgram);
@@ -507,9 +506,48 @@ void GCP_Framework::ShowAndHold()
 
 }
 
+void GCP_Framework::Show()
+{
+	// sanity check that Init() has been called
+	assert(_mainBuffer != nullptr);
+	// Show
+
+	// Specify the colour to clear the framebuffer to
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	// This writes the above colour to the colour part of the framebuffer
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	// Send offline framebuffer to the OpenGL texture
+	_mainBuffer->UpdateGL();
+
+	// Binds OpenGL Texture
+	//glActiveTexture(GL_TEXTURE0);
+	_mainBuffer->BindGLTex();
+
+	// Call our drawing function to draw that triangle!
+	DrawVAOTris(_triangleVAO, 6, _shaderProgram);
+
+
+	// This tells the renderer to actually show its contents to the screen
+	SDL_GL_SwapWindow(_SDLwindow);
+}
+
 GCP_Framework::~GCP_Framework()
 {
 	delete _mainBuffer;
+
+	if(_SDLglcontext)
+	{
+		SDL_GL_DeleteContext(_SDLglcontext);
+	}
+
+	if(_SDLwindow)
+	{
+		SDL_DestroyWindow(_SDLwindow);
+	}
+	
+	SDL_Quit();
+
 
 	// TODO: currently doesn't clean up VAO or VBO
 }
@@ -534,8 +572,6 @@ void Framebuffer::SetAllPixels(glm::vec3 colour)
 	}
 }
 
-
-
 void Framebuffer::UpdateGL()
 {
 	// Send offline framebuffer to the OpenGL texture
@@ -557,7 +593,6 @@ void Framebuffer::GenLocalFramebuffer()
 
 void Framebuffer::GenGLFramebuffer()
 {
-
 	// Create OpenGL texture
 	glGenTextures(1, &_glTexName);
 
@@ -574,5 +609,4 @@ void Framebuffer::GenGLFramebuffer()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_FLOAT, 0);
-
 }
