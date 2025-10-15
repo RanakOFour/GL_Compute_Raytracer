@@ -406,7 +406,7 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	_triangleVAO = CreateTriangleVAO();
 
 	// Create the shaders and link them together into the shader program
-	_shaderProgram = LoadShaders("./resources/shaders/VertShader.txt", "./resources/shaders/FragShader.txt");
+	_shaderProgram = LoadShaders("./resources/shaders/VertShader.txt", "./resources/shaders/RayTracingFragShader.txt");
 
 	_mainBuffer = new Framebuffer(winWidth, winHeight);
 
@@ -436,7 +436,7 @@ void GCP_Framework::ShowAndHold()
 {
 	// sanity check that Init() has been called
 	assert(_mainBuffer != nullptr);
-
+	float currentTime = SDL_GetTicks64();
 	// Show
 
 		// Specify the colour to clear the framebuffer to
@@ -445,11 +445,11 @@ void GCP_Framework::ShowAndHold()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Send offline framebuffer to the OpenGL texture
-		_mainBuffer->UpdateGL();
+		//_mainBuffer->UpdateGL();
 
 		// Binds OpenGL Texture
 		glActiveTexture(GL_TEXTURE0);
-		_mainBuffer->BindGLTex();
+		//_mainBuffer->BindGLTex();
 
 		// Call our drawing function to draw that triangle!
 		DrawVAOTris(_triangleVAO, 6, _shaderProgram);
@@ -457,7 +457,9 @@ void GCP_Framework::ShowAndHold()
 
 		// This tells the renderer to actually show its contents to the screen
 		SDL_GL_SwapWindow(_SDLwindow);
-		printf("Drawn window\n");
+
+		currentTime = (SDL_GetTicks64() - currentTime) * 0.001f;
+		printf("Drawn window in %fs\n");
 
 
 	// Hold

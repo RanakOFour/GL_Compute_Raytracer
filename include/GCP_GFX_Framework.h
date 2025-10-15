@@ -8,6 +8,7 @@
 #include <fstream>
 
 #include <GLM/glm.hpp>
+#include "GL/glew.h"
 
 // Forward declaration of internal utility class to handle framebuffer functionality
 class Framebuffer;
@@ -36,6 +37,8 @@ public:
 	// Will return when user closes the window
 	// SDL is uninitialised, you are expected to exit the program
 	void ShowAndHold();
+
+	GLuint GetShaderProgram() const { return _shaderProgram; };
 
 protected:
 
