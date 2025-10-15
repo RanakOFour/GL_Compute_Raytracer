@@ -10,17 +10,20 @@ struct RaycastResult
 {
     bool connect;
     glm::vec3 position;
+    glm::vec3 normal;
 
     RaycastResult()
     {
         connect = false;
         position = glm::vec3(0);
+        normal = position;
     }
 
-    RaycastResult(bool _connect, glm::vec3 _pos)
+    RaycastResult(bool _connect, glm::vec3 _pos, glm::vec3 _norm)
     {
         connect = _connect;
         position = _pos;
+        normal = _norm;
     }
 };
 
@@ -46,46 +49,50 @@ struct Sphere
 
     RaycastResult RayIntersect(Ray* _ray)
     {
-        //Check if inside
-        float l_distance = glm::pow(_ray->origin.x - position.x, 2) + glm::pow(_ray->origin.y - position.y, 2) + glm::pow(_ray->origin.z - position.z, 2);
-        float l_radiusSquare = radius * radius;
+        glm::vec3 l_rayToSphere = _ray->origin - position;
+        float a = glm::dot(_ray->direction, _ray->direction);
+        float b = 2.0f * glm::dot(l_rayToSphere, _ray->direction);
+        float c = glm::dot(l_rayToSphere, l_rayToSphere) - radius * radius;
 
-        if(l_distance < l_radiusSquare)
-        {
-            // Inside sphere, so no collision
-            //printf("Distance issue\n");
+        // Builds a quadratic that calculates the distance from the sphere
+        
+        float discriminant = b * b - 4 * a * c;
+        
+        if (discriminant < 0) {
+            // Ray is infront of the sphere
             return RaycastResult();
         }
-
-        //Check for intersect
-
-        float rayToSphereDot = glm::dot(position - _ray->origin, _ray->direction);
-
-        float l_d = (position - _ray->origin - ((rayToSphereDot * _ray->direction) * _ray->direction)).length();
-
-        if(l_d > radius)
-        {
-            // No collision
-            printf("D issue\n");
-            return RaycastResult();
+        
+        // Find the nearest intersection point
+        float sqrtDiscriminant = glm::sqrt(discriminant);
+        float t1 = (-b - sqrtDiscriminant) / (2.0f * a);
+        float t2 = (-b + sqrtDiscriminant) / (2.0f * a);
+        
+        // Use the closest positive intersection
+        float t = (t1 > 0) ? t1 : t2;
+        if (t <= 0) {
+            return RaycastResult(); // Intersection behind ray origin
         }
-
-        float l_x = glm::sqrt((radius * radius) - (l_d * l_d));
-
-        glm::vec3 l_closestIntersect = _ray->origin + (rayToSphereDot - l_x) * _ray->direction;
-
-        printf("Intersect\n");
-        return RaycastResult(true, l_closestIntersect);
+        
+        glm::vec3 intersectPoint = _ray->origin + t * _ray->direction;
+        return RaycastResult(true, intersectPoint, GetNormal(intersectPoint));
     }
 
-    glm::vec3 Shade()
+    glm::vec3 Shade(glm::vec3 _intersectPoint)
     {
-        return colour;
+        glm::vec3 lightDir = glm::normalize(glm::vec3(0, -1, 0)); // example light direction
+        glm::vec3 normal = GetNormal(_intersectPoint);
+
+        float diffuse = glm::max(glm::dot(normal, lightDir), 0.0f);
+
+        float ambient = 0.1f;
+
+        return colour * (ambient + (1.0f - ambient) * diffuse);
     }
 
     glm::vec3 GetNormal(glm::vec3 _point)
     {
-        return glm::vec3(0);
+        return glm::normalize(_point - position);
     }
 };
 

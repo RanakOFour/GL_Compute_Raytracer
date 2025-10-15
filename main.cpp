@@ -18,23 +18,14 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 	
-	// Preparing a position to draw a pixel
-	glm::ivec2 pixelPosition = winSize / 2;
-
-	// Preparing a colour to draw
-	// Colours are RGB, each value ranges between 0 and 1
-	glm::vec3 pixelColour(1, 0, 0);
-
-
 	// Sets all pixels the same colour
 	_myFramework.SetAllPixels( glm::vec3(0.1f,0.1f,0.3f) );
-
-	// Draws a single pixel
-	//_myFramework.DrawPixel(pixelPosition, pixelColour);
 
 	RayTracer rayTracer;
 	Camera camera;
 	Ray r;
+	glm::ivec2 pixelPosition;
+	glm::vec3 pixelColour;
 	for(int i = 0; i < 480; ++i)
 	{
 		pixelPosition.y = i;
@@ -43,16 +34,10 @@ int main(int argc, char* argv[])
 			pixelPosition.x = j;
 			r = camera.GetRay(pixelPosition);
 			pixelColour = rayTracer.TraceRay(&r);
-			if(pixelColour != glm::vec3(0))
-			{
-				printf("Ray hit sphere at (%i, %i)\n", j, i);
-			}
 
 			_myFramework.DrawPixel(pixelPosition, pixelColour);
 		}
 	}
-
-
 
 	// Pushes the framebuffer to OpenGL and renders to screen
 	// Also contains an event loop that keeps the window going until it's closed
