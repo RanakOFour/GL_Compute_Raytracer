@@ -436,7 +436,6 @@ void GCP_Framework::ShowAndHold()
 {
 	// sanity check that Init() has been called
 	assert(_mainBuffer != nullptr);
-	float currentTime = SDL_GetTicks64();
 	// Show
 
 		// Specify the colour to clear the framebuffer to
@@ -457,9 +456,7 @@ void GCP_Framework::ShowAndHold()
 
 		// This tells the renderer to actually show its contents to the screen
 		SDL_GL_SwapWindow(_SDLwindow);
-
-		currentTime = (SDL_GetTicks64() - currentTime) * 0.001f;
-		printf("Drawn window in %fs\n");
+		printf("Drawn window\n");
 
 
 	// Hold
