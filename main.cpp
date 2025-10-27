@@ -73,6 +73,9 @@ int main(int argc, char* argv[])
     // Pushes the framebuffer to OpenGL and renders to screen
     // Also contains an event loop that keeps the window going until it's closed
 
+	glm::vec3 l_lightCol = glm::vec3(1.0, 1.0, 1.0);
+	GLuint l_lightColLoc = glGetUniformLocation(shaderProgram, "lightColor");
+
 	bool keepGoing = true;
 	SDL_Event e;
 	while(keepGoing)
@@ -91,14 +94,8 @@ int main(int argc, char* argv[])
 		float colourAmount = (glm::sin(time) + 1.0f) * 0.5f;
 		//printf("Delta: %f\n", time); 
 		glUseProgram(shaderProgram);
-		
-		for (int i = 0; i < spheres.size(); i++) 
-		{
-			std::string base = "spheres[" + std::to_string(i) + "].";
 
-			GLuint colorLoc = glGetUniformLocation(shaderProgram, (base + "color").c_str());
-			glUniform3f(colorLoc, spheres[i].colour.x * colourAmount, spheres[i].colour.y * colourAmount, spheres[i].colour.z * colourAmount);
-		}
+		glUniform3f(l_lightColLoc, colourAmount, colourAmount, colourAmount);
 
 		glUseProgram(0);
 
@@ -107,33 +104,4 @@ int main(int argc, char* argv[])
 
 
     return 0;
-
-
-	// Old CPU tracing
-	// Sets all pixels the same colour
-	// _myFramework.SetAllPixels( glm::vec3(0.1f,0.1f,0.3f) );
-
-	// RayTracer rayTracer;
-	// Camera camera;
-	// Ray r;
-	// glm::ivec2 pixelPosition;
-	// glm::vec3 pixelColour;
-	// for(int i = 0; i < 480; ++i)
-	// {
-	// 	pixelPosition.y = i;
-	// 	for(int j = 0; j < 640; ++j)
-	// 	{
-	// 		pixelPosition.x = j;
-	// 		r = camera.GetRay(pixelPosition);
-	// 		pixelColour = rayTracer.TraceRay(&r);
-
-	// 		_myFramework.DrawPixel(pixelPosition, pixelColour);
-	// 	}
-	// }
-
-	// // Pushes the framebuffer to OpenGL and renders to screen
-	// // Also contains an event loop that keeps the window going until it's closed
-	// _myFramework.ShowAndHold();
-	// return 0;
-
 }
