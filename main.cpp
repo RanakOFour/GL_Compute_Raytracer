@@ -88,14 +88,16 @@ int main(int argc, char* argv[])
 		}
 
 		float time = (float)SDL_GetTicks64() * 0.001f;
+		float colourAmount = (glm::sin(time) + 1.0f) * 0.5f;
 		//printf("Delta: %f\n", time); 
 		glUseProgram(shaderProgram);
 		
 		for (int i = 0; i < spheres.size(); i++) 
 		{
 			std::string base = "spheres[" + std::to_string(i) + "].";
-			
+
 			GLuint colorLoc = glGetUniformLocation(shaderProgram, (base + "color").c_str());
+			glUniform3f(colorLoc, spheres[i].colour.x * colourAmount, spheres[i].colour.y * colourAmount, spheres[i].colour.z * colourAmount);
 		}
 
 		glUseProgram(0);
