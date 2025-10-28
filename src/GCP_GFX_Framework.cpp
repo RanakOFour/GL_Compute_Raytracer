@@ -2,24 +2,29 @@
 
 #include "GL/glew.h"
 
+#include "OpenGLError.h"
+
+#include <iostream>
+#include <fstream>
+#include <error.h>
+
 // Handles local (CPU side) and OpenGL framebuffer functionality
 class Framebuffer
 {
-public:
-
+	public:
 	Framebuffer(unsigned int w, unsigned int h)
 	{
 		_width = w; _height = h;
 
 		GenLocalFramebuffer();
 		GenGLFramebuffer();
-	}
+	};
 
 	~Framebuffer()
 	{
 		glDeleteTextures(1, &_glTexName);
 		delete[] _localBuffer;
-	}
+	};
 
 	// Requires colours between 0 and 1 per RGB channel
 	void DrawPixel(glm::ivec2 position, glm::vec3 colour);
@@ -33,8 +38,8 @@ public:
 	void BindGLTex();
 
 	void BindGLImage();
-
-protected:
+	
+	protected:
 	unsigned int _glTexName = 0;
 
 	unsigned int _width = 0;
@@ -47,8 +52,6 @@ protected:
 
 	void GenGLFramebuffer();
 };
-
-
 
 // An initialisation function, mainly for GLEW
 // This will also print to console the version of OpenGL we are using
@@ -341,8 +344,6 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 		return false;
 	}
 
-
-
 	// This is how we set the context profile
 	// We need to do this through SDL, so that it can set up the OpenGL drawing context that matches this
 	// (of course in reality we have no guarantee this will be available and should provide fallback methods if it's not!)
@@ -397,7 +398,7 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 		return false;
 	}
 
-
+	OpenGLError::Init();
 
 	// Create the vertex array object for our triangle
 	_triangleVAO = CreateTriangleVAO();

@@ -101,8 +101,15 @@ vec3 calculateShading(RaycastResult hit, Ray ray) {
 
 void main() 
 {
-    ivec2 uv = ivec2(((gl_GlobalInvocationID.x / resolution.x) - 0.5f) * 2.0f, ((gl_GlobalInvocationID.y / resolution.y) - 0.5f) * 2.0f);
-    
+    //Normalize coords from -1.0 to 1.0
+    vec2 uv = vec2(((float(gl_GlobalInvocationID.x) / gl_NumWorkGroups.x) - 0.5f) * 2.0f, ((float(gl_GlobalInvocationID.y) / gl_NumWorkGroups.y) - 0.5f) * 2.0f);
+
+    //Normalized coords from 0.0 to 1.0
+    //vec2 uv = vec2(gl_GlobalInvocationID.x / gl_NumWorkGroups.x, gl_GlobalInvocationID.y / gl_NumWorkGroups.y);
+
+    //Pixel screen coords
+    //vec2 uv = vec2(gl_GlobalInvocationID.xy);
+
     float aspect = resolution.x / resolution.y;
     vec3 rayDir = normalize(cameraForward + 
                            uv.x * cameraRight * fov * aspect + 
@@ -128,10 +135,10 @@ void main()
 
     /*
     vec4 value = vec4(0.0, 0.0, 0.0, 1.0);
-	ivec2 texelCoord = ivec2(gl_GlobalInvocationID.xy);
 
-	value.x = float(texelCoord.x) / (gl_NumWorkGroups.x);
-	value.y = float(texelCoord.y) / (gl_NumWorkGroups.y);
+	value.x = uv.x;
+	value.y = uv.y;
+
 	imageStore(framebufferTex, position, value);
     */
 }

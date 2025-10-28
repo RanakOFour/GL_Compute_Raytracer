@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 	myShader.SetUniform("resolution", winSize);
     
     // Set sphere uniforms
-	myShader.SetUniform("numSpheres", spheres.size());
+	myShader.SetUniform("numSpheres", (int)spheres.size());
     
     for (int i = 0; i < spheres.size(); i++) {
         std::string base = "spheres[" + std::to_string(i) + "].";
@@ -81,9 +81,13 @@ int main(int argc, char* argv[])
 
 		float time = (float)SDL_GetTicks64() * 0.001f;
 		float colourAmount = (glm::sin(time) + 1.0f) * 0.5f;
+		l_lightCol.x = colourAmount;
+		l_lightCol.y = colourAmount;
+		l_lightCol.z = colourAmount;
+		
 		//printf("Delta: %f\n", time); 
 		myShader.use();
-		myShader.SetUniform("lightColor", colourAmount);
+		myShader.SetUniform("lightColor", l_lightCol);
 
 		_myFramework.SetGLTexture();
 

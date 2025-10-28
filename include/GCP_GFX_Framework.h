@@ -1,8 +1,7 @@
-#pragma once
+#ifndef GCP_GFX_FRAMEWORK_H
+#define GCP_GFX_FRAMEWORK_H
 
-#include <iostream>
 #include <string>
-#include <fstream>
 
 #include "SDL/SDL.h"
 #include "GLM/glm.hpp"
@@ -59,3 +58,5 @@ protected:
 
 };
 
+
+#endif

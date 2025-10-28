@@ -56,6 +56,11 @@ void ComputeShader::use()
     glUseProgram(m_ID);
 }
 
+void ComputeShader::SetUniform(std::string _name, int _value)
+{
+    glUniform1i(glGetUniformLocation(m_ID, _name.c_str()), _value);
+}
+
 void ComputeShader::SetUniform(std::string _name, float _value)
 {
     glUniform1f(glGetUniformLocation(m_ID, _name.c_str()), _value);
