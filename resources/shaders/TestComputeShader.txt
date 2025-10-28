@@ -1,0 +1,128 @@
+#version 430 core
+
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout(rgba32f, binding = 0) uniform image2D framebufferTex;
+
+uniform vec3 cameraPos;
+uniform vec3 cameraForward;
+uniform vec3 cameraRight;
+uniform vec3 cameraUp;
+uniform float fov;
+uniform vec2 resolution;
+
+uniform vec3 lightDirection = vec3(1.0, 1.0, 1.0);
+uniform vec3 lightColor = vec3(1.0, 1.0, 1.0);
+uniform vec3 ambientColor = vec3(0.0, 0.0, 0.0);
+
+struct Sphere {
+    vec3 position;
+    float radius;
+    vec3 color;
+};
+
+#define MAX_SPHERES 10
+uniform Sphere spheres[MAX_SPHERES];
+uniform int numSpheres;
+
+struct Ray {
+    vec3 origin;
+    vec3 direction;
+};
+
+struct RaycastResult {
+    bool hit;
+    float distance;
+    vec3 position;
+    vec3 normal;
+    int sphereIndex;
+};
+
+RaycastResult intersectSphere(Ray ray, Sphere sphere, int index) {
+    RaycastResult result;
+    result.hit = false;
+    result.sphereIndex = index;
+    
+    vec3 oc = ray.origin - sphere.position;
+    float a = dot(ray.direction, ray.direction);
+    float b = 2.0 * dot(oc, ray.direction);
+    float c = dot(oc, oc) - sphere.radius * sphere.radius;
+    
+    float discriminant = b * b - 4.0 * a * c;
+    
+    if (discriminant < 0.0) {
+        return result;
+    }
+    
+    float sqrtDisc = sqrt(discriminant);
+    float t1 = (-b - sqrtDisc) / (2.0 * a);
+    float t2 = (-b + sqrtDisc) / (2.0 * a);
+    
+    float t = (t1 > 0.0) ? t1 : t2;
+    if (t <= 0.0) {
+        return result;
+    }
+    
+    result.hit = true;
+    result.distance = t;
+    result.position = ray.origin + t * ray.direction;
+    result.normal = normalize(result.position - sphere.position);
+    
+    return result;
+}
+
+vec3 calculateShading(RaycastResult hit, Ray ray) {
+    if (!hit.hit) {
+        return vec3(0.1, 0.1, 0.3); // Background color
+    }
+    
+    Sphere sphere = spheres[hit.sphereIndex];
+    
+    // Normalize light direction
+    vec3 lightDir = normalize(lightDirection);
+    
+    // Diffuse lighting
+    float diffuse = max(dot(hit.normal, lightDir), 0.0);
+    vec3 diffuseColor = lightColor * sphere.color * diffuse;
+    
+    // Ambient lighting
+    vec3 ambient = ambientColor * sphere.color;
+    
+    // Specular highlights (Blinn-Phong)
+    vec3 viewDir = normalize(-ray.direction);
+    vec3 halfDir = normalize(lightDir + viewDir);
+    float specular = pow(max(dot(hit.normal, halfDir), 0.0), 32.0);
+    vec3 specularColor = lightColor * specular;
+    
+    // Combine lighting
+    vec3 lighting = ambient + diffuseColor + specularColor;
+    
+    return lighting;
+}
+
+void main() 
+{
+    ivec2 uv = ivec2(((gl_GlobalInvocationID.x / resolution.x) - 0.5f) * 2.0f, ((gl_GlobalInvocationID.y / resolution.y) - 0.5f) * 2.0f);
+    
+    float aspect = resolution.x / resolution.y;
+    vec3 rayDir = normalize(cameraForward + 
+                           uv.x * cameraRight * fov * aspect + 
+                           uv.y * cameraUp * fov);
+    
+    Ray ray;
+    ray.origin = cameraPos;
+    ray.direction = rayDir;
+    
+    RaycastResult closestHit;
+    closestHit.hit = false;
+    closestHit.distance = 1e10;
+    
+    for (int i = 0; i < numSpheres; i++) {
+        RaycastResult hit = intersectSphere(ray, spheres[i], i);
+        if (hit.hit && hit.distance < closestHit.distance) {
+            closestHit = hit;
+        }
+    }
+
+    ivec2 position = ivec2(gl_GlobalInvocationID.xy);
+    imageStore(framebufferTex, position, vec4(calculateShading(closestHit, ray), 1));
+}

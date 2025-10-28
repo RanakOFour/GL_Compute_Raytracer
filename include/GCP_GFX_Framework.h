@@ -1,13 +1,11 @@
 #pragma once
 
-
-#include <SDL/SDL.h>
-
 #include <iostream>
 #include <string>
 #include <fstream>
 
-#include <GLM/glm.hpp>
+#include "SDL/SDL.h"
+#include "GLM/glm.hpp"
 #include "GL/glew.h"
 
 // Forward declaration of internal utility class to handle framebuffer functionality
@@ -40,6 +38,8 @@ public:
 
 	// Draws the buffer on OpenGL once
 	void Show();
+
+	void SetGLTexture();
 
 	GLuint GetShaderProgram() const { return _shaderProgram; };
 

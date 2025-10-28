@@ -1,10 +1,6 @@
 #include "GCP_GFX_Framework.h"
+
 #include "GL/glew.h"
-
-#include <SDL/SDL.h>
-
-
-#include <GLM/glm.hpp>
 
 // Handles local (CPU side) and OpenGL framebuffer functionality
 class Framebuffer
@@ -405,7 +401,7 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	_triangleVAO = CreateTriangleVAO();
 
 	// Create the shaders and link them together into the shader program
-	_shaderProgram = LoadShaders("./resources/shaders/VertShader.txt", "./resources/shaders/RayTracingFragShader.txt");
+	_shaderProgram = LoadShaders("./resources/shaders/VertShader.txt", "./resources/shaders/FragShader.txt");
 
 	_mainBuffer = new Framebuffer(winWidth, winHeight);
 
@@ -513,16 +509,14 @@ void GCP_Framework::Show()
 	// Show
 
 	// Specify the colour to clear the framebuffer to
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
 	// This writes the above colour to the colour part of the framebuffer
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Send offline framebuffer to the OpenGL texture
-	_mainBuffer->UpdateGL();
+	//_mainBuffer->UpdateGL();
 
 	// Binds OpenGL Texture
-	//glActiveTexture(GL_TEXTURE0);
-	_mainBuffer->BindGLTex();
 
 	// Call our drawing function to draw that triangle!
 	DrawVAOTris(_triangleVAO, 6, _shaderProgram);
@@ -530,6 +524,11 @@ void GCP_Framework::Show()
 
 	// This tells the renderer to actually show its contents to the screen
 	SDL_GL_SwapWindow(_SDLwindow);
+}
+
+void GCP_Framework::SetGLTexture()
+{
+	_mainBuffer->BindGLTex();
 }
 
 GCP_Framework::~GCP_Framework()
@@ -576,7 +575,7 @@ void Framebuffer::UpdateGL()
 {
 	// Send offline framebuffer to the OpenGL texture
 	glBindTexture(GL_TEXTURE_2D, _glTexName);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_FLOAT, _localBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, _width, _height, 0, GL_RGBA, GL_FLOAT, _localBuffer);
 
 }
 
@@ -608,5 +607,5 @@ void Framebuffer::GenGLFramebuffer()
 	// We therefore either need to tell it to use linear or generate a mipmap
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, _width, _height, 0, GL_RGBA, GL_FLOAT, 0);
 }

@@ -3,6 +3,8 @@
 #include "Camera.h"
 #include "RayTracer.h"
 #include "Ray.h"
+#include "ComputeShader.h"
+
 #include "GL/glew.h"
 
 int main(int argc, char* argv[])
@@ -26,46 +28,36 @@ int main(int argc, char* argv[])
     
     // Camera setup
     Camera camera;
+
+	ComputeShader myShader("./resources/shaders/TestComputeShader.txt");
     
     // Get shader program and set uniforms
     GLuint shaderProgram = _myFramework.GetShaderProgram(); // You'll need to add this getter to GCP_Framework
     
-    glUseProgram(shaderProgram);
+    myShader.use();
     
     // Set camera uniforms
     glm::vec3 camPos(0, 0, 3);
     glm::vec3 camForward(0, 0, -1);
     glm::vec3 camRight(1, 0, 0);
     glm::vec3 camUp(0, 1, 0);
-    
-    GLuint camPosLoc = glGetUniformLocation(shaderProgram, "cameraPos");
-    GLuint camForwardLoc = glGetUniformLocation(shaderProgram, "cameraForward");
-    GLuint camRightLoc = glGetUniformLocation(shaderProgram, "cameraRight");
-    GLuint camUpLoc = glGetUniformLocation(shaderProgram, "cameraUp");
-    GLuint fovLoc = glGetUniformLocation(shaderProgram, "fov");
-    GLuint resLoc = glGetUniformLocation(shaderProgram, "resolution");
-    
-    glUniform3f(camPosLoc, camPos.x, camPos.y, camPos.z);
-    glUniform3f(camForwardLoc, camForward.x, camForward.y, camForward.z);
-    glUniform3f(camRightLoc, camRight.x, camRight.y, camRight.z);
-    glUniform3f(camUpLoc, camUp.x, camUp.y, camUp.z);
-    glUniform1f(fovLoc, 0.5f); // Adjust FOV as needed
-    glUniform2f(resLoc, winSize.x, winSize.y);
+
+	myShader.SetUniform("cameraPos", camPos);
+	myShader.SetUniform("cameraForward", camForward);
+	myShader.SetUniform("cameraRight", camRight);
+	myShader.SetUniform("cameraUp", camUp);
+	myShader.SetUniform("fov", 0.5f);
+	myShader.SetUniform("resolution", winSize);
     
     // Set sphere uniforms
-    GLuint numSpheresLoc = glGetUniformLocation(shaderProgram, "numSpheres");
-    glUniform1i(numSpheresLoc, spheres.size());
+	myShader.SetUniform("numSpheres", spheres.size());
     
     for (int i = 0; i < spheres.size(); i++) {
         std::string base = "spheres[" + std::to_string(i) + "].";
-        
-        GLuint posLoc = glGetUniformLocation(shaderProgram, (base + "position").c_str());
-        GLuint radiusLoc = glGetUniformLocation(shaderProgram, (base + "radius").c_str());
-        GLuint colorLoc = glGetUniformLocation(shaderProgram, (base + "color").c_str());
-        
-        glUniform3f(posLoc, spheres[i].position.x, spheres[i].position.y, spheres[i].position.z);
-        glUniform1f(radiusLoc, spheres[i].radius);
-        glUniform3f(colorLoc, spheres[i].colour.x, spheres[i].colour.y, spheres[i].colour.z);
+
+		myShader.SetUniform((base + "position"), spheres[i].position);
+		myShader.SetUniform((base + "radius"), spheres[i].radius);
+		myShader.SetUniform((base + "color"), spheres[i].colour);
     }
     
     glUseProgram(0);
@@ -74,7 +66,6 @@ int main(int argc, char* argv[])
     // Also contains an event loop that keeps the window going until it's closed
 
 	glm::vec3 l_lightCol = glm::vec3(1.0, 1.0, 1.0);
-	GLuint l_lightColLoc = glGetUniformLocation(shaderProgram, "lightColor");
 
 	bool keepGoing = true;
 	SDL_Event e;
@@ -93,11 +84,16 @@ int main(int argc, char* argv[])
 		float time = (float)SDL_GetTicks64() * 0.001f;
 		float colourAmount = (glm::sin(time) + 1.0f) * 0.5f;
 		//printf("Delta: %f\n", time); 
-		glUseProgram(shaderProgram);
+		myShader.use();
+		myShader.SetUniform("lightColor", colourAmount);
 
-		glUniform3f(l_lightColLoc, colourAmount, colourAmount, colourAmount);
+		_myFramework.SetGLTexture();
 
-		glUseProgram(0);
+		printf("E\n");
+		glDispatchCompute((unsigned int)winSize.x, (unsigned int)winSize.y, 1);
+		printf("F\n");
+
+		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
 		_myFramework.Show();
 	}

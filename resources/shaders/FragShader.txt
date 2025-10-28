@@ -2,11 +2,11 @@
 
 in vec2 pixelPos;
 
-out vec3 fColour;
+out vec4 fColour;
 
 uniform sampler2D framebufferTex;
 
 void main()
 {
-	fColour = vec3(texture(framebufferTex,pixelPos));
+	fColour = vec4(texture(framebufferTex,pixelPos));
 }
