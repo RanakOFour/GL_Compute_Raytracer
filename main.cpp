@@ -64,7 +64,8 @@ int main(int argc, char* argv[])
     // Also contains an event loop that keeps the window going until it's closed
 
 	glm::vec3 l_lightCol = glm::vec3(1.0, 1.0, 1.0);
-	
+	glm::vec3 l_lightPos = glm::vec3(0.0f);
+
 	bool keepGoing = true;
 	SDL_Event e;
 	while(keepGoing)
@@ -84,16 +85,17 @@ int main(int argc, char* argv[])
 		l_lightCol.x = colourAmount;
 		l_lightCol.y = colourAmount;
 		l_lightCol.z = colourAmount;
+
+		l_lightPos.x = glm::sin(time);
+		l_lightPos.z = glm::cos(time);
 		
-		//printf("Delta: %f\n", time); 
 		myShader.use();
 		myShader.SetUniform("lightColor", l_lightCol);
+		myShader.SetUniform("lightDirection", l_lightPos);
 
 		_myFramework.SetGLTexture();
 
-		//printf("E\n");
 		glDispatchCompute((unsigned int)winSize.x, (unsigned int)winSize.y, 1);
-		//printf("F\n");
 
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
