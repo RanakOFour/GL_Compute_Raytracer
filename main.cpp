@@ -59,14 +59,12 @@ int main(int argc, char* argv[])
 		myShader.SetUniform((base + "radius"), spheres[i].radius);
 		myShader.SetUniform((base + "color"), spheres[i].colour);
     }
-    
-    glUseProgram(0);
 
     // Pushes the framebuffer to OpenGL and renders to screen
     // Also contains an event loop that keeps the window going until it's closed
 
 	glm::vec3 l_lightCol = glm::vec3(1.0, 1.0, 1.0);
-
+	
 	bool keepGoing = true;
 	SDL_Event e;
 	while(keepGoing)
@@ -89,9 +87,9 @@ int main(int argc, char* argv[])
 
 		_myFramework.SetGLTexture();
 
-		printf("E\n");
+		//printf("E\n");
 		glDispatchCompute((unsigned int)winSize.x, (unsigned int)winSize.y, 1);
-		printf("F\n");
+		//printf("F\n");
 
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 

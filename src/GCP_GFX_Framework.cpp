@@ -32,6 +32,8 @@ public:
 	// Binds the OpenGL texture for use with rendering it to screen
 	void BindGLTex();
 
+	void BindGLImage();
+
 protected:
 	unsigned int _glTexName = 0;
 
@@ -517,6 +519,7 @@ void GCP_Framework::Show()
 	//_mainBuffer->UpdateGL();
 
 	// Binds OpenGL Texture
+	_mainBuffer->BindGLTex();
 
 	// Call our drawing function to draw that triangle!
 	DrawVAOTris(_triangleVAO, 6, _shaderProgram);
@@ -528,7 +531,7 @@ void GCP_Framework::Show()
 
 void GCP_Framework::SetGLTexture()
 {
-	_mainBuffer->BindGLTex();
+	_mainBuffer->BindGLImage();
 }
 
 GCP_Framework::~GCP_Framework()
@@ -584,6 +587,10 @@ void Framebuffer::BindGLTex()
 	glBindTexture(GL_TEXTURE_2D, _glTexName);
 }
 
+void Framebuffer::BindGLImage()
+{
+	glBindImageTexture(0, _glTexName, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+}
 
 void Framebuffer::GenLocalFramebuffer()
 {
@@ -597,14 +604,9 @@ void Framebuffer::GenGLFramebuffer()
 
 	glBindTexture(GL_TEXTURE_2D, _glTexName);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	// By default, OpenGL mag filter is linear
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	// By default, OpenGL min filter will use mipmaps
-	// We therefore either need to tell it to use linear or generate a mipmap
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, _width, _height, 0, GL_RGBA, GL_FLOAT, 0);

@@ -125,4 +125,13 @@ void main()
 
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
     imageStore(framebufferTex, position, vec4(calculateShading(closestHit, ray), 1));
+
+    /*
+    vec4 value = vec4(0.0, 0.0, 0.0, 1.0);
+	ivec2 texelCoord = ivec2(gl_GlobalInvocationID.xy);
+
+	value.x = float(texelCoord.x) / (gl_NumWorkGroups.x);
+	value.y = float(texelCoord.y) / (gl_NumWorkGroups.y);
+	imageStore(framebufferTex, position, value);
+    */
 }
