@@ -133,6 +133,7 @@ void main()
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
     imageStore(framebufferTex, position, vec4(calculateShading(closestHit, ray), 1));
 
+    // Test for coordinate space (Outputs value of uv as red/green values)
     /*
     vec4 value = vec4(0.0, 0.0, 0.0, 1.0);
 
