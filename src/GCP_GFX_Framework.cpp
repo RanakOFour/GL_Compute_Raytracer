@@ -4,6 +4,10 @@
 
 #include "OpenGLError.h"
 
+#include <imgui.h>
+#include <imgui_impl_sdl.h>
+#include <imgui_impl_opengl3.h>
+
 #include <iostream>
 #include <fstream>
 #include <error.h>
@@ -149,17 +153,13 @@ void DrawVAOTris(GLuint VAO, int numVertices, GLuint shaderProgram)
 
 	// Activate the shader program
 	glUseProgram(shaderProgram);
-
 		// Activate the VAO
 		glBindVertexArray(VAO);
-
 			// Tell OpenGL to draw it
 			// Must specify the type of geometry to draw and the number of vertices
 			glDrawArrays(GL_TRIANGLES, 0, numVertices);
-
 		// Unbind VAO
 		glBindVertexArray(0);
-
 	// Technically we can do this, but it makes no real sense because we must always have a valid shader program to draw geometry
 	glUseProgram(0);
 }
@@ -404,11 +404,24 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	_triangleVAO = CreateTriangleVAO();
 
 	// Create the shaders and link them together into the shader program
-	_shaderProgram = LoadShaders("./resources/shaders/VertShader.txt", "./resources/shaders/FragShader.txt");
+	_shaderProgram = LoadShaders("./resources/shaders/ScreenVertex.txt", "./resources/shaders/ScreenFragment.txt");
 
 	_mainBuffer = new Framebuffer(winWidth, winHeight);
 
 	_mainBuffer->SetAllPixels(glm::vec3(0, 0, 0));
+
+	// Setting up the GUI system
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	ImGui::StyleColorsDark();
+
+	const char* glslVersion = "#version 130";
+	ImGui_ImplSDL2_InitForOpenGL(_SDLwindow, _SDLglcontext);
+	ImGui_ImplOpenGL3_Init(glslVersion);
+
+	glEnable(GL_DEPTH_TEST);
 
 	return true;
 }
@@ -520,14 +533,11 @@ void GCP_Framework::Show()
 	//_mainBuffer->UpdateGL();
 
 	// Binds OpenGL Texture
+	glUseProgram(_shaderProgram);
 	_mainBuffer->BindGLTex();
 
 	// Call our drawing function to draw that triangle!
 	DrawVAOTris(_triangleVAO, 6, _shaderProgram);
-
-
-	// This tells the renderer to actually show its contents to the screen
-	SDL_GL_SwapWindow(_SDLwindow);
 }
 
 void GCP_Framework::SetGLTexture()

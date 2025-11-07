@@ -42,6 +42,11 @@ public:
 
 	GLuint GetShaderProgram() const { return _shaderProgram; };
 
+	void SwapBuffer()
+	{
+		SDL_GL_SwapWindow(_SDLwindow);
+	}
+
 protected:
 
 	// Internal variables

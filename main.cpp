@@ -4,6 +4,7 @@
 #include "RayTracer.h"
 #include "Ray.h"
 #include "ComputeShader.h"
+#include "IMGUIDisplay.h"
 
 #include "GL/glew.h"
 
@@ -29,7 +30,9 @@ int main(int argc, char* argv[])
     // Camera setup
     Camera camera;
 
-	ComputeShader myShader("./resources/shaders/TestComputeShader.txt");
+	ComputeShader myShader("./resources/shaders/RTCompute.txt");
+
+    IMGUIDisplay l_display(&myShader, &spheres);
     
     // Get shader program and set uniforms
     GLuint shaderProgram = _myFramework.GetShaderProgram(); // You'll need to add this getter to GCP_Framework
@@ -66,12 +69,15 @@ int main(int argc, char* argv[])
 	glm::vec3 l_lightCol = glm::vec3(1.0, 1.0, 1.0);
 	glm::vec3 l_lightPos = glm::vec3(0.0f);
 
+
 	bool keepGoing = true;
 	SDL_Event e;
 	while(keepGoing)
 	{
+		
 		while(SDL_PollEvent(&e))
 		{
+			ImGui_ImplSDL2_ProcessEvent(&e);
 			switch(e.type)
 			{
 				case SDL_QUIT:
@@ -81,25 +87,18 @@ int main(int argc, char* argv[])
 		}
 
 		float time = (float)SDL_GetTicks64() * 0.001f;
-		float colourAmount = (glm::sin(time) + 1.0f) * 0.5f;
-		l_lightCol.x = colourAmount;
-		l_lightCol.y = colourAmount;
-		l_lightCol.z = colourAmount;
 
-		l_lightPos.x = glm::sin(time);
-		l_lightPos.z = glm::cos(time);
-		
-		myShader.use();
-		myShader.SetUniform("lightColor", l_lightCol);
+        myShader.use();
 		myShader.SetUniform("lightDirection", l_lightPos);
 
 		_myFramework.SetGLTexture();
-
+		
 		glDispatchCompute((unsigned int)winSize.x, (unsigned int)winSize.y, 1);
-
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
 		_myFramework.Show();
+		l_display.DrawDisplay();
+		_myFramework.SwapBuffer();
 	}
 
 
