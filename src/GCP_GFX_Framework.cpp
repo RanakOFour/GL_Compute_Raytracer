@@ -67,7 +67,7 @@ bool InitGL()
 	glewExperimental = GL_TRUE;
 
 	GLenum err = glewInit();
-	if (GLEW_OK != err)
+	if (err != GLEW_OK)
 	{
 		/* Problem: glewInit failed, something is seriously wrong. */
 		std::cerr << "Error: GLEW failed to initialise with message: " << glewGetErrorString(err) << std::endl << "Err num: " << err << std::endl;
@@ -89,16 +89,15 @@ bool InitGL()
 // The VAO stores one or more Vertex Buffer Objects
 // The VBOs store the actual vertex data (e.g. one each for positions, colours, texture coords etc)
 // The VAO tells the server how to actually interpret and use the VBO data
-GLuint CreateTriangleVAO()
+void CreateTriangleVAO(unsigned int* _vaoIn, unsigned int* _vboIn)
 {
 	// Variable for storing our VAO
 	// OpenGL has its own defined datatypes - a 'GLuint' is basically an unsigned int
-	GLuint VAO = 0;
 	// Creates one VAO
-	glGenVertexArrays(1, &VAO);
+	glGenVertexArrays(1, &(*_vaoIn));
 	// 'Binding' something makes it the current one we are using
 	// This is like activating it, so that subsequent function calls will work on this item
-	glBindVertexArray(VAO);
+	glBindVertexArray(*_vaoIn);
 
 	// Simple vertex data for a triangle
 	// OpenGL is happy for us to work with 2D coordinates if we want
@@ -112,12 +111,10 @@ GLuint CreateTriangleVAO()
 		 -1.0f,  1.0f
 	};
 
-	// Variable for storing a VBO
-	GLuint buffer = 0;
 	// Create a generic 'buffer'
-	glGenBuffers(1, &buffer);
+	glGenBuffers(1, &(*_vboIn));
 	// Tell OpenGL that we want to activate the buffer and that it's a VBO
-	glBindBuffer(GL_ARRAY_BUFFER, buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, (*_vboIn));
 	// With this buffer active, we can now send our data to OpenGL
 	// We need to tell it how much data to send
 	// We can also tell OpenGL how we intend to use this buffer - here we say GL_STATIC_DRAW because we're only writing it once
@@ -139,8 +136,6 @@ GLuint CreateTriangleVAO()
 
 	// Technically we can do this, because the enabled / disabled state is stored in the VAO
 	glDisableVertexAttribArray(0);
-
-	return VAO;
 }
 
 // Draws the VAO
@@ -162,6 +157,8 @@ void DrawVAOTris(GLuint VAO, int numVertices, GLuint shaderProgram)
 		glBindVertexArray(0);
 	// Technically we can do this, but it makes no real sense because we must always have a valid shader program to draw geometry
 	glUseProgram(0);
+
+	printf("Drawn triangles\n");
 }
 
 // Useful little function to just check for compiler errors
@@ -322,6 +319,7 @@ GLuint LoadShaders(std::string vertFilename, std::string fragFilename)
 		return 0;
 	}
 
+	printf("Shader compiled\n");
 
 	return _shaderProgram;
 }
@@ -364,33 +362,17 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	// You can experiment with the numbers to see what they do
 	int winPosX = 100;
 	int winPosY = 100;
-	int winWidth = _screenSize.x;
-	int winHeight = _screenSize.y;
 	_SDLwindow = SDL_CreateWindow("My Window!!!",  // The first parameter is the window title
 		winPosX, winPosY,
-		winWidth, winHeight,
+		_screenSize.x, _screenSize.y,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
-	// The last parameter lets us specify a number of options
-	// Here, we tell SDL that we want the window to be shown and that it can be resized
-	// You can learn more about SDL_CreateWindow here: https://wiki.libsdl.org/SDL_CreateWindow?highlight=%28\bCategoryVideo\b%29|%28CategoryEnum%29|%28CategoryStruct%29
-	// The flags you can pass in for the last parameter are listed here: https://wiki.libsdl.org/SDL_WindowFlags
 
-	// The SDL_CreateWindow function returns an SDL_Window
-	// This is a structure which contains all the data about our window (size, position, etc)
-	// We will also need this when we want to draw things to the window
-	// This is therefore quite important we don't lose it!
-
-	// The SDL_Renderer is a structure that handles rendering
-	// It will store all of SDL's internal rendering related settings
-	// When we create it we tell it which SDL_Window we want it to render to
-	// That renderer can only be used for this window
-	// (yes, we can have multiple windows - feel free to have a play sometime)
 	SDL_Renderer* renderer = SDL_CreateRenderer(_SDLwindow, -1, 0);
-
 
 	// Now that the SDL renderer is created for the window, we can create an OpenGL context for it!
 	// This will allow us to actually use OpenGL to draw to the window
 	_SDLglcontext = SDL_GL_CreateContext(_SDLwindow);
+	printf("SDL_GL Context created\n");
 
 	// Call our initialisation function to set up GLEW and print out some GL info to console
 	if (!InitGL())
@@ -401,12 +383,14 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	OpenGLError::Init();
 
 	// Create the vertex array object for our triangle
-	_triangleVAO = CreateTriangleVAO();
+	CreateTriangleVAO(&_vaoId, &_vboId);
+
+	printf("Created triangles in VBO %i in VAO %i\n", _vboId, _vaoId);
 
 	// Create the shaders and link them together into the shader program
 	_shaderProgram = LoadShaders("./resources/shaders/ScreenVertex.txt", "./resources/shaders/ScreenFragment.txt");
 
-	_mainBuffer = new Framebuffer(winWidth, winHeight);
+	_mainBuffer = new Framebuffer(_screenSize.x, _screenSize.y);
 
 	_mainBuffer->SetAllPixels(glm::vec3(0, 0, 0));
 
@@ -462,7 +446,7 @@ void GCP_Framework::ShowAndHold()
 		_mainBuffer->BindGLTex();
 
 		// Call our drawing function to draw that triangle!
-		DrawVAOTris(_triangleVAO, 6, _shaderProgram);
+		DrawVAOTris(_vaoId, 6, _shaderProgram);
 
 
 		// This tells the renderer to actually show its contents to the screen

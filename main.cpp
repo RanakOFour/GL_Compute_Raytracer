@@ -11,7 +11,7 @@
 int main(int argc, char* argv[])
 {
 	// Set window size
-	glm::ivec2 winSize(640, 480);
+	glm::ivec2 winSize(500, 500);
 
 	// This will handle rendering to screen
 	GCP_Framework _myFramework;

@@ -14,7 +14,7 @@ target_link_directories(GCP_Raytracer_Framework_CMAKE PUBLIC ${PROJECT_SOURCE_DI
 if(WIN32)
 	target_link_libraries(GCP_Raytracer_Framework_CMAKE PUBLIC SDL2 SDL2main opengl32)
 else()
-	target_link_libraries(GCP_Raytracer_Framework_CMAKE PUBLIC SDL2 SDL2main GL GLEW)
+	target_link_libraries(GCP_Raytracer_Framework_CMAKE PUBLIC SDL2 SDL2main GL)
 endif()
 
 # TODO: Add tests and install targets if needed.
