@@ -74,8 +74,10 @@ class IMGUIDisplay
 			//  3. Send it back to the scene in case it's changed
 
 			// Light stuff
-			ImGui::DragFloat3("Light Direction", &(m_lightDir[0]));
-			m_compute->SetUniform("lightDir", m_lightDir);
+			ImGui::DragFloat3("Light Direction", &(m_lightDir[0]), 0.01f, -1.0f, 1.0f);
+            printf("Uniform\n");
+			m_compute->SetUniform("lightDirection", m_lightDir);
+            printf("Done\n");
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
@@ -84,7 +86,9 @@ class IMGUIDisplay
 		}
 
 		// Render GUI to screen
+        printf("Rendering\n");
 		ImGui::Render();
+        printf("RenderingDone\n");
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     };
 
