@@ -1,12 +1,18 @@
 
 #include "GCP_GFX_Framework.h"
 #include "Camera.h"
-#include "RayTracer.h"
 #include "Light.h"
 #include "ComputeShader.h"
+#include "Sphere.h"
 #include "Cube.h"
 
 #include "GL/glew.h"
+
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl3.h"
+
+#include <vector>
 
 int main(int argc, char* argv[])
 {
@@ -30,7 +36,7 @@ int main(int argc, char* argv[])
     // Camera setup
     Camera camera;
 
-	ComputeShader myShader("./resources/shaders/RTCompute.txt");
+	ComputeShader myShader("./resources/shaders/RTCompute.comp");
     
     myShader.use();
     
@@ -59,7 +65,7 @@ int main(int argc, char* argv[])
     }
 
 	Cube floor;
-	floor.position = glm::vec3(0.0f, -0.5f, 0.0f);
+	floor.position = glm::vec3(0.0f, -0.75f, 0.0f);
 	floor.size = glm::vec3(5.0f, 0.5, 5.0f);
 	floor.color = glm::vec3(1.0f, 1.0f, 1.0f);
 
@@ -81,21 +87,23 @@ int main(int argc, char* argv[])
 
 	bool keepGoing = true;
 
-	int lastFrame = 0;
-	int currentFrame = 0;
-	int deltaTime;
+	Uint64 lastFrame = 0;
+	Uint64 currentFrame = 0;
+	double deltaTime;
 
 	SDL_Event e;
 	while(keepGoing)
 	{
 		lastFrame = currentFrame;
-		currentFrame = SDL_GetTicks64();
-		deltaTime = currentFrame - lastFrame;
+		currentFrame = SDL_GetPerformanceCounter();
+		deltaTime = ((float)currentFrame - (float)lastFrame);
+		deltaTime /= (float)SDL_GetPerformanceFrequency();
 
-		printf("Current FPS: %f\n Delta: %ims\n", (float)((float)1000 / (float)deltaTime), deltaTime);
+		printf("Current FPS: %.2f\n Delta: %.2f\n", 1.0f / deltaTime, deltaTime);
 
 		while(SDL_PollEvent(&e))
 		{
+			ImGui_ImplSDL2_ProcessEvent(&e);
 			switch(e.type)
 			{
 				case SDL_QUIT:
@@ -108,7 +116,6 @@ int main(int argc, char* argv[])
 		
 		myShader.use();
 
-		light.position = glm::vec3(3.0f * glm::sin(time), 0.0f, 3.0f * glm::cos(time));
 		myShader.SetUniform("lights[0].position", light.position);
 
 		_myFramework.SetGLTexture();
@@ -117,8 +124,24 @@ int main(int argc, char* argv[])
 
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplSDL2_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::Begin("Light Settings");
+		glm::vec3 l_currentLightPos = light.position;
+		ImGui::DragFloat3("Position", &(l_currentLightPos[0]), 0.1f, -10.0f, 10.0f);
+		light.position = l_currentLightPos;
+
+
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+		ImGui::End();
+
 		_myFramework.Show();
 	}
+
+	_myFramework.Shutdown();
 
 
     return 0;

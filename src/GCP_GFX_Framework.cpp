@@ -2,6 +2,10 @@
 
 #include "GL/glew.h"
 
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl3.h"
+
 #include "OpenGLError.h"
 
 #include <iostream>
@@ -400,6 +404,17 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 
 	OpenGLError::Init();
 
+	// Setting up the GUI system
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	ImGui::StyleColorsDark();
+
+	const char* glslVersion = "#version 130";
+	ImGui_ImplSDL2_InitForOpenGL(_SDLwindow, _SDLglcontext);
+	ImGui_ImplOpenGL3_Init(glslVersion);
+
 	// Create the vertex array object for our triangle
 	_triangleVAO = CreateTriangleVAO();
 
@@ -409,6 +424,8 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	_mainBuffer = new Framebuffer(winWidth, winHeight);
 
 	_mainBuffer->SetAllPixels(glm::vec3(0, 0, 0));
+
+	glEnable(GL_DEPTH_TEST);
 
 	return true;
 }
@@ -428,81 +445,6 @@ void GCP_Framework::DrawPixel(glm::ivec2 pixelPosition, glm::vec3 pixelColour)
 	assert(_mainBuffer != nullptr);
 
 	_mainBuffer->DrawPixel(pixelPosition, pixelColour);
-}
-
-void GCP_Framework::ShowAndHold()
-{
-	// sanity check that Init() has been called
-	assert(_mainBuffer != nullptr);
-	// Show
-
-		// Specify the colour to clear the framebuffer to
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		// This writes the above colour to the colour part of the framebuffer
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		// Send offline framebuffer to the OpenGL texture
-		_mainBuffer->UpdateGL();
-
-		// Binds OpenGL Texture
-		glActiveTexture(GL_TEXTURE0);
-		_mainBuffer->BindGLTex();
-
-		// Call our drawing function to draw that triangle!
-		DrawVAOTris(_triangleVAO, 6, _shaderProgram);
-
-
-		// This tells the renderer to actually show its contents to the screen
-		SDL_GL_SwapWindow(_SDLwindow);
-		printf("Drawn window\n");
-
-
-	// Hold
-
-		bool go = true;
-		while (go)
-		{
-
-			// Here we are going to check for any input events
-			// Basically when you press the keyboard or move the mouse, the parameters are stored as something called an 'event'
-			// SDL has a queue of events
-			// We need to check for each event and then do something about it (called 'event handling')
-			// the SDL_Event is the datatype for the event
-			SDL_Event incomingEvent;
-			// SDL_PollEvent will check if there is an event in the queue
-			// If there's nothing in the queue it won't sit and wait around for an event to come along (there are functions which do this, and that can be useful too!)
-			// For an empty queue it will simply return 'false'
-			// If there is an event, the function will return 'true' and it will fill the 'incomingEvent' we have given it as a parameter with the event data
-			while (SDL_PollEvent(&incomingEvent))
-			{
-				// If we get in here, we have an event and need to figure out what to do with it
-				// For now, we will just use a switch based on the event's type
-				switch (incomingEvent.type)
-				{
-				case SDL_QUIT:
-					// The event type is SDL_QUIT
-					// This means we have been asked to quit - probably the user clicked on the 'x' at the top right corner of the window
-					// To quit we need to set our 'go' bool to false so that we can escape out of the game loop
-					go = false;
-					break;
-
-					// If you want to learn more about event handling and different SDL event types, see:
-					// https://wiki.libsdl.org/SDL_Event
-					// and also: https://wiki.libsdl.org/SDL_EventType
-				}
-			}
-
-			// Limiter to slow us down
-			SDL_Delay((unsigned int)((1.0f / 50.0f) * 1000.0f));
-		}
-
-
-	// Cleanup
-
-		SDL_GL_DeleteContext(_SDLglcontext);
-		SDL_DestroyWindow(_SDLwindow);
-		SDL_Quit();
-
 }
 
 void GCP_Framework::Show()
@@ -525,6 +467,9 @@ void GCP_Framework::Show()
 	// Call our drawing function to draw that triangle!
 	DrawVAOTris(_triangleVAO, 6, _shaderProgram);
 
+	// Render GUI to screen
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	// This tells the renderer to actually show its contents to the screen
 	SDL_GL_SwapWindow(_SDLwindow);
@@ -553,6 +498,13 @@ GCP_Framework::~GCP_Framework()
 
 
 	// TODO: currently doesn't clean up VAO or VBO
+}
+
+void GCP_Framework::Shutdown()
+{
+	SDL_GL_DeleteContext(_SDLglcontext);
+	SDL_DestroyWindow(_SDLwindow);
+	SDL_Quit();
 }
 
 

@@ -6,9 +6,9 @@ project ("GCP_Raytracer_Framework_CMAKE")
 add_executable (GCP_Raytracer_Framework_CMAKE "main.cpp")
 
 add_subdirectory(src)
-#add_subdirectory(external)
+add_subdirectory(external)
 
-target_include_directories(GCP_Raytracer_Framework_CMAKE PUBLIC include)
+target_include_directories(GCP_Raytracer_Framework_CMAKE PUBLIC include external/IMGUI)
 target_link_directories(GCP_Raytracer_Framework_CMAKE PUBLIC ${PROJECT_SOURCE_DIR}/lib)
 
 if(WIN32)
