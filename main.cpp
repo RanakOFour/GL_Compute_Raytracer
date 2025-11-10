@@ -80,9 +80,20 @@ int main(int argc, char* argv[])
 	myShader.SetUniform("lights[0].color", light.colour);
 
 	bool keepGoing = true;
+
+	int lastFrame = 0;
+	int currentFrame = 0;
+	int deltaTime;
+
 	SDL_Event e;
 	while(keepGoing)
 	{
+		lastFrame = currentFrame;
+		currentFrame = SDL_GetTicks64();
+		deltaTime = currentFrame - lastFrame;
+
+		printf("Current FPS: %f\n Delta: %ims\n", (float)((float)1000 / (float)deltaTime), deltaTime);
+
 		while(SDL_PollEvent(&e))
 		{
 			switch(e.type)
