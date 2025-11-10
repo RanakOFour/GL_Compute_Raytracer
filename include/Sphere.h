@@ -4,7 +4,7 @@
 #include "GLM/glm.hpp"
 #include <iostream>
 
-#include "Ray.h"
+#include "CPURaytracer/Ray.h"
 
 struct RaycastResult
 {

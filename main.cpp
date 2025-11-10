@@ -1,12 +1,18 @@
 
 #include "GCP_GFX_Framework.h"
 #include "Camera.h"
-#include "RayTracer.h"
-#include "Ray.h"
+#include "Light.h"
 #include "ComputeShader.h"
-#include "IMGUIDisplay.h"
+#include "Sphere.h"
+#include "Cube.h"
 
 #include "GL/glew.h"
+
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl3.h"
+
+#include <vector>
 
 int main(int argc, char* argv[])
 {
@@ -30,12 +36,7 @@ int main(int argc, char* argv[])
     // Camera setup
     Camera camera;
 
-	ComputeShader myShader("./resources/shaders/RTCompute.txt");
-
-    IMGUIDisplay l_display(&myShader, &spheres);
-    
-    // Get shader program and set uniforms
-    GLuint shaderProgram = _myFramework.GetShaderProgram(); // You'll need to add this getter to GCP_Framework
+	ComputeShader myShader("./resources/shaders/RTCompute.comp");
     
     myShader.use();
     
@@ -63,18 +64,44 @@ int main(int argc, char* argv[])
 		myShader.SetUniform((base + "color"), spheres[i].colour);
     }
 
+	Cube floor;
+	floor.position = glm::vec3(0.0f, -0.75f, 0.0f);
+	floor.size = glm::vec3(5.0f, 0.5, 5.0f);
+	floor.color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	myShader.SetUniform("numCubes", 1);
+	myShader.SetUniform("cubes[0].position", floor.position);
+	myShader.SetUniform("cubes[0].size", floor.size);
+	myShader.SetUniform("cubes[0].color", floor.color);
+
     // Pushes the framebuffer to OpenGL and renders to screen
     // Also contains an event loop that keeps the window going until it's closed
 
-	glm::vec3 l_lightCol = glm::vec3(1.0, 1.0, 1.0);
-	glm::vec3 l_lightPos = glm::vec3(0.0f);
+	Light light;
+	light.position = glm::vec3(0.0f, 0.0f, 3.0f);
+	light.colour = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	myShader.SetUniform("numLights", 1);
+	myShader.SetUniform("lights[0].position", light.position);
+	myShader.SetUniform("lights[0].color", light.colour);
 
 
 	bool keepGoing = true;
+
+	Uint64 lastFrame = 0;
+	Uint64 currentFrame = 0;
+	double deltaTime;
+
 	SDL_Event e;
 	while(keepGoing)
 	{
-		
+		lastFrame = currentFrame;
+		currentFrame = SDL_GetPerformanceCounter();
+		deltaTime = ((float)currentFrame - (float)lastFrame);
+		deltaTime /= (float)SDL_GetPerformanceFrequency();
+
+		printf("Current FPS: %.2f\n Delta: %.2f\n", 1.0f / deltaTime, deltaTime);
+
 		while(SDL_PollEvent(&e))
 		{
 			ImGui_ImplSDL2_ProcessEvent(&e);
@@ -87,19 +114,34 @@ int main(int argc, char* argv[])
 		}
 
 		float time = (float)SDL_GetTicks64() * 0.001f;
+		
+		myShader.use();
 
-        myShader.use();
-		myShader.SetUniform("lightDirection", l_lightPos);
+		myShader.SetUniform("lights[0].position", light.position);
 
 		_myFramework.SetGLTexture();
 		
 		glDispatchCompute((unsigned int)winSize.x, (unsigned int)winSize.y, 1);
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplSDL2_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::Begin("Light Settings");
+		glm::vec3 l_currentLightPos = light.position;
+		ImGui::DragFloat3("Position", &(l_currentLightPos[0]), 0.1f, -10.0f, 10.0f);
+		light.position = l_currentLightPos;
+
+
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+		ImGui::End();
+
 		_myFramework.Show();
-		l_display.DrawDisplay();
-		_myFramework.SwapBuffer();
 	}
+
+	_myFramework.Shutdown();
 
 
     return 0;

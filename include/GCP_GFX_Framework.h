@@ -15,7 +15,6 @@ class Framebuffer;
 class GCP_Framework
 {
 public:
-
 	~GCP_Framework();
 
 	// Must call Init after creation
@@ -30,17 +29,13 @@ public:
 	// Colour is RGB, each must range from 0 to 1
 	void DrawPixel(glm::ivec2 pixelPosition, glm::vec3 pixelColour);
 
-	// Sends framebuffer to OpenGL and displays to screen
-	// Will return when user closes the window
-	// SDL is uninitialised, you are expected to exit the program
-	void ShowAndHold();
-
-	// Draws the buffer on OpenGL once
+	// Draws the buffer on OpenGL
 	void Show();
 
+	// Sets Texture as Image;
 	void SetGLTexture();
 
-	GLuint GetShaderProgram() const { return _shaderProgram; };
+	void Shutdown();
 
 	void SwapBuffer()
 	{
@@ -60,8 +55,6 @@ protected:
 	// OpenGL drawing variables
 		unsigned int _triangleVAO = 0;
 		unsigned int _shaderProgram = 0;
-		unsigned int _vaoId;
-		unsigned int _vboId;
 
 };
 

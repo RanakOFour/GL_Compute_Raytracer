@@ -2,12 +2,17 @@
 #define CAMERA_H
 
 #include "GLM/ext.hpp"
-#include "Ray.h"
 
 class Camera
 {
     private:
     glm::mat4 _viewingMatrice[3];
+    glm::vec3 m_Position;
+    glm::vec3 m_Forward = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 m_Right = glm::vec3(1.0f, 0.0f, 0.0f);
+    glm::vec3 m_Up = glm::vec3(0.0f, 1.0f, 0.0f);
+
+    float m_fov;
 
     public:
     Camera()
@@ -20,24 +25,16 @@ class Camera
     ~Camera()
     {};
 
-    Ray GetRay(glm::ivec2 _screenPosition)
-    {
-        float x = (2 * ((float)_screenPosition.x / 640.0f)) - 1.0f;
-        float y = 1.0f - (2 * ((float)_screenPosition.y / 480.0f));
+    inline void FOV(float _fov) { m_fov = _fov; };
+    inline float FOV() { return m_fov; };
 
-        glm::vec4 l_clipSpaceRay = glm::vec4(x, y, -1, 1);
+    inline void Move(glm::vec3 _posChange) { m_Position += _posChange; };
+    inline void Position(glm::vec3 _newPos) { m_Position = _newPos; };
 
-        glm::vec4 l_eyeSpaceRay= glm::inverse(_viewingMatrice[2]) * l_clipSpaceRay;
-        l_eyeSpaceRay[2] = -1.0f;
-        l_eyeSpaceRay[3] = 0.0f;
-
-        glm::vec3 l_worldSpaceRay = glm::vec3(glm::inverse(_viewingMatrice[1]) * l_eyeSpaceRay);
-        l_worldSpaceRay = glm::normalize(l_worldSpaceRay);
-
-        Ray toReturn(glm::vec3(0, 0, 1), l_worldSpaceRay);
-
-        return toReturn;
-    }
+    glm::vec3& Position() { return m_Position; }
+    glm::vec3& Forward() { return m_Forward; };
+    glm::vec3& Right() { return m_Right; };
+    glm::vec3& Up() { return m_Up; };
 };
 
 #endif
