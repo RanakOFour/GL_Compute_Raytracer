@@ -3,6 +3,8 @@
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D framebufferTex;
 
+// Link to SSBO of scene information
+
 uniform vec3 cameraPos;
 uniform vec3 cameraForward;
 uniform vec3 cameraRight;
@@ -10,11 +12,18 @@ uniform vec3 cameraUp;
 uniform float fov;
 uniform vec2 resolution;
 
-uniform vec3 lightDirection = vec3(1.0, 1.0, 1.0);
-uniform vec3 lightColor = vec3(1.0, 1.0, 1.0);
-uniform vec3 ambientColor = vec3(0.0, 0.0, 0.0);
+struct Light
+{
+    vec3 color;
+    vec3 position;
+};
 
-struct Sphere {
+#define MAX_LIGHTS 10
+uniform Light lights[MAX_LIGHTS];
+uniform int numLights;
+
+struct Sphere 
+{
     vec3 position;
     float radius;
     vec3 color;
@@ -24,12 +33,14 @@ struct Sphere {
 uniform Sphere spheres[MAX_SPHERES];
 uniform int numSpheres;
 
-struct Ray {
+struct Ray 
+{
     vec3 origin;
     vec3 direction;
 };
 
-struct RaycastResult {
+struct RaycastResult 
+{
     bool hit;
     float distance;
     vec3 position;
@@ -70,33 +81,62 @@ RaycastResult intersectSphere(Ray ray, Sphere sphere, int index) {
     return result;
 }
 
+bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
+{
+    Ray shadowRay;
+    shadowRay.origin = raycastHit.position + raycastHit.normal * 0.001;
+    shadowRay.direction = normalize(lightPos - raycastHit.position);
+    
+    float lightDistance = length(lightPos - raycastHit.position);
+    
+    // Check if any sphere blocks the path to light
+    for (int i = 0; i < numSpheres; i++) {
+        if (i == raycastHit.sphereIndex) continue; // Skip the current sphere
+        
+        RaycastResult shadowHit = intersectSphere(shadowRay, spheres[i], i);
+        if (shadowHit.hit && shadowHit.distance < lightDistance) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
 vec3 calculateShading(RaycastResult hit, Ray ray) {
     if (!hit.hit) {
         return vec3(0.1, 0.1, 0.3); // Background color
     }
     
     Sphere sphere = spheres[hit.sphereIndex];
+    vec3 lighting = vec3(0.0);
+
+    for(int i = 0; i < numLights; i++)
+    {
+        if(isInShadow(lights[i].position, hit))
+        {
+            continue;
+        }
+
+        vec3 lightDir = normalize(lights[i].position - hit.position);
+
+        float diffuse = max(dot(hit.normal, lightDir), 0.0);
+        vec3 diffuseColor = lights[i].color * sphere.color * diffuse;
+
+        vec3 viewDir = normalize(cameraPos - hit.position);
+        vec3 reflectDir = reflect(-lightDir, hit.normal);
+        float specular = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+        vec3 specularColor = lights[i].color * specular;
+
+        float distance = length(lights[i].position - hit.position);
+        float attenuation = 1.0 / (1.0 + 0.1 * distance + 0.01 * distance * distance);
+        
+        lighting += (diffuseColor + specularColor) * attenuation;
+    };
     
-    // Normalize light direction
-    vec3 lightDir = normalize(lightDirection);
+    // Add ambient lighting
+    vec3 ambient = sphere.color * 0.1;
     
-    // Diffuse lighting
-    float diffuse = max(dot(hit.normal, lightDir), 0.0);
-    vec3 diffuseColor = lightColor * sphere.color * diffuse;
-    
-    // Ambient lighting
-    vec3 ambient = ambientColor * sphere.color;
-    
-    // Specular highlights (Blinn-Phong)
-    vec3 viewDir = normalize(-ray.direction);
-    vec3 halfDir = normalize(lightDir + viewDir);
-    float specular = pow(max(dot(hit.normal, halfDir), 0.0), 32.0);
-    vec3 specularColor = lightColor * specular;
-    
-    // Combine lighting
-    vec3 lighting = ambient + diffuseColor + specularColor;
-    
-    return lighting;
+    return ambient + lighting;
 }
 
 void main() 

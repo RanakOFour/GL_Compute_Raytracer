@@ -2,8 +2,9 @@
 #include "GCP_GFX_Framework.h"
 #include "Camera.h"
 #include "RayTracer.h"
-#include "Ray.h"
+#include "Light.h"
 #include "ComputeShader.h"
+#include "Cube.h"
 
 #include "GL/glew.h"
 
@@ -29,10 +30,7 @@ int main(int argc, char* argv[])
     // Camera setup
     Camera camera;
 
-	ComputeShader myShader("./resources/shaders/TestComputeShader.txt");
-    
-    // Get shader program and set uniforms
-    GLuint shaderProgram = _myFramework.GetShaderProgram(); // You'll need to add this getter to GCP_Framework
+	ComputeShader myShader("./resources/shaders/RTCompute.txt");
     
     myShader.use();
     
@@ -60,11 +58,26 @@ int main(int argc, char* argv[])
 		myShader.SetUniform((base + "color"), spheres[i].colour);
     }
 
+	Cube floor;
+	floor.position = glm::vec3(0.0f, -0.5f, 0.0f);
+	floor.size = glm::vec3(5.0f, 0.5, 5.0f);
+	floor.color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	myShader.SetUniform("numCubes", 1);
+	myShader.SetUniform("cubes[0].position", floor.position);
+	myShader.SetUniform("cubes[0].size", floor.size);
+	myShader.SetUniform("cubes[0].color", floor.color);
+
     // Pushes the framebuffer to OpenGL and renders to screen
     // Also contains an event loop that keeps the window going until it's closed
 
-	glm::vec3 l_lightCol = glm::vec3(1.0, 1.0, 1.0);
-	glm::vec3 l_lightPos = glm::vec3(0.0f);
+	Light light;
+	light.position = glm::vec3(0.0f, 0.0f, 3.0f);
+	light.colour = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	myShader.SetUniform("numLights", 1);
+	myShader.SetUniform("lights[0].position", light.position);
+	myShader.SetUniform("lights[0].color", light.colour);
 
 	bool keepGoing = true;
 	SDL_Event e;
@@ -81,17 +94,11 @@ int main(int argc, char* argv[])
 		}
 
 		float time = (float)SDL_GetTicks64() * 0.001f;
-		float colourAmount = (glm::sin(time) + 1.0f) * 0.5f;
-		l_lightCol.x = colourAmount;
-		l_lightCol.y = colourAmount;
-		l_lightCol.z = colourAmount;
-
-		l_lightPos.x = glm::sin(time);
-		l_lightPos.z = glm::cos(time);
 		
 		myShader.use();
-		myShader.SetUniform("lightColor", l_lightCol);
-		myShader.SetUniform("lightDirection", l_lightPos);
+
+		light.position = glm::vec3(3.0f * glm::sin(time), 0.0f, 3.0f * glm::cos(time));
+		myShader.SetUniform("lights[0].position", light.position);
 
 		_myFramework.SetGLTexture();
 

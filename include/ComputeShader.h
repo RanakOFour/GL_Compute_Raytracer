@@ -20,7 +20,6 @@ class ComputeShader
 
     private:
     GLint m_ID;
-
 };
 
 #endif
