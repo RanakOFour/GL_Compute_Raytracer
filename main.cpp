@@ -34,24 +34,14 @@ int main(int argc, char* argv[])
     spheres.push_back(Sphere(glm::vec3(-1, 0, 0), 0.4f, glm::vec3(0, 0, 1)));   // Blue sphere
     
     // Camera setup
-    Camera camera;
+    Camera camera(glm::vec2(400 * 16.0f/9.0f, 400));
 
 	ComputeShader myShader("./resources/shaders/RTCompute.comp");
     
     myShader.use();
     
     // Set camera uniforms
-    glm::vec3 camPos(0, 0, 3);
-    glm::vec3 camForward(0, 0, -1);
-    glm::vec3 camRight(1, 0, 0);
-    glm::vec3 camUp(0, 1, 0);
-
-	myShader.SetUniform("cameraPos", camPos);
-	myShader.SetUniform("cameraForward", camForward);
-	myShader.SetUniform("cameraRight", camRight);
-	myShader.SetUniform("cameraUp", camUp);
-	myShader.SetUniform("fov", 0.5f);
-	myShader.SetUniform("resolution", winSize);
+    camera.SetShaderValues(&myShader);
     
     // Set sphere uniforms
 	myShader.SetUniform("numSpheres", (int)spheres.size());
@@ -85,23 +75,14 @@ int main(int argc, char* argv[])
 	myShader.SetUniform("lights[0].position", light.position);
 	myShader.SetUniform("lights[0].color", light.colour);
 
+	float sampleCount = 1;
+	myShader.SetUniform("sampleCount", sampleCount);
 
 	bool keepGoing = true;
-
-	Uint64 lastFrame = 0;
-	Uint64 currentFrame = 0;
-	double deltaTime;
 
 	SDL_Event e;
 	while(keepGoing)
 	{
-		lastFrame = currentFrame;
-		currentFrame = SDL_GetPerformanceCounter();
-		deltaTime = ((float)currentFrame - (float)lastFrame);
-		deltaTime /= (float)SDL_GetPerformanceFrequency();
-
-		printf("Current FPS: %.2f\n Delta: %.2f\n", 1.0f / deltaTime, deltaTime);
-
 		while(SDL_PollEvent(&e))
 		{
 			ImGui_ImplSDL2_ProcessEvent(&e);
@@ -113,11 +94,15 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		float time = (float)SDL_GetTicks64() * 0.001f;
+		float time = (float)SDL_GetTicks64() * 1000.0f;
 		
 		myShader.use();
 
+		myShader.SetUniform("sampleCount", sampleCount);
+		myShader.SetUniform("time", time);
 		myShader.SetUniform("lights[0].position", light.position);
+		myShader.SetUniform("u_camera.position", camera.Position());
+		myShader.SetUniform("u_camera.focalLength", camera.FocalLength());
 
 		_myFramework.SetGLTexture();
 		
@@ -129,9 +114,27 @@ int main(int argc, char* argv[])
 		ImGui::NewFrame();
 
 		ImGui::Begin("Light Settings");
-		glm::vec3 l_currentLightPos = light.position;
-		ImGui::DragFloat3("Position", &(l_currentLightPos[0]), 0.1f, -10.0f, 10.0f);
-		light.position = l_currentLightPos;
+
+		glm::vec3 lightPos = light.position;
+		ImGui::DragFloat3("Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
+		light.position = lightPos;
+
+		float s3amples = sampleCount;
+		ImGui::DragFloat("Sample Count", &s3amples, 1.0f, 0.0f, 20.0f);
+		sampleCount = s3amples;
+
+		ImGui::End();
+
+		ImGui::Begin("Camera Settings");
+
+		glm::vec3 camPos = camera.Position();
+		ImGui::DragFloat3("Position", &(camPos[0]), 0.1f, -10.0f, 10.0f);
+		camera.Position(camPos);
+
+		float fl = camera.FocalLength();
+		ImGui::DragFloat("Focal Length", &(fl), 0.1f, -10.0f, 10.0f);
+		camera.FocalLength(fl);
+
 
 
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

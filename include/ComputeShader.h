@@ -13,6 +13,7 @@ class ComputeShader
     ~ComputeShader();
 
     void use();
+    void SetUniform(std::string _name, bool _value);
     void SetUniform(std::string _name, int _value);
     void SetUniform(std::string _name, float _value);
     void SetUniform(std::string _name, glm::vec2 _value);

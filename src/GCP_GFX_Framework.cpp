@@ -93,15 +93,16 @@ bool InitGL()
 // The VAO stores one or more Vertex Buffer Objects
 // The VBOs store the actual vertex data (e.g. one each for positions, colours, texture coords etc)
 // The VAO tells the server how to actually interpret and use the VBO data
-void CreateTriangleVAO(unsigned int* _vaoIn, unsigned int* _vboIn)
+GLuint CreateTriangleVAO()
 {
 	// Variable for storing our VAO
 	// OpenGL has its own defined datatypes - a 'GLuint' is basically an unsigned int
+	GLuint VAO = 0;
 	// Creates one VAO
-	glGenVertexArrays(1, &(*_vaoIn));
+	glGenVertexArrays(1, &VAO);
 	// 'Binding' something makes it the current one we are using
 	// This is like activating it, so that subsequent function calls will work on this item
-	glBindVertexArray(*_vaoIn);
+	glBindVertexArray(VAO);
 
 	// Simple vertex data for a triangle
 	// OpenGL is happy for us to work with 2D coordinates if we want
@@ -115,10 +116,12 @@ void CreateTriangleVAO(unsigned int* _vaoIn, unsigned int* _vboIn)
 		 -1.0f,  1.0f
 	};
 
+	// Variable for storing a VBO
+	GLuint buffer = 0;
 	// Create a generic 'buffer'
-	glGenBuffers(1, &(*_vboIn));
+	glGenBuffers(1, &buffer);
 	// Tell OpenGL that we want to activate the buffer and that it's a VBO
-	glBindBuffer(GL_ARRAY_BUFFER, (*_vboIn));
+	glBindBuffer(GL_ARRAY_BUFFER, buffer);
 	// With this buffer active, we can now send our data to OpenGL
 	// We need to tell it how much data to send
 	// We can also tell OpenGL how we intend to use this buffer - here we say GL_STATIC_DRAW because we're only writing it once
@@ -140,6 +143,8 @@ void CreateTriangleVAO(unsigned int* _vaoIn, unsigned int* _vboIn)
 
 	// Technically we can do this, because the enabled / disabled state is stored in the VAO
 	glDisableVertexAttribArray(0);
+
+	return VAO;
 }
 
 // Draws the VAO
@@ -417,7 +422,7 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	_triangleVAO = CreateTriangleVAO();
 
 	// Create the shaders and link them together into the shader program
-	_shaderProgram = LoadShaders("./resources/shaders/VertShader.txt", "./resources/shaders/FragShader.txt");
+	_shaderProgram = LoadShaders("./resources/shaders/ScreenVertex.txt", "./resources/shaders/ScreenFragment.txt");
 
 	_mainBuffer = new Framebuffer(winWidth, winHeight);
 

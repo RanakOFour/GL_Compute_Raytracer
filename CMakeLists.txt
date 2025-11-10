@@ -19,7 +19,7 @@ endif()
 
 # TODO: Add tests and install targets if needed.
 #add_custom_command(TARGET GCP_Raytracer_Framework_CMAKE POST_BUILD {CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/resources" $<TARGET_FILE_DIR:GCP_Raytracer_Framework_CMAKE>/resources/)
-add_custom_command(TARGET GCP_Raytracer_Framework_CMAKE POST_BUILD
-				   COMMAND ${CMAKE_COMMAND} -E copy_directory
-				   "${PROJECT_SOURCE_DIR}/resources"
-				   $<TARGET_FILE_DIR:GCP_Raytracer_Framework_CMAKE>/resources/)
+#add_custom_command(TARGET GCP_Raytracer_Framework_CMAKE POST_BUILD
+#				   COMMAND ${CMAKE_COMMAND} -E copy_directory
+#				   "${PROJECT_SOURCE_DIR}/resources"
+#				   $<TARGET_FILE_DIR:GCP_Raytracer_Framework_CMAKE>/resources/)
