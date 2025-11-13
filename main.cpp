@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
     
     myShader.use();
 
-	Model sphereModel("./resources/objects/cube.obj");
+	Model sphereModel("./resources/objects/sphere.obj");
 	
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, sphereModel.GetSSBO());
     
