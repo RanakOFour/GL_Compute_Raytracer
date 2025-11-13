@@ -8,14 +8,14 @@ struct Triangle
     vec3 a;
     vec3 b;
     vec3 c;
-    vec3 normal;
 };
 
-layout(std430, binding = 1) readonly buffer b_modelSSBO {
+layout(std430, binding = 1) buffer b_modelSSBO {
     Triangle modelData[];
 };
 
-uniform mat3 m_modelMatrix;
+uniform int u_triCount;
+uniform vec3 u_modelPosition;
 
 struct Camera
 {
@@ -61,10 +61,10 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
     result.hit = false;
     result.objectIndex = _index;
 
-    float l_ep = 0.0001;
+    float l_ep = 0.0000001;
 
-    vec3 edge1 = u_modelMatrix * (_tri.position.y - _tri.position.x);
-    vec3 edge2 = u_modelMatrix * (_tri.position.z - _tri.position.x);
+    vec3 edge1 = u_modelPosition + (_tri.b - _tri.a);
+    vec3 edge2 = u_modelPosition + (_tri.c - _tri.a);
     vec3 ray_cross_edge2 = cross(_ray.direction, edge2);
     float det = dot(edge1, ray_cross_edge2);
 
@@ -74,7 +74,7 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
     }
 
     float inv_det = 1.0 / det;
-    vec3 s = ray.origin - u_modelMatrix * (_tri.position.x);
+    vec3 s = _ray.origin - _tri.a + u_modelPosition;
     float u = inv_det * dot(s, ray_cross_edge2);
 
     if((u < 0 && abs(u) > l_ep) || (u > 1 && abs(u - 1) > l_ep))
@@ -96,9 +96,9 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
     if(t > l_ep)
     {
         result.hit = true;
-        result.position = vec3(ray.origin + ray.direction * t);
+        result.position = _ray.origin + _ray.direction * t;
         result.distance = length(result.position);
-        result.normal = _tri.normal;
+        result.normal = cross(edge2, edge1);
 
         return result;
     }
@@ -115,29 +115,14 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
     float lightDistance = length(lightPos - raycastHit.position);
     
     // Check if any sphere blocks the path to light
-    for (int i = 0; i < numSpheres; i++)
+    for (int i = 0; i < u_triCount; i++)
     {
-        if (raycastHit.isSphere && i == raycastHit.objectIndex)
+        if (i == raycastHit.objectIndex)
         {
             continue;
         }
         
-        RaycastResult shadowHit = intersectSphere(shadowRay, spheres[i], i);
-        if (shadowHit.hit && shadowHit.distance < lightDistance)
-        {
-            return true;
-        }
-    }
-
-    // Check if any cube blocks the path to light
-    for (int i = 0; i < numCubes; i++)
-    {
-        if (!raycastHit.isSphere && i == raycastHit.objectIndex)
-        {
-            continue;
-        }
-        
-        RaycastResult shadowHit = intersectCube(shadowRay, cubes[i], i);
+        RaycastResult shadowHit = triangleIntersect(shadowRay, modelData[i], i);
         if (shadowHit.hit && shadowHit.distance < lightDistance)
         {
             return true;
@@ -150,7 +135,8 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
 
 vec3 getObjectColor(RaycastResult hit)
 {
-    return b_modelSSBO[hit.objectIndex].normal;
+    //return cross(modelData[hit.objectIndex].b - modelData[hit.objectIndex].a, modelData[hit.objectIndex].c - modelData[hit.objectIndex].a);
+    return vec3(1.0, 0.0, 0.0);
 }
 
 vec3 calculateShading(RaycastResult hit, Ray ray)
@@ -217,19 +203,9 @@ void main()
     closestHit.distance = 1e10;
     
     // Check spheres
-    for (int i = 0; i < numSpheres; i++)
+    for (int i = 0; i < u_triCount; i++)
     {
-        RaycastResult hit = intersectSphere(ray, spheres[i], i);
-        if (hit.hit && hit.distance < closestHit.distance)
-        {
-            closestHit = hit;
-        }
-    }
-    
-    // Check cubes
-    for (int i = 0; i < numCubes; i++)
-    {
-        RaycastResult hit = intersectCube(ray, cubes[i], i);
+        RaycastResult hit = triangleIntersect(ray, modelData[i], i);
         if (hit.hit && hit.distance < closestHit.distance)
         {
             closestHit = hit;

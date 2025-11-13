@@ -2,8 +2,8 @@
 
 #define MODEL_H
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
+#include "GL/glew.h"
+#include "GLM/glm.hpp"
 
 #include <string>
 #include <fstream>
@@ -24,20 +24,22 @@ struct Face
   Vertex b;
   Vertex c;
   glm::vec3 normal;
-  void CalculateNormal()
-  {
-    glm::vec3 ac = c.position - a.position;
-    glm::vec3 ab = b.position - a.position;
-    
-    normal = glm::cross(ac, ab);
-  };
-};  
+};
+
+inline void CalculateNormal(Face& _face)
+{
+  glm::vec3 ac = _face.c.position - _face.a.position;
+  glm::vec3 ab = _face.b.position - _face.a.position;
+  
+  _face.normal = glm::cross(ac, ab);
+};
 
 class Model
 {
   std::vector<Face> m_faces;
   GLuint m_vaoId;
   GLuint m_vboId;
+  GLuint m_ssboId;
   bool m_dirty;
 
   void SplitStringWhitespace(const std::string& _input,
@@ -336,45 +338,42 @@ inline GLuint Model::GetVAO()
   return m_vaoId;
 }
 
+struct Triangle
+{
+  glm::vec3 a;
+  float _padding_a;
+  glm::vec3 b;
+  float _padding_b;
+  glm::vec3 c;
+  float _padding_c;
+};
+
 inline GLuint Model::GetSSBO()
 {
   if(m_dirty)
   {
-    std::vector<GLfloat> data;
+    std::vector<Triangle> data;
 
     for(size_t fi = 0; fi < m_faces.size(); ++fi)
     {
-      data.push_back(m_faces[fi].a.position.x);
-      data.push_back(m_faces[fi].a.position.y);
-      data.push_back(m_faces[fi].a.position.z);
-
-      data.push_back(m_faces[fi].a.normal.x);
-      data.push_back(m_faces[fi].a.normal.y);
-      data.push_back(m_faces[fi].a.normal.z);
-      
-      data.push_back(m_faces[fi].b.position.x);
-      data.push_back(m_faces[fi].b.position.y);
-      data.push_back(m_faces[fi].b.position.z);
-      
-      data.push_back(m_faces[fi].b.normal.x);
-      data.push_back(m_faces[fi].b.normal.y);
-      data.push_back(m_faces[fi].b.normal.z);
-
-      data.push_back(m_faces[fi].c.position.x);
-      data.push_back(m_faces[fi].c.position.y);
-      data.push_back(m_faces[fi].c.position.z);
-
-      data.push_back(m_faces[fi].c.normal.x);
-      data.push_back(m_faces[fi].c.normal.y);
-      data.push_back(m_faces[fi].c.normal.z);
+      Triangle newTri;
+      newTri.a = m_faces[fi].a.position;
+      newTri.b = m_faces[fi].b.position;
+      newTri.c = m_faces[fi].c.position;
+      data.push_back(newTri);
     }
 
-    glCreateBuffers(1, &m_vaoId);
+    glGenBuffers(1, &m_ssboId);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssboId);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 4 * sizeof(GLfloat) * 3 * data.size(), &(data.at(0)), GL_DYNAMIC_READ);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_ssboId);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-    glNamedBufferStorage(m_vaoId, sizeof(glm::vec4) * 4 * data.size(), (const void*)data.data(), GL_DYNAMIC_STORAGE_BIT);
+    printf("SSBO Model uploaded\n");
+    m_dirty = false;
   }
 
-  return m_vaoId;
+  return m_ssboId;
 }
 
 inline GLsizei Model::GetVertexCount() const

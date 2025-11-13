@@ -5,6 +5,7 @@
 #include "ComputeShader.h"
 #include "Sphere.h"
 #include "Cube.h"
+#include "Model.h"
 
 #include "GL/glew.h"
 
@@ -28,41 +29,45 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	std::vector<Sphere> spheres;
-    spheres.push_back(Sphere(glm::vec3(0, 0, 0), 0.5f, glm::vec3(1, 0, 0)));    // Red sphere
-    spheres.push_back(Sphere(glm::vec3(1, 0, 0), 0.3f, glm::vec3(0, 1, 0)));    // Green sphere
-    spheres.push_back(Sphere(glm::vec3(-1, 0, 0), 0.4f, glm::vec3(0, 0, 1)));   // Blue sphere
+	// std::vector<Sphere> spheres;
+    // spheres.push_back(Sphere(glm::vec3(0, 0, 0), 0.5f, glm::vec3(1, 0, 0)));    // Red sphere
+    // spheres.push_back(Sphere(glm::vec3(1, 0, 0), 0.3f, glm::vec3(0, 1, 0)));    // Green sphere
+    // spheres.push_back(Sphere(glm::vec3(-1, 0, 0), 0.4f, glm::vec3(0, 0, 1)));   // Blue sphere
     
     // Camera setup
     Camera camera(glm::vec2(400 * 16.0f/9.0f, 400));
 
-	ComputeShader myShader("./resources/shaders/RTCompute.txt");
+	ComputeShader myShader("./resources/shaders/RTComputeTriangle.txt");
     
     myShader.use();
+
+	Model sphereModel("./resources/objects/cube.obj");
+	
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, sphereModel.GetSSBO());
     
     // Set camera uniforms
     camera.SetShaderValues(&myShader);
     
     // Set sphere uniforms
-	myShader.SetUniform("numSpheres", (int)spheres.size());
+	//myShader.SetUniform("numSpheres", (int)spheres.size());
     
-    for (int i = 0; i < spheres.size(); i++) {
-        std::string base = "spheres[" + std::to_string(i) + "].";
+    // for (int i = 0; i < spheres.size(); i++) {
+    //     std::string base = "spheres[" + std::to_string(i) + "].";
 
-		myShader.SetUniform((base + "position"), spheres[i].position);
-		myShader.SetUniform((base + "radius"), spheres[i].radius);
-		myShader.SetUniform((base + "color"), spheres[i].colour);
-    }
+	// 	myShader.SetUniform((base + "position"), spheres[i].position);
+	// 	myShader.SetUniform((base + "radius"), spheres[i].radius);
+	// 	myShader.SetUniform((base + "color"), spheres[i].colour);
+    // }
 
-	Cube floor;
-	floor.position = glm::vec3(0.0f, -0.75f, 0.0f);
-	floor.size = glm::vec3(5.0f, 0.5, 5.0f);
-	floor.color = glm::vec3(1.0f, 1.0f, 1.0f);
+	// Cube floor;
+	// floor.position = glm::vec3(0.0f, -0.75f, 0.0f);
+	// floor.size = glm::vec3(5.0f, 0.5, 5.0f);
+	// floor.color = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	myShader.SetUniform("numCubes", 1);
-	myShader.SetUniform("cubes[0].position", floor.position);
-	myShader.SetUniform("cubes[0].size", floor.size);
-	myShader.SetUniform("cubes[0].color", floor.color);
+	// myShader.SetUniform("numCubes", 1);
+	// myShader.SetUniform("cubes[0].position", floor.position);
+	// myShader.SetUniform("cubes[0].size", floor.size);
+	// myShader.SetUniform("cubes[0].color", floor.color);
 
     // Pushes the framebuffer to OpenGL and renders to screen
     // Also contains an event loop that keeps the window going until it's closed
@@ -75,8 +80,8 @@ int main(int argc, char* argv[])
 	myShader.SetUniform("lights[0].position", light.position);
 	myShader.SetUniform("lights[0].color", light.colour);
 
-	float sampleCount = 1;
-	myShader.SetUniform("sampleCount", sampleCount);
+	myShader.SetUniform("u_triCount", (int)(sphereModel.GetVertexCount() / 3));
+	myShader.SetUniform("u_modelPosition", glm::vec3(0.0f, 0.0f, 0.0f));
 
 	bool keepGoing = true;
 
@@ -97,8 +102,9 @@ int main(int argc, char* argv[])
 		float time = (float)SDL_GetTicks64() * 1000.0f;
 		
 		myShader.use();
+		
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, sphereModel.GetSSBO());
 
-		myShader.SetUniform("sampleCount", sampleCount);
 		myShader.SetUniform("time", time);
 		myShader.SetUniform("lights[0].position", light.position);
 		myShader.SetUniform("u_camera.position", camera.Position());
@@ -119,9 +125,9 @@ int main(int argc, char* argv[])
 		ImGui::DragFloat3("Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
 		light.position = lightPos;
 
-		float s3amples = sampleCount;
-		ImGui::DragFloat("Sample Count", &s3amples, 1.0f, 0.0f, 20.0f);
-		sampleCount = s3amples;
+		// float s3amples = sampleCount;
+		// ImGui::DragFloat("Sample Count", &s3amples, 1.0f, 0.0f, 20.0f);
+		// sampleCount = s3amples;
 
 		ImGui::End();
 

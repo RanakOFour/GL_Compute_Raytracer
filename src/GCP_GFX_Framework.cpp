@@ -8,10 +8,6 @@
 
 #include "OpenGLError.h"
 
-#include <imgui.h>
-#include <imgui_impl_sdl.h>
-#include <imgui_impl_opengl3.h>
-
 #include <iostream>
 #include <fstream>
 #include <error.h>
