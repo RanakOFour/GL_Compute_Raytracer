@@ -1,7 +1,21 @@
 #version 430 core
 
-layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout(local_size_x = 1, local_size_y = 1) in;
 layout(rgba32f, binding = 0) uniform image2D framebufferTex;
+
+struct Triangle
+{
+    vec3 a;
+    vec3 b;
+    vec3 c;
+    vec3 normal;
+};
+
+layout(std430, binding = 1) readonly buffer b_modelSSBO {
+    Triangle modelData[];
+};
+
+uniform mat3 m_modelMatrix;
 
 struct Camera
 {
@@ -26,28 +40,6 @@ struct Light
 uniform Light lights[MAX_LIGHTS];
 uniform int numLights;
 
-struct Sphere 
-{
-    vec3 position;
-    float radius;
-    vec3 color;
-};
-
-#define MAX_SPHERES 10
-uniform Sphere spheres[MAX_SPHERES];
-uniform int numSpheres;
-
-struct Cube 
-{
-    vec3 position;
-    vec3 size;
-    vec3 color;
-};
-
-#define MAX_CUBES 10
-uniform Cube cubes[MAX_CUBES];
-uniform int numCubes;
-
 struct Ray 
 {
     vec3 origin;
@@ -61,92 +53,56 @@ struct RaycastResult
     vec3 position;
     vec3 normal;
     int objectIndex;
-    bool isSphere; // true for sphere, false for cube
 };
 
-RaycastResult intersectSphere(Ray ray, Sphere sphere, int index)
+RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
 {
     RaycastResult result;
     result.hit = false;
-    result.objectIndex = index;
-    result.isSphere = true;
-    
-    vec3 oc = ray.origin - sphere.position;
-    float a = dot(ray.direction, ray.direction);
-    float b = 2.0 * dot(oc, ray.direction);
-    float c = dot(oc, oc) - sphere.radius * sphere.radius;
-    
-    float discriminant = b * b - 4.0 * a * c;
-    
-    if (discriminant < 0.0)
-    {
-        return result;
-    }
-    
-    float sqrtDisc = sqrt(discriminant);
-    float t1 = (-b - sqrtDisc) / (2.0 * a);
-    float t2 = (-b + sqrtDisc) / (2.0 * a);
-    
-    float t = (t1 > 0.0) ? t1 : t2;
-    if (t <= 0.0)
-    {
-        return result;
-    }
-    
-    result.hit = true;
-    result.distance = t;
-    result.position = ray.origin + t * ray.direction;
-    result.normal = normalize(result.position - sphere.position);
-    
-    return result;
-}
+    result.objectIndex = _index;
 
-RaycastResult intersectCube(Ray ray, Cube cube, int index)
-{
-    RaycastResult result;
-    result.hit = false;
-    result.objectIndex = index;
-    result.isSphere = false;
-    
-    vec3 cubeMin = cube.position - cube.size * 0.5;
-    vec3 cubeMax = cube.position + cube.size * 0.5;
-    
-    vec3 invDir = 1.0 / ray.direction;
-    vec3 t0 = (cubeMin - ray.origin) * invDir;
-    vec3 t1 = (cubeMax - ray.origin) * invDir;
-    
-    vec3 tmin = min(t0, t1);
-    vec3 tmax = max(t0, t1);
-    
-    float tnear = max(max(tmin.x, tmin.y), tmin.z);
-    float tfar = min(min(tmax.x, tmax.y), tmax.z);
-    
-    if (tnear > tfar || tfar < 0.0)
+    float l_ep = 0.0001;
+
+    vec3 edge1 = u_modelMatrix * (_tri.position.y - _tri.position.x);
+    vec3 edge2 = u_modelMatrix * (_tri.position.z - _tri.position.x);
+    vec3 ray_cross_edge2 = cross(_ray.direction, edge2);
+    float det = dot(edge1, ray_cross_edge2);
+
+    if(det > -l_ep && det < l_ep)
     {
         return result;
     }
-    
-    result.hit = true;
-    result.distance = tnear;
-    result.position = ray.origin + tnear * ray.direction;
-    
-    // Calculate normal based on which face was hit
-    vec3 localPos = (result.position - cube.position) / cube.size;
-    vec3 absPos = abs(localPos);
-    
-    if (absPos.x > absPos.y && absPos.x > absPos.z)
+
+    float inv_det = 1.0 / det;
+    vec3 s = ray.origin - u_modelMatrix * (_tri.position.x);
+    float u = inv_det * dot(s, ray_cross_edge2);
+
+    if((u < 0 && abs(u) > l_ep) || (u > 1 && abs(u - 1) > l_ep))
     {
-        result.normal = vec3(sign(localPos.x), 0.0, 0.0);
+        return result;
     }
-    else if (absPos.y > absPos.z)
+
+    vec3 s_cross_e1 = cross(s, edge1);
+
+    float v = inv_det * dot(_ray.direction, s_cross_e1);
+
+    if ((v < 0 && abs(v) > l_ep) || (u + v > 1 && abs(u + v - 1) > l_ep))
     {
-        result.normal = vec3(0.0, sign(localPos.y), 0.0);
+        return result;
     }
-    else
+
+    float t = inv_det * dot(edge2, s_cross_e1);
+
+    if(t > l_ep)
     {
-        result.normal = vec3(0.0, 0.0, sign(localPos.z));
+        result.hit = true;
+        result.position = vec3(ray.origin + ray.direction * t);
+        result.distance = length(result.position);
+        result.normal = _tri.normal;
+
+        return result;
     }
-    
+
     return result;
 }
 
@@ -194,14 +150,7 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
 
 vec3 getObjectColor(RaycastResult hit)
 {
-    if (hit.isSphere)
-    {
-        return spheres[hit.objectIndex].color;
-    }
-    else
-    {
-        return cubes[hit.objectIndex].color;
-    }
+    return b_modelSSBO[hit.objectIndex].normal;
 }
 
 vec3 calculateShading(RaycastResult hit, Ray ray)

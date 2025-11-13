@@ -47,6 +47,8 @@ class Model
     std::vector<std::string>& _output);
 
   public:
+
+  glm::vec3 m_position;
    
   Model();
   Model(const std::string& _path);
@@ -59,6 +61,7 @@ class Model
 
   GLsizei GetVertexCount() const;
   GLuint GetVAO();
+  GLuint GetSSBO();
 };
 
 #include <stdexcept>
@@ -68,12 +71,14 @@ inline Model::Model()
   : m_vboId(0)
   , m_vaoId(0)
   , m_dirty(false)
+  , m_position()
 { }
 
 inline Model::Model(const std::string& _path)
   : m_vboId(0)
   , m_vaoId(0)
   , m_dirty(false)
+  , m_position()
 {
   std::vector<glm::vec3> L_positions;
   std::vector<glm::vec2> L_tcs;
@@ -326,6 +331,47 @@ inline GLuint Model::GetVAO()
 
     m_dirty = false;
     printf("Model cleaned\n");
+  }
+
+  return m_vaoId;
+}
+
+inline GLuint Model::GetSSBO()
+{
+  if(m_dirty)
+  {
+    std::vector<GLfloat> data;
+
+    for(size_t fi = 0; fi < m_faces.size(); ++fi)
+    {
+      data.push_back(m_faces[fi].a.position.x);
+      data.push_back(m_faces[fi].a.position.y);
+      data.push_back(m_faces[fi].a.position.z);
+
+      data.push_back(m_faces[fi].a.normal.x);
+      data.push_back(m_faces[fi].a.normal.y);
+      data.push_back(m_faces[fi].a.normal.z);
+      
+      data.push_back(m_faces[fi].b.position.x);
+      data.push_back(m_faces[fi].b.position.y);
+      data.push_back(m_faces[fi].b.position.z);
+      
+      data.push_back(m_faces[fi].b.normal.x);
+      data.push_back(m_faces[fi].b.normal.y);
+      data.push_back(m_faces[fi].b.normal.z);
+
+      data.push_back(m_faces[fi].c.position.x);
+      data.push_back(m_faces[fi].c.position.y);
+      data.push_back(m_faces[fi].c.position.z);
+
+      data.push_back(m_faces[fi].c.normal.x);
+      data.push_back(m_faces[fi].c.normal.y);
+      data.push_back(m_faces[fi].c.normal.z);
+    }
+
+    glCreateBuffers(1, &m_vaoId);
+
+    glNamedBufferStorage(m_vaoId, sizeof(glm::vec4) * 4 * data.size(), (const void*)data.data(), GL_DYNAMIC_STORAGE_BIT);
   }
 
   return m_vaoId;
