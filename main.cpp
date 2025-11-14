@@ -3,8 +3,6 @@
 #include "Camera.h"
 #include "Light.h"
 #include "ComputeShader.h"
-#include "Sphere.h"
-#include "Cube.h"
 #include "Model.h"
 
 #include "GL/glew.h"
@@ -47,30 +45,6 @@ int main(int argc, char* argv[])
     
     // Set camera uniforms
     camera.SetShaderValues(&myShader);
-    
-    // Set sphere uniforms
-	//myShader.SetUniform("numSpheres", (int)spheres.size());
-    
-    // for (int i = 0; i < spheres.size(); i++) {
-    //     std::string base = "spheres[" + std::to_string(i) + "].";
-
-	// 	myShader.SetUniform((base + "position"), spheres[i].position);
-	// 	myShader.SetUniform((base + "radius"), spheres[i].radius);
-	// 	myShader.SetUniform((base + "color"), spheres[i].colour);
-    // }
-
-	// Cube floor;
-	// floor.position = glm::vec3(0.0f, -0.75f, 0.0f);
-	// floor.size = glm::vec3(5.0f, 0.5, 5.0f);
-	// floor.color = glm::vec3(1.0f, 1.0f, 1.0f);
-
-	// myShader.SetUniform("numCubes", 1);
-	// myShader.SetUniform("cubes[0].position", floor.position);
-	// myShader.SetUniform("cubes[0].size", floor.size);
-	// myShader.SetUniform("cubes[0].color", floor.color);
-
-    // Pushes the framebuffer to OpenGL and renders to screen
-    // Also contains an event loop that keeps the window going until it's closed
 
 	Light light;
 	light.position = glm::vec3(0.0f, 0.0f, 3.0f);
