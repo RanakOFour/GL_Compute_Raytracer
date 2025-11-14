@@ -1,6 +1,6 @@
 #version 430 core
 
-layout(local_size_x = 8, local_size_y = 8) in;
+layout(local_size_x = 1, local_size_y = 1) in;
 layout(rgba32f, binding = 0) uniform image2D framebufferTex;
 
 struct Triangle
@@ -8,13 +8,13 @@ struct Triangle
     vec3 a;
     vec3 b;
     vec3 c;
+    vec3 normal;
 };
 
-layout(std430, binding = 1) buffer b_modelSSBO {
+layout(std430, binding = 1) readonly buffer b_trianglesSSBO {
     Triangle modelData[];
 };
 
-uniform int u_triCount;
 uniform vec3 u_modelPosition;
 
 struct Camera
@@ -103,7 +103,7 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
         result.hit = true;
         result.position = _ray.origin + _ray.direction * t;  // Fixed variable name
         result.distance = t;  // Distance should be t, not length of position
-        result.normal = normalize(cross(edge2, edge1));
+        result.normal = _tri.normal;
         return result;
     }
 
@@ -118,7 +118,7 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
     
     float lightDistance = length(lightPos - raycastHit.position);
     
-    for (int i = 0; i < u_triCount; i++)
+    for (int i = 0; i < modelData.length(); i++)
     {
         if (i == raycastHit.objectIndex)
         {
@@ -138,7 +138,7 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
 
 vec3 getObjectColor(RaycastResult hit)
 {
-    //return cross(modelData[hit.objectIndex].b - modelData[hit.objectIndex].a, modelData[hit.objectIndex].c - modelData[hit.objectIndex].a);
+    //return _tri.normal;
     return vec3(1.0, 0.0, 0.0);
 }
 
@@ -210,8 +210,9 @@ void main()
     RaycastResult closestHit;
     closestHit.hit = false;
     closestHit.distance = 1e10;
-    
-    for (int i = 0; i < u_triCount; i++)
+
+    int l_triCount = modelData.length();
+    for (int i = 0; i < l_triCount; i++)
     {
         RaycastResult hit = triangleIntersect(ray, modelData[i], i);
         if (hit.hit && hit.distance < closestHit.distance)

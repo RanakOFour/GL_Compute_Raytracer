@@ -102,8 +102,6 @@ int main(int argc, char* argv[])
 		float time = (float)SDL_GetTicks64() * 1000.0f;
 		
 		myShader.use();
-		
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, sphereModel.GetSSBO());
 
 		myShader.SetUniform("time", time);
 		myShader.SetUniform("lights[0].position", light.position);

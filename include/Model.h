@@ -24,21 +24,20 @@ struct Face
   Vertex b;
   Vertex c;
   glm::vec3 normal;
-};
 
-inline void CalculateNormal(Face& _face)
-{
-  glm::vec3 ac = _face.c.position - _face.a.position;
-  glm::vec3 ab = _face.b.position - _face.a.position;
-  
-  _face.normal = glm::cross(ac, ab);
+  inline void CalculateNormal()
+  {
+    glm::vec3 ac = c.position - a.position;
+    glm::vec3 ab = b.position - a.position;
+    
+    normal = glm::cross(ac, ab);
+  };
 };
 
 class Model
 {
+  Model* model;
   std::vector<Face> m_faces;
-  GLuint m_vaoId;
-  GLuint m_vboId;
   GLuint m_ssboId;
   bool m_dirty;
 
@@ -62,25 +61,22 @@ class Model
   std::vector<Face>& GetFaces();
 
   GLsizei GetVertexCount() const;
-  GLuint GetVAO();
   GLuint GetSSBO();
 };
 
 #include <stdexcept>
 
 
-inline Model::Model()
-  : m_vboId(0)
-  , m_vaoId(0)
-  , m_dirty(false)
+inline Model::Model() :
+    m_dirty(false)
   , m_position()
+  , m_ssboId(0)
 { }
 
-inline Model::Model(const std::string& _path)
-  : m_vboId(0)
-  , m_vaoId(0)
-  , m_dirty(false)
+inline Model::Model(const std::string& _path) :
+    m_dirty(false)
   , m_position()
+  , m_ssboId(0)
 {
   std::vector<glm::vec3> L_positions;
   std::vector<glm::vec2> L_tcs;
@@ -147,6 +143,7 @@ inline Model::Model(const std::string& _path)
         if(sub.size() >= 2) f.c.texcoord = L_tcs.at(atoi(sub.at(1).c_str()) - 1);
         if(sub.size() >= 3) f.c.normal = L_normals.at(atoi(sub.at(2).c_str()) - 1);
 
+        f.CalculateNormal();
         m_faces.push_back(f);
         m_dirty = true;
       }
@@ -156,20 +153,14 @@ inline Model::Model(const std::string& _path)
 
 inline Model::~Model()
 {
-  if(m_vaoId)
+  if(m_ssboId)
   {
-    glDeleteVertexArrays(1, &m_vaoId);
-  }
-
-  if(m_vboId)
-  {
-    glDeleteBuffers(1, &m_vboId);
+    glDeleteBuffers(1, &m_ssboId);
   }
 }
 
 inline Model::Model(const Model& _copy)
-  : m_vaoId(0)
-  , m_vboId(0)
+  : m_ssboId(0)
   , m_faces(_copy.m_faces)
   , m_dirty(true)
 { }
@@ -245,99 +236,6 @@ inline std::vector<Face>& Model::GetFaces()
   return m_faces;
 }
 
-inline GLuint Model::GetVAO()
-{
-  if(!m_faces.size())
-  {
-    throw std::runtime_error("Model is empty");
-  }
-
-  if(!m_vboId)
-  {
-    glGenBuffers(1, &m_vboId);
-
-    if(!m_vboId)
-    {
-      throw std::runtime_error("Failed to generate vertex buffer");
-    }
-  }
-
-  if(!m_vaoId)
-  {
-    glGenVertexArrays(1, &m_vaoId);
-
-    if(!m_vaoId)
-    {
-      throw std::runtime_error("Failed to generate vertex array");
-    }
-  }
-
-  if(m_dirty)
-  {
-    std::vector<GLfloat> data;
-
-    for(size_t fi = 0; fi < m_faces.size(); ++fi)
-    {
-      data.push_back(m_faces[fi].a.position.x);
-      data.push_back(m_faces[fi].a.position.y);
-      data.push_back(m_faces[fi].a.position.z);
-      data.push_back(m_faces[fi].a.texcoord.x);
-      data.push_back(m_faces[fi].a.texcoord.y);
-      data.push_back(m_faces[fi].a.normal.x);
-      data.push_back(m_faces[fi].a.normal.y);
-      data.push_back(m_faces[fi].a.normal.z);
-
-      data.push_back(m_faces[fi].b.position.x);
-      data.push_back(m_faces[fi].b.position.y);
-      data.push_back(m_faces[fi].b.position.z);
-      data.push_back(m_faces[fi].b.texcoord.x);
-      data.push_back(m_faces[fi].b.texcoord.y);
-      data.push_back(m_faces[fi].b.normal.x);
-      data.push_back(m_faces[fi].b.normal.y);
-      data.push_back(m_faces[fi].b.normal.z);
-
-      data.push_back(m_faces[fi].c.position.x);
-      data.push_back(m_faces[fi].c.position.y);
-      data.push_back(m_faces[fi].c.position.z);
-      data.push_back(m_faces[fi].c.texcoord.x);
-      data.push_back(m_faces[fi].c.texcoord.y);
-      data.push_back(m_faces[fi].c.normal.x);
-      data.push_back(m_faces[fi].c.normal.y);
-      data.push_back(m_faces[fi].c.normal.z);
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, m_vboId);
-    glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(data.at(0)), &data.at(0), GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    glBindVertexArray(m_vaoId);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vboId);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-      8 * sizeof(data.at(0)), (void*)0);
-
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
-      8 * sizeof(data.at(0)), (void*)(3 * sizeof(GLfloat)));
-
-    glEnableVertexAttribArray(1);
-
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE,
-      8 * sizeof(data.at(0)), (void*)(5 * sizeof(GLfloat)));
-
-    glEnableVertexAttribArray(2);
-
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    m_dirty = false;
-    printf("Model cleaned\n");
-  }
-
-  return m_vaoId;
-}
-
 struct Triangle
 {
   glm::vec3 a;
@@ -346,6 +244,8 @@ struct Triangle
   float _padding_b;
   glm::vec3 c;
   float _padding_c;
+  glm::vec3 normal;
+  float _padding_d;
 };
 
 inline GLuint Model::GetSSBO()
@@ -360,12 +260,13 @@ inline GLuint Model::GetSSBO()
       newTri.a = m_faces[fi].a.position;
       newTri.b = m_faces[fi].b.position;
       newTri.c = m_faces[fi].c.position;
+      newTri.normal = m_faces[fi].normal;
       data.push_back(newTri);
     }
 
     glGenBuffers(1, &m_ssboId);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssboId);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, 4 * sizeof(GLfloat) * 3 * data.size(), &(data.at(0)), GL_DYNAMIC_READ);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 4 * sizeof(GLfloat) * 4 * data.size(), &(data.at(0)), GL_DYNAMIC_READ);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_ssboId);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
