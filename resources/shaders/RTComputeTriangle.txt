@@ -176,31 +176,47 @@ bool IntersectAABB(Ray _ray, vec3 _minBound, vec3 _maxBound)
     return true;
 }
 
-RaycastResult rayNodeIntersect(inout RaycastResult _result, Ray _ray, int _nodeIndex)
-{
-    Node node = bvhNodes[_nodeIndex];
-    if(!IntersectAABB(_ray, node.minBound, node.maxBound))
-    {
-        return _result;
-    }
 
-    // Leaf node
-    if(node.triangleCount > 0)
+RaycastResult TraverseBVH(inout RaycastResult _result, Ray _ray)
+{
+    int indexStack[64];
+    int top = 0;
+    indexStack[top] = 0;
+
+    while(top > 0)
     {
-        for(int i = 0; i < node.triangleCount; i++)
+        Node node = bvhNodes[indexStack[top]];
+
+        if(!IntersectAABB(_ray, node.minBound, node.maxBound))
         {
-            RaycastResult newResult = triangleIntersect(_ray, modelData[bvhTriangleIndexes[node.firstTriangle + i]], bvhTriangleIndexes[node.firstTriangle + i]);
-            if(newResult.hit && newResult.distance < _result.distance)
+            top--;
+            continue;
+        }
+
+        // Leaf node
+        if(node.triangleCount > 0)
+        {
+            for(int i = 0; i < node.triangleCount; i++)
             {
-                _result = newResult;
+                RaycastResult newResult = triangleIntersect(_ray, modelData[bvhTriangleIndexes[node.firstTriangle + i]], bvhTriangleIndexes[node.firstTriangle + i]);
+                if(newResult.hit && newResult.distance < _result.distance)
+                {
+                    _result = newResult;
+                }
             }
         }
+        else
+        {
+            indexStack[top] = node.rightIndex;
+            top++;
+            indexStack[top] = node.leftIndex;
+            top++;
+        }
+
+        
+        top--;
     }
-    else
-    {
-        rayNodeIntersect(_result, _ray, bvhNodes[_nodeIndex].leftIndex);
-        rayNodeIntersect(_result, _ray, bvhNodes[_nodeIndex].rightIndex);
-    }
+    
 
     return _result;
 }
@@ -213,7 +229,7 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
     
     float lightDistance = length(lightPos - raycastHit.position);
     
-    rayNodeIntersect(raycastHit, shadowRay, 0);
+    TraverseBVH(raycastHit, shadowRay);
     
     return false;
 }
@@ -286,7 +302,7 @@ void main()
     closestHit.hit = false;
     closestHit.distance = 1e10;
 
-    rayNodeIntersect(closestHit, _ray, 0);
+    TraverseBVH(closestHit, _ray);
 
     vec3 color = calculateShading(closestHit, _ray);
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);

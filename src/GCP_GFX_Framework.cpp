@@ -10,7 +10,12 @@
 
 #include <iostream>
 #include <fstream>
+
+#if _WIN32
+
+#else
 #include <error.h>
+#endif
 
 // Handles local (CPU side) and OpenGL framebuffer functionality
 class Framebuffer

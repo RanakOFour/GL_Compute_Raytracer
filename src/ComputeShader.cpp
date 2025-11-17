@@ -24,7 +24,7 @@ ComputeShader::ComputeShader(std::string _path)
     glCompileShader(compute);
 
     GLint success;
-    GLchar infoLog[1000];
+    GLchar infoLog[1024];
     glGetShaderiv(compute, GL_COMPILE_STATUS, &success);
     if(!success)
     {

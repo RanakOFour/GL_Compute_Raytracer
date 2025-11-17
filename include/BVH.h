@@ -14,13 +14,14 @@ struct BVH
     private:
     GLuint m_nodeSSBOID;
     GLuint m_indexesSSBOID;
-    bool m_dirty;
+    bool m_dirtyNodes;
+    bool m_dirtyIDs;
 
     struct Node
     {
-        glm::vec3 minBound;
-        int leftNodeIndex; //Fits between the 2 vec3s to save on padding
-        glm::vec3 maxBound;
+        glm::vec3 minBound; float _pad_1;
+        int leftNodeIndex;
+        glm::vec3 maxBound; float _pad_2;
         int rightNodeIndex;
 
         int firstTriangle;
@@ -52,10 +53,15 @@ struct BVH
 
     void Subdivide(int _nodeIndex)
     {
+        printf("Splitting node %i: ", _nodeIndex);
         Node& l_node = m_nodes[_nodeIndex];
         
         // Base case for recursion
-        if(l_node.triangleCount <= 2) return;
+        if (l_node.triangleCount <= 2)
+        {
+            printf("Only has %i tris\n", l_node.triangleCount);
+            return;
+        }
 
         // Split axis
         glm::vec3 l_extents = l_node.maxBound - l_node.minBound;
@@ -87,19 +93,26 @@ struct BVH
             }
         }
 
+        printf("%i left, %i right\n", i - l_node.firstTriangle, l_node.triangleCount - (i - l_node.firstTriangle));
+
         // Don't create empty sides
         int l_leftCount = i - l_node.firstTriangle;
-        if(l_leftCount = 0 || l_leftCount == l_node.triangleCount) return;
+        if (l_leftCount == 0 || l_leftCount == l_node.triangleCount)
+        {
+            return;
+        }
 
         // Create 2 split nodes
         int l_leftChildIndex = m_nodes.size();
         int l_rightChildIndex = m_nodes.size() + 1;
+
+        printf("Creating 2 new nodes\n");
         
         Node l_left;
         l_left.firstTriangle = l_node.firstTriangle;
         l_left.triangleCount = l_leftCount;
         Node l_right;
-        l_right.firstTriangle = l_node.firstTriangle;
+        l_right.firstTriangle = i;
         l_right.triangleCount = l_node.triangleCount - l_leftCount;
 
         l_node.triangleCount = 0;
@@ -123,7 +136,8 @@ struct BVH
     , m_nodes()
     , m_tris(*_tris)
     , m_triIndexes()
-    , m_dirty(true)
+    , m_dirtyNodes(true)
+    , m_dirtyIDs(true)
     {
         BuildBHV();
     };
@@ -135,6 +149,7 @@ struct BVH
 
     void BuildBHV()
     {
+        printf("Building BVH with %i triangles\n", (int)m_tris.size());
         int rootNodeId = 0;
         for(int i = 0; i < m_tris.size(); i++)
         {
@@ -150,21 +165,37 @@ struct BVH
 
         UpdateNodeBounds(0);
         Subdivide(0);
-        m_dirty = true;
+        m_dirtyNodes = true;
+        m_dirtyIDs = true;
+
+        printf("BVH build with %i nodes\n", (int)m_nodes.size());
+
+        for (int i = 0; i < m_nodes.size(); i++)
+        {
+            printf("Node %i: %i triangles\n", i, m_nodes[i].triangleCount);
+        }
+
+        for (int i = 0; i < m_triIndexes.size(); i++)
+        {
+            if (i != m_triIndexes[i])
+            {
+                printf("Indexes: %i, %i\n", i, m_triIndexes[i]);
+            }
+        }
     }
 
     GLuint GetNodeSSBO()
     {
-        if(m_dirty)
+        if(m_dirtyNodes)
         {
             glGenBuffers(1, &m_nodeSSBOID);
             glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_nodeSSBOID);
-            glBufferData(GL_SHADER_STORAGE_BUFFER, ((2 * sizeof(GLfloat) * 4) + (2 * sizeof(GLint))) * m_nodes.size(), &(m_nodes.at(0)), GL_DYNAMIC_READ);
+            glBufferData(GL_SHADER_STORAGE_BUFFER, ((2 * sizeof(GLfloat) * 4) + (4 * sizeof(GLint))) * m_nodes.size(), &(m_nodes.at(0)), GL_DYNAMIC_READ);
             glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_nodeSSBOID);
             glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
             printf("BVH Nodes uploaded\n");
-            m_dirty = false;
+            m_dirtyNodes = false;
         }
 
         return m_nodeSSBOID;
@@ -172,16 +203,16 @@ struct BVH
 
     GLuint GetIndexSSBO()
     {
-        if(m_dirty)
+        if(m_dirtyIDs)
         {
             glGenBuffers(1, &m_indexesSSBOID);
             glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_indexesSSBOID);
-            glBufferData(GL_SHADER_STORAGE_BUFFER, ((2 * sizeof(GLfloat) * 4) + (2 * sizeof(GLint))) * m_triIndexes.size(), &(m_triIndexes.at(0)), GL_DYNAMIC_READ);
+            glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLint) * m_triIndexes.size(), &(m_triIndexes.at(0)), GL_DYNAMIC_READ);
             glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_indexesSSBOID);
             glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-            printf("BVH Nodes uploaded\n");
-            m_dirty = false;
+            printf("BVH indexes uploaded\n");
+            m_dirtyIDs = false;
         }
 
         return m_indexesSSBOID;
