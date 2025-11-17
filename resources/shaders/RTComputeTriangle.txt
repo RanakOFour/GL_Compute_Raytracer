@@ -5,6 +5,7 @@ layout(rgba32f, binding = 0) uniform image2D framebufferTex;
 
 struct Triangle
 {
+    int materialIndex;
     vec3 a;
     vec3 b;
     vec3 c;
@@ -22,8 +23,8 @@ struct Node
 {
     vec3 minBound;
     vec3 maxBound;
-    int left;
-    int right;
+    int leftIndex;
+    int rightIndex;
     int triOffset;
     int triCount;
 };
@@ -68,7 +69,8 @@ struct RaycastResult
     float distance;
     vec3 position;
     vec3 normal;
-    int objectIndex;
+    int triangleIndex;
+    int materialIndex;
 };
 
 bool rayNodeIntersect(Ray _ray, Node _node, float _tmax)
@@ -237,6 +239,13 @@ void main()
     int l_triCount = modelData.length();
     for (int i = 0; i < l_triCount; i++)
     {
+        // Skip back facing triangles
+        vec3 difference = ray.direction - modelData[i].normal;
+        if(length(difference) < 0.1)
+        {
+            continue;
+        }
+
         RaycastResult hit = triangleIntersect(ray, modelData[i], i);
         if (hit.hit && hit.distance < closestHit.distance)
         {

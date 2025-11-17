@@ -5,6 +5,8 @@
 #include "GL/glew.h"
 #include "GLM/glm.hpp"
 
+#include "Triangle.h"
+
 #include <string>
 #include <fstream>
 #include <vector>
@@ -62,6 +64,7 @@ class Model
 
   GLsizei GetVertexCount() const;
   GLuint GetSSBO();
+  std::vector<Triangle> GetTriangles(glm::vec3 _position);
 };
 
 #include <stdexcept>
@@ -236,18 +239,6 @@ inline std::vector<Face>& Model::GetFaces()
   return m_faces;
 }
 
-struct Triangle
-{
-  glm::vec3 a;
-  float _padding_a;
-  glm::vec3 b;
-  float _padding_b;
-  glm::vec3 c;
-  float _padding_c;
-  glm::vec3 normal;
-  float _padding_d;
-};
-
 inline GLuint Model::GetSSBO()
 {
   if(m_dirty)
@@ -261,12 +252,13 @@ inline GLuint Model::GetSSBO()
       newTri.b = m_faces[fi].b.position;
       newTri.c = m_faces[fi].c.position;
       newTri.normal = m_faces[fi].normal;
+      CalculateCentroid(newTri);
       data.push_back(newTri);
     }
 
     glGenBuffers(1, &m_ssboId);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssboId);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, 4 * sizeof(GLfloat) * 4 * data.size(), &(data.at(0)), GL_DYNAMIC_READ);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(int) + (4 * sizeof(GLfloat) * 4) * data.size(), &(data.at(0)), GL_DYNAMIC_READ);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_ssboId);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
@@ -275,6 +267,24 @@ inline GLuint Model::GetSSBO()
   }
 
   return m_ssboId;
+}
+
+inline std::vector<Triangle> Model::GetTriangles(glm::vec3 _position)
+{
+  std::vector<Triangle> l_triangles;
+
+  for(size_t fi = 0; fi < m_faces.size(); ++fi)
+  {
+    Triangle newTri;
+    newTri.a = m_faces[fi].a.position + _position;
+    newTri.b = m_faces[fi].b.position + _position;
+    newTri.c = m_faces[fi].c.position + _position;
+    CalculateNormal(newTri);
+    CalculateCentroid(newTri);
+    l_triangles.push_back(newTri);
+  }
+
+  return l_triangles;
 }
 
 inline GLsizei Model::GetVertexCount() const
