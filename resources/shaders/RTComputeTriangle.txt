@@ -31,7 +31,7 @@ struct Node
 layout(std430, binding = 2) readonly buffer b_bvhTriangleIndex
 {
     int bvhTriangleIndexes[];
-}
+};
 
 layout(std430, binding = 3) readonly buffer b_bvhNodes
 {
@@ -77,13 +77,11 @@ struct RaycastResult
     int materialIndex;
 };
 
-
-
 RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
 {
     RaycastResult result;
     result.hit = false;
-    result.objectIndex = _index;
+    result.triangleIndex = _index;
 
     float l_ep = 0.0001;
 
@@ -135,21 +133,55 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
 
 bool IntersectAABB(Ray _ray, vec3 _minBound, vec3 _maxBound)
 {
-    float tx1 = (_minBound.x - _ray.O.x) / _ray.D.x, tx2 = (_maxBound.x - _ray.O.x) / _ray.D.x;
-    float tmin = min( tx1, tx2 ), tmax = max( tx1, tx2 );
-    float ty1 = (_minBound.y - _ray.O.y) / _ray.D.y, ty2 = (_maxBound.y - _ray.O.y) / _ray.D.y;
-    tmin = max( tmin, min( ty1, ty2 ) ), tmax = min( tmax, max( ty1, ty2 ) );
-    float tz1 = (_minBound.z - _ray.O.z) / _ray.D.z, tz2 = (_maxBound.z - _ray.O.z) / _ray.D.z;
-    tmin = max( tmin, min( tz1, tz2 ) ), tmax = min( tmax, max( tz1, tz2 ) );
-    return tmax >= tmin && tmin < _ray.t && tmax > 0;
+    float tmin = 0.0f;          // Start with the minimum distance (can be -FLT_MAX for entire ray)
+    float tmax = 10000000.0f;    // Maximum allowable distance for the ray (segment length or ∞)
+
+    // Iterate over each axis (x, y, z)
+    for (int i = 0; i < 3; i++)
+    {
+        // If the ray is parallel to the slab (AABB plane pair)
+        if (abs(_ray.direction[i]) < 0.0001f)
+        {
+            // If the origin is outside the slab, there's no intersection
+            if (_ray.origin[i] < _minBound[i] || _ray.origin[i] > _maxBound[i])
+                return false;
+        }
+        else
+        {
+            // Compute the intersection t-values for the near and far planes of the slab
+            float ood = 1.0f / _ray.direction[i];
+            float t1 = (_minBound[i] - _ray.origin[i]) * ood;
+            float t2 = (_maxBound[i] - _ray.origin[i]) * ood;
+
+            // Ensure t1 is the intersection with the near plane, and t2 with the far plane
+            if (t1 > t2)
+            {
+                float temp = t1; // Swap t1 and t2
+                t1 = t2;
+                t2 = temp;
+            }
+
+            // Update tmin and tmax to compute the intersection interval
+            tmin = max(tmin, t1);
+            tmax = min(tmax, t2);
+
+            // If the interval becomes invalid, there is no intersection
+            if (tmin > tmax)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }
 
-RaycastResult rayNodeIntersect(RaycastResult _result, Ray _ray, int _nodeIndex)
+RaycastResult rayNodeIntersect(inout RaycastResult _result, Ray _ray, int _nodeIndex)
 {
-    Node node = b_bvhNodes[_nodeIndex];
+    Node node = bvhNodes[_nodeIndex];
     if(!IntersectAABB(_ray, node.minBound, node.maxBound))
     {
-        return;
+        return _result;
     }
 
     // Leaf node
@@ -157,7 +189,7 @@ RaycastResult rayNodeIntersect(RaycastResult _result, Ray _ray, int _nodeIndex)
     {
         for(int i = 0; i < node.triangleCount; i++)
         {
-            RaycastResult newResult = triangleIntersect(_ray, modelData[bvhTriangleIndexes[node.firstTriangle + i]]);
+            RaycastResult newResult = triangleIntersect(_ray, modelData[bvhTriangleIndexes[node.firstTriangle + i]], bvhTriangleIndexes[node.firstTriangle + i]);
             if(newResult.hit && newResult.distance < _result.distance)
             {
                 _result = newResult;
@@ -166,8 +198,8 @@ RaycastResult rayNodeIntersect(RaycastResult _result, Ray _ray, int _nodeIndex)
     }
     else
     {
-        IntersectAABB(_node.leftIndex);
-        IntersectAABB(_node.rightIndex);
+        rayNodeIntersect(_result, _ray, bvhNodes[_nodeIndex].leftIndex);
+        rayNodeIntersect(_result, _ray, bvhNodes[_nodeIndex].rightIndex);
     }
 
     return _result;
@@ -181,7 +213,7 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
     
     float lightDistance = length(lightPos - raycastHit.position);
     
-    rayNodeIntersect(shadowRay, 0);
+    rayNodeIntersect(raycastHit, shadowRay, 0);
     
     return false;
 }
@@ -189,7 +221,7 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
 
 vec3 getObjectColor(RaycastResult hit)
 {
-    return modelData[hit.objectIndex].normal;
+    return modelData[hit.triangleIndex].normal;
 }
 
 vec3 calculateShading(RaycastResult hit, Ray _ray)

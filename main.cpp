@@ -4,6 +4,7 @@
 #include "Light.h"
 #include "ComputeShader.h"
 #include "Model.h"
+#include "BVH.h"
 
 #include "GL/glew.h"
 
@@ -55,7 +56,13 @@ int main(int argc, char* argv[])
 	myShader.SetUniform("lights[0].color", light.colour);
 
 	myShader.SetUniform("u_triCount", (int)(sphereModel.GetVertexCount() / 3));
-	myShader.SetUniform("u_modelPosition", glm::vec3(0.0f, 0.0f, 0.0f));
+
+	std::vector<Triangle> tris = sphereModel.GetTriangles(glm::vec3(0.0f));
+
+	BVH myBVH(&tris);
+
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, myBVH.GetIndexSSBO());
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, myBVH.GetNodeSSBO());
 
 	bool keepGoing = true;
 

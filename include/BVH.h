@@ -2,6 +2,7 @@
 #define BVH_H
 
 #include <vector>
+#include <iostream>
 
 #include "GL/glew.h"
 #include "GLM/glm.hpp"
@@ -11,7 +12,9 @@
 struct BVH
 {
     private:
-    GLuint m_ssboID;
+    GLuint m_nodeSSBOID;
+    GLuint m_indexesSSBOID;
+    bool m_dirty;
 
     struct Node
     {
@@ -28,13 +31,11 @@ struct BVH
     std::vector<Triangle> m_tris;
     std::vector<int> m_triIndexes;
 
-
-
     void UpdateNodeBounds(int _nodeIndex)
     {
         Node& l_nodeToUpdate = m_nodes[_nodeIndex];
         l_nodeToUpdate.minBound = glm::vec3(1e30f);
-        l_nodeToUpdate.minBound = glm::vec3(-1e30f);
+        l_nodeToUpdate.maxBound = glm::vec3(-1e30f);
         for(int first = l_nodeToUpdate.firstTriangle, i = 0; i < l_nodeToUpdate.triangleCount; i++)
         {
             int l_leafIndex = m_triIndexes[first + i];
@@ -117,12 +118,14 @@ struct BVH
 
     public:
     BVH(std::vector<Triangle>* _tris)
-    : m_ssboID(0)
+    : m_nodeSSBOID(0)
+    , m_indexesSSBOID(0)
     , m_nodes()
     , m_tris(*_tris)
     , m_triIndexes()
+    , m_dirty(true)
     {
-        
+        BuildBHV();
     };
 
     ~BVH()
@@ -147,6 +150,41 @@ struct BVH
 
         UpdateNodeBounds(0);
         Subdivide(0);
+        m_dirty = true;
+    }
+
+    GLuint GetNodeSSBO()
+    {
+        if(m_dirty)
+        {
+            glGenBuffers(1, &m_nodeSSBOID);
+            glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_nodeSSBOID);
+            glBufferData(GL_SHADER_STORAGE_BUFFER, ((2 * sizeof(GLfloat) * 4) + (2 * sizeof(GLint))) * m_nodes.size(), &(m_nodes.at(0)), GL_DYNAMIC_READ);
+            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_nodeSSBOID);
+            glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+            printf("BVH Nodes uploaded\n");
+            m_dirty = false;
+        }
+
+        return m_nodeSSBOID;
+    }
+
+    GLuint GetIndexSSBO()
+    {
+        if(m_dirty)
+        {
+            glGenBuffers(1, &m_indexesSSBOID);
+            glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_indexesSSBOID);
+            glBufferData(GL_SHADER_STORAGE_BUFFER, ((2 * sizeof(GLfloat) * 4) + (2 * sizeof(GLint))) * m_triIndexes.size(), &(m_triIndexes.at(0)), GL_DYNAMIC_READ);
+            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_indexesSSBOID);
+            glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+            printf("BVH Nodes uploaded\n");
+            m_dirty = false;
+        }
+
+        return m_indexesSSBOID;
     }
 };
 
