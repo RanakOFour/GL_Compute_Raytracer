@@ -258,7 +258,7 @@ inline GLuint Model::GetSSBO()
 
     glGenBuffers(1, &m_ssboId);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssboId);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(int) + (4 * sizeof(GLfloat) * 4) * data.size(), &(data.at(0)), GL_DYNAMIC_READ);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 5 * sizeof(GLfloat) * 4 * data.size(), &(data.at(0)), GL_DYNAMIC_READ);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_ssboId);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 

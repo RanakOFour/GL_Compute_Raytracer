@@ -17,19 +17,23 @@ layout(std430, binding = 1) readonly buffer b_trianglesSSBO
     Triangle modelData[];
 };
 
-uniform vec3 u_modelPosition;
-
 struct Node
 {
     vec3 minBound;
-    vec3 maxBound;
     int leftIndex;
+    vec3 maxBound;
     int rightIndex;
-    int triOffset;
-    int triCount;
+
+    int firstTriangle;
+    int triangleCount;
 };
 
-layout(std430, binding = 2) readonly buffer b_bvhNodes
+layout(std430, binding = 2) readonly buffer b_bvhTriangleIndex
+{
+    int bvhTriangleIndexes[];
+}
+
+layout(std430, binding = 3) readonly buffer b_bvhNodes
 {
     Node bvhNodes[];
 };
@@ -73,21 +77,7 @@ struct RaycastResult
     int materialIndex;
 };
 
-bool rayNodeIntersect(Ray _ray, Node _node, float _tmax)
-{
-    vec3 l_invDir = 1.0 / _ray.direction;
-    vec3 l_t0 = (_node.minBound - _ray.origin) * l_invDir;
-    vec3 l_t1 = (_node.maxBound - _ray.origin) * l_invDir;
 
-    float tmin = 0.0;
-    vec3 tmin2 = min(l_t0, l_t1);
-    vec3 tmax2 = max(l_t0, l_t1);
-    
-    tmin = max(tmin, max(tmin2.x, max(tmin2.y, tmin2.z)));
-    _tmax = min(_tmax, min(tmax2.x, min(tmax2.y, tmax2.z)));
-    
-    return tmin <= _tmax;
-}
 
 RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
 {
@@ -97,16 +87,16 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
 
     float l_ep = 0.0001;
 
-    vec3 v0 = _tri.a + u_modelPosition;
-    vec3 v1 = _tri.b + u_modelPosition; 
-    vec3 v2 = _tri.c + u_modelPosition;
+    vec3 v0 = _tri.a;
+    vec3 v1 = _tri.b; 
+    vec3 v2 = _tri.c;
 
     vec3 edge1 = v1 - v0;
     vec3 edge2 = v2 - v0;
     vec3 ray_cross_edge2 = cross(_ray.direction, edge2);
     float det = dot(edge1, ray_cross_edge2);
 
-    // Only check triangles facing the ray
+    // Only check triangles facing the _ray
     if(det < l_ep)
     {
         return result;
@@ -143,6 +133,46 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
     return result;
 }
 
+bool IntersectAABB(Ray _ray, vec3 _minBound, vec3 _maxBound)
+{
+    float tx1 = (_minBound.x - _ray.O.x) / _ray.D.x, tx2 = (_maxBound.x - _ray.O.x) / _ray.D.x;
+    float tmin = min( tx1, tx2 ), tmax = max( tx1, tx2 );
+    float ty1 = (_minBound.y - _ray.O.y) / _ray.D.y, ty2 = (_maxBound.y - _ray.O.y) / _ray.D.y;
+    tmin = max( tmin, min( ty1, ty2 ) ), tmax = min( tmax, max( ty1, ty2 ) );
+    float tz1 = (_minBound.z - _ray.O.z) / _ray.D.z, tz2 = (_maxBound.z - _ray.O.z) / _ray.D.z;
+    tmin = max( tmin, min( tz1, tz2 ) ), tmax = min( tmax, max( tz1, tz2 ) );
+    return tmax >= tmin && tmin < _ray.t && tmax > 0;
+}
+
+RaycastResult rayNodeIntersect(RaycastResult _result, Ray _ray, int _nodeIndex)
+{
+    Node node = b_bvhNodes[_nodeIndex];
+    if(!IntersectAABB(_ray, node.minBound, node.maxBound))
+    {
+        return;
+    }
+
+    // Leaf node
+    if(node.triangleCount > 0)
+    {
+        for(int i = 0; i < node.triangleCount; i++)
+        {
+            RaycastResult newResult = triangleIntersect(_ray, modelData[bvhTriangleIndexes[node.firstTriangle + i]]);
+            if(newResult.hit && newResult.distance < _result.distance)
+            {
+                _result = newResult;
+            }
+        }
+    }
+    else
+    {
+        IntersectAABB(_node.leftIndex);
+        IntersectAABB(_node.rightIndex);
+    }
+
+    return _result;
+}
+
 bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
 {
     Ray shadowRay;
@@ -151,19 +181,7 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
     
     float lightDistance = length(lightPos - raycastHit.position);
     
-    for (int i = 0; i < modelData.length(); i++)
-    {
-        if (i == raycastHit.objectIndex)
-        {
-            continue;
-        }
-        
-        RaycastResult shadowHit = triangleIntersect(shadowRay, modelData[i], i);
-        if (shadowHit.hit && shadowHit.distance < lightDistance)
-        {
-            return true;
-        }
-    }
+    rayNodeIntersect(shadowRay, 0);
     
     return false;
 }
@@ -174,7 +192,7 @@ vec3 getObjectColor(RaycastResult hit)
     return modelData[hit.objectIndex].normal;
 }
 
-vec3 calculateShading(RaycastResult hit, Ray ray)
+vec3 calculateShading(RaycastResult hit, Ray _ray)
 {
     if (!hit.hit)
     {
@@ -228,32 +246,17 @@ void main()
                            uv.x * u_camera.right * aspect + 
                            uv.y * u_camera.up);
     
-    Ray ray;
-    ray.origin = u_camera.position;
-    ray.direction = rayDir;
+    Ray _ray;
+    _ray.origin = u_camera.position;
+    _ray.direction = rayDir;
     
     RaycastResult closestHit;
     closestHit.hit = false;
     closestHit.distance = 1e10;
 
-    int l_triCount = modelData.length();
-    for (int i = 0; i < l_triCount; i++)
-    {
-        // Skip back facing triangles
-        vec3 difference = ray.direction - modelData[i].normal;
-        if(length(difference) < 0.1)
-        {
-            continue;
-        }
+    rayNodeIntersect(closestHit, _ray, 0);
 
-        RaycastResult hit = triangleIntersect(ray, modelData[i], i);
-        if (hit.hit && hit.distance < closestHit.distance)
-        {
-            closestHit = hit;
-        }
-    }
-
-    vec3 color = calculateShading(closestHit, ray);
+    vec3 color = calculateShading(closestHit, _ray);
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
     imageStore(framebufferTex, position, vec4(color, 1.0));
 }
