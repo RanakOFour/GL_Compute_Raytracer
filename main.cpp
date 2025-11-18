@@ -41,8 +41,6 @@ int main(int argc, char* argv[])
     myShader.use();
 
 	Model sphereModel("./resources/objects/sphere.obj");
-	
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, sphereModel.GetSSBO());
     
     // Set camera uniforms
     camera.SetShaderValues(&myShader);
@@ -64,10 +62,12 @@ int main(int argc, char* argv[])
 	tris.insert(tris.end(), tris2.begin(), tris2.end());
 	tris.insert(tris.end(), tris3.begin(), tris3.end());
 
-	printf("%i Triangles sent to BVH\n", tris.size());
+	printf("%i Triangles sent to BVH\n", (int)tris.size());
 
 	BVH myBVH(&tris);
 
+
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, myBVH.GetTriangleSSBO());
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, myBVH.GetIndexSSBO());
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, myBVH.GetNodeSSBO());
 

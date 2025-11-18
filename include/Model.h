@@ -63,7 +63,6 @@ class Model
   std::vector<Face>& GetFaces();
 
   GLsizei GetVertexCount() const;
-  GLuint GetSSBO();
   std::vector<Triangle> GetTriangles(glm::vec3 _position);
 };
 
@@ -239,36 +238,6 @@ inline std::vector<Face>& Model::GetFaces()
   return m_faces;
 }
 
-inline GLuint Model::GetSSBO()
-{
-  if(m_dirty)
-  {
-    std::vector<Triangle> data;
-
-    for(size_t fi = 0; fi < m_faces.size(); ++fi)
-    {
-      Triangle newTri;
-      newTri.a = m_faces[fi].a.position;
-      newTri.b = m_faces[fi].b.position;
-      newTri.c = m_faces[fi].c.position;
-      newTri.normal = m_faces[fi].normal;
-      CalculateCentroid(newTri);
-      data.push_back(newTri);
-    }
-
-    glGenBuffers(1, &m_ssboId);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssboId);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, 5 * sizeof(GLfloat) * 4 * data.size(), &(data.at(0)), GL_DYNAMIC_READ);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_ssboId);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-    printf("SSBO Model uploaded\n");
-    m_dirty = false;
-  }
-
-  return m_ssboId;
-}
-
 inline std::vector<Triangle> Model::GetTriangles(glm::vec3 _position)
 {
   std::vector<Triangle> l_triangles;
@@ -280,7 +249,6 @@ inline std::vector<Triangle> Model::GetTriangles(glm::vec3 _position)
     newTri.b = m_faces[fi].b.position + _position;
     newTri.c = m_faces[fi].c.position + _position;
     CalculateNormal(newTri);
-    CalculateCentroid(newTri);
     l_triangles.push_back(newTri);
   }
 

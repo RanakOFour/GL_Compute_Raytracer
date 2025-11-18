@@ -14,18 +14,21 @@ struct BVH
     private:
     GLuint m_nodeSSBOID;
     GLuint m_indexesSSBOID;
+    GLuint m_triangleSSBOID;
     bool m_dirtyNodes;
     bool m_dirtyIDs;
+    bool m_dirtyTris;
 
     struct Node
     {
-        glm::vec3 minBound; float _pad_1;
         int leftNodeIndex;
-        glm::vec3 maxBound; float _pad_2;
-        int rightNodeIndex;
-
         int firstTriangle;
         int triangleCount;
+
+        glm::vec3 minBound;
+        float _pad_1;
+        glm::vec3 maxBound;
+        float _pad_2;
     };
 
     std::vector<Node> m_nodes;
@@ -78,25 +81,28 @@ struct BVH
 
         //  In-place partition
         int i = l_node.firstTriangle;
-        int j = l_node.triangleCount - 1;
+        int j = i + l_node.triangleCount - 1;
         while(i <= j)
         {
-            if(m_tris[i].centroid[axis] < l_splitPos)
+            if(CalculateCentroid(m_tris[m_triIndexes[i]])[axis] < l_splitPos)
             {
                 i++;
             }
             else
             {
-                Triangle temp = m_tris[j--];
+                j--;
+                Triangle temp = m_tris[j];
                 m_tris[j] = m_tris[i];
                 m_tris[i] = temp;
             }
         }
 
-        printf("%i left, %i right\n", i - l_node.firstTriangle, l_node.triangleCount - (i - l_node.firstTriangle));
-
+        
         // Don't create empty sides
         int l_leftCount = i - l_node.firstTriangle;
+
+        printf("%i left, %i right\n", l_leftCount, l_node.triangleCount - l_leftCount);
+
         if (l_leftCount == 0 || l_leftCount == l_node.triangleCount)
         {
             return;
@@ -117,7 +123,6 @@ struct BVH
 
         l_node.triangleCount = 0;
         l_node.leftNodeIndex = l_leftChildIndex;
-        l_node.rightNodeIndex = l_rightChildIndex;
 
         m_nodes.push_back(l_left);
         m_nodes.push_back(l_right);
@@ -133,18 +138,33 @@ struct BVH
     BVH(std::vector<Triangle>* _tris)
     : m_nodeSSBOID(0)
     , m_indexesSSBOID(0)
+    , m_triangleSSBOID(0)
     , m_nodes()
     , m_tris(*_tris)
     , m_triIndexes()
     , m_dirtyNodes(true)
     , m_dirtyIDs(true)
+    , m_dirtyTris(true)
     {
         BuildBHV();
     };
 
     ~BVH()
     {
+        if (m_indexesSSBOID)
+        {
+            glDeleteBuffers(1, &m_indexesSSBOID);
+        }
 
+        if (m_nodeSSBOID)
+        {
+            glDeleteBuffers(1, &m_nodeSSBOID);
+        }
+
+        if (m_triangleSSBOID)
+        {
+            glDeleteBuffers(1, &m_triangleSSBOID);
+        }
     };
 
     void BuildBHV()
@@ -158,7 +178,7 @@ struct BVH
         }
 
         Node l_root;
-        l_root.leftNodeIndex = l_root.rightNodeIndex = 0;
+        l_root.leftNodeIndex = 0;
         l_root.firstTriangle = 0;
         l_root.triangleCount = m_tris.size();
         m_nodes.push_back(l_root);
@@ -172,13 +192,13 @@ struct BVH
 
         for (int i = 0; i < m_nodes.size(); i++)
         {
-            /*printf("Node %i: %i triangles, Min:(%f, %f, %f), Max(%f, %f, %f)\n", i, m_nodes[i].triangleCount,
-                m_nodes[i].minBound[0], m_nodes[i].minBound[1], m_nodes[i].minBound[2],
-                m_nodes[i].maxBound[0], m_nodes[i].maxBound[1], m_nodes[i].maxBound[2]);*/
-
-            printf("%f,%f,%f,%f,%f,%f\n",
+            printf("Node %i: %i triangles, Min:(%f, %f, %f), Max(%f, %f, %f)\n", i, m_nodes[i].triangleCount,
                 m_nodes[i].minBound[0], m_nodes[i].minBound[1], m_nodes[i].minBound[2],
                 m_nodes[i].maxBound[0], m_nodes[i].maxBound[1], m_nodes[i].maxBound[2]);
+
+            /*printf("%f,%f,%f,%f,%f,%f\n",
+                m_nodes[i].minBound[0], m_nodes[i].minBound[1], m_nodes[i].minBound[2],
+                m_nodes[i].maxBound[0], m_nodes[i].maxBound[1], m_nodes[i].maxBound[2]);*/
         }
 
         for (int i = 0; i < m_triIndexes.size(); i++)
@@ -190,26 +210,26 @@ struct BVH
         }
     }
 
-    GLuint GetNodeSSBO()
+    GLuint GetTriangleSSBO()
     {
-        if(m_dirtyNodes)
+        if (m_dirtyTris)
         {
-            glGenBuffers(1, &m_nodeSSBOID);
-            glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_nodeSSBOID);
-            glBufferData(GL_SHADER_STORAGE_BUFFER, ((2 * sizeof(GLfloat) * 4) + (4 * sizeof(GLint))) * m_nodes.size(), &(m_nodes.at(0)), GL_DYNAMIC_READ);
-            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_nodeSSBOID);
+            glGenBuffers(1, &m_triangleSSBOID);
+            glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_triangleSSBOID);
+            glBufferData(GL_SHADER_STORAGE_BUFFER, (4 * sizeof(GLfloat) * 4) * m_tris.size(), &(m_tris.at(0)), GL_DYNAMIC_READ);
+            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_triangleSSBOID);
             glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-            printf("BVH Nodes uploaded\n");
-            m_dirtyNodes = false;
+            printf("BVH triangles uploaded\n");
+            m_dirtyTris = false;
         }
 
-        return m_nodeSSBOID;
+        return m_triangleSSBOID;
     }
 
     GLuint GetIndexSSBO()
     {
-        if(m_dirtyIDs)
+        if (m_dirtyIDs)
         {
             glGenBuffers(1, &m_indexesSSBOID);
             glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_indexesSSBOID);
@@ -222,6 +242,23 @@ struct BVH
         }
 
         return m_indexesSSBOID;
+    }
+
+    GLuint GetNodeSSBO()
+    {
+        if(m_dirtyNodes)
+        {
+            glGenBuffers(1, &m_nodeSSBOID);
+            glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_nodeSSBOID);
+            glBufferData(GL_SHADER_STORAGE_BUFFER, ((3 * sizeof(GLint)) + (4 * sizeof(GLfloat) * 2)) * m_nodes.size(), &(m_nodes.at(0)), GL_DYNAMIC_READ);
+            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_nodeSSBOID);
+            glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+            printf("BVH Nodes uploaded\n");
+            m_dirtyNodes = false;
+        }
+
+        return m_nodeSSBOID;
     }
 };
 

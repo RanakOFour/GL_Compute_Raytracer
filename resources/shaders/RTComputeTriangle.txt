@@ -5,27 +5,26 @@ layout(rgba32f, binding = 0) uniform image2D framebufferTex;
 
 struct Triangle
 {
-    int materialIndex;
     vec3 a;
     vec3 b;
     vec3 c;
     vec3 normal;
 };
 
-layout(std430, binding = 1) readonly buffer b_trianglesSSBO
-{
-    Triangle modelData[];
-};
-
 struct Node
 {
-    vec3 minBound;
     int leftIndex;
-    vec3 maxBound;
-    int rightIndex;
 
     int firstTriangle;
     int triangleCount;
+
+    vec3 minBound;
+    vec3 maxBound;
+};
+
+layout(std430, binding = 1) readonly buffer b_trianglesSSBO
+{
+    Triangle modelData[];
 };
 
 layout(std430, binding = 2) readonly buffer b_bvhTriangleIndex
@@ -74,7 +73,6 @@ struct RaycastResult
     vec3 position;
     vec3 normal;
     int triangleIndex;
-    int materialIndex;
 };
 
 RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
@@ -85,14 +83,19 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
 
     float l_ep = 0.0001;
 
-    //vec3 v0 = _tri.a;
-    //vec3 v1 = _tri.b; 
-    //vec3 v2 = _tri.c;
+    vec3 v0 = _tri.a;
+    vec3 v1 = _tri.b; 
+    vec3 v2 = _tri.c;
 
     vec3 edge1 = v1 - v0;
     vec3 edge2 = v2 - v0;
     vec3 ray_cross_edge2 = cross(_ray.direction, edge2);
     float det = dot(edge1, ray_cross_edge2);
+
+    if(det > -l_ep && det < l_ep)
+    {
+        return result;
+    }
 
     float inv_det = 1.0 / det;
     vec3 s = _ray.origin - v0;
@@ -127,13 +130,12 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
 
 bool IntersectAABB(Ray _ray, vec3 _minBound, vec3 _maxBound)
 {
-    float tmin = 0.0f;          // Start with the minimum distance (can be -FLT_MAX for entire ray)
-    float tmax = 10000000.0f;    // Maximum allowable distance for the ray (segment length or ∞)
+    float tmin = -100000000.0f;
+    float tmax = 10000000.0f;
 
     // Iterate over each axis (x, y, z)
     for (int i = 0; i < 3; i++)
     {
-        // If the ray is parallel to the slab (AABB plane pair)
         if (abs(_ray.direction[i]) < 0.0001f)
         {
             // If the origin is outside the slab, there's no intersection
@@ -176,15 +178,16 @@ RaycastResult TraverseBVH(inout RaycastResult _result, Ray _ray)
     int indexStack[64];
     int top = 0;
     indexStack[top] = 0;
+    int hits = 0;
 
 
-    while(top >= 0)
+    while(top > -1)
     {
         Node node = bvhNodes[indexStack[top]];
 
         if(!IntersectAABB(_ray, node.minBound, node.maxBound))
         {
-            //_result.normal.x += 0.05;
+            _result.normal.x += 0.05;
             top--;
             continue;
         }
@@ -204,7 +207,7 @@ RaycastResult TraverseBVH(inout RaycastResult _result, Ray _ray)
         }
         else
         {
-            indexStack[top] = node.rightIndex;
+            indexStack[top] = node.leftIndex + 1;
             top++;
             indexStack[top] = node.leftIndex;
             top++;
@@ -213,7 +216,6 @@ RaycastResult TraverseBVH(inout RaycastResult _result, Ray _ray)
         
         top--;
     }
-    
 
     return _result;
 }
@@ -234,7 +236,7 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
 
 vec3 getObjectColor(RaycastResult hit)
 {
-    return modelData[hit.triangleIndex].normal;
+    return vec3(1.0);
 }
 
 vec3 calculateShading(RaycastResult hit, Ray _ray)
@@ -245,6 +247,9 @@ vec3 calculateShading(RaycastResult hit, Ray _ray)
     }
     
     vec3 objectColor = getObjectColor(hit);
+
+    //return objectColor;
+
     vec3 lighting = vec3(0.0);
 
     for(int i = 0; i < numLights; i++)
@@ -298,11 +303,25 @@ void main()
     RaycastResult closestHit;
     closestHit.hit = false;
     closestHit.distance = 1e10;
+    closestHit.normal = vec3(0.0);
 
+    #if 0
+    for(int i = 0; i < modelData.length(); i++)
+    {
+        RaycastResult newResult = triangleIntersect(_ray, modelData[i], i);
+        if(newResult.hit && newResult.distance < closestHit.distance)
+        {
+            closestHit = newResult;
+            //_result.normal.y += 0.05;
+        }
+    }
+    #else
     TraverseBVH(closestHit, _ray);
+    #endif
 
-    //vec3 color = closestHit.normal
     vec3 color = calculateShading(closestHit, _ray);
+    color = closestHit.normal;
+
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
     imageStore(framebufferTex, position, vec4(color, 1.0));
 }
