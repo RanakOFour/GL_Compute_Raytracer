@@ -172,7 +172,13 @@ struct BVH
 
         for (int i = 0; i < m_nodes.size(); i++)
         {
-            printf("Node %i: %i triangles\n", i, m_nodes[i].triangleCount);
+            /*printf("Node %i: %i triangles, Min:(%f, %f, %f), Max(%f, %f, %f)\n", i, m_nodes[i].triangleCount,
+                m_nodes[i].minBound[0], m_nodes[i].minBound[1], m_nodes[i].minBound[2],
+                m_nodes[i].maxBound[0], m_nodes[i].maxBound[1], m_nodes[i].maxBound[2]);*/
+
+            printf("%f,%f,%f,%f,%f,%f\n",
+                m_nodes[i].minBound[0], m_nodes[i].minBound[1], m_nodes[i].minBound[2],
+                m_nodes[i].maxBound[0], m_nodes[i].maxBound[1], m_nodes[i].maxBound[2]);
         }
 
         for (int i = 0; i < m_triIndexes.size(); i++)

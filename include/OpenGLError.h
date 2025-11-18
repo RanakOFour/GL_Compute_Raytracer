@@ -28,7 +28,7 @@ public:
 	static void Init()
 	{
 		glEnable(GL_DEBUG_OUTPUT);
-		glDebugMessageCallback(DisplayDebugMessage, 0);
+		//glDebugMessageCallback(DisplayDebugMessage, 0);
 		printf("OpenGLError Initialized\n");
 	}
 };
