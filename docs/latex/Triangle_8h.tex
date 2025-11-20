@@ -1,0 +1,33 @@
+\doxysection{include/\+Triangle.h File Reference}
+\hypertarget{Triangle_8h}{}\label{Triangle_8h}\index{include/Triangle.h@{include/Triangle.h}}
+{\ttfamily \#include "{}GLM/glm.\+hpp"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structTriangle}{Triangle}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{Triangle_8h_a7309599ed6e36916cbb312a22494c00a}{Calculate\+Normal}} (\mbox{\hyperlink{structTriangle}{Triangle}} \&\+\_\+tri)
+\item 
+glm\+::vec3 \mbox{\hyperlink{Triangle_8h_a38c038ab92f402626e0d3a53136645aa}{Calculate\+Centroid}} (\mbox{\hyperlink{structTriangle}{Triangle}} \&\+\_\+tri)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{Triangle_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{Triangle_8h_a38c038ab92f402626e0d3a53136645aa}\index{Triangle.h@{Triangle.h}!CalculateCentroid@{CalculateCentroid}}
+\index{CalculateCentroid@{CalculateCentroid}!Triangle.h@{Triangle.h}}
+\doxysubsubsection{\texorpdfstring{CalculateCentroid()}{CalculateCentroid()}}
+{\footnotesize\ttfamily \label{Triangle_8h_a38c038ab92f402626e0d3a53136645aa} 
+glm\+::vec3 Calculate\+Centroid (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structTriangle}{Triangle}} \&}]{\+\_\+tri}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Calculates center point on the face of the given \doxylink{structTriangle}{Triangle}. Taken outside of \doxylink{structTriangle}{Triangle} struct to avoid Open\+GL schenanigans with uploading to the GPU \Hypertarget{Triangle_8h_a7309599ed6e36916cbb312a22494c00a}\index{Triangle.h@{Triangle.h}!CalculateNormal@{CalculateNormal}}
+\index{CalculateNormal@{CalculateNormal}!Triangle.h@{Triangle.h}}
+\doxysubsubsection{\texorpdfstring{CalculateNormal()}{CalculateNormal()}}
+{\footnotesize\ttfamily \label{Triangle_8h_a7309599ed6e36916cbb312a22494c00a} 
+void Calculate\+Normal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structTriangle}{Triangle}} \&}]{\+\_\+tri}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Calculates normal of given \doxylink{structTriangle}{Triangle}. Taken outside of \doxylink{structTriangle}{Triangle} struct to avoid Open\+GL schenanigans with uploading to the GPU 

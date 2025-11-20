@@ -1,0 +1,75 @@
+\doxysection{SDL\+\_\+\+Joy\+Hat\+Event Struct Reference}
+\hypertarget{structSDL__JoyHatEvent}{}\label{structSDL__JoyHatEvent}\index{SDL\_JoyHatEvent@{SDL\_JoyHatEvent}}
+
+
+{\ttfamily \#include $<$SDL\+\_\+events.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__JoyHatEvent_ac583dafab46c44354e210a542aff57cc}{type}}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__JoyHatEvent_ade58ecb3e75aad4ef9809f040519a021}{timestamp}}
+\item 
+\mbox{\hyperlink{SDL__joystick_8h_a3c3d32500cb08f76ee8077983912c0bd}{SDL\+\_\+\+Joystick\+ID}} \mbox{\hyperlink{structSDL__JoyHatEvent_ac9d9bb179f9116d16b3da47cacd74b55}{which}}
+\item 
+Uint8 \mbox{\hyperlink{structSDL__JoyHatEvent_ab1b54a6d1091e583e856f86b5af1e2f6}{hat}}
+\item 
+Uint8 \mbox{\hyperlink{structSDL__JoyHatEvent_a52b179a34407449941b61d988ca72ef4}{value}}
+\item 
+\Hypertarget{structSDL__JoyHatEvent_afbe72b6702cf7f70ccbe206737ab2e49}\label{structSDL__JoyHatEvent_afbe72b6702cf7f70ccbe206737ab2e49} 
+Uint8 {\bfseries padding1}
+\item 
+\Hypertarget{structSDL__JoyHatEvent_adaca3e99773130ae456690ba83feb420}\label{structSDL__JoyHatEvent_adaca3e99773130ae456690ba83feb420} 
+Uint8 {\bfseries padding2}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Joystick hat position change event structure (event.\+jhat.\texorpdfstring{$\ast$}{*}) 
+
+\label{doc-variable-members}
+\Hypertarget{structSDL__JoyHatEvent_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structSDL__JoyHatEvent_ab1b54a6d1091e583e856f86b5af1e2f6}\index{SDL\_JoyHatEvent@{SDL\_JoyHatEvent}!hat@{hat}}
+\index{hat@{hat}!SDL\_JoyHatEvent@{SDL\_JoyHatEvent}}
+\doxysubsubsection{\texorpdfstring{hat}{hat}}
+{\footnotesize\ttfamily \label{structSDL__JoyHatEvent_ab1b54a6d1091e583e856f86b5af1e2f6} 
+Uint8 SDL\+\_\+\+Joy\+Hat\+Event\+::hat}
+
+The joystick hat index \Hypertarget{structSDL__JoyHatEvent_ade58ecb3e75aad4ef9809f040519a021}\index{SDL\_JoyHatEvent@{SDL\_JoyHatEvent}!timestamp@{timestamp}}
+\index{timestamp@{timestamp}!SDL\_JoyHatEvent@{SDL\_JoyHatEvent}}
+\doxysubsubsection{\texorpdfstring{timestamp}{timestamp}}
+{\footnotesize\ttfamily \label{structSDL__JoyHatEvent_ade58ecb3e75aad4ef9809f040519a021} 
+Uint32 SDL\+\_\+\+Joy\+Hat\+Event\+::timestamp}
+
+In milliseconds, populated using SDL\+\_\+\+Get\+Ticks() \Hypertarget{structSDL__JoyHatEvent_ac583dafab46c44354e210a542aff57cc}\index{SDL\_JoyHatEvent@{SDL\_JoyHatEvent}!type@{type}}
+\index{type@{type}!SDL\_JoyHatEvent@{SDL\_JoyHatEvent}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{structSDL__JoyHatEvent_ac583dafab46c44354e210a542aff57cc} 
+Uint32 SDL\+\_\+\+Joy\+Hat\+Event\+::type}
+
+SDL\+\_\+\+JOYHATMOTION \Hypertarget{structSDL__JoyHatEvent_a52b179a34407449941b61d988ca72ef4}\index{SDL\_JoyHatEvent@{SDL\_JoyHatEvent}!value@{value}}
+\index{value@{value}!SDL\_JoyHatEvent@{SDL\_JoyHatEvent}}
+\doxysubsubsection{\texorpdfstring{value}{value}}
+{\footnotesize\ttfamily \label{structSDL__JoyHatEvent_a52b179a34407449941b61d988ca72ef4} 
+Uint8 SDL\+\_\+\+Joy\+Hat\+Event\+::value}
+
+The hat position value. \begin{DoxySeeAlso}{See also}
+SDL\+\_\+\+HAT\+\_\+\+LEFTUP SDL\+\_\+\+HAT\+\_\+\+UP SDL\+\_\+\+HAT\+\_\+\+RIGHTUP 
+
+SDL\+\_\+\+HAT\+\_\+\+LEFT SDL\+\_\+\+HAT\+\_\+\+CENTERED SDL\+\_\+\+HAT\+\_\+\+RIGHT 
+
+SDL\+\_\+\+HAT\+\_\+\+LEFTDOWN SDL\+\_\+\+HAT\+\_\+\+DOWN SDL\+\_\+\+HAT\+\_\+\+RIGHTDOWN
+\end{DoxySeeAlso}
+Note that zero means the POV is centered. \Hypertarget{structSDL__JoyHatEvent_ac9d9bb179f9116d16b3da47cacd74b55}\index{SDL\_JoyHatEvent@{SDL\_JoyHatEvent}!which@{which}}
+\index{which@{which}!SDL\_JoyHatEvent@{SDL\_JoyHatEvent}}
+\doxysubsubsection{\texorpdfstring{which}{which}}
+{\footnotesize\ttfamily \label{structSDL__JoyHatEvent_ac9d9bb179f9116d16b3da47cacd74b55} 
+\mbox{\hyperlink{SDL__joystick_8h_a3c3d32500cb08f76ee8077983912c0bd}{SDL\+\_\+\+Joystick\+ID}} SDL\+\_\+\+Joy\+Hat\+Event\+::which}
+
+The joystick instance id 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+SDL/SDL\+\_\+events.\+h\end{DoxyCompactItemize}

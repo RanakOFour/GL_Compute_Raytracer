@@ -1,0 +1,100 @@
+\doxysection{ext.\+hpp}
+\hypertarget{ext_8hpp_source}{}\label{ext_8hpp_source}\index{include/GLM/ext.hpp@{include/GLM/ext.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ "{}glm.hpp"{}}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_MESSAGE\_EXT\_INCLUDED\_DISPLAYED)}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MESSAGE\_EXT\_INCLUDED\_DISPLAYED}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ All\ extensions\ included\ (not\ recommanded)"{})}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_MESSAGES}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ "{}./gtc/bitfield.hpp"{}}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ "{}./gtc/color\_space.hpp"{}}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ "{}./gtc/constants.hpp"{}}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ "{}./gtc/epsilon.hpp"{}}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ "{}./gtc/functions.hpp"{}}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ "{}./gtc/integer.hpp"{}}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ "{}./gtc/matrix\_access.hpp"{}}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ "{}./gtc/matrix\_integer.hpp"{}}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ "{}./gtc/matrix\_inverse.hpp"{}}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#include\ "{}./gtc/matrix\_transform.hpp"{}}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#include\ "{}./gtc/noise.hpp"{}}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#include\ "{}./gtc/packing.hpp"{}}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#include\ "{}./gtc/quaternion.hpp"{}}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#include\ "{}./gtc/random.hpp"{}}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#include\ "{}./gtc/reciprocal.hpp"{}}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#include\ "{}./gtc/round.hpp"{}}}
+\DoxyCodeLine{00053\ \textcolor{comment}{//\#include\ "{}./gtc/type\_aligned.hpp"{}}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#include\ "{}./gtc/type\_precision.hpp"{}}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#include\ "{}./gtc/type\_ptr.hpp"{}}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#include\ "{}./gtc/ulp.hpp"{}}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#include\ "{}./gtc/vec1.hpp"{}}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#if\ GLM\_HAS\_ALIGNED\_TYPE}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#\ \ \ include\ "{}./gtc/type\_aligned.hpp"{}}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#include\ "{}./gtx/associated\_min\_max.hpp"{}}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#include\ "{}./gtx/bit.hpp"{}}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#include\ "{}./gtx/closest\_point.hpp"{}}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#include\ "{}./gtx/color\_space.hpp"{}}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#include\ "{}./gtx/color\_space\_YCoCg.hpp"{}}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#include\ "{}./gtx/compatibility.hpp"{}}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#include\ "{}./gtx/component\_wise.hpp"{}}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#include\ "{}./gtx/dual\_quaternion.hpp"{}}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#include\ "{}./gtx/euler\_angles.hpp"{}}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#include\ "{}./gtx/extend.hpp"{}}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#include\ "{}./gtx/extended\_min\_max.hpp"{}}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#include\ "{}./gtx/fast\_exponential.hpp"{}}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#include\ "{}./gtx/fast\_square\_root.hpp"{}}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#include\ "{}./gtx/fast\_trigonometry.hpp"{}}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#include\ "{}./gtx/gradient\_paint.hpp"{}}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#include\ "{}./gtx/handed\_coordinate\_space.hpp"{}}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#include\ "{}./gtx/integer.hpp"{}}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#include\ "{}./gtx/intersect.hpp"{}}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#include\ "{}./gtx/log\_base.hpp"{}}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#include\ "{}./gtx/matrix\_cross\_product.hpp"{}}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#include\ "{}./gtx/matrix\_interpolation.hpp"{}}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#include\ "{}./gtx/matrix\_major\_storage.hpp"{}}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#include\ "{}./gtx/matrix\_operation.hpp"{}}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#include\ "{}./gtx/matrix\_query.hpp"{}}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#include\ "{}./gtx/mixed\_product.hpp"{}}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#include\ "{}./gtx/norm.hpp"{}}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#include\ "{}./gtx/normal.hpp"{}}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#include\ "{}./gtx/normalize\_dot.hpp"{}}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#include\ "{}./gtx/number\_precision.hpp"{}}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#include\ "{}./gtx/optimum\_pow.hpp"{}}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#include\ "{}./gtx/orthonormalize.hpp"{}}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#include\ "{}./gtx/perpendicular.hpp"{}}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#include\ "{}./gtx/polar\_coordinates.hpp"{}}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#include\ "{}./gtx/projection.hpp"{}}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#include\ "{}./gtx/quaternion.hpp"{}}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#include\ "{}./gtx/raw\_data.hpp"{}}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#include\ "{}./gtx/rotate\_vector.hpp"{}}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#include\ "{}./gtx/spline.hpp"{}}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#include\ "{}./gtx/std\_based\_type.hpp"{}}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#if\ !(GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#\ \ \ include\ "{}./gtx/string\_cast.hpp"{}}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#include\ "{}./gtx/transform.hpp"{}}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#include\ "{}./gtx/transform2.hpp"{}}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#include\ "{}./gtx/vector\_angle.hpp"{}}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#include\ "{}./gtx/vector\_query.hpp"{}}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#include\ "{}./gtx/wrap.hpp"{}}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#if\ GLM\_HAS\_TEMPLATE\_ALIASES}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#\ \ \ include\ "{}./gtx/scalar\_multiplication.hpp"{}}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#if\ GLM\_HAS\_RANGE\_FOR}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#\ \ \ include\ "{}./gtx/range.hpp"{}}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

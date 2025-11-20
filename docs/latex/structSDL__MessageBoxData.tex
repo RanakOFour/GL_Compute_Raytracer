@@ -1,0 +1,72 @@
+\doxysection{SDL\+\_\+\+Message\+Box\+Data Struct Reference}
+\hypertarget{structSDL__MessageBoxData}{}\label{structSDL__MessageBoxData}\index{SDL\_MessageBoxData@{SDL\_MessageBoxData}}
+
+
+{\ttfamily \#include $<$SDL\+\_\+messagebox.\+h$>$}
+
+
+
+Collaboration diagram for SDL\+\_\+\+Message\+Box\+Data\+:
+% FIG 0
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__MessageBoxData_a113d016f760bf4e4156b0f376358d6a0}{flags}}
+\item 
+SDL\+\_\+\+Window \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structSDL__MessageBoxData_a5c333bc93705c66068e140bc28daedcb}{window}}
+\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structSDL__MessageBoxData_a93ceeafeed20b553ad4c86c9be37f117}{title}}
+\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structSDL__MessageBoxData_ada6ae208a1f85adabbd7a7a08ca609c8}{message}}
+\item 
+\Hypertarget{structSDL__MessageBoxData_a133f4fef549cc0cb14b799af35f3dc5a}\label{structSDL__MessageBoxData_a133f4fef549cc0cb14b799af35f3dc5a} 
+int {\bfseries numbuttons}
+\item 
+\Hypertarget{structSDL__MessageBoxData_a265e47aab749e384661ae91d3e11e0db}\label{structSDL__MessageBoxData_a265e47aab749e384661ae91d3e11e0db} 
+const \mbox{\hyperlink{structSDL__MessageBoxButtonData}{SDL\+\_\+\+Message\+Box\+Button\+Data}} \texorpdfstring{$\ast$}{*} {\bfseries buttons}
+\item 
+const \mbox{\hyperlink{structSDL__MessageBoxColorScheme}{SDL\+\_\+\+Message\+Box\+Color\+Scheme}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structSDL__MessageBoxData_a18744865a3e89e260db5f01aee579e35}{color\+Scheme}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Message\+Box structure containing title, text, window, etc. 
+
+\label{doc-variable-members}
+\Hypertarget{structSDL__MessageBoxData_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structSDL__MessageBoxData_a18744865a3e89e260db5f01aee579e35}\index{SDL\_MessageBoxData@{SDL\_MessageBoxData}!colorScheme@{colorScheme}}
+\index{colorScheme@{colorScheme}!SDL\_MessageBoxData@{SDL\_MessageBoxData}}
+\doxysubsubsection{\texorpdfstring{colorScheme}{colorScheme}}
+{\footnotesize\ttfamily \label{structSDL__MessageBoxData_a18744865a3e89e260db5f01aee579e35} 
+const \mbox{\hyperlink{structSDL__MessageBoxColorScheme}{SDL\+\_\+\+Message\+Box\+Color\+Scheme}}\texorpdfstring{$\ast$}{*} SDL\+\_\+\+Message\+Box\+Data\+::color\+Scheme}
+
+\doxylink{structSDL__MessageBoxColorScheme}{SDL\+\_\+\+Message\+Box\+Color\+Scheme}, can be NULL to use system settings \Hypertarget{structSDL__MessageBoxData_a113d016f760bf4e4156b0f376358d6a0}\index{SDL\_MessageBoxData@{SDL\_MessageBoxData}!flags@{flags}}
+\index{flags@{flags}!SDL\_MessageBoxData@{SDL\_MessageBoxData}}
+\doxysubsubsection{\texorpdfstring{flags}{flags}}
+{\footnotesize\ttfamily \label{structSDL__MessageBoxData_a113d016f760bf4e4156b0f376358d6a0} 
+Uint32 SDL\+\_\+\+Message\+Box\+Data\+::flags}
+
+SDL\+\_\+\+Message\+Box\+Flags \Hypertarget{structSDL__MessageBoxData_ada6ae208a1f85adabbd7a7a08ca609c8}\index{SDL\_MessageBoxData@{SDL\_MessageBoxData}!message@{message}}
+\index{message@{message}!SDL\_MessageBoxData@{SDL\_MessageBoxData}}
+\doxysubsubsection{\texorpdfstring{message}{message}}
+{\footnotesize\ttfamily \label{structSDL__MessageBoxData_ada6ae208a1f85adabbd7a7a08ca609c8} 
+const char\texorpdfstring{$\ast$}{*} SDL\+\_\+\+Message\+Box\+Data\+::message}
+
+UTF-\/8 message text \Hypertarget{structSDL__MessageBoxData_a93ceeafeed20b553ad4c86c9be37f117}\index{SDL\_MessageBoxData@{SDL\_MessageBoxData}!title@{title}}
+\index{title@{title}!SDL\_MessageBoxData@{SDL\_MessageBoxData}}
+\doxysubsubsection{\texorpdfstring{title}{title}}
+{\footnotesize\ttfamily \label{structSDL__MessageBoxData_a93ceeafeed20b553ad4c86c9be37f117} 
+const char\texorpdfstring{$\ast$}{*} SDL\+\_\+\+Message\+Box\+Data\+::title}
+
+UTF-\/8 title \Hypertarget{structSDL__MessageBoxData_a5c333bc93705c66068e140bc28daedcb}\index{SDL\_MessageBoxData@{SDL\_MessageBoxData}!window@{window}}
+\index{window@{window}!SDL\_MessageBoxData@{SDL\_MessageBoxData}}
+\doxysubsubsection{\texorpdfstring{window}{window}}
+{\footnotesize\ttfamily \label{structSDL__MessageBoxData_a5c333bc93705c66068e140bc28daedcb} 
+SDL\+\_\+\+Window\texorpdfstring{$\ast$}{*} SDL\+\_\+\+Message\+Box\+Data\+::window}
+
+Parent window, can be NULL 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+SDL/SDL\+\_\+messagebox.\+h\end{DoxyCompactItemize}

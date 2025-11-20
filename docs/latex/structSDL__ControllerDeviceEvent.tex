@@ -1,0 +1,50 @@
+\doxysection{SDL\+\_\+\+Controller\+Device\+Event Struct Reference}
+\hypertarget{structSDL__ControllerDeviceEvent}{}\label{structSDL__ControllerDeviceEvent}\index{SDL\_ControllerDeviceEvent@{SDL\_ControllerDeviceEvent}}
+
+
+{\ttfamily \#include $<$SDL\+\_\+events.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__ControllerDeviceEvent_a45b3807eaf70a5f5cf712455da277536}{type}}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__ControllerDeviceEvent_a62945795fc17f5000fddc80e2cf921b8}{timestamp}}
+\item 
+Sint32 \mbox{\hyperlink{structSDL__ControllerDeviceEvent_accb80de1619c1e790cffb6c888c915db}{which}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Controller device event structure (event.\+cdevice.\texorpdfstring{$\ast$}{*})
+
+Joysticks that are supported game controllers receive both an \doxylink{structSDL__JoyDeviceEvent}{SDL\+\_\+\+Joy\+Device\+Event} and an \doxylink{structSDL__ControllerDeviceEvent}{SDL\+\_\+\+Controller\+Device\+Event}.
+
+SDL will send CONTROLLERDEVICEADDED events for joysticks that are already plugged in during \doxylink{SDL_8h_a8fc8d35348d7c74bad8392d776c937b8}{SDL\+\_\+\+Init()} and are recognized as game controllers. 
+
+\label{doc-variable-members}
+\Hypertarget{structSDL__ControllerDeviceEvent_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structSDL__ControllerDeviceEvent_a62945795fc17f5000fddc80e2cf921b8}\index{SDL\_ControllerDeviceEvent@{SDL\_ControllerDeviceEvent}!timestamp@{timestamp}}
+\index{timestamp@{timestamp}!SDL\_ControllerDeviceEvent@{SDL\_ControllerDeviceEvent}}
+\doxysubsubsection{\texorpdfstring{timestamp}{timestamp}}
+{\footnotesize\ttfamily \label{structSDL__ControllerDeviceEvent_a62945795fc17f5000fddc80e2cf921b8} 
+Uint32 SDL\+\_\+\+Controller\+Device\+Event\+::timestamp}
+
+In milliseconds, populated using SDL\+\_\+\+Get\+Ticks() \Hypertarget{structSDL__ControllerDeviceEvent_a45b3807eaf70a5f5cf712455da277536}\index{SDL\_ControllerDeviceEvent@{SDL\_ControllerDeviceEvent}!type@{type}}
+\index{type@{type}!SDL\_ControllerDeviceEvent@{SDL\_ControllerDeviceEvent}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{structSDL__ControllerDeviceEvent_a45b3807eaf70a5f5cf712455da277536} 
+Uint32 SDL\+\_\+\+Controller\+Device\+Event\+::type}
+
+SDL\+\_\+\+CONTROLLERDEVICEADDED, SDL\+\_\+\+CONTROLLERDEVICEREMOVED, SDL\+\_\+\+CONTROLLERDEVICEREMAPPED, or SDL\+\_\+\+CONTROLLERSTEAMHANDLEUPDATED \Hypertarget{structSDL__ControllerDeviceEvent_accb80de1619c1e790cffb6c888c915db}\index{SDL\_ControllerDeviceEvent@{SDL\_ControllerDeviceEvent}!which@{which}}
+\index{which@{which}!SDL\_ControllerDeviceEvent@{SDL\_ControllerDeviceEvent}}
+\doxysubsubsection{\texorpdfstring{which}{which}}
+{\footnotesize\ttfamily \label{structSDL__ControllerDeviceEvent_accb80de1619c1e790cffb6c888c915db} 
+Sint32 SDL\+\_\+\+Controller\+Device\+Event\+::which}
+
+The joystick device index for the ADDED event, instance id for the REMOVED or REMAPPED event 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+SDL/SDL\+\_\+events.\+h\end{DoxyCompactItemize}

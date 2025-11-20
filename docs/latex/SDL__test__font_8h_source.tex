@@ -1,0 +1,174 @@
+\doxysection{SDL\+\_\+test\+\_\+font.\+h}
+\hypertarget{SDL__test__font_8h_source}{}\label{SDL__test__font_8h_source}\index{include/SDL/SDL\_test\_font.h@{include/SDL/SDL\_test\_font.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2025\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ \ \(\backslash\)file\ SDL\_test\_font.h}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ \ Include\ file\ for\ SDL\ test\ framework.}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ *\ \ This\ code\ is\ a\ part\ of\ the\ SDL2\_test\ library,\ not\ the\ main\ SDL\ library.}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#ifndef\ SDL\_test\_font\_h\_}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ SDL\_test\_font\_h\_}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ "{}begin\_code.h"{}}}
+\DoxyCodeLine{00034\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00036\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{comment}{/*\ Function\ prototypes\ */}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ FONT\_CHARACTER\_SIZE\ 8}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ FONT\_LINE\_HEIGHT\ \ \ \ (FONT\_CHARACTER\_SIZE\ +\ 2)}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ *\ \ \(\backslash\)brief\ Draw\ a\ string\ in\ the\ currently\ set\ font.}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ renderer\ The\ renderer\ to\ draw\ on.}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ x\ The\ X\ coordinate\ of\ the\ upper\ left\ corner\ of\ the\ character.}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ y\ The\ Y\ coordinate\ of\ the\ upper\ left\ corner\ of\ the\ character.}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ c\ The\ character\ to\ draw.}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ \ \(\backslash\)returns\ 0\ on\ success,\ -\/1\ on\ failure.}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00054\ \textcolor{keywordtype}{int}\ SDLTest\_DrawCharacter(SDL\_Renderer\ *renderer,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ Uint32\ c);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ *\ \ \(\backslash\)brief\ Draw\ a\ UTF-\/8\ string\ in\ the\ currently\ set\ font.}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ *\ \ The\ font\ currently\ only\ supports\ characters\ in\ the\ Basic\ Latin\ and\ Latin-\/1\ Supplement\ sets.}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ renderer\ The\ renderer\ to\ draw\ on.}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ x\ The\ X\ coordinate\ of\ the\ upper\ left\ corner\ of\ the\ string.}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ y\ The\ Y\ coordinate\ of\ the\ upper\ left\ corner\ of\ the\ string.}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ s\ The\ string\ to\ draw.}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ *\ \ \(\backslash\)returns\ 0\ on\ success,\ -\/1\ on\ failure.}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00068\ \textcolor{keywordtype}{int}\ SDLTest\_DrawString(SDL\_Renderer\ *renderer,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *s);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ *\ \ \(\backslash\)brief\ Data\ used\ for\ multi-\/line\ text\ output}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00073\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structSDLTest__TextWindow}{SDLTest\_TextWindow}}}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \mbox{\hyperlink{structSDL__Rect}{SDL\_Rect}}\ rect;}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{int}\ current;}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{int}\ numlines;}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{char}\ **lines;}
+\DoxyCodeLine{00079\ \}\ \mbox{\hyperlink{structSDLTest__TextWindow}{SDLTest\_TextWindow}};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ *\ \ \(\backslash\)brief\ Create\ a\ multi-\/line\ text\ output\ window}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ x\ The\ X\ coordinate\ of\ the\ upper\ left\ corner\ of\ the\ window.}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ y\ The\ Y\ coordinate\ of\ the\ upper\ left\ corner\ of\ the\ window.}}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ w\ The\ width\ of\ the\ window\ (currently\ ignored)}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ h\ The\ height\ of\ the\ window\ (currently\ ignored)}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ *\ \ \(\backslash\)returns\ the\ new\ window,\ or\ NULL\ on\ failure.}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ *\ \ \(\backslash\)since\ This\ function\ is\ available\ since\ SDL\ 2.24.0}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00093\ \mbox{\hyperlink{structSDLTest__TextWindow}{SDLTest\_TextWindow}}\ *SDLTest\_TextWindowCreate(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ h);}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ *\ \ \(\backslash\)brief\ Display\ a\ multi-\/line\ text\ output\ window}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00098\ \textcolor{comment}{\ *\ \ This\ function\ should\ be\ called\ every\ frame\ to\ display\ the\ text}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ textwin\ The\ text\ output\ window}}
+\DoxyCodeLine{00101\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ renderer\ The\ renderer\ to\ use\ for\ display}}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00103\ \textcolor{comment}{\ *\ \ \(\backslash\)since\ This\ function\ is\ available\ since\ SDL\ 2.24.0}}
+\DoxyCodeLine{00104\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00105\ \textcolor{keywordtype}{void}\ SDLTest\_TextWindowDisplay(\mbox{\hyperlink{structSDLTest__TextWindow}{SDLTest\_TextWindow}}\ *textwin,\ SDL\_Renderer\ *renderer);}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00108\ \textcolor{comment}{\ *\ \ \(\backslash\)brief\ Add\ text\ to\ a\ multi-\/line\ text\ output\ window}}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ *\ \ Adds\ UTF-\/8\ text\ to\ the\ end\ of\ the\ current\ text.\ The\ newline\ character\ starts\ a}}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ *\ \ new\ line\ of\ text.\ The\ backspace\ character\ deletes\ the\ last\ character\ or,\ if\ the}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ *\ \ line\ is\ empty,\ deletes\ the\ line\ and\ goes\ to\ the\ end\ of\ the\ previous\ line.}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ textwin\ The\ text\ output\ window}}
+\DoxyCodeLine{00115\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ fmt\ A\ printf()\ style\ format\ string}}
+\DoxyCodeLine{00116\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ ...\ \ additional\ parameters\ matching\ \%\ tokens\ in\ the\ \`{}fmt`\ string,\ if\ any}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ *\ \ \(\backslash\)since\ This\ function\ is\ available\ since\ SDL\ 2.24.0}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00120\ \textcolor{keywordtype}{void}\ SDLTest\_TextWindowAddText(\mbox{\hyperlink{structSDLTest__TextWindow}{SDLTest\_TextWindow}}\ *textwin,\ SDL\_PRINTF\_FORMAT\_STRING\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *fmt,\ ...)\ SDL\_PRINTF\_VARARG\_FUNC(2);}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *\ \ \(\backslash\)brief\ Add\ text\ to\ a\ multi-\/line\ text\ output\ window}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ *\ \ Adds\ UTF-\/8\ text\ to\ the\ end\ of\ the\ current\ text.\ The\ newline\ character\ starts\ a}}
+\DoxyCodeLine{00126\ \textcolor{comment}{\ *\ \ new\ line\ of\ text.\ The\ backspace\ character\ deletes\ the\ last\ character\ or,\ if\ the}}
+\DoxyCodeLine{00127\ \textcolor{comment}{\ *\ \ line\ is\ empty,\ deletes\ the\ line\ and\ goes\ to\ the\ end\ of\ the\ previous\ line.}}
+\DoxyCodeLine{00128\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ textwin\ The\ text\ output\ window}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ text\ The\ text\ to\ add\ to\ the\ window}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ len\ The\ length,\ in\ bytes,\ of\ the\ text\ to\ add\ to\ the\ window}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ *\ \ \(\backslash\)since\ This\ function\ is\ available\ since\ SDL\ 2.24.0}}
+\DoxyCodeLine{00134\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00135\ \textcolor{keywordtype}{void}\ SDLTest\_TextWindowAddTextWithLength(\mbox{\hyperlink{structSDLTest__TextWindow}{SDLTest\_TextWindow}}\ *textwin,\ const\ \textcolor{keywordtype}{char}\ *text,\ \textcolor{keywordtype}{size\_t}\ len);}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00138\ \textcolor{comment}{\ *\ \ \(\backslash\)brief\ Clear\ the\ text\ in\ a\ multi-\/line\ text\ output\ window}}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ textwin\ The\ text\ output\ window}}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ *\ \ \(\backslash\)since\ This\ function\ is\ available\ since\ SDL\ 2.24.0}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00144\ \textcolor{keywordtype}{void}\ SDLTest\_TextWindowClear(\mbox{\hyperlink{structSDLTest__TextWindow}{SDLTest\_TextWindow}}\ *textwin);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00147\ \textcolor{comment}{\ *\ \ \(\backslash\)brief\ Free\ the\ storage\ associated\ with\ a\ multi-\/line\ text\ output\ window}}
+\DoxyCodeLine{00148\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ *\ \ \(\backslash\)param\ textwin\ The\ text\ output\ window}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ *\ \ \(\backslash\)since\ This\ function\ is\ available\ since\ SDL\ 2.24.0}}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00153\ \textcolor{keywordtype}{void}\ SDLTest\_TextWindowDestroy(\mbox{\hyperlink{structSDLTest__TextWindow}{SDLTest\_TextWindow}}\ *textwin);}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00156\ \textcolor{comment}{\ *\ \ \(\backslash\)brief\ Cleanup\ textures\ used\ by\ font\ drawing\ functions.}}
+\DoxyCodeLine{00157\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00158\ \textcolor{keywordtype}{void}\ SDLTest\_CleanupTextDrawing(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00162\ \}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{close__code_8h}{close\_code.h}}"{}}}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_test\_font\_h\_\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{comment}{/*\ vi:\ set\ ts=4\ sw=4\ expandtab:\ */}}
+
+\end{DoxyCode}

@@ -3,6 +3,9 @@
 
 #include "GLM/glm.hpp"
 
+/*
+*   Stores CPU side information about point lights
+*/
 struct Light
 {
     glm::vec3 position;

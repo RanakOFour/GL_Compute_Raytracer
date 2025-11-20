@@ -1,0 +1,20 @@
+digraph "glm::shortMix"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="LR";
+  Node1 [id="Node000001",label="glm::shortMix",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [id="edge7_Node000001_Node000002",color="steelblue1",style="solid",tooltip=" "];
+  Node2 [id="Node000002",label="glm::atan",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__core__func__trigonometric.html#ga72cc880c647a2b0ba5cf6dc037cfb685",tooltip=" "];
+  Node1 -> Node3 [id="edge8_Node000001_Node000003",color="steelblue1",style="solid",tooltip=" "];
+  Node3 [id="Node000003",label="glm::dot",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__core__func__geometric.html#ga7dada304da2ba7dd3376ab4f178c3f6b",tooltip=" "];
+  Node1 -> Node4 [id="edge9_Node000001_Node000004",color="steelblue1",style="solid",tooltip=" "];
+  Node4 [id="Node000004",label="glm::epsilon",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__gtc__constants.html#ga2a1e57fc5592b69cfae84174cbfc9429",tooltip=" "];
+  Node1 -> Node5 [id="edge10_Node000001_Node000005",color="steelblue1",style="solid",tooltip=" "];
+  Node5 [id="Node000005",label="glm::sin",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__core__func__trigonometric.html#ga626e6663f52e5ffefd16ba0f52ccbd90",tooltip=" "];
+  Node5 -> Node5 [id="edge11_Node000005_Node000005",color="steelblue1",style="solid",tooltip=" "];
+  Node1 -> Node6 [id="edge12_Node000001_Node000006",color="steelblue1",style="solid",tooltip=" "];
+  Node6 [id="Node000006",label="glm::sqrt",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__core__func__exponential.html#ga5c784ec51a1765be0a623104db2577b6",tooltip=" "];
+}

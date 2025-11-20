@@ -1,0 +1,68 @@
+\doxysection{GCP\+\_\+\+GFX\+\_\+\+Framework.\+h}
+\hypertarget{GCP__GFX__Framework_8h_source}{}\label{GCP__GFX__Framework_8h_source}\index{include/GCP\_GFX\_Framework.h@{include/GCP\_GFX\_Framework.h}}
+\mbox{\hyperlink{GCP__GFX__Framework_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GCP\_GFX\_FRAMEWORK\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GCP\_GFX\_FRAMEWORK\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}SDL/SDL.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}GLM/glm.hpp"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}GL/glew.h"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ Forward\ declaration\ of\ internal\ utility\ class\ to\ handle\ framebuffer\ functionality}}
+\DoxyCodeLine{00011\ \textcolor{keyword}{class\ }Framebuffer;}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ Main\ interface\ for\ the\ framework}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ Must\ call\ Init()\ before\ other\ functions}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classGCP__Framework}{GCP\_Framework}}}
+\DoxyCodeLine{00016\ \{}
+\DoxyCodeLine{00017\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{classGCP__Framework_aeccf17ced45b50c710bc6842574e5b57}{\string~GCP\_Framework}}();}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{comment}{//\ Must\ call\ Init\ after\ creation}}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{comment}{//\ Sets\ up\ SDL,\ OpenGL\ and\ the\ internal\ framebuffer}}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classGCP__Framework_ac1acadefe05c83920e2cfafab831901f}{Init}}(\ glm::ivec2\ screenSize\ );}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{comment}{//\ Set\ all\ pixels\ to\ the\ same\ colour}}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{comment}{//\ Colour\ is\ RGB,\ each\ must\ range\ from\ 0\ to\ 1}}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classGCP__Framework_ad4b7848a85b6a6a6c21344e768f1bbf0}{SetAllPixels}}(\ glm::vec3\ pixelColour\ );}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ Set\ a\ single\ pixel\ to\ the\ specified\ colour}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//\ Colour\ is\ RGB,\ each\ must\ range\ from\ 0\ to\ 1}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classGCP__Framework_a5fafa9ed793d846c2bb66cb051b308de}{DrawPixel}}(glm::ivec2\ pixelPosition,\ glm::vec3\ pixelColour);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{comment}{//\ Draws\ the\ buffer\ on\ OpenGL}}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classGCP__Framework_aadef4eb4f2d9c1537753b6a6541a69f7}{Show}}();}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//\ Sets\ Texture\ as\ Image;}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classGCP__Framework_a1aa2733e87963c394fed4ae56392aa40}{SetGLTexture}}();}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classGCP__Framework_a7be50125045945316c64c60e827d3e4e}{Shutdown}}();}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classGCP__Framework_af64c3fb8bcb2bb1c9f5dbc4cc5aa8e3d}{SwapBuffer}}()}
+\DoxyCodeLine{00041\ \ \ \ \ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ SDL\_GL\_SwapWindow(\mbox{\hyperlink{classGCP__Framework_a51ba501ebf893f4fc830f5679cf0d99d}{\_SDLwindow}});}
+\DoxyCodeLine{00043\ \ \ \ \ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ Internal\ variables}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ Framebuffer*\ \mbox{\hyperlink{classGCP__Framework_ae9b8bdb8210fd87e3a5a31e17f93b4f4}{\_mainBuffer}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ glm::ivec2\ \mbox{\hyperlink{classGCP__Framework_adf9db85a0afa00bc99b2c1a9b05e2c71}{\_screenSize}};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{comment}{//\ SDL\ variables}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ SDL\_Window*\ \mbox{\hyperlink{classGCP__Framework_a51ba501ebf893f4fc830f5679cf0d99d}{\_SDLwindow}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ SDL\_GLContext\ \mbox{\hyperlink{classGCP__Framework_aa6cd9e3891dec1eb2ea9531306389b92}{\_SDLglcontext}};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{//\ OpenGL\ drawing\ variables}}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classGCP__Framework_ab6b97bb783916df9dffa5ed0ec533cc3}{\_triangleVAO}}\ =\ 0;}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classGCP__Framework_abf05746a6c170519af918e93e0bb077b}{\_shaderProgram}}\ =\ 0;}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

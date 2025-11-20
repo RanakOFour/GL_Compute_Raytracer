@@ -1,0 +1,87 @@
+\doxysection{round.\+hpp}
+\hypertarget{round_8hpp_source}{}\label{round_8hpp_source}\index{include/GLM/gtc/round.hpp@{include/GLM/gtc/round.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Dependencies}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../detail/setup.hpp"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}../detail/precision.hpp"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}../detail/\_vectorize.hpp"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}../vector\_relational.hpp"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}../common.hpp"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_EXT\_INCLUDED)}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_GTC\_integer\ extension\ included"{})}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00037\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{group__gtc__round_gaebf826fbb6e0a70eeaab0792d89b25ec}{isPowerOfTwo}}(genIUType\ Value);}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00043\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<bool,\ P>\ \mbox{\hyperlink{group__gtc__round_gaebf826fbb6e0a70eeaab0792d89b25ec}{isPowerOfTwo}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ value);}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00050\ \ \ \ \ GLM\_FUNC\_DECL\ genIUType\ \mbox{\hyperlink{group__gtc__round_gaa73c7690c787086fa3ac1c312264acab}{ceilPowerOfTwo}}(genIUType\ Value);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00057\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__round_gaa73c7690c787086fa3ac1c312264acab}{ceilPowerOfTwo}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ value);}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00064\ \ \ \ \ GLM\_FUNC\_DECL\ genIUType\ \mbox{\hyperlink{group__gtc__round_gac80f6519c31baae10d8d7bea6735d1fa}{floorPowerOfTwo}}(genIUType\ Value);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00071\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__round_gac80f6519c31baae10d8d7bea6735d1fa}{floorPowerOfTwo}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ value);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00077\ \ \ \ \ GLM\_FUNC\_DECL\ genIUType\ \mbox{\hyperlink{group__gtc__round_ga6d24a9e3abe3e6a908661b43acb8efe0}{roundPowerOfTwo}}(genIUType\ Value);}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00083\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__round_ga6d24a9e3abe3e6a908661b43acb8efe0}{roundPowerOfTwo}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ value);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00089\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{group__gtc__round_gaf7444a7b2eb524f373463ceba76b9326}{isMultiple}}(genIUType\ Value,\ genIUType\ Multiple);}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00095\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<bool,\ P>\ \mbox{\hyperlink{group__gtc__round_gaf7444a7b2eb524f373463ceba76b9326}{isMultiple}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ Value,\ T\ Multiple);}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00101\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<bool,\ P>\ \mbox{\hyperlink{group__gtc__round_gaf7444a7b2eb524f373463ceba76b9326}{isMultiple}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ Value,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ Multiple);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00111\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__gtc__round_gac84898c466e609cdd2e81d9ba907d9e8}{ceilMultiple}}(genType\ Source,\ genType\ Multiple);}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00121\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__round_gac84898c466e609cdd2e81d9ba907d9e8}{ceilMultiple}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ Source,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ Multiple);}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00131\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__gtc__round_ga9eafb9dbedf84e5cece65c2fe9d5631d}{floorMultiple}}(}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ genType\ Source,}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ genType\ Multiple);}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00143\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__round_ga9eafb9dbedf84e5cece65c2fe9d5631d}{floorMultiple}}(}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ Source,}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ Multiple);}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00155\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__gtc__round_ga6739d1de04b2cea7c78675b365644bce}{roundMultiple}}(}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ genType\ Source,}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ genType\ Multiple);}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00167\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__round_ga6739d1de04b2cea7c78675b365644bce}{roundMultiple}}(}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ Source,}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ Multiple);}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00172\ \}\ \textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#include\ "{}round.inl"{}}}
+
+\end{DoxyCode}

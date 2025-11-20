@@ -1,0 +1,74 @@
+\doxysection{SDL\+\_\+\+Joy\+Axis\+Event Struct Reference}
+\hypertarget{structSDL__JoyAxisEvent}{}\label{structSDL__JoyAxisEvent}\index{SDL\_JoyAxisEvent@{SDL\_JoyAxisEvent}}
+
+
+{\ttfamily \#include $<$SDL\+\_\+events.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__JoyAxisEvent_aed1c873fb90ba58194e65f972933c67d}{type}}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__JoyAxisEvent_a60ecfc70df9eeef8e33b5dd7dc060389}{timestamp}}
+\item 
+\mbox{\hyperlink{SDL__joystick_8h_a3c3d32500cb08f76ee8077983912c0bd}{SDL\+\_\+\+Joystick\+ID}} \mbox{\hyperlink{structSDL__JoyAxisEvent_a965719f4703a7091bcc5f07f79fcf7e1}{which}}
+\item 
+Uint8 \mbox{\hyperlink{structSDL__JoyAxisEvent_a0beac2fb161e45771c424bd0b6daeabb}{axis}}
+\item 
+\Hypertarget{structSDL__JoyAxisEvent_ae8e17bced478530638982f0382a0dafa}\label{structSDL__JoyAxisEvent_ae8e17bced478530638982f0382a0dafa} 
+Uint8 {\bfseries padding1}
+\item 
+\Hypertarget{structSDL__JoyAxisEvent_ad5407250032f618fde7437ac5f229257}\label{structSDL__JoyAxisEvent_ad5407250032f618fde7437ac5f229257} 
+Uint8 {\bfseries padding2}
+\item 
+\Hypertarget{structSDL__JoyAxisEvent_a8bf5144fddc19686c2003add1f0e1565}\label{structSDL__JoyAxisEvent_a8bf5144fddc19686c2003add1f0e1565} 
+Uint8 {\bfseries padding3}
+\item 
+Sint16 \mbox{\hyperlink{structSDL__JoyAxisEvent_a53ee73e7c367934dd6edb69963be5556}{value}}
+\item 
+\Hypertarget{structSDL__JoyAxisEvent_a604b258940a8cd8beaa5efeb55d6f825}\label{structSDL__JoyAxisEvent_a604b258940a8cd8beaa5efeb55d6f825} 
+Uint16 {\bfseries padding4}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Joystick axis motion event structure (event.\+jaxis.\texorpdfstring{$\ast$}{*}) 
+
+\label{doc-variable-members}
+\Hypertarget{structSDL__JoyAxisEvent_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structSDL__JoyAxisEvent_a0beac2fb161e45771c424bd0b6daeabb}\index{SDL\_JoyAxisEvent@{SDL\_JoyAxisEvent}!axis@{axis}}
+\index{axis@{axis}!SDL\_JoyAxisEvent@{SDL\_JoyAxisEvent}}
+\doxysubsubsection{\texorpdfstring{axis}{axis}}
+{\footnotesize\ttfamily \label{structSDL__JoyAxisEvent_a0beac2fb161e45771c424bd0b6daeabb} 
+Uint8 SDL\+\_\+\+Joy\+Axis\+Event\+::axis}
+
+The joystick axis index \Hypertarget{structSDL__JoyAxisEvent_a60ecfc70df9eeef8e33b5dd7dc060389}\index{SDL\_JoyAxisEvent@{SDL\_JoyAxisEvent}!timestamp@{timestamp}}
+\index{timestamp@{timestamp}!SDL\_JoyAxisEvent@{SDL\_JoyAxisEvent}}
+\doxysubsubsection{\texorpdfstring{timestamp}{timestamp}}
+{\footnotesize\ttfamily \label{structSDL__JoyAxisEvent_a60ecfc70df9eeef8e33b5dd7dc060389} 
+Uint32 SDL\+\_\+\+Joy\+Axis\+Event\+::timestamp}
+
+In milliseconds, populated using SDL\+\_\+\+Get\+Ticks() \Hypertarget{structSDL__JoyAxisEvent_aed1c873fb90ba58194e65f972933c67d}\index{SDL\_JoyAxisEvent@{SDL\_JoyAxisEvent}!type@{type}}
+\index{type@{type}!SDL\_JoyAxisEvent@{SDL\_JoyAxisEvent}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{structSDL__JoyAxisEvent_aed1c873fb90ba58194e65f972933c67d} 
+Uint32 SDL\+\_\+\+Joy\+Axis\+Event\+::type}
+
+SDL\+\_\+\+JOYAXISMOTION \Hypertarget{structSDL__JoyAxisEvent_a53ee73e7c367934dd6edb69963be5556}\index{SDL\_JoyAxisEvent@{SDL\_JoyAxisEvent}!value@{value}}
+\index{value@{value}!SDL\_JoyAxisEvent@{SDL\_JoyAxisEvent}}
+\doxysubsubsection{\texorpdfstring{value}{value}}
+{\footnotesize\ttfamily \label{structSDL__JoyAxisEvent_a53ee73e7c367934dd6edb69963be5556} 
+Sint16 SDL\+\_\+\+Joy\+Axis\+Event\+::value}
+
+The axis value (range\+: -\/32768 to 32767) \Hypertarget{structSDL__JoyAxisEvent_a965719f4703a7091bcc5f07f79fcf7e1}\index{SDL\_JoyAxisEvent@{SDL\_JoyAxisEvent}!which@{which}}
+\index{which@{which}!SDL\_JoyAxisEvent@{SDL\_JoyAxisEvent}}
+\doxysubsubsection{\texorpdfstring{which}{which}}
+{\footnotesize\ttfamily \label{structSDL__JoyAxisEvent_a965719f4703a7091bcc5f07f79fcf7e1} 
+\mbox{\hyperlink{SDL__joystick_8h_a3c3d32500cb08f76ee8077983912c0bd}{SDL\+\_\+\+Joystick\+ID}} SDL\+\_\+\+Joy\+Axis\+Event\+::which}
+
+The joystick instance id 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+SDL/SDL\+\_\+events.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,20 @@
+\doxysection{perpendicular.\+inl}
+\hypertarget{perpendicular_8inl_source}{}\label{perpendicular_8inl_source}\index{include/GLM/gtx/perpendicular.inl@{include/GLM/gtx/perpendicular.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00005\ \{}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ vecType>\ }
+\DoxyCodeLine{00007\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType\ \mbox{\hyperlink{group__gtx__perpendicular_ga41f8c73da9798a18e6b1e32f1e301f07}{perp}}}
+\DoxyCodeLine{00008\ \ \ \ \ (}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ vecType\ \textcolor{keyword}{const}\ \&\ x,\ }
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ vecType\ \textcolor{keyword}{const}\ \&\ Normal}
+\DoxyCodeLine{00011\ \ \ \ \ )}
+\DoxyCodeLine{00012\ \ \ \ \ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x\ -\/\ \mbox{\hyperlink{group__gtx__projection_gadf29123bcf748fc9d6fb0998192184cf}{proj}}(x,\ Normal);}
+\DoxyCodeLine{00014\ \ \ \ \ \}}
+\DoxyCodeLine{00015\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

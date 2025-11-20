@@ -1,0 +1,110 @@
+\doxysection{func\+\_\+vector\+\_\+relational.\+inl}
+\hypertarget{func__vector__relational_8inl_source}{}\label{func__vector__relational_8inl_source}\index{include/GLM/detail/func\_vector\_relational.inl@{include/GLM/detail/func\_vector\_relational.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00007\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00009\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<bool,\ P>\ \mbox{\hyperlink{group__core__func__vector__relational_gadb626e8c1b32ecb79f8de0cce5069e5c}{lessThan}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00010\ \ \ \ \ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ assert(x.length()\ ==\ y.length());}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ vecType<bool,\ P>\ Result(uninitialize);}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ x.length();\ ++i)}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ x[i]\ <\ y[i];}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00021\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<bool,\ P>\ \mbox{\hyperlink{group__core__func__vector__relational_gab95731a0c2912db21effb0c9391def8f}{lessThanEqual}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00022\ \ \ \ \ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ assert(x.length()\ ==\ y.length());}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ vecType<bool,\ P>\ Result(uninitialize);}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ x.length();\ ++i)}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ x[i]\ <=\ y[i];}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00029\ \ \ \ \ \}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00032\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<bool,\ P>\ \mbox{\hyperlink{group__core__func__vector__relational_ga278939a85cf8159a964835bbabf840a8}{greaterThan}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00033\ \ \ \ \ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ assert(x.length()\ ==\ y.length());}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ vecType<bool,\ P>\ Result(uninitialize);}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ x.length();\ ++i)}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ x[i]\ >\ y[i];}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00043\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<bool,\ P>\ \mbox{\hyperlink{group__core__func__vector__relational_gaf95a6672601cb2e4c539f2e45136b240}{greaterThanEqual}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00044\ \ \ \ \ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ assert(x.length()\ ==\ y.length());}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ vecType<bool,\ P>\ Result(uninitialize);}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ x.length();\ ++i)}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ x[i]\ >=\ y[i];}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00054\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<bool,\ P>\ \mbox{\hyperlink{group__core__func__vector__relational_ga229aa6c48f93155ae6547210e005f06c}{equal}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00055\ \ \ \ \ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ assert(x.length()\ ==\ y.length());}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ vecType<bool,\ P>\ Result(uninitialize);}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ x.length();\ ++i)}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ x[i]\ ==\ y[i];}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00062\ \ \ \ \ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00065\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<bool,\ P>\ \mbox{\hyperlink{group__core__func__vector__relational_ga5ed495eccb82f7b772bfe1fcbeab1e66}{notEqual}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00066\ \ \ \ \ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ assert(x.length()\ ==\ y.length());}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ vecType<bool,\ P>\ Result(uninitialize);}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ x.length();\ ++i)}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ x[i]\ !=\ y[i];}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00073\ \ \ \ \ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{template}\ <precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00076\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{group__core__func__vector__relational_ga632a2644532d9332011c8860400d30b2}{any}}(vecType<bool,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00077\ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ Result\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ v.length();\ ++i)}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ Result\ =\ Result\ ||\ v[i];}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00082\ \ \ \ \ \}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{template}\ <precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00085\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{group__core__func__vector__relational_ga14bbc94f2ae2774a1d64d91f8767773e}{all}}(vecType<bool,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00086\ \ \ \ \ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ Result\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ v.length();\ ++i)}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ Result\ =\ Result\ \&\&\ v[i];}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00091\ \ \ \ \ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{template}\ <precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00094\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<bool,\ P>\ \mbox{\hyperlink{group__core__func__vector__relational_ga9dd5592cd6bdf84dd714eb5289639c8b}{not\_}}(vecType<bool,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00095\ \ \ \ \ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ vecType<bool,\ P>\ Result(uninitialize);}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ v.length();\ ++i)}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ !v[i];}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00100\ \ \ \ \ \}}
+\DoxyCodeLine{00101\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#if\ GLM\_ARCH\ !=\ GLM\_ARCH\_PURE\ \&\&\ GLM\_HAS\_UNRESTRICTED\_UNIONS}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#\ \ \ include\ "{}func\_vector\_relational\_simd.inl"{}}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

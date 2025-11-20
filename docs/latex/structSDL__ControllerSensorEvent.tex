@@ -1,0 +1,70 @@
+\doxysection{SDL\+\_\+\+Controller\+Sensor\+Event Struct Reference}
+\hypertarget{structSDL__ControllerSensorEvent}{}\label{structSDL__ControllerSensorEvent}\index{SDL\_ControllerSensorEvent@{SDL\_ControllerSensorEvent}}
+
+
+{\ttfamily \#include $<$SDL\+\_\+events.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__ControllerSensorEvent_a553d55d13d9b118679a3f208c41e96cb}{type}}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__ControllerSensorEvent_a67f4b70a91f347130928f1c91d120e95}{timestamp}}
+\item 
+\mbox{\hyperlink{SDL__joystick_8h_a3c3d32500cb08f76ee8077983912c0bd}{SDL\+\_\+\+Joystick\+ID}} \mbox{\hyperlink{structSDL__ControllerSensorEvent_acf40e0528d7147725dfc94cc96618d4d}{which}}
+\item 
+Sint32 \mbox{\hyperlink{structSDL__ControllerSensorEvent_aac19e4034212a30d64066a122d5db2a8}{sensor}}
+\item 
+float \mbox{\hyperlink{structSDL__ControllerSensorEvent_a214cbd66e4c8b5e58a60f21faa00e0e7}{data}} \mbox{[}3\mbox{]}
+\item 
+Uint64 \mbox{\hyperlink{structSDL__ControllerSensorEvent_a992c902eb22978f48f0022022ca3aa6f}{timestamp\+\_\+us}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Game controller sensor event structure (event.\+csensor.\texorpdfstring{$\ast$}{*}) 
+
+\label{doc-variable-members}
+\Hypertarget{structSDL__ControllerSensorEvent_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structSDL__ControllerSensorEvent_a214cbd66e4c8b5e58a60f21faa00e0e7}\index{SDL\_ControllerSensorEvent@{SDL\_ControllerSensorEvent}!data@{data}}
+\index{data@{data}!SDL\_ControllerSensorEvent@{SDL\_ControllerSensorEvent}}
+\doxysubsubsection{\texorpdfstring{data}{data}}
+{\footnotesize\ttfamily \label{structSDL__ControllerSensorEvent_a214cbd66e4c8b5e58a60f21faa00e0e7} 
+float SDL\+\_\+\+Controller\+Sensor\+Event\+::data\mbox{[}3\mbox{]}}
+
+Up to 3 values from the sensor, as defined in \doxylink{SDL__sensor_8h_source}{SDL\+\_\+sensor.\+h} \Hypertarget{structSDL__ControllerSensorEvent_aac19e4034212a30d64066a122d5db2a8}\index{SDL\_ControllerSensorEvent@{SDL\_ControllerSensorEvent}!sensor@{sensor}}
+\index{sensor@{sensor}!SDL\_ControllerSensorEvent@{SDL\_ControllerSensorEvent}}
+\doxysubsubsection{\texorpdfstring{sensor}{sensor}}
+{\footnotesize\ttfamily \label{structSDL__ControllerSensorEvent_aac19e4034212a30d64066a122d5db2a8} 
+Sint32 SDL\+\_\+\+Controller\+Sensor\+Event\+::sensor}
+
+The type of the sensor, one of the values of SDL\+\_\+\+Sensor\+Type \Hypertarget{structSDL__ControllerSensorEvent_a67f4b70a91f347130928f1c91d120e95}\index{SDL\_ControllerSensorEvent@{SDL\_ControllerSensorEvent}!timestamp@{timestamp}}
+\index{timestamp@{timestamp}!SDL\_ControllerSensorEvent@{SDL\_ControllerSensorEvent}}
+\doxysubsubsection{\texorpdfstring{timestamp}{timestamp}}
+{\footnotesize\ttfamily \label{structSDL__ControllerSensorEvent_a67f4b70a91f347130928f1c91d120e95} 
+Uint32 SDL\+\_\+\+Controller\+Sensor\+Event\+::timestamp}
+
+In milliseconds, populated using SDL\+\_\+\+Get\+Ticks() \Hypertarget{structSDL__ControllerSensorEvent_a992c902eb22978f48f0022022ca3aa6f}\index{SDL\_ControllerSensorEvent@{SDL\_ControllerSensorEvent}!timestamp\_us@{timestamp\_us}}
+\index{timestamp\_us@{timestamp\_us}!SDL\_ControllerSensorEvent@{SDL\_ControllerSensorEvent}}
+\doxysubsubsection{\texorpdfstring{timestamp\_us}{timestamp\_us}}
+{\footnotesize\ttfamily \label{structSDL__ControllerSensorEvent_a992c902eb22978f48f0022022ca3aa6f} 
+Uint64 SDL\+\_\+\+Controller\+Sensor\+Event\+::timestamp\+\_\+us}
+
+The timestamp of the sensor reading in microseconds, if the hardware provides this information. \Hypertarget{structSDL__ControllerSensorEvent_a553d55d13d9b118679a3f208c41e96cb}\index{SDL\_ControllerSensorEvent@{SDL\_ControllerSensorEvent}!type@{type}}
+\index{type@{type}!SDL\_ControllerSensorEvent@{SDL\_ControllerSensorEvent}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{structSDL__ControllerSensorEvent_a553d55d13d9b118679a3f208c41e96cb} 
+Uint32 SDL\+\_\+\+Controller\+Sensor\+Event\+::type}
+
+SDL\+\_\+\+CONTROLLERSENSORUPDATE \Hypertarget{structSDL__ControllerSensorEvent_acf40e0528d7147725dfc94cc96618d4d}\index{SDL\_ControllerSensorEvent@{SDL\_ControllerSensorEvent}!which@{which}}
+\index{which@{which}!SDL\_ControllerSensorEvent@{SDL\_ControllerSensorEvent}}
+\doxysubsubsection{\texorpdfstring{which}{which}}
+{\footnotesize\ttfamily \label{structSDL__ControllerSensorEvent_acf40e0528d7147725dfc94cc96618d4d} 
+\mbox{\hyperlink{SDL__joystick_8h_a3c3d32500cb08f76ee8077983912c0bd}{SDL\+\_\+\+Joystick\+ID}} SDL\+\_\+\+Controller\+Sensor\+Event\+::which}
+
+The joystick instance id 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+SDL/SDL\+\_\+events.\+h\end{DoxyCompactItemize}

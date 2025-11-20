@@ -1,0 +1,817 @@
+\doxysection{setup.\+hpp}
+\hypertarget{setup_8hpp_source}{}\label{setup_8hpp_source}\index{include/GLM/detail/setup.hpp@{include/GLM/detail/setup.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#if\ (defined(GLM\_FORCE\_SWIZZLE)\ ||\ defined(GLM\_SWIZZLE))\ \&\&\ defined(GLM\_FORCE\_UNRESTRICTED\_GENTYPE)}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#\ \ \ error\ "{}Both\ GLM\_FORCE\_SWIZZLE\ and\ GLM\_FORCE\_UNRESTRICTED\_GENTYPE\ can't\ be\ defined\ at\ the\ same\ time"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ Messages}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#ifdef\ GLM\_MESSAGES}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_MESSAGES\ is\ deprecated,\ use\ GLM\_FORCE\_MESSAGES\ instead"{})}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ GLM\_MESSAGES\_ENABLED\ 1}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ GLM\_MESSAGES\_DISABLE\ 0}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#if\ defined(GLM\_FORCE\_MESSAGES)\ ||\ defined(GLM\_MESSAGES)}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#\ \ \ undef\ GLM\_MESSAGES}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MESSAGES\ GLM\_MESSAGES\_ENABLED}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#\ \ \ undef\ GLM\_MESSAGES}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MESSAGES\ GLM\_MESSAGES\_DISABLE}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ "{}../simd/platform.h"{}}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ Version}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ GLM\_VERSION\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 98}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ GLM\_VERSION\_MAJOR\ \ \ \ \ \ \ \ \ \ \ 0}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ GLM\_VERSION\_MINOR\ \ \ \ \ \ \ \ \ \ \ 9}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ GLM\_VERSION\_PATCH\ \ \ \ \ \ \ \ \ \ \ 8}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ GLM\_VERSION\_REVISION\ \ \ \ \ \ \ \ 5}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_MESSAGE\_VERSION\_DISPLAYED)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MESSAGE\_VERSION\_DISPLAYED}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#\ \ \ pragma\ message\ ("{}GLM:\ version\ 0.9.8.5"{})}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_MESSAGES}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ Report\ compiler\ detection}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_MESSAGE\_COMPILER\_DISPLAYED)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MESSAGE\_COMPILER\_DISPLAYED}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ CUDA\ compiler\ detected"{})}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ Visual\ C++\ compiler\ detected"{})}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ Clang\ compiler\ detected"{})}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ Intel\ Compiler\ detected"{})}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ GCC\ compiler\ detected"{})}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ Compiler\ not\ detected"{})}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_MESSAGES}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ Build\ model}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#if\ defined(\_\_arch64\_\_)\ ||\ defined(\_\_LP64\_\_)\ ||\ defined(\_M\_X64)\ ||\ defined(\_\_ppc64\_\_)\ ||\ defined(\_\_x86\_64\_\_)}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MODEL\ \ \ \ GLM\_MODEL\_64}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#elif\ defined(\_\_i386\_\_)\ ||\ defined(\_\_ppc\_\_)}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MODEL\ \ \ \ GLM\_MODEL\_32}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MODEL\ \ \ \ GLM\_MODEL\_32}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#if\ !defined(GLM\_MODEL)\ \&\&\ GLM\_COMPILER\ !=\ 0}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#\ \ \ error\ "{}GLM\_MODEL\ undefined,\ your\ compiler\ may\ not\ be\ supported\ by\ GLM.\ Add\ \#define\ GLM\_MODEL\ 0\ to\ ignore\ this\ message."{}}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_MODEL}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_MESSAGE\_MODEL\_DISPLAYED)}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MESSAGE\_MODEL\_DISPLAYED}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#\ \ \ if(GLM\_MODEL\ ==\ GLM\_MODEL\_64)}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ 64\ bits\ model"{})}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#\ \ \ elif(GLM\_MODEL\ ==\ GLM\_MODEL\_32)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ 32\ bits\ model"{})}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#\ \ \ endif}\textcolor{comment}{//GLM\_MODEL}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_MESSAGES}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_MESSAGE\_ARCH\_DISPLAYED)}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MESSAGE\_ARCH\_DISPLAYED}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#\ \ \ if(GLM\_ARCH\ ==\ GLM\_ARCH\_PURE)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ Platform\ independent\ code"{})}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#\ \ \ elif(GLM\_ARCH\ ==\ GLM\_ARCH\_AVX2)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ AVX2\ instruction\ set"{})}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#\ \ \ elif(GLM\_ARCH\ ==\ GLM\_ARCH\_AVX)}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ AVX\ instruction\ set"{})}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#\ \ \ elif(GLM\_ARCH\ ==\ GLM\_ARCH\_SSE42)}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ SSE4.2\ instruction\ set"{})}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#\ \ \ elif(GLM\_ARCH\ ==\ GLM\_ARCH\_SSE41)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ SSE4.1\ instruction\ set"{})}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#\ \ \ elif(GLM\_ARCH\ ==\ GLM\_ARCH\_SSSE3)}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ SSSE3\ instruction\ set"{})}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#\ \ \ elif(GLM\_ARCH\ ==\ GLM\_ARCH\_SSE3)}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ SSE3\ instruction\ set"{})}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#\ \ \ elif(GLM\_ARCH\ ==\ GLM\_ARCH\_SSE2)}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ SSE2\ instruction\ set"{})}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#\ \ \ elif(GLM\_ARCH\ ==\ GLM\_ARCH\_X86)}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ x86\ instruction\ set"{})}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#\ \ \ elif(GLM\_ARCH\ ==\ GLM\_ARCH\_NEON)}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ NEON\ instruction\ set"{})}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#\ \ \ elif(GLM\_ARCH\ ==\ GLM\_ARCH\_ARM)}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ ARM\ instruction\ set"{})}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#\ \ \ elif(GLM\_ARCH\ ==\ GLM\_ARCH\_MIPS)}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ MIPS\ instruction\ set"{})}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#\ \ \ elif(GLM\_ARCH\ ==\ GLM\_ARCH\_PPC)}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ PowerPC\ architechture"{})}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#\ \ \ endif}\textcolor{comment}{//GLM\_ARCH}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_MESSAGES}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00120\ \textcolor{comment}{//\ C++\ Version}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{comment}{//\ User\ defines:\ GLM\_FORCE\_CXX98,\ GLM\_FORCE\_CXX03,\ GLM\_FORCE\_CXX11,\ GLM\_FORCE\_CXX14}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX98\_FLAG\ \ \ \ \ \ \ \ \ (1\ <<\ 1)}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX03\_FLAG\ \ \ \ \ \ \ \ \ (1\ <<\ 2)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX0X\_FLAG\ \ \ \ \ \ \ \ \ (1\ <<\ 3)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX11\_FLAG\ \ \ \ \ \ \ \ \ (1\ <<\ 4)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX1Y\_FLAG\ \ \ \ \ \ \ \ \ (1\ <<\ 5)}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX14\_FLAG\ \ \ \ \ \ \ \ \ (1\ <<\ 6)}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX1Z\_FLAG\ \ \ \ \ \ \ \ \ (1\ <<\ 7)}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXXMS\_FLAG\ \ \ \ \ \ \ \ \ (1\ <<\ 8)}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXXGNU\_FLAG\ \ \ \ \ \ \ \ (1\ <<\ 9)}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX98\ \ \ \ \ \ \ \ \ \ GLM\_LANG\_CXX98\_FLAG}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX03\ \ \ \ \ \ \ \ \ \ (GLM\_LANG\_CXX98\ |\ GLM\_LANG\_CXX03\_FLAG)}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX0X\ \ \ \ \ \ \ \ \ \ (GLM\_LANG\_CXX03\ |\ GLM\_LANG\_CXX0X\_FLAG)}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX11\ \ \ \ \ \ \ \ \ \ (GLM\_LANG\_CXX0X\ |\ GLM\_LANG\_CXX11\_FLAG)}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX1Y\ \ \ \ \ \ \ \ \ \ (GLM\_LANG\_CXX11\ |\ GLM\_LANG\_CXX1Y\_FLAG)}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX14\ \ \ \ \ \ \ \ \ \ (GLM\_LANG\_CXX1Y\ |\ GLM\_LANG\_CXX14\_FLAG)}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXX1Z\ \ \ \ \ \ \ \ \ \ (GLM\_LANG\_CXX14\ |\ GLM\_LANG\_CXX1Z\_FLAG)}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXXMS\ \ \ \ \ \ \ \ \ \ GLM\_LANG\_CXXMS\_FLAG}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#define\ GLM\_LANG\_CXXGNU\ \ \ \ \ \ \ \ \ GLM\_LANG\_CXXGNU\_FLAG}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#if\ defined(GLM\_FORCE\_CXX14)}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#\ \ \ if((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC)\ \&\&\ (GLM\_COMPILER\ <=\ GLM\_COMPILER\_GCC50))\ ||\ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG)\ \&\&\ (GLM\_COMPILER\ <=\ GLM\_COMPILER\_CLANG34))}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ pragma\ message("{}GLM:\ Using\ GLM\_FORCE\_CXX14\ with\ a\ compiler\ that\ doesn't\ fully\ support\ C++14"{})}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ pragma\ message("{}GLM:\ Using\ GLM\_FORCE\_CXX14\ but\ there\ is\ no\ known\ version\ of\ Visual\ C++\ compiler\ that\ fully\ supports\ C++14"{})}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ pragma\ message("{}GLM:\ Using\ GLM\_FORCE\_CXX14\ but\ there\ is\ no\ known\ version\ of\ ICC\ compiler\ that\ fully\ supports\ C++14"{})}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX14}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_LANG\_STL11\_FORCED}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#elif\ defined(GLM\_FORCE\_CXX11)}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#\ \ \ if((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC)\ \&\&\ (GLM\_COMPILER\ <=\ GLM\_COMPILER\_GCC48))\ ||\ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG)\ \&\&\ (GLM\_COMPILER\ <=\ GLM\_COMPILER\_CLANG33))}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ pragma\ message("{}GLM:\ Using\ GLM\_FORCE\_CXX11\ with\ a\ compiler\ that\ doesn't\ fully\ support\ C++11"{})}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ pragma\ message("{}GLM:\ Using\ GLM\_FORCE\_CXX11\ but\ there\ is\ no\ known\ version\ of\ Visual\ C++\ compiler\ that\ fully\ supports\ C++11"{})}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ pragma\ message("{}GLM:\ Using\ GLM\_FORCE\_CXX11\ but\ there\ is\ no\ known\ version\ of\ ICC\ compiler\ that\ fully\ supports\ C++11"{})}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX11}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_LANG\_STL11\_FORCED}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#elif\ defined(GLM\_FORCE\_CXX03)}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX03}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#elif\ defined(GLM\_FORCE\_CXX98)}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX98}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ \_\_cplusplus\ >=\ 201402L\ }\textcolor{comment}{//\ GLM\_COMPILER\_CLANG34\ +\ -\/std=c++14}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX14}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ \_\_has\_feature(cxx\_decltype\_auto)\ \&\&\ \_\_has\_feature(cxx\_aggregate\_nsdmi)\ }\textcolor{comment}{//\ GLM\_COMPILER\_CLANG33\ +\ -\/std=c++1y}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX1Y}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ \_\_cplusplus\ >=\ 201103L\ }\textcolor{comment}{//\ GLM\_COMPILER\_CLANG33\ +\ -\/std=c++11}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX11}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ \_\_has\_feature(cxx\_static\_assert)\ }\textcolor{comment}{//\ GLM\_COMPILER\_CLANG29\ +\ -\/std=c++11}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX0X}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ \_\_cplusplus\ >=\ 199711L}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX98}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ \_\_cplusplus\ >=\ 201402L}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX14}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ \_\_cplusplus\ >=\ 201103L}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX11}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ defined(\_\_GXX\_EXPERIMENTAL\_CXX0X\_\_)}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX0X}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX98}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifdef\ \_MSC\_EXTENSIONS}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ if\ \_\_cplusplus\ >=\ 201402L}}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ (GLM\_LANG\_CXX14\ |\ GLM\_LANG\_CXXMS\_FLAG)}}
+\DoxyCodeLine{00197\ \textcolor{comment}{//\#\ \ \ \ \ \ \ \ \ elif\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC14}}
+\DoxyCodeLine{00198\ \textcolor{comment}{//\#\ \ \ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ (GLM\_LANG\_CXX1Y\ |\ GLM\_LANG\_CXXMS\_FLAG)}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ elif\ \_\_cplusplus\ >=\ 201103L}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ (GLM\_LANG\_CXX11\ |\ GLM\_LANG\_CXXMS\_FLAG)}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ elif\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC10}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ (GLM\_LANG\_CXX0X\ |\ GLM\_LANG\_CXXMS\_FLAG)}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ elif\ \_\_cplusplus\ >=\ 199711L}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ (GLM\_LANG\_CXX98\ |\ GLM\_LANG\_CXXMS\_FLAG)}}
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ (GLM\_LANG\_CXX\ |\ GLM\_LANG\_CXXMS\_FLAG)}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ if\ \_\_cplusplus\ >=\ 201402L}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX14}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ elif\ \_\_cplusplus\ >=\ 201103L}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX11}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ elif\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC10}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX0X}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ elif\ \_\_cplusplus\ >=\ 199711L}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX98}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifdef\ \_MSC\_EXTENSIONS}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_MSC\_EXT\ GLM\_LANG\_CXXMS\_FLAG}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_MSC\_EXT\ 0}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ \_\_cplusplus\ >=\ 201402L}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ (GLM\_LANG\_CXX14\ |\ GLM\_MSC\_EXT)}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ \_\_cplusplus\ >=\ 201103L}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ (GLM\_LANG\_CXX11\ |\ GLM\_MSC\_EXT)}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ \_\_INTEL\_CXX11\_MODE\_\_}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ (GLM\_LANG\_CXX0X\ |\ GLM\_MSC\_EXT)}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ \_\_cplusplus\ >=\ 199711L}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ (GLM\_LANG\_CXX98\ |\ GLM\_MSC\_EXT)}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ (GLM\_LANG\_CXX\ |\ GLM\_MSC\_EXT)}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifdef\ \_MSC\_EXTENSIONS}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_MSC\_EXT\ GLM\_LANG\_CXXMS\_FLAG}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_MSC\_EXT\ 0}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_CUDA75}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ (GLM\_LANG\_CXX0X\ |\ GLM\_MSC\_EXT)}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ (GLM\_LANG\_CXX98\ |\ GLM\_MSC\_EXT)}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#\ \ \ else\ }\textcolor{comment}{//\ Unknown\ compiler}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ \_\_cplusplus\ >=\ 201402L}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX14}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ \_\_cplusplus\ >=\ 201103L}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX11}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ \_\_cplusplus\ >=\ 199711L}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX98}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_LANG\ GLM\_LANG\_CXX\ }\textcolor{comment}{//\ Good\ luck\ with\ that!}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifndef\ GLM\_FORCE\_PURE}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_FORCE\_PURE}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_MESSAGE\_LANG\_DISPLAYED)}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MESSAGE\_LANG\_DISPLAYED}}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_LANG\ \&\ GLM\_LANG\_CXX1Z\_FLAG}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ C++1z"{})}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX14\_FLAG}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ C++14"{})}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX1Y\_FLAG}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ C++1y"{})}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ C++11"{})}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG}}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ C++0x"{})}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX03\_FLAG}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ C++03"{})}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX98\_FLAG}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ C++98"{})}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ C++\ language\ undetected"{})}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#\ \ \ endif}\textcolor{comment}{//GLM\_LANG}}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_LANG\ \&\ (GLM\_LANG\_CXXGNU\_FLAG\ |\ GLM\_LANG\_CXXMS\_FLAG)}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ Language\ extensions\ enabled"{})}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\#\ \ \ endif}\textcolor{comment}{//GLM\_LANG}}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_MESSAGES}}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00292\ \textcolor{comment}{//\ Has\ of\ C++\ features}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \textcolor{comment}{//\ http://clang.llvm.org/cxx\_status.html}}
+\DoxyCodeLine{00295\ \textcolor{comment}{//\ http://gcc.gnu.org/projects/cxx0x.html}}
+\DoxyCodeLine{00296\ \textcolor{comment}{//\ http://msdn.microsoft.com/en-\/us/library/vstudio/hh567368(v=vs.120).aspx}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \textcolor{comment}{//\ Android\ has\ multiple\ STLs\ but\ C++11\ STL\ detection\ doesn't\ always\ work\ \#284\ \#564}}
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\#if\ GLM\_PLATFORM\ ==\ GLM\_PLATFORM\_ANDROID\ \&\&\ !defined(GLM\_LANG\_STL11\_FORCED)}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_CXX11\_STL\ 0}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\#elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\#\ \ \ if\ (defined(\_LIBCPP\_VERSION)\ \&\&\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG)\ ||\ defined(GLM\_LANG\_STL11\_FORCED)}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_HAS\_CXX11\_STL\ 1}}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_HAS\_CXX11\_STL\ 0}}
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_CXX11\_STL\ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_GCC48))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC12))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_PLATFORM\ !=\ GLM\_PLATFORM\_WINDOWS)\ \&\&\ (GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_INTEL15))))}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \textcolor{comment}{//\ N1720}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\#if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_STATIC\_ASSERT\ \_\_has\_feature(cxx\_static\_assert)}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_STATIC\_ASSERT\ 1}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_STATIC\_ASSERT\ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC))))}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \textcolor{comment}{//\ N1988}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\#if\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_EXTENDED\_INTEGER\_TYPE\ 1}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_EXTENDED\_INTEGER\_TYPE\ (\(\backslash\)}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC11))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG)))}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \textcolor{comment}{//\ N2235}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_CONSTEXPR\ \_\_has\_feature(cxx\_constexpr)}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_CONSTEXPR\_PARTIAL\ GLM\_HAS\_CONSTEXPR}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_CONSTEXPR\ 1}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_CONSTEXPR\_PARTIAL\ GLM\_HAS\_CONSTEXPR}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_CONSTEXPR\ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC15))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_GCC48))))\ }\textcolor{comment}{//\ GCC\ 4.6\ support\ constexpr\ but\ there\ is\ a\ compiler\ bug\ causing\ a\ crash}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_CONSTEXPR\_PARTIAL\ (GLM\_HAS\_CONSTEXPR\ ||\ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC14)))}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \textcolor{comment}{//\ N2672}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\#if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_INITIALIZER\_LISTS\ \_\_has\_feature(cxx\_generalized\_initializers)}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\#elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_INITIALIZER\_LISTS\ 1}}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_INITIALIZER\_LISTS\ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC12))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_CUDA75))))}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00363\ \textcolor{comment}{//\ N2544\ Unrestricted\ unions\ http://www.open-\/std.org/jtc1/sc22/wg21/docs/papers/2008/n2544.pdf}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\#if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_UNRESTRICTED\_UNIONS\ \_\_has\_feature(cxx\_unrestricted\_unions)}}
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\#elif\ GLM\_LANG\ \&\ (GLM\_LANG\_CXX11\_FLAG\ |\ GLM\_LANG\_CXXMS\_FLAG)}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_UNRESTRICTED\_UNIONS\ 1}}
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_UNRESTRICTED\_UNIONS\ (GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_LANG\ \&\ GLM\_LANG\_CXXMS\_FLAG))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_CUDA75))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_GCC46)))}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \textcolor{comment}{//\ N2346}}
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\#if\ defined(GLM\_FORCE\_UNRESTRICTED\_GENTYPE)}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_DEFAULTED\_FUNCTIONS\ 0}}
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{\#elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_DEFAULTED\_FUNCTIONS\ \_\_has\_feature(cxx\_defaulted\_functions)}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\#elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG}}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_DEFAULTED\_FUNCTIONS\ 1}}
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_DEFAULTED\_FUNCTIONS\ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC12))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_INTEL12))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA)))}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \textcolor{comment}{//\ N2118}}
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\#if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00392\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_RVALUE\_REFERENCES\ \_\_has\_feature(cxx\_rvalue\_references)}}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\#elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG}}
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_RVALUE\_REFERENCES\ 1}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_RVALUE\_REFERENCES\ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC11))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00399\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_CUDA50))))}}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ \textcolor{comment}{//\ N2437\ http://www.open-\/std.org/jtc1/sc22/wg21/docs/papers/2007/n2437.pdf}}
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_EXPLICIT\_CONVERSION\_OPERATORS\ \_\_has\_feature(cxx\_explicit\_conversions)}}
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\#elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG}}
+\DoxyCodeLine{00406\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_EXPLICIT\_CONVERSION\_OPERATORS\ 1}}
+\DoxyCodeLine{00407\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_EXPLICIT\_CONVERSION\_OPERATORS\ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00409\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_GCC45))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_INTEL14))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00411\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC12))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_CUDA50))))}}
+\DoxyCodeLine{00413\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00414\ }
+\DoxyCodeLine{00415\ \textcolor{comment}{//\ N2258\ http://www.open-\/std.org/jtc1/sc22/wg21/docs/papers/2007/n2258.pdf}}
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\#if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00417\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_TEMPLATE\_ALIASES\ \_\_has\_feature(cxx\_alias\_templates)}}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\#elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG}}
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_TEMPLATE\_ALIASES\ 1}}
+\DoxyCodeLine{00420\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_TEMPLATE\_ALIASES\ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_INTEL12\_1))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_GCC47))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC12))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_CUDA50))))}}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00427\ }
+\DoxyCodeLine{00428\ \textcolor{comment}{//\ N2930\ http://www.open-\/std.org/jtc1/sc22/wg21/docs/papers/2009/n2930.html}}
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\#if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_RANGE\_FOR\ \_\_has\_feature(cxx\_range\_for)}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG}}
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_RANGE\_FOR\ 1}}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_RANGE\_FOR\ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00435\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_GCC46))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00436\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_INTEL13))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00437\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC11))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_CUDA50))))}}
+\DoxyCodeLine{00439\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00441\ \textcolor{comment}{//\ N2341\ http://www.open-\/std.org/jtc1/sc22/wg21/docs/papers/2007/n2341.pdf}}
+\DoxyCodeLine{00442\ \textcolor{preprocessor}{\#if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00443\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_ALIGNOF\ \_\_has\_feature(c\_alignof)}}
+\DoxyCodeLine{00444\ \textcolor{preprocessor}{\#elif\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG}}
+\DoxyCodeLine{00445\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_ALIGNOF\ 1}}
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00447\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_ALIGNOF\ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00448\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_GCC48))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00449\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_INTEL15))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC14))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_CUDA70))))}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00453\ }
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{\#define\ GLM\_HAS\_ONLY\_XYZW\ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC)\ \&\&\ (GLM\_COMPILER\ <\ GLM\_COMPILER\_GCC46))}}
+\DoxyCodeLine{00455\ \textcolor{preprocessor}{\#if\ GLM\_HAS\_ONLY\_XYZW}}
+\DoxyCodeLine{00456\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GCC\ older\ than\ 4.6\ has\ a\ bug\ presenting\ the\ use\ of\ rgba\ and\ stpq\ components"{})}}
+\DoxyCodeLine{00457\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00458\ }
+\DoxyCodeLine{00459\ \textcolor{comment}{//}}
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\#if\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG}}
+\DoxyCodeLine{00461\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_ASSIGNABLE\ 1}}
+\DoxyCodeLine{00462\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00463\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_ASSIGNABLE\ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00464\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC15))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00465\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_GCC49))))}}
+\DoxyCodeLine{00466\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00467\ }
+\DoxyCodeLine{00468\ \textcolor{comment}{//}}
+\DoxyCodeLine{00469\ \textcolor{preprocessor}{\#define\ GLM\_HAS\_TRIVIAL\_QUERIES\ 0}}
+\DoxyCodeLine{00470\ }
+\DoxyCodeLine{00471\ \textcolor{comment}{//}}
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\#if\ GLM\_LANG\ \&\ GLM\_LANG\_CXX11\_FLAG}}
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_MAKE\_SIGNED\ 1}}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_MAKE\_SIGNED\ ((GLM\_LANG\ \&\ GLM\_LANG\_CXX0X\_FLAG)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC12))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00477\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_CUDA50))))}}
+\DoxyCodeLine{00478\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00479\ }
+\DoxyCodeLine{00480\ \textcolor{preprocessor}{\#if\ GLM\_ARCH\ ==\ GLM\_ARCH\_PURE}}
+\DoxyCodeLine{00481\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_BITSCAN\_WINDOWS\ 0}}
+\DoxyCodeLine{00482\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_HAS\_BITSCAN\_WINDOWS\ ((GLM\_PLATFORM\ \&\ GLM\_PLATFORM\_WINDOWS)\ \&\&\ (\(\backslash\)}}
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00485\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC14)\ \&\&\ (GLM\_ARCH\ \&\ GLM\_ARCH\_X86\_BIT))))}}
+\DoxyCodeLine{00486\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00488\ \textcolor{comment}{//\ OpenMP}}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\#ifdef\ \_OPENMP}}
+\DoxyCodeLine{00490\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC}}
+\DoxyCodeLine{00491\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_GCC61}}
+\DoxyCodeLine{00492\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 45}}
+\DoxyCodeLine{00493\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_GCC49}}
+\DoxyCodeLine{00494\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 40}}
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_GCC47}}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 31}}
+\DoxyCodeLine{00497\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_GCC44}}
+\DoxyCodeLine{00498\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 30}}
+\DoxyCodeLine{00499\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_GCC42}}
+\DoxyCodeLine{00500\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 25}}
+\DoxyCodeLine{00501\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00502\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 0}}
+\DoxyCodeLine{00503\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00505\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_CLANG38}}
+\DoxyCodeLine{00506\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 31}}
+\DoxyCodeLine{00507\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00508\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 0}}
+\DoxyCodeLine{00509\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00510\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC}}
+\DoxyCodeLine{00511\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC10}}
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 20}}
+\DoxyCodeLine{00513\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00514\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 0}}
+\DoxyCodeLine{00515\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00516\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL}}
+\DoxyCodeLine{00517\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_INTEL16}}
+\DoxyCodeLine{00518\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 40}}
+\DoxyCodeLine{00519\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_INTEL12}}
+\DoxyCodeLine{00520\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 31}}
+\DoxyCodeLine{00521\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 0}}
+\DoxyCodeLine{00523\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00525\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_HAS\_OPENMP\ 0}}
+\DoxyCodeLine{00526\ \textcolor{preprocessor}{\#\ \ \ endif}\textcolor{comment}{//\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC}}
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00530\ \textcolor{comment}{//\ Static\ assert}}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \textcolor{preprocessor}{\#if\ GLM\_HAS\_STATIC\_ASSERT}}
+\DoxyCodeLine{00533\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_STATIC\_ASSERT(x,\ message)\ static\_assert(x,\ message)}}
+\DoxyCodeLine{00534\ \textcolor{preprocessor}{\#elif\ defined(BOOST\_STATIC\_ASSERT)}}
+\DoxyCodeLine{00535\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_STATIC\_ASSERT(x,\ message)\ BOOST\_STATIC\_ASSERT(x)}}
+\DoxyCodeLine{00536\ \textcolor{preprocessor}{\#elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC}}
+\DoxyCodeLine{00537\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_STATIC\_ASSERT(x,\ message)\ typedef\ char\ \_\_CASSERT\_\_\#\#\_\_LINE\_\_[(x)\ ?\ 1\ :\ -\/1]}}
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00539\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_STATIC\_ASSERT(x,\ message)}}
+\DoxyCodeLine{00540\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_STATIC\_ASSERT\_NULL}}
+\DoxyCodeLine{00541\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_LANG}}
+\DoxyCodeLine{00542\ }
+\DoxyCodeLine{00544\ \textcolor{comment}{//\ Qualifiers}}
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00546\ \textcolor{preprocessor}{\#if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA}}
+\DoxyCodeLine{00547\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_CUDA\_FUNC\_DEF\ \_\_device\_\_\ \_\_host\_\_}}
+\DoxyCodeLine{00548\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_CUDA\_FUNC\_DECL\ \_\_device\_\_\ \_\_host\_\_}}
+\DoxyCodeLine{00549\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00550\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_CUDA\_FUNC\_DEF}}
+\DoxyCodeLine{00551\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_CUDA\_FUNC\_DECL}}
+\DoxyCodeLine{00552\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00553\ }
+\DoxyCodeLine{00554\ \textcolor{preprocessor}{\#if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC}}
+\DoxyCodeLine{00555\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_VAR\_USED\ \_\_attribute\_\_\ ((unused))}}
+\DoxyCodeLine{00556\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00557\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_VAR\_USED}}
+\DoxyCodeLine{00558\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \textcolor{preprocessor}{\#if\ defined(GLM\_FORCE\_INLINE)}}
+\DoxyCodeLine{00561\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC}}
+\DoxyCodeLine{00562\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_INLINE\ \_\_forceinline}}
+\DoxyCodeLine{00563\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_NEVER\_INLINE\ \_\_declspec((noinline))}}
+\DoxyCodeLine{00564\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ (GLM\_COMPILER\_GCC\ |\ GLM\_COMPILER\_CLANG)}}
+\DoxyCodeLine{00565\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_INLINE\ inline\ \_\_attribute\_\_((\_\_always\_inline\_\_))}}
+\DoxyCodeLine{00566\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_NEVER\_INLINE\ \_\_attribute\_\_((\_\_noinline\_\_))}}
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\#\ \ \ elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA}}
+\DoxyCodeLine{00568\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_INLINE\ \_\_forceinline\_\_}}
+\DoxyCodeLine{00569\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_NEVER\_INLINE\ \_\_noinline\_\_}}
+\DoxyCodeLine{00570\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00571\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_INLINE\ inline}}
+\DoxyCodeLine{00572\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_NEVER\_INLINE}}
+\DoxyCodeLine{00573\ \textcolor{preprocessor}{\#\ \ \ endif}\textcolor{comment}{//GLM\_COMPILER}}
+\DoxyCodeLine{00574\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_INLINE\ inline}}
+\DoxyCodeLine{00576\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_NEVER\_INLINE}}
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//defined(GLM\_FORCE\_INLINE)}}
+\DoxyCodeLine{00578\ }
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\#define\ GLM\_FUNC\_DECL\ GLM\_CUDA\_FUNC\_DECL}}
+\DoxyCodeLine{00580\ \textcolor{preprocessor}{\#define\ GLM\_FUNC\_QUALIFIER\ GLM\_CUDA\_FUNC\_DEF\ GLM\_INLINE}}
+\DoxyCodeLine{00581\ }
+\DoxyCodeLine{00583\ \textcolor{comment}{//\ Swizzle\ operators}}
+\DoxyCodeLine{00584\ }
+\DoxyCodeLine{00585\ \textcolor{comment}{//\ User\ defines:\ GLM\_FORCE\_SWIZZLE}}
+\DoxyCodeLine{00586\ }
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\#ifdef\ GLM\_SWIZZLE}}
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_SWIZZLE\ is\ deprecated,\ use\ GLM\_FORCE\_SWIZZLE\ instead"{})}}
+\DoxyCodeLine{00589\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00590\ }
+\DoxyCodeLine{00591\ \textcolor{preprocessor}{\#define\ GLM\_SWIZZLE\_ENABLED\ 1}}
+\DoxyCodeLine{00592\ \textcolor{preprocessor}{\#define\ GLM\_SWIZZLE\_DISABLE\ 0}}
+\DoxyCodeLine{00593\ }
+\DoxyCodeLine{00594\ \textcolor{preprocessor}{\#if\ defined(GLM\_FORCE\_SWIZZLE)\ ||\ defined(GLM\_SWIZZLE)}}
+\DoxyCodeLine{00595\ \textcolor{preprocessor}{\#\ \ \ undef\ GLM\_SWIZZLE}}
+\DoxyCodeLine{00596\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_SWIZZLE\ GLM\_SWIZZLE\_ENABLED}}
+\DoxyCodeLine{00597\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00598\ \textcolor{preprocessor}{\#\ \ \ undef\ GLM\_SWIZZLE}}
+\DoxyCodeLine{00599\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_SWIZZLE\ GLM\_SWIZZLE\_DISABLE}}
+\DoxyCodeLine{00600\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00601\ }
+\DoxyCodeLine{00602\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_MESSAGE\_SWIZZLE\_DISPLAYED)}}
+\DoxyCodeLine{00603\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MESSAGE\_SWIZZLE\_DISPLAYED}}
+\DoxyCodeLine{00604\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_SWIZZLE\ ==\ GLM\_SWIZZLE\_ENABLED}}
+\DoxyCodeLine{00605\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ Swizzling\ operators\ enabled"{})}}
+\DoxyCodeLine{00606\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00607\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ Swizzling\ operators\ disabled,\ \#define\ GLM\_SWIZZLE\ to\ enable\ swizzle\ operators"{})}}
+\DoxyCodeLine{00608\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00609\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_MESSAGES}}
+\DoxyCodeLine{00610\ }
+\DoxyCodeLine{00612\ \textcolor{comment}{//\ Allows\ using\ not\ basic\ types\ as\ genType}}
+\DoxyCodeLine{00613\ }
+\DoxyCodeLine{00614\ \textcolor{comment}{//\ \#define\ GLM\_FORCE\_UNRESTRICTED\_GENTYPE}}
+\DoxyCodeLine{00615\ }
+\DoxyCodeLine{00616\ \textcolor{preprocessor}{\#ifdef\ GLM\_FORCE\_UNRESTRICTED\_GENTYPE}}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_UNRESTRICTED\_GENTYPE\ 1}}
+\DoxyCodeLine{00618\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00619\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_UNRESTRICTED\_GENTYPE\ 0}}
+\DoxyCodeLine{00620\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00622\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_MESSAGE\_UNRESTRICTED\_GENTYPE\_DISPLAYED)}}
+\DoxyCodeLine{00623\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MESSAGE\_UNRESTRICTED\_GENTYPE\_DISPLAYED}}
+\DoxyCodeLine{00624\ \textcolor{preprocessor}{\#\ \ \ ifdef\ GLM\_FORCE\_UNRESTRICTED\_GENTYPE}}
+\DoxyCodeLine{00625\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ Use\ unrestricted\ genType"{})}}
+\DoxyCodeLine{00626\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00627\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_MESSAGES}}
+\DoxyCodeLine{00628\ }
+\DoxyCodeLine{00630\ \textcolor{comment}{//\ Clip\ control}}
+\DoxyCodeLine{00631\ }
+\DoxyCodeLine{00632\ \textcolor{preprocessor}{\#ifdef\ GLM\_DEPTH\_ZERO\_TO\_ONE\ }\textcolor{comment}{//\ Legacy\ 0.9.8\ development}}
+\DoxyCodeLine{00633\ \textcolor{preprocessor}{\#\ \ \ error\ Define\ GLM\_FORCE\_DEPTH\_ZERO\_TO\_ONE\ instead\ of\ GLM\_DEPTH\_ZERO\_TO\_ONE\ to\ use\ 0\ to\ 1\ clip\ space.}}
+\DoxyCodeLine{00634\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00635\ }
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\#define\ GLM\_DEPTH\_ZERO\_TO\_ONE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000001}}
+\DoxyCodeLine{00637\ \textcolor{preprocessor}{\#define\ GLM\_DEPTH\_NEGATIVE\_ONE\_TO\_ONE\ \ \ \ \ \ \ 0x00000002}}
+\DoxyCodeLine{00638\ }
+\DoxyCodeLine{00639\ \textcolor{preprocessor}{\#ifdef\ GLM\_FORCE\_DEPTH\_ZERO\_TO\_ONE}}
+\DoxyCodeLine{00640\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_DEPTH\_CLIP\_SPACE\ GLM\_DEPTH\_ZERO\_TO\_ONE}}
+\DoxyCodeLine{00641\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00642\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_DEPTH\_CLIP\_SPACE\ GLM\_DEPTH\_NEGATIVE\_ONE\_TO\_ONE}}
+\DoxyCodeLine{00643\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00644\ }
+\DoxyCodeLine{00645\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_MESSAGE\_DEPTH\_DISPLAYED)}}
+\DoxyCodeLine{00646\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MESSAGE\_DEPTH\_DISPLAYED}}
+\DoxyCodeLine{00647\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_DEPTH\_CLIP\_SPACE\ ==\ GLM\_DEPTH\_ZERO\_TO\_ONE}}
+\DoxyCodeLine{00648\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ Depth\ clip\ space:\ Zero\ to\ one"{})}}
+\DoxyCodeLine{00649\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00650\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ Depth\ clip\ space:\ negative\ one\ to\ one"{})}}
+\DoxyCodeLine{00651\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00652\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_MESSAGES}}
+\DoxyCodeLine{00653\ }
+\DoxyCodeLine{00655\ \textcolor{comment}{//\ Coordinate\ system,\ define\ GLM\_FORCE\_LEFT\_HANDED\ before\ including\ GLM}}
+\DoxyCodeLine{00656\ \textcolor{comment}{//\ to\ use\ left\ handed\ coordinate\ system\ by\ default.}}
+\DoxyCodeLine{00657\ }
+\DoxyCodeLine{00658\ \textcolor{preprocessor}{\#ifdef\ GLM\_LEFT\_HANDED\ }\textcolor{comment}{//\ Legacy\ 0.9.8\ development}}
+\DoxyCodeLine{00659\ \textcolor{preprocessor}{\#\ \ \ error\ Define\ GLM\_FORCE\_LEFT\_HANDED\ instead\ of\ GLM\_LEFT\_HANDED\ left\ handed\ coordinate\ system\ by\ default.}}
+\DoxyCodeLine{00660\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00661\ }
+\DoxyCodeLine{00662\ \textcolor{preprocessor}{\#define\ GLM\_LEFT\_HANDED\ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000001\ \ }\textcolor{comment}{//\ For\ DirectX,\ Metal,\ Vulkan}}
+\DoxyCodeLine{00663\ \textcolor{preprocessor}{\#define\ GLM\_RIGHT\_HANDED\ \ \ \ \ \ \ \ \ \ \ \ 0x00000002\ \ }\textcolor{comment}{//\ For\ OpenGL,\ default\ in\ GLM}}
+\DoxyCodeLine{00664\ }
+\DoxyCodeLine{00665\ \textcolor{preprocessor}{\#ifdef\ GLM\_FORCE\_LEFT\_HANDED}}
+\DoxyCodeLine{00666\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_COORDINATE\_SYSTEM\ GLM\_LEFT\_HANDED}}
+\DoxyCodeLine{00667\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00668\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_COORDINATE\_SYSTEM\ GLM\_RIGHT\_HANDED}}
+\DoxyCodeLine{00669\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00670\ }
+\DoxyCodeLine{00671\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_MESSAGE\_HANDED\_DISPLAYED)}}
+\DoxyCodeLine{00672\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MESSAGE\_HANDED\_DISPLAYED}}
+\DoxyCodeLine{00673\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_COORDINATE\_SYSTEM\ ==\ GLM\_LEFT\_HANDED}}
+\DoxyCodeLine{00674\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ Coordinate\ system:\ left\ handed"{})}}
+\DoxyCodeLine{00675\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00676\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ Coordinate\ system:\ right\ handed"{})}}
+\DoxyCodeLine{00677\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00678\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_MESSAGES}}
+\DoxyCodeLine{00679\ }
+\DoxyCodeLine{00681\ \textcolor{comment}{//\ Qualifiers}}
+\DoxyCodeLine{00682\ }
+\DoxyCodeLine{00683\ \textcolor{preprocessor}{\#if\ (GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ ||\ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL)\ \&\&\ (GLM\_PLATFORM\ \&\ GLM\_PLATFORM\_WINDOWS))}}
+\DoxyCodeLine{00684\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_DEPRECATED\ \_\_declspec(deprecated)}}
+\DoxyCodeLine{00685\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_ALIGN(x)\ \_\_declspec(align(x))}}
+\DoxyCodeLine{00686\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_ALIGNED\_STRUCT(x)\ struct\ \_\_declspec(align(x))}}
+\DoxyCodeLine{00687\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_ALIGNED\_TYPEDEF(type,\ name,\ alignment)\ typedef\ \_\_declspec(align(alignment))\ type\ name}}
+\DoxyCodeLine{00688\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_RESTRICT\_FUNC\ \_\_declspec(restrict)}}
+\DoxyCodeLine{00689\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_RESTRICT\ \_\_restrict}}
+\DoxyCodeLine{00690\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC12}}
+\DoxyCodeLine{00691\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_VECTOR\_CALL\ \_\_vectorcall}}
+\DoxyCodeLine{00692\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00693\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_VECTOR\_CALL}}
+\DoxyCodeLine{00694\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00695\ \textcolor{preprocessor}{\#elif\ GLM\_COMPILER\ \&\ (GLM\_COMPILER\_GCC\ |\ GLM\_COMPILER\_CLANG\ |\ GLM\_COMPILER\_INTEL)}}
+\DoxyCodeLine{00696\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_DEPRECATED\ \_\_attribute\_\_((\_\_deprecated\_\_))}}
+\DoxyCodeLine{00697\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_ALIGN(x)\ \_\_attribute\_\_((aligned(x)))}}
+\DoxyCodeLine{00698\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_ALIGNED\_STRUCT(x)\ struct\ \_\_attribute\_\_((aligned(x)))}}
+\DoxyCodeLine{00699\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_ALIGNED\_TYPEDEF(type,\ name,\ alignment)\ typedef\ type\ name\ \_\_attribute\_\_((aligned(alignment)))}}
+\DoxyCodeLine{00700\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_RESTRICT\_FUNC\ \_\_restrict\_\_}}
+\DoxyCodeLine{00701\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_RESTRICT\ \_\_restrict\_\_}}
+\DoxyCodeLine{00702\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ GLM\_COMPILER\ >=\ GLM\_COMPILER\_CLANG37}}
+\DoxyCodeLine{00704\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_VECTOR\_CALL\ \_\_vectorcall}}
+\DoxyCodeLine{00705\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00706\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ define\ GLM\_VECTOR\_CALL}}
+\DoxyCodeLine{00707\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00708\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_VECTOR\_CALL}}
+\DoxyCodeLine{00710\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00711\ \textcolor{preprocessor}{\#elif\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CUDA}}
+\DoxyCodeLine{00712\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_DEPRECATED}}
+\DoxyCodeLine{00713\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_ALIGN(x)\ \_\_align\_\_(x)}}
+\DoxyCodeLine{00714\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_ALIGNED\_STRUCT(x)\ struct\ \_\_align\_\_(x)}}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_ALIGNED\_TYPEDEF(type,\ name,\ alignment)\ typedef\ type\ name\ \_\_align\_\_(x)}}
+\DoxyCodeLine{00716\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_RESTRICT\_FUNC\ \_\_restrict\_\_}}
+\DoxyCodeLine{00717\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_RESTRICT\ \_\_restrict\_\_}}
+\DoxyCodeLine{00718\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_VECTOR\_CALL}}
+\DoxyCodeLine{00719\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00720\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_DEPRECATED}}
+\DoxyCodeLine{00721\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_ALIGN}}
+\DoxyCodeLine{00722\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_ALIGNED\_STRUCT(x)\ struct}}
+\DoxyCodeLine{00723\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_ALIGNED\_TYPEDEF(type,\ name,\ alignment)\ typedef\ type\ name}}
+\DoxyCodeLine{00724\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_RESTRICT\_FUNC}}
+\DoxyCodeLine{00725\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_RESTRICT}}
+\DoxyCodeLine{00726\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_VECTOR\_CALL}}
+\DoxyCodeLine{00727\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_COMPILER}}
+\DoxyCodeLine{00728\ }
+\DoxyCodeLine{00729\ \textcolor{preprocessor}{\#if\ GLM\_HAS\_DEFAULTED\_FUNCTIONS}}
+\DoxyCodeLine{00730\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_DEFAULT\ =\ default}}
+\DoxyCodeLine{00731\ \textcolor{preprocessor}{\#\ \ \ ifdef\ GLM\_FORCE\_NO\_CTOR\_INIT}}
+\DoxyCodeLine{00732\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_DEFAULT\_CTOR\ =\ default}}
+\DoxyCodeLine{00733\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00734\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_DEFAULT\_CTOR}}
+\DoxyCodeLine{00735\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00736\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00737\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_DEFAULT}}
+\DoxyCodeLine{00738\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_DEFAULT\_CTOR}}
+\DoxyCodeLine{00739\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00740\ }
+\DoxyCodeLine{00741\ \textcolor{preprocessor}{\#if\ GLM\_HAS\_CONSTEXPR\ ||\ GLM\_HAS\_CONSTEXPR\_PARTIAL}}
+\DoxyCodeLine{00742\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_CONSTEXPR\ constexpr}}
+\DoxyCodeLine{00743\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC\ }\textcolor{comment}{//\ Visual\ C++\ has\ a\ bug\ \#594\ https://github.com/g-\/truc/glm/issues/594}}
+\DoxyCodeLine{00744\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_CONSTEXPR\_CTOR}}
+\DoxyCodeLine{00745\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00746\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ GLM\_CONSTEXPR\_CTOR\ constexpr}}
+\DoxyCodeLine{00747\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00748\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00749\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_CONSTEXPR}}
+\DoxyCodeLine{00750\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_CONSTEXPR\_CTOR}}
+\DoxyCodeLine{00751\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00752\ }
+\DoxyCodeLine{00753\ \textcolor{preprocessor}{\#if\ GLM\_HAS\_CONSTEXPR}}
+\DoxyCodeLine{00754\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_RELAXED\_CONSTEXPR\ constexpr}}
+\DoxyCodeLine{00755\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00756\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_RELAXED\_CONSTEXPR\ const}}
+\DoxyCodeLine{00757\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00758\ }
+\DoxyCodeLine{00759\ \textcolor{preprocessor}{\#if\ GLM\_ARCH\ ==\ GLM\_ARCH\_PURE}}
+\DoxyCodeLine{00760\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_CONSTEXPR\_SIMD\ GLM\_CONSTEXPR\_CTOR}}
+\DoxyCodeLine{00761\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00762\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_CONSTEXPR\_SIMD}}
+\DoxyCodeLine{00763\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00764\ }
+\DoxyCodeLine{00765\ \textcolor{preprocessor}{\#ifdef\ GLM\_FORCE\_EXPLICIT\_CTOR}}
+\DoxyCodeLine{00766\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_EXPLICIT\ explicit}}
+\DoxyCodeLine{00767\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00768\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_EXPLICIT}}
+\DoxyCodeLine{00769\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00770\ }
+\DoxyCodeLine{00772\ }
+\DoxyCodeLine{00773\ \textcolor{preprocessor}{\#define\ GLM\_HAS\_ALIGNED\_TYPE\ GLM\_HAS\_UNRESTRICTED\_UNIONS}}
+\DoxyCodeLine{00774\ }
+\DoxyCodeLine{00776\ \textcolor{comment}{//\ Length\ type}}
+\DoxyCodeLine{00777\ }
+\DoxyCodeLine{00778\ \textcolor{comment}{//\ User\ defines:\ GLM\_FORCE\_SIZE\_T\_LENGTH\ GLM\_FORCE\_SIZE\_FUNC}}
+\DoxyCodeLine{00779\ }
+\DoxyCodeLine{00780\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00781\ \{}
+\DoxyCodeLine{00782\ \ \ \ \ \textcolor{keyword}{using\ }std::size\_t;}
+\DoxyCodeLine{00783\ \textcolor{preprocessor}{\#\ \ \ if\ defined(GLM\_FORCE\_SIZE\_T\_LENGTH)}}
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{size\_t}\ length\_t;}
+\DoxyCodeLine{00785\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00786\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ length\_t;}
+\DoxyCodeLine{00787\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00788\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00789\ }
+\DoxyCodeLine{00790\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_MESSAGE\_FORCE\_SIZE\_T\_LENGTH)}}
+\DoxyCodeLine{00791\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_MESSAGE\_FORCE\_SIZE\_T\_LENGTH}}
+\DoxyCodeLine{00792\ \textcolor{preprocessor}{\#\ \ \ if\ defined\ GLM\_FORCE\_SIZE\_T\_LENGTH}}
+\DoxyCodeLine{00793\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ .length()\ returns\ glm::length\_t,\ a\ typedef\ of\ std::size\_t"{})}}
+\DoxyCodeLine{00794\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00795\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ message("{}GLM:\ .length()\ returns\ glm::length\_t,\ a\ typedef\ of\ int\ following\ the\ GLSL\ specification"{})}}
+\DoxyCodeLine{00796\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00797\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_MESSAGES}}
+\DoxyCodeLine{00798\ }
+\DoxyCodeLine{00800\ \textcolor{comment}{//\ countof}}
+\DoxyCodeLine{00801\ }
+\DoxyCodeLine{00802\ \textcolor{preprocessor}{\#ifndef\ \_\_has\_feature}}
+\DoxyCodeLine{00803\ \textcolor{preprocessor}{\#\ \ \ define\ \_\_has\_feature(x)\ 0\ }\textcolor{comment}{//\ Compatibility\ with\ non-\/clang\ compilers.}}
+\DoxyCodeLine{00804\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00805\ }
+\DoxyCodeLine{00806\ \textcolor{preprocessor}{\#if\ GLM\_HAS\_CONSTEXPR\_PARTIAL}}
+\DoxyCodeLine{00807\ \ \ \ \ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00808\ \ \ \ \ \{}
+\DoxyCodeLine{00809\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ std::\textcolor{keywordtype}{size\_t}\ N>}
+\DoxyCodeLine{00810\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ std::size\_t\ countof(T\ \textcolor{keyword}{const}\ (\&)[N])}
+\DoxyCodeLine{00811\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00812\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ N;}
+\DoxyCodeLine{00813\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00814\ \ \ \ \ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00815\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_COUNTOF(arr)\ glm::countof(arr)}}
+\DoxyCodeLine{00816\ \textcolor{preprocessor}{\#elif\ defined(\_MSC\_VER)}}
+\DoxyCodeLine{00817\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_COUNTOF(arr)\ \_countof(arr)}}
+\DoxyCodeLine{00818\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00819\ \textcolor{preprocessor}{\#\ \ \ define\ GLM\_COUNTOF(arr)\ sizeof(arr)\ /\ sizeof(arr[0])}}
+\DoxyCodeLine{00820\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00821\ }
+\DoxyCodeLine{00823\ \textcolor{comment}{//\ Uninitialize\ constructors}}
+\DoxyCodeLine{00824\ }
+\DoxyCodeLine{00825\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00826\ \{}
+\DoxyCodeLine{00827\ \ \ \ \ \textcolor{keyword}{enum}\ ctor\{uninitialize\};}
+\DoxyCodeLine{00828\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

@@ -1,0 +1,81 @@
+\doxysection{transform2.\+hpp}
+\hypertarget{transform2_8hpp_source}{}\label{transform2_8hpp_source}\index{include/GLM/gtx/transform2.hpp@{include/GLM/gtx/transform2.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Dependency:}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../glm.hpp"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}../gtx/transform.hpp"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_EXT\_INCLUDED)}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_GTX\_transform2\ extension\ included"{})}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00025\ \{}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00032\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__transform2_ga0b2935b4006285dab9da089435c6d2ac}{shearX2D}}(}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ }
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ T\ y);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>\ }
+\DoxyCodeLine{00039\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__transform2_gab22b09b6bd656b3538027e7398f5ab65}{shearY2D}}(}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ T\ x);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>\ }
+\DoxyCodeLine{00046\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \mbox{\hyperlink{group__gtx__transform2_ga5df93eddbce781fa9f7cc0315420a0c6}{shearX3D}}(}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \&\ m,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ T\ y,\ }
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ T\ z);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>\ }
+\DoxyCodeLine{00054\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \mbox{\hyperlink{group__gtx__transform2_ga2d68673663296d49aca066050acae243}{shearY3D}}(}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \&\ m,\ }
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ T\ x,\ }
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ T\ z);}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>\ }
+\DoxyCodeLine{00062\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \mbox{\hyperlink{group__gtx__transform2_ga3f617bc8cee3f8f4001bfc65b5c527fd}{shearZ3D}}(}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \&\ m,\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ T\ x,\ }
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ T\ y);}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//template\ <typename\ T>\ GLM\_FUNC\_QUALIFIER\ tmat4x4<T,\ P>\ shear(const\ tmat4x4<T,\ P>\ \&\ m,\ shearPlane,\ planePoint,\ angle)}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{//\ Identity\ +\ tan(angle)\ *\ cross(Normal,\ OnPlaneVector)\ \ \ \ \ 0}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ -\/\ dot(PointOnPlane,\ normal)\ *\ OnPlaneVector\ \ \ \ \ \ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{//\ Reflect\ functions\ seem\ to\ don't\ work}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{comment}{//template\ <typename\ T>\ tmat3x3<T,\ P>\ reflect2D(const\ tmat3x3<T,\ P>\ \&\ m,\ const\ tvec3<T,\ P>\&\ normal)\{return\ reflect2DGTX(m,\ normal);\}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //!<\ \(\backslash\)brief\ Build\ a\ reflection\ matrix\ (from\ GLM\_GTX\_transform2\ extension)}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{//template\ <typename\ T>\ tmat4x4<T,\ P>\ reflect3D(const\ tmat4x4<T,\ P>\ \&\ m,\ const\ tvec3<T,\ P>\&\ normal)\{return\ reflect3DGTX(m,\ normal);\}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //!<\ \(\backslash\)brief\ Build\ a\ reflection\ matrix\ (from\ GLM\_GTX\_transform2\ extension)}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>\ }
+\DoxyCodeLine{00078\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__transform2_gab75fbf068d06512d89a9f8631bf050b5}{proj2D}}(}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \&\ m,\ }
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\&\ normal);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>\ }
+\DoxyCodeLine{00085\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \mbox{\hyperlink{group__gtx__transform2_gaea134b29a075f306884b7e4879328214}{proj3D}}(}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \&\ m,\ }
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\&\ normal);}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ valType,\ precision\ P>\ }
+\DoxyCodeLine{00092\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<valType,\ P>}}\ \mbox{\hyperlink{group__gtx__transform2_ga8f6ba26452208920678dac0a5de614d6}{scaleBias}}(}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ valType\ \mbox{\hyperlink{group__gtc__matrix__transform_ga5c4bc4fcfde14c2209e58d906418fb26}{scale}},\ }
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ valType\ bias);}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ valType,\ precision\ P>\ }
+\DoxyCodeLine{00099\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<valType,\ P>}}\ \mbox{\hyperlink{group__gtx__transform2_ga8f6ba26452208920678dac0a5de614d6}{scaleBias}}(}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<valType,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ valType\ \mbox{\hyperlink{group__gtc__matrix__transform_ga5c4bc4fcfde14c2209e58d906418fb26}{scale}},\ }
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ valType\ bias);}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00105\ \}\textcolor{comment}{//\ namespace\ glm}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#include\ "{}transform2.inl"{}}}
+
+\end{DoxyCode}

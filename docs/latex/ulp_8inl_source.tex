@@ -1,0 +1,319 @@
+\doxysection{ulp.\+inl}
+\hypertarget{ulp_8inl_source}{}\label{ulp_8inl_source}\index{include/GLM/gtc/ulp.inl@{include/GLM/gtc/ulp.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}../detail/type\_int.hpp"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <cfloat>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#if(GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#\ \ \ pragma\ warning(push)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#\ \ \ pragma\ warning(disable\ :\ 4127)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{union}}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{float}\ value;}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{comment}{/*\ FIXME:\ Assumes\ 32\ bit\ int.\ \ */}}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ word;}
+\DoxyCodeLine{00026\ \}\ \mbox{\hyperlink{unionieee__float__shape__type}{ieee\_float\_shape\_type}};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{union}}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{double}\ value;}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00032\ \ \ \ \ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ glm::detail::int32\ lsw;}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ glm::detail::int32\ msw;}
+\DoxyCodeLine{00035\ \ \ \ \ \}\ parts;}
+\DoxyCodeLine{00036\ \}\ \mbox{\hyperlink{unionieee__double__shape__type}{ieee\_double\_shape\_type}};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ GLM\_EXTRACT\_WORDS(ix0,ix1,d)\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ieee\_double\_shape\_type\ ew\_u;\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ew\_u.value\ =\ (d);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (ix0)\ =\ ew\_u.parts.msw;\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (ix1)\ =\ ew\_u.parts.lsw;\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ GLM\_GET\_FLOAT\_WORD(i,d)\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ieee\_float\_shape\_type\ gf\_u;\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ gf\_u.value\ =\ (d);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (i)\ =\ gf\_u.word;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ GLM\_SET\_FLOAT\_WORD(d,i)\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ieee\_float\_shape\_type\ sf\_u;\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ sf\_u.word\ =\ (i);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (d)\ =\ sf\_u.value;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ GLM\_INSERT\_WORDS(d,ix0,ix1)\ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ieee\_double\_shape\_type\ iw\_u;\ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ iw\_u.parts.msw\ =\ (ix0);\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ iw\_u.parts.lsw\ =\ (ix1);\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (d)\ =\ iw\_u.value;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{namespace\ }glm\{}
+\DoxyCodeLine{00069\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00070\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{float}\ nextafterf(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y)}
+\DoxyCodeLine{00072\ \ \ \ \ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keyword}{volatile}\ \textcolor{keywordtype}{float}\ t;}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ glm::detail::int32\ hx,\ hy,\ ix,\ iy;}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ GLM\_GET\_FLOAT\_WORD(hx,\ x);}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ GLM\_GET\_FLOAT\_WORD(hy,\ y);}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ ix\ =\ hx\&0x7fffffff;\ \ \ \ \ \textcolor{comment}{//\ |x|}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ iy\ =\ hy\&0x7fffffff;\ \ \ \ \ \textcolor{comment}{//\ |y|}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((ix>0x7f800000)\ ||\ \ \ \textcolor{comment}{//\ x\ is\ nan\ }}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ (iy>0x7f800000))\ \ \ \ \textcolor{comment}{//\ y\ is\ nan\ }}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x+y;}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(x==y)\ \textcolor{keywordflow}{return}\ y;\ \ \ \ \ \ \textcolor{comment}{//\ x=y,\ return\ y}}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(ix==0)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ x\ ==\ 0}}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ GLM\_SET\_FLOAT\_WORD(x,(hy\&0x80000000)|1);\textcolor{comment}{//\ return\ +-\/minsubnormal}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ t\ =\ x*x;}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(t==x)\ \textcolor{keywordflow}{return}\ t;\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{return}\ x;\ \ \ \textcolor{comment}{//\ raise\ underflow\ flag}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(hx>=0)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ x\ >\ 0\ }}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(hx>hy)\ \{\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ x\ >\ y,\ x\ -\/=\ ulp}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hx\ -\/=\ 1;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ x\ <\ y,\ x\ +=\ ulp}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hx\ +=\ 1;}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ x\ <\ 0}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(hy>=0||hx>hy)\{\ \ \ \textcolor{comment}{//\ x\ <\ y,\ x\ -\/=\ ulp}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hx\ -\/=\ 1;}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ x\ >\ y,\ x\ +=\ ulp}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hx\ +=\ 1;}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ hy\ =\ hx\&0x7f800000;}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(hy>=0x7f800000)\ \textcolor{keywordflow}{return}\ x+x;\ \ \textcolor{comment}{//\ overflow}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(hy<0x00800000)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ underflow}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ t\ =\ x*x;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(t!=x)\ \{\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ raise\ underflow\ flag}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLM\_SET\_FLOAT\_WORD(y,hx);}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ y;}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ GLM\_SET\_FLOAT\_WORD(x,hx);}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00114\ \ \ \ \ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{double}\ nextafter(\textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y)}
+\DoxyCodeLine{00117\ \ \ \ \ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keyword}{volatile}\ \textcolor{keywordtype}{double}\ t;}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ glm::detail::int32\ hx,\ hy,\ ix,\ iy;}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ glm::detail::uint32\ lx,\ ly;}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ GLM\_EXTRACT\_WORDS(hx,\ lx,\ x);}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ GLM\_EXTRACT\_WORDS(hy,\ ly,\ y);}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ ix\ =\ hx\ \&\ 0x7fffffff;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ |x|\ }}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ iy\ =\ hy\ \&\ 0x7fffffff;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ |y|\ }}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(((ix>=0x7ff00000)\&\&((ix-\/0x7ff00000)|lx)!=0)\ ||\ \ \ \textcolor{comment}{//\ x\ is\ nan}}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ ((iy>=0x7ff00000)\&\&((iy-\/0x7ff00000)|ly)!=0))\ \ \ \ \ \textcolor{comment}{//\ y\ is\ nan}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x+y;}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(x==y)\ \textcolor{keywordflow}{return}\ y;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ x=y,\ return\ y}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((ix|lx)==0)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ x\ ==\ 0\ }}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ GLM\_INSERT\_WORDS(x,\ hy\ \&\ 0x80000000,\ 1);\ \ \ \ \textcolor{comment}{//\ return\ +-\/minsubnormal}}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ t\ =\ x*x;}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(t==x)\ \textcolor{keywordflow}{return}\ t;\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{return}\ x;\ \ \ \textcolor{comment}{//\ raise\ underflow\ flag\ }}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(hx>=0)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ x\ >\ 0\ }}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(hx>hy||((hx==hy)\&\&(lx>ly)))\ \{\ \ \ \ \textcolor{comment}{//\ x\ >\ y,\ x\ -\/=\ ulp\ }}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(lx==0)\ hx\ -\/=\ 1;}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lx\ -\/=\ 1;}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ x\ <\ y,\ x\ +=\ ulp}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lx\ +=\ 1;}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(lx==0)\ hx\ +=\ 1;}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ x\ <\ 0\ }}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(hy>=0||hx>hy||((hx==hy)\&\&(lx>ly)))\{\textcolor{comment}{//\ x\ <\ y,\ x\ -\/=\ ulp}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(lx==0)\ hx\ -\/=\ 1;}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lx\ -\/=\ 1;}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ x\ >\ y,\ x\ +=\ ulp}}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lx\ +=\ 1;}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(lx==0)\ hx\ +=\ 1;}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ hy\ =\ hx\&0x7ff00000;}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(hy>=0x7ff00000)\ \textcolor{keywordflow}{return}\ x+x;\ \ \textcolor{comment}{//\ overflow}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(hy<0x00100000)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ underflow}}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ t\ =\ x*x;}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(t!=x)\ \{\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ raise\ underflow\ flag}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLM\_INSERT\_WORDS(y,hx,lx);}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ y;}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ GLM\_INSERT\_WORDS(x,hx,lx);}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00164\ \ \ \ \ \}}
+\DoxyCodeLine{00165\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00166\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#if(GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#\ \ \ pragma\ warning(pop)}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00173\ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00175\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{group__gtc__ulp_gae516ae554faa6117660828240e8bdaf0}{next\_float}}(\textcolor{keywordtype}{float}\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00176\ \ \ \ \ \{}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ GLM\_HAS\_CXX11\_STL}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::nextafter(x,\ std::numeric\_limits<float>::max());}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ ||\ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL)\ \&\&\ (GLM\_PLATFORM\ \&\ GLM\_PLATFORM\_WINDOWS)))}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::nextafterf(x,\ FLT\_MAX);}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif(GLM\_PLATFORM\ \&\ GLM\_PLATFORM\_ANDROID)}}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_\_builtin\_nextafterf(x,\ FLT\_MAX);}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ nextafterf(x,\ FLT\_MAX);}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00186\ \ \ \ \ \}}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00189\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__gtc__ulp_gae516ae554faa6117660828240e8bdaf0}{next\_float}}(\textcolor{keywordtype}{double}\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00190\ \ \ \ \ \{}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ GLM\_HAS\_CXX11\_STL}}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::nextafter(x,\ std::numeric\_limits<double>::max());}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ ||\ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL)\ \&\&\ (GLM\_PLATFORM\ \&\ GLM\_PLATFORM\_WINDOWS)))}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::nextafter(x,\ std::numeric\_limits<double>::max());}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif(GLM\_PLATFORM\ \&\ GLM\_PLATFORM\_ANDROID)}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_\_builtin\_nextafter(x,\ FLT\_MAX);}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ nextafter(x,\ DBL\_MAX);}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00200\ \ \ \ \ \}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}<\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00203\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__ulp_gae516ae554faa6117660828240e8bdaf0}{next\_float}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00204\ \ \ \ \ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ Result(uninitialize);}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0,\ n\ =\ Result.length();\ i\ <\ n;\ ++i)}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ \mbox{\hyperlink{group__gtc__ulp_gae516ae554faa6117660828240e8bdaf0}{next\_float}}(x[i]);}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00209\ \ \ \ \ \}}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{group__gtc__ulp_ga2fcbb7bfbfc595712bfddc51b0715b07}{prev\_float}}(\textcolor{keywordtype}{float}\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00212\ \ \ \ \ \{}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ GLM\_HAS\_CXX11\_STL}}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::nextafter(x,\ std::numeric\_limits<float>::min());}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ ||\ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL)\ \&\&\ (GLM\_PLATFORM\ \&\ GLM\_PLATFORM\_WINDOWS)))}}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::nextafterf(x,\ FLT\_MIN);}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif(GLM\_PLATFORM\ \&\ GLM\_PLATFORM\_ANDROID)}}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_\_builtin\_nextafterf(x,\ FLT\_MIN);}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ nextafterf(x,\ FLT\_MIN);}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00222\ \ \ \ \ \}}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__gtc__ulp_ga2fcbb7bfbfc595712bfddc51b0715b07}{prev\_float}}(\textcolor{keywordtype}{double}\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00225\ \ \ \ \ \{}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ GLM\_HAS\_CXX11\_STL}}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::nextafter(x,\ std::numeric\_limits<double>::min());}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ ||\ ((GLM\_COMPILER\ \&\ GLM\_COMPILER\_INTEL)\ \&\&\ (GLM\_PLATFORM\ \&\ GLM\_PLATFORM\_WINDOWS)))}}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_nextafter(x,\ DBL\_MIN);}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ elif(GLM\_PLATFORM\ \&\ GLM\_PLATFORM\_ANDROID)}}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_\_builtin\_nextafter(x,\ DBL\_MIN);}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ nextafter(x,\ DBL\_MIN);}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00235\ \ \ \ \ \}}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}<\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00238\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__ulp_ga2fcbb7bfbfc595712bfddc51b0715b07}{prev\_float}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00239\ \ \ \ \ \{}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ Result(uninitialize);}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0,\ n\ =\ Result.length();\ i\ <\ n;\ ++i)}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ \mbox{\hyperlink{group__gtc__ulp_ga2fcbb7bfbfc595712bfddc51b0715b07}{prev\_float}}(x[i]);}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00244\ \ \ \ \ \}}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00247\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__gtc__ulp_gae516ae554faa6117660828240e8bdaf0}{next\_float}}(T\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \textcolor{keyword}{const}\ \&\ ulps)}
+\DoxyCodeLine{00248\ \ \ \ \ \{}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ T\ temp\ =\ x;}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ i\ =\ 0;\ i\ <\ ulps;\ ++i)}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ temp\ =\ \mbox{\hyperlink{group__gtc__ulp_gae516ae554faa6117660828240e8bdaf0}{next\_float}}(temp);}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ temp;}
+\DoxyCodeLine{00253\ \ \ \ \ \}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}<\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00256\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__ulp_gae516ae554faa6117660828240e8bdaf0}{next\_float}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<uint,\ P>\ \textcolor{keyword}{const}\ \&\ ulps)}
+\DoxyCodeLine{00257\ \ \ \ \ \{}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ Result(uninitialize);}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0,\ n\ =\ Result.length();\ i\ <\ n;\ ++i)}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ \mbox{\hyperlink{group__gtc__ulp_gae516ae554faa6117660828240e8bdaf0}{next\_float}}(x[i],\ ulps[i]);}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00262\ \ \ \ \ \}}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00265\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__gtc__ulp_ga2fcbb7bfbfc595712bfddc51b0715b07}{prev\_float}}(T\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \textcolor{keyword}{const}\ \&\ ulps)}
+\DoxyCodeLine{00266\ \ \ \ \ \{}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ T\ temp\ =\ x;}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ i\ =\ 0;\ i\ <\ ulps;\ ++i)}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ temp\ =\ \mbox{\hyperlink{group__gtc__ulp_ga2fcbb7bfbfc595712bfddc51b0715b07}{prev\_float}}(temp);}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ temp;}
+\DoxyCodeLine{00271\ \ \ \ \ \}}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}<\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00274\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__ulp_ga2fcbb7bfbfc595712bfddc51b0715b07}{prev\_float}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<uint,\ P>\ \textcolor{keyword}{const}\ \&\ ulps)}
+\DoxyCodeLine{00275\ \ \ \ \ \{}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ Result(uninitialize);}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0,\ n\ =\ Result.length();\ i\ <\ n;\ ++i)}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ \mbox{\hyperlink{group__gtc__ulp_ga2fcbb7bfbfc595712bfddc51b0715b07}{prev\_float}}(x[i],\ ulps[i]);}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00280\ \ \ \ \ \}}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00283\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \mbox{\hyperlink{group__gtc__ulp_ga2e09bd6c8b0a9c91f6f5683d68245634}{float\_distance}}(T\ \textcolor{keyword}{const}\ \&\ x,\ T\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00284\ \ \ \ \ \{}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ ulp\ =\ 0;}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(x\ <\ y)}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ T\ temp\ =\ x;}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(temp\ !=\ y)\textcolor{comment}{//\ \&\&\ ulp\ <\ std::numeric\_limits<std::size\_t>::max())}}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++ulp;}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\ =\ \mbox{\hyperlink{group__gtc__ulp_gae516ae554faa6117660828240e8bdaf0}{next\_float}}(temp);}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(y\ <\ x)}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ T\ temp\ =\ y;}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(temp\ !=\ x)\textcolor{comment}{//\ \&\&\ ulp\ <\ std::numeric\_limits<std::size\_t>::max())}}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++ulp;}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\ =\ \mbox{\hyperlink{group__gtc__ulp_gae516ae554faa6117660828240e8bdaf0}{next\_float}}(temp);}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{comment}{//\ ==}}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ulp;}
+\DoxyCodeLine{00311\ \ \ \ \ \}}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}<\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00314\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<uint,\ P>\ \mbox{\hyperlink{group__gtc__ulp_ga2e09bd6c8b0a9c91f6f5683d68245634}{float\_distance}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00315\ \ \ \ \ \{}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ vecType<uint,\ P>\ Result(uninitialize);}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0,\ n\ =\ Result.length();\ i\ <\ n;\ ++i)}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ \mbox{\hyperlink{group__gtc__ulp_ga2e09bd6c8b0a9c91f6f5683d68245634}{float\_distance}}(x[i],\ y[i]);}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00320\ \ \ \ \ \}}
+\DoxyCodeLine{00321\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

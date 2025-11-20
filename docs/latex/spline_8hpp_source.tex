@@ -1,0 +1,48 @@
+\doxysection{spline.\+hpp}
+\hypertarget{spline_8hpp_source}{}\label{spline_8hpp_source}\index{include/GLM/gtx/spline.hpp@{include/GLM/gtx/spline.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ Dependency:}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}../glm.hpp"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../gtx/optimum\_pow.hpp"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_EXT\_INCLUDED)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_GTX\_spline\ extension\ included"{})}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>\ }
+\DoxyCodeLine{00031\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__gtx__spline_ga8119c04f8210fd0d292757565cd6918d}{catmullRom}}(}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ v1,\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ v2,\ }
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ v3,\ }
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ v4,\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ genType::value\_type\ \textcolor{keyword}{const}\ \&\ s);}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>\ }
+\DoxyCodeLine{00041\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__gtx__spline_gaa69e143f6374d32f934a8edeaa50bac9}{hermite}}(}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ v1,\ }
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ t1,\ }
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ v2,\ }
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ t2,\ }
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ genType::value\_type\ \textcolor{keyword}{const}\ \&\ s);}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>\ }
+\DoxyCodeLine{00051\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__gtx__spline_ga6b867eb52e2fc933d2e0bf26aabc9a70}{cubic}}(}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ v1,\ }
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ v2,\ }
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ v3,\ }
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ v4,\ }
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ genType::value\_type\ \textcolor{keyword}{const}\ \&\ s);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00059\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#include\ "{}spline.inl"{}}}
+
+\end{DoxyCode}

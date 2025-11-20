@@ -1,0 +1,178 @@
+\doxysection{type\+\_\+mat3x2.\+hpp}
+\hypertarget{type__mat3x2_8hpp_source}{}\label{type__mat3x2_8hpp_source}\index{include/GLM/detail/type\_mat3x2.hpp@{include/GLM/detail/type\_mat3x2.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}../fwd.hpp"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}type\_vec2.hpp"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}type\_vec3.hpp"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}type\_mat.hpp"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00014\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P\ =\ defaultp>}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{struct\ }tmat3x2}
+\DoxyCodeLine{00017\ \ \ \ \ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<T,\ P>}}\ col\_type;}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ row\_type;}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ tmat3x2<T,\ P>\ type;}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structglm_1_1tmat2x3}{tmat2x3<T,\ P>}}\ transpose\_type;}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ T\ value\_type;}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ col\_type\ value[3];}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Constructors\ -\/-\/}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2()\ GLM\_DEFAULT\_CTOR;}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2(tmat3x2<T,\ P>\ \textcolor{keyword}{const}\ \&\ m)\ GLM\_DEFAULT;}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <precision\ Q>}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2(tmat3x2<T,\ Q>\ \textcolor{keyword}{const}\ \&\ m);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ GLM\_CONSTEXPR\_CTOR\ \textcolor{keyword}{explicit}\ tmat3x2(ctor);}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keyword}{explicit}\ tmat3x2(T\ scalar);}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2(}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ T\ x0,\ T\ y0,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ T\ x1,\ T\ y1,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ T\ x2,\ T\ y2);}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2(}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ col\_type\ \textcolor{keyword}{const}\ \&\ v0,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ col\_type\ \textcolor{keyword}{const}\ \&\ v1,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ col\_type\ \textcolor{keyword}{const}\ \&\ v2);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Conversions\ -\/-\/}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ X1,\ \textcolor{keyword}{typename}\ Y1,}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ X2,\ \textcolor{keyword}{typename}\ Y2,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ X3,\ \textcolor{keyword}{typename}\ Y3>}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2(}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ X1\ x1,\ Y1\ y1,}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ X2\ x2,\ Y2\ y2,}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ X3\ x3,\ Y3\ y3);}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ V1,\ \textcolor{keyword}{typename}\ V2,\ \textcolor{keyword}{typename}\ V3>}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2(}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<V1,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<V2,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2,}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<V3,\ P>}}\ \textcolor{keyword}{const}\ \&\ v3);}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Matrix\ conversions\ -\/-\/}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U,\ precision\ Q>}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ GLM\_EXPLICIT\ tmat3x2(tmat3x2<U,\ Q>\ \textcolor{keyword}{const}\ \&\ m);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ GLM\_EXPLICIT\ tmat3x2(\mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ GLM\_EXPLICIT\ tmat3x2(\mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ GLM\_EXPLICIT\ tmat3x2(\mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ GLM\_EXPLICIT\ tmat3x2(\mbox{\hyperlink{structglm_1_1tmat2x3}{tmat2x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ GLM\_EXPLICIT\ tmat3x2(\mbox{\hyperlink{structglm_1_1tmat2x4}{tmat2x4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ GLM\_EXPLICIT\ tmat3x2(\mbox{\hyperlink{structglm_1_1tmat3x4}{tmat3x4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ GLM\_EXPLICIT\ tmat3x2(\mbox{\hyperlink{structglm_1_1tmat4x2}{tmat4x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ GLM\_EXPLICIT\ tmat3x2(\mbox{\hyperlink{structglm_1_1tmat4x3}{tmat4x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Accesses\ -\/-\/}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ length\_t\ length\_type;}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keyword}{static}\ length\_type\ length()\{\textcolor{keywordflow}{return}\ 3;\}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ col\_type\ \&\ operator[](length\_type\ i);}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ col\_type\ \textcolor{keyword}{const}\ \&\ operator[](length\_type\ i)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ arithmetic\ operators\ -\/-\/}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2<T,\ P>\ \&\ operator=(tmat3x2<T,\ P>\ \textcolor{keyword}{const}\ \&\ m)\ GLM\_DEFAULT;}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2<T,\ P>\ \&\ operator=(tmat3x2<U,\ P>\ \textcolor{keyword}{const}\ \&\ m);}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2<T,\ P>\ \&\ operator+=(U\ s);}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2<T,\ P>\ \&\ operator+=(tmat3x2<U,\ P>\ \textcolor{keyword}{const}\ \&\ m);}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2<T,\ P>\ \&\ operator-\/=(U\ s);}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2<T,\ P>\ \&\ operator-\/=(tmat3x2<U,\ P>\ \textcolor{keyword}{const}\ \&\ m);}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2<T,\ P>\ \&\ operator*=(U\ s);}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2<T,\ P>\ \&\ operator/=(U\ s);}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Increment\ and\ decrement\ operators\ -\/-\/}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2<T,\ P>\ \&\ operator++\ ();}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2<T,\ P>\ \&\ operator-\/-\/\ ();}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2<T,\ P>\ operator++(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ tmat3x2<T,\ P>\ operator-\/-\/(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00110\ \ \ \ \ \};}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ operators\ -\/-\/}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00115\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ operator+(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m);}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00118\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ operator-\/(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m);}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Binary\ operators\ -\/-\/}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00123\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ operator+(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ T\ scalar);}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00126\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ operator+(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m1,\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m2);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00129\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ operator-\/(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ T\ scalar);}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00132\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ operator-\/(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m1,\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m2);}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00135\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ T\ scalar);}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00138\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ operator*(T\ scalar,\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m);}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00141\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keyword}{typename}\ tmat3x2<T,\ P>::col\_type\ operator*(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ \textcolor{keyword}{typename}\ tmat3x2<T,\ P>::row\_type\ \textcolor{keyword}{const}\ \&\ v);}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00144\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keyword}{typename}\ tmat3x2<T,\ P>::row\_type\ operator*(\textcolor{keyword}{typename}\ tmat3x2<T,\ P>::col\_type\ \textcolor{keyword}{const}\ \&\ v,\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00147\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m1,\ \mbox{\hyperlink{structglm_1_1tmat2x3}{tmat2x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m2);}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00150\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m1,\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m2);}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00153\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x2}{tmat4x2<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m1,\ \mbox{\hyperlink{structglm_1_1tmat4x3}{tmat4x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m2);}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00156\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ operator/(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ T\ scalar);}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00159\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ operator/(T\ scalar,\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m);}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Boolean\ operators\ -\/-\/}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00164\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{bool}\ operator==(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m1,\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m2);}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00167\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{bool}\ operator!=(\mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m1,\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m2);}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#ifndef\ GLM\_EXTERNAL\_TEMPLATE}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#include\ "{}type\_mat3x2.inl"{}}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

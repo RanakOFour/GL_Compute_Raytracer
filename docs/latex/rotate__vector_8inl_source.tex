@@ -1,0 +1,193 @@
+\doxysection{rotate\+\_\+vector.\+inl}
+\hypertarget{rotate__vector_8inl_source}{}\label{rotate__vector_8inl_source}\index{include/GLM/gtx/rotate\_vector.inl@{include/GLM/gtx/rotate\_vector.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00005\ \{}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00007\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \mbox{\hyperlink{group__gtc__quaternion_ga216da7ed129a42b8f13ad04a14a33061}{slerp}}}
+\DoxyCodeLine{00008\ \ \ \ \ (}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y,}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ a}
+\DoxyCodeLine{00012\ \ \ \ \ )}
+\DoxyCodeLine{00013\ \ \ \ \ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ get\ cosine\ of\ angle\ between\ vectors\ (-\/1\ -\/>\ 1)}}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ T\ CosAlpha\ =\ \mbox{\hyperlink{group__core__func__geometric_ga7dada304da2ba7dd3376ab4f178c3f6b}{dot}}(x,\ y);}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ get\ angle\ (0\ -\/>\ pi)}}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ T\ Alpha\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga01fa516ece73d88ecbe61b68e1001a41}{acos}}(CosAlpha);}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ get\ sine\ of\ angle\ between\ vectors\ (0\ -\/>\ 1)}}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ T\ SinAlpha\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(Alpha);}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this\ breaks\ down\ when\ SinAlpha\ =\ 0,\ i.e.\ Alpha\ =\ 0\ or\ pi}}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ T\ t1\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}((\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ -\/\ a)\ *\ Alpha)\ /\ SinAlpha;}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ T\ t2\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(a\ *\ Alpha)\ /\ SinAlpha;}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ interpolate\ src\ vectors}}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x\ *\ t1\ +\ y\ *\ t2;}
+\DoxyCodeLine{00026\ \ \ \ \ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00029\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<T,\ P>}}\ \mbox{\hyperlink{group__gtc__matrix__transform_ga5f1687db728fff252eb6272530df88fc}{rotate}}}
+\DoxyCodeLine{00030\ \ \ \ \ (}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}}
+\DoxyCodeLine{00033\ \ \ \ \ )}
+\DoxyCodeLine{00034\ \ \ \ \ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<T,\ P>}}\ Result;}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Cos(\mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{cos}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Sin(\mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ Result.x\ =\ v.x\ *\ Cos\ -\/\ v.y\ *\ Sin;}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ Result.y\ =\ v.x\ *\ Sin\ +\ v.y\ *\ Cos;}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00042\ \ \ \ \ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00045\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \mbox{\hyperlink{group__gtc__matrix__transform_ga5f1687db728fff252eb6272530df88fc}{rotate}}}
+\DoxyCodeLine{00046\ \ \ \ \ (}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}},}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ normal}
+\DoxyCodeLine{00050\ \ \ \ \ )}
+\DoxyCodeLine{00051\ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}(\mbox{\hyperlink{group__gtc__matrix__transform_ga5f1687db728fff252eb6272530df88fc}{glm::rotate}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}},\ normal))\ *\ v;}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ \ \ \ template\ <typename\ T,\ precision\ P>}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ \ \ \ GLM\_FUNC\_QUALIFIER\ tvec3<T,\ P>\ rotateGTX(}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ \ \ \ \ \ \ \ const\ tvec3<T,\ P>\&\ x,}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ \ \ \ \ \ \ \ T\ angle,}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ \ \ \ \ \ \ \ const\ tvec3<T,\ P>\&\ normal)}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ \ \ \ \ \ \ \ const\ T\ Cos\ =\ cos(radians(angle));}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ \ \ \ \ \ \ \ const\ T\ Sin\ =\ sin(radians(angle));}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ \ \ \ \ \ \ \ return\ x\ *\ Cos\ +\ ((x\ *\ normal)\ *\ (T(1)\ -\/\ Cos))\ *\ normal\ +\ cross(x,\ normal)\ *\ Sin;}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00067\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \mbox{\hyperlink{group__gtc__matrix__transform_ga5f1687db728fff252eb6272530df88fc}{rotate}}}
+\DoxyCodeLine{00068\ \ \ \ \ (}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}},}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ normal}
+\DoxyCodeLine{00072\ \ \ \ \ )}
+\DoxyCodeLine{00073\ \ \ \ \ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__gtc__matrix__transform_ga5f1687db728fff252eb6272530df88fc}{rotate}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}},\ normal)\ *\ v;}
+\DoxyCodeLine{00075\ \ \ \ \ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00078\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__rotate__vector_gae25ff76be4460ce4a3b19a3a9cab2cfa}{rotateX}}}
+\DoxyCodeLine{00079\ \ \ \ \ (}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}}
+\DoxyCodeLine{00082\ \ \ \ \ )}
+\DoxyCodeLine{00083\ \ \ \ \ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ Result(v);}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Cos(\mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{cos}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Sin(\mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ Result.y\ =\ v.y\ *\ Cos\ -\/\ v.z\ *\ Sin;}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ Result.z\ =\ v.y\ *\ Sin\ +\ v.z\ *\ Cos;}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00091\ \ \ \ \ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00094\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__rotate__vector_gaa514f6bc29efd2fd38857948d4cbf4ab}{rotateY}}}
+\DoxyCodeLine{00095\ \ \ \ \ (}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}}
+\DoxyCodeLine{00098\ \ \ \ \ )}
+\DoxyCodeLine{00099\ \ \ \ \ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ Result\ =\ v;}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Cos(\mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{cos}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Sin(\mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ Result.x\ =\ \ v.x\ *\ Cos\ +\ v.z\ *\ Sin;}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ Result.z\ =\ -\/v.x\ *\ Sin\ +\ v.z\ *\ Cos;}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00107\ \ \ \ \ \}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00110\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__rotate__vector_ga68fdb4f34ad1f97355fb0e8775333db7}{rotateZ}}}
+\DoxyCodeLine{00111\ \ \ \ \ (}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}}
+\DoxyCodeLine{00114\ \ \ \ \ )}
+\DoxyCodeLine{00115\ \ \ \ \ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ Result\ =\ v;}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Cos(\mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{cos}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Sin(\mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ Result.x\ =\ v.x\ *\ Cos\ -\/\ v.y\ *\ Sin;}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ Result.y\ =\ v.x\ *\ Sin\ +\ v.y\ *\ Cos;}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00123\ \ \ \ \ \}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00126\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \mbox{\hyperlink{group__gtx__rotate__vector_gae25ff76be4460ce4a3b19a3a9cab2cfa}{rotateX}}}
+\DoxyCodeLine{00127\ \ \ \ \ (}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}}
+\DoxyCodeLine{00130\ \ \ \ \ )}
+\DoxyCodeLine{00131\ \ \ \ \ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ Result\ =\ v;}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Cos(\mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{cos}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Sin(\mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ Result.y\ =\ v.y\ *\ Cos\ -\/\ v.z\ *\ Sin;}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ Result.z\ =\ v.y\ *\ Sin\ +\ v.z\ *\ Cos;}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00139\ \ \ \ \ \}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00142\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \mbox{\hyperlink{group__gtx__rotate__vector_gaa514f6bc29efd2fd38857948d4cbf4ab}{rotateY}}}
+\DoxyCodeLine{00143\ \ \ \ \ (}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}}
+\DoxyCodeLine{00146\ \ \ \ \ )}
+\DoxyCodeLine{00147\ \ \ \ \ \{}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ Result\ =\ v;}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Cos(\mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{cos}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Sin(\mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ Result.x\ =\ \ v.x\ *\ Cos\ +\ v.z\ *\ Sin;}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ Result.z\ =\ -\/v.x\ *\ Sin\ +\ v.z\ *\ Cos;}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00155\ \ \ \ \ \}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00158\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \mbox{\hyperlink{group__gtx__rotate__vector_ga68fdb4f34ad1f97355fb0e8775333db7}{rotateZ}}}
+\DoxyCodeLine{00159\ \ \ \ \ (}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}}
+\DoxyCodeLine{00162\ \ \ \ \ )}
+\DoxyCodeLine{00163\ \ \ \ \ \{}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ Result\ =\ v;}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Cos(\mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{cos}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Sin(\mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}));}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ Result.x\ =\ v.x\ *\ Cos\ -\/\ v.y\ *\ Sin;}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ Result.y\ =\ v.x\ *\ Sin\ +\ v.y\ *\ Cos;}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00171\ \ \ \ \ \}}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00174\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \mbox{\hyperlink{group__gtx__rotate__vector_ga19cb24de97f02935ee66fc82f77d229f}{orientation}}}
+\DoxyCodeLine{00175\ \ \ \ \ (}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ Normal,}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ Up}
+\DoxyCodeLine{00178\ \ \ \ \ )}
+\DoxyCodeLine{00179\ \ \ \ \ \{}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{group__core__func__vector__relational_ga14bbc94f2ae2774a1d64d91f8767773e}{all}}(\mbox{\hyperlink{group__core__func__vector__relational_ga229aa6c48f93155ae6547210e005f06c}{equal}}(Normal,\ Up)))}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}(T(1));}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ RotationAxis\ =\ \mbox{\hyperlink{group__core__func__geometric_ga349f34d7cc9cd71393f96b953a91441a}{cross}}(Up,\ Normal);}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ T\ Angle\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga01fa516ece73d88ecbe61b68e1001a41}{acos}}(\mbox{\hyperlink{group__core__func__geometric_ga7dada304da2ba7dd3376ab4f178c3f6b}{dot}}(Normal,\ Up));}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__gtc__matrix__transform_ga5f1687db728fff252eb6272530df88fc}{rotate}}(Angle,\ RotationAxis);}
+\DoxyCodeLine{00187\ \ \ \ \ \}}
+\DoxyCodeLine{00188\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

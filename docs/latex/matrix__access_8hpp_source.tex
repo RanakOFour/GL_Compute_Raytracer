@@ -1,0 +1,45 @@
+\doxysection{matrix\+\_\+access.\+hpp}
+\hypertarget{matrix__access_8hpp_source}{}\label{matrix__access_8hpp_source}\index{include/GLM/gtc/matrix\_access.hpp@{include/GLM/gtc/matrix\_access.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ Dependency:}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}../detail/setup.hpp"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_EXT\_INCLUDED)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_GTC\_matrix\_access\ extension\ included"{})}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00029\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keyword}{typename}\ genType::row\_type\ \mbox{\hyperlink{group__gtc__matrix__access_ga259e5ebd0f31ec3f83440f8cae7f5dba}{row}}(}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ m,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ length\_t\ index);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00036\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__gtc__matrix__access_ga259e5ebd0f31ec3f83440f8cae7f5dba}{row}}(}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ m,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ length\_t\ index,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ genType::row\_type\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00044\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keyword}{typename}\ genType::col\_type\ \mbox{\hyperlink{group__gtc__matrix__access_ga96022eb0d3fae39d89fc7a954e59b374}{column}}(}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ m,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ length\_t\ index);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00051\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__gtc__matrix__access_ga96022eb0d3fae39d89fc7a954e59b374}{column}}(}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ m,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ length\_t\ index,}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ genType::col\_type\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00057\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#include\ "{}matrix\_access.inl"{}}}
+
+\end{DoxyCode}

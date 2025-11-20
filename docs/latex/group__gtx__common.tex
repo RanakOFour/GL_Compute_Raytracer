@@ -1,0 +1,59 @@
+\doxysubsection{GLM\+\_\+\+GTX\+\_\+common }
+\hypertarget{group__gtx__common}{}\label{group__gtx__common}\index{GLM\_GTX\_common@{GLM\_GTX\_common}}
+
+
+Provide functions to increase the compatibility with Cg and HLSL languages.  
+
+
+Collaboration diagram for GLM\+\_\+\+GTX\+\_\+common\+:
+% FIG 0
+\doxysubsubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename gen\+Type$>$ }\\GLM\+\_\+\+FUNC\+\_\+\+DECL gen\+Type\+::bool\+\_\+type \mbox{\hyperlink{group__gtx__common_ga74aa7c7462245d83bd5a9edf9c6c2d91}{glm\+::isdenormal}} (gen\+Type const \&x)
+\item 
+{\footnotesize template$<$typename T, precision P, template$<$ typename, precision $>$ class vec\+Type$>$ }\\GLM\+\_\+\+FUNC\+\_\+\+DECL vec\+Type$<$ T, P $>$ \mbox{\hyperlink{group__gtx__common_ga54dda5ea9f48272d658df9dc3688af0c}{glm\+::fmod}} (vec\+Type$<$ T, P $>$ const \&v)
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+Provide functions to increase the compatibility with Cg and HLSL languages. 
+
+\texorpdfstring{$<$}{<}glm/gtx/common.\+hpp\texorpdfstring{$>$}{>} need to be included to use these functionalities.
+
+\label{doc-func-members}
+\Hypertarget{group__gtx__common_doc-func-members}
+\doxysubsubsection{Function Documentation}
+\Hypertarget{group__gtx__common_ga54dda5ea9f48272d658df9dc3688af0c}\index{GLM\_GTX\_common@{GLM\_GTX\_common}!fmod@{fmod}}
+\index{fmod@{fmod}!GLM\_GTX\_common@{GLM\_GTX\_common}}
+\doxysubsubsubsection{\texorpdfstring{fmod()}{fmod()}}
+{\footnotesize\ttfamily \label{group__gtx__common_ga54dda5ea9f48272d658df9dc3688af0c} 
+template$<$typename T, precision P, template$<$ typename, precision $>$ class vec\+Type$>$ \\
+GLM\+\_\+\+FUNC\+\_\+\+DECL vec\+Type$<$ T, P $>$ glm\+::fmod (\begin{DoxyParamCaption}\item[{vec\+Type$<$ T, P $>$ const \&}]{v}{}\end{DoxyParamCaption})}
+
+Similar to \textquotesingle{}mod\textquotesingle{} but with a different rounding and integer support. Returns \textquotesingle{}x -\/ y \texorpdfstring{$\ast$}{*} trunc(x/y)\textquotesingle{} instead of \textquotesingle{}x -\/ y \texorpdfstring{$\ast$}{*} floor(x/y)\textquotesingle{}
+
+\begin{DoxySeeAlso}{See also}
+\href{http://stackoverflow.com/questions/7610631/glsl-mod-vs-hlsl-fmod}{\texttt{GLSL mod vs HLSL fmod}} 
+
+\href{http://www.opengl.org/sdk/docs/manglsl/xhtml/mod.xml}{\texttt{GLSL mod man page}} 
+\end{DoxySeeAlso}
+\Hypertarget{group__gtx__common_ga74aa7c7462245d83bd5a9edf9c6c2d91}\index{GLM\_GTX\_common@{GLM\_GTX\_common}!isdenormal@{isdenormal}}
+\index{isdenormal@{isdenormal}!GLM\_GTX\_common@{GLM\_GTX\_common}}
+\doxysubsubsubsection{\texorpdfstring{isdenormal()}{isdenormal()}}
+{\footnotesize\ttfamily \label{group__gtx__common_ga74aa7c7462245d83bd5a9edf9c6c2d91} 
+template$<$typename gen\+Type$>$ \\
+GLM\+\_\+\+FUNC\+\_\+\+DECL gen\+Type\+::bool\+\_\+type glm\+::isdenormal (\begin{DoxyParamCaption}\item[{gen\+Type const \&}]{x}{}\end{DoxyParamCaption})}
+
+Returns true if x is a denormalized number Numbers whose absolute value is too small to be represented in the normal format are represented in an alternate, denormalized format. This format is less precise but can represent values closer to zero.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em gen\+Type} & Floating-\/point scalar or vector types.\\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxySeeAlso}{See also}
+\href{http://www.opengl.org/sdk/docs/manglsl/xhtml/isnan.xml}{\texttt{GLSL isnan man page}} 
+
+\href{http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf}{\texttt{GLSL 4.\+20.\+8 specification, section 8.\+3 Common Functions}} 
+\end{DoxySeeAlso}

@@ -1,0 +1,151 @@
+\doxysection{func\+\_\+exponential.\+inl}
+\hypertarget{func__exponential_8inl_source}{}\label{func__exponential_8inl_source}\index{include/GLM/detail/func\_exponential.inl@{include/GLM/detail/func\_exponential.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}func\_vector\_relational.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\_vectorize.hpp"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }glm\{}
+\DoxyCodeLine{00011\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_HAS\_CXX11\_STL}}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }std::log2;}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1detail_1_1genType}{genType}}\ log2(\mbox{\hyperlink{structglm_1_1detail_1_1genType}{genType}}\ Value)}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::log(Value)\ *\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{structglm_1_1detail_1_1genType}{genType}}\textcolor{keyword}{>}(1.4426950408889634073599246810019);}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class},\ precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keywordtype}{bool}\ isFloat,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__log2}{compute\_log2}}}
+\DoxyCodeLine{00025\ \ \ \ \ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<T,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ vec)}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<T,\ T,\ P,\ vecType>::call}}(log2,\ vec);}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00030\ \ \ \ \ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{class},\ precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__sqrt}{compute\_sqrt}}}
+\DoxyCodeLine{00034\ \ \ \ \ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<T,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<T,\ T,\ P,\ vecType>::call}}(std::sqrt,\ x);}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00039\ \ \ \ \ \};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{class},\ precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__inversesqrt}{compute\_inversesqrt}}}
+\DoxyCodeLine{00043\ \ \ \ \ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<T,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ /\ \mbox{\hyperlink{group__core__func__exponential_ga5c784ec51a1765be0a623104db2577b6}{sqrt}}(x);}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00048\ \ \ \ \ \};}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{class},\ precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__inversesqrt}{compute\_inversesqrt}}<vecType,\ float,\ lowp,\ Aligned>}
+\DoxyCodeLine{00052\ \ \ \ \ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<float,\ lowp>\ call(vecType<float,\ lowp>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ vecType<float,\ lowp>\ tmp(x);}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ vecType<float,\ lowp>\ xhalf(tmp\ *\ 0.5f);}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ vecType<uint,\ lowp>*\ p\ =\ \textcolor{keyword}{reinterpret\_cast<}vecType<uint,\ lowp>*\textcolor{keyword}{>}(\textcolor{keyword}{const\_cast<}vecType<float,\ lowp>*\textcolor{keyword}{>}(\&x));}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ vecType<uint,\ lowp>\ i\ =\ vecType<uint,\ lowp>(0x5f375a86)\ -\/\ (*p\ >>\ vecType<uint,\ lowp>(1));}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ vecType<float,\ lowp>*\ ptmp\ =\ \textcolor{keyword}{reinterpret\_cast<}vecType<float,\ lowp>*\textcolor{keyword}{>}(\&i);}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ tmp\ =\ *ptmp;}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ tmp\ =\ tmp\ *\ (1.5f\ -\/\ xhalf\ *\ tmp\ *\ tmp);}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tmp;}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00064\ \ \ \ \ \};}
+\DoxyCodeLine{00065\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ pow}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{using\ }std::pow;}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00070\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__exponential_ga36f6281a6ce767ac4cd05db06c1a78c3}{pow}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ base,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ exponent)}
+\DoxyCodeLine{00071\ \ \ \ \ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1functor2}{detail::functor2<T,\ P,\ vecType>::call}}(\mbox{\hyperlink{group__core__func__exponential_ga36f6281a6ce767ac4cd05db06c1a78c3}{pow}},\ base,\ exponent);}
+\DoxyCodeLine{00073\ \ \ \ \ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//\ exp}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{using\ }std::exp;}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00078\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__exponential_ga6e9557409b21768860d8f7d974bb41dc}{exp}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00079\ \ \ \ \ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<T,\ T,\ P,\ vecType>::call}}(\mbox{\hyperlink{group__core__func__exponential_ga6e9557409b21768860d8f7d974bb41dc}{exp}},\ x);}
+\DoxyCodeLine{00081\ \ \ \ \ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{//\ log}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{using\ }std::log;}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00086\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__exponential_gaf706df3d5958c67cc6edad6b53e0fc56}{log}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00087\ \ \ \ \ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<T,\ T,\ P,\ vecType>::call}}(\mbox{\hyperlink{group__core__func__exponential_gaf706df3d5958c67cc6edad6b53e0fc56}{log}},\ x);}
+\DoxyCodeLine{00089\ \ \ \ \ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{comment}{//exp2,\ ln2\ =\ 0.69314718055994530941723212145818f}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00093\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ \mbox{\hyperlink{group__core__func__exponential_gac206dc861ac6a3e7a65e96719022f5ce}{exp2}}(genType\ x)}
+\DoxyCodeLine{00094\ \ \ \ \ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<genType>::is\_iec559,\ \textcolor{stringliteral}{"{}'exp2'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::exp(\textcolor{keyword}{static\_cast<}genType\textcolor{keyword}{>}(0.69314718055994530941723212145818)\ *\ x);}
+\DoxyCodeLine{00098\ \ \ \ \ \}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00101\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__exponential_gac206dc861ac6a3e7a65e96719022f5ce}{exp2}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00102\ \ \ \ \ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<T,\ T,\ P,\ vecType>::call}}(\mbox{\hyperlink{group__core__func__exponential_gac206dc861ac6a3e7a65e96719022f5ce}{exp2}},\ x);}
+\DoxyCodeLine{00104\ \ \ \ \ \}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{comment}{//\ log2,\ ln2\ =\ 0.69314718055994530941723212145818f}}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00108\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ \mbox{\hyperlink{group__core__func__exponential_ga28c5e0cf5c0bc103d3ac62f416bcb9fa}{log2}}(genType\ x)}
+\DoxyCodeLine{00109\ \ \ \ \ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__exponential_ga28c5e0cf5c0bc103d3ac62f416bcb9fa}{log2}}(tvec1<genType>(x)).x;}
+\DoxyCodeLine{00111\ \ \ \ \ \}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00114\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__exponential_ga28c5e0cf5c0bc103d3ac62f416bcb9fa}{log2}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00115\ \ \ \ \ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__log2}{detail::compute\_log2<T,\ P,\ vecType,\ std::numeric\_limits<T>::is\_iec559}},\ detail::is\_aligned<P>::value>::call(x);}
+\DoxyCodeLine{00117\ \ \ \ \ \}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{//\ sqrt}}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keyword}{using\ }std::sqrt;}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00122\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__exponential_ga5c784ec51a1765be0a623104db2577b6}{sqrt}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00123\ \ \ \ \ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<T>::is\_iec559,\ \textcolor{stringliteral}{"{}'sqrt'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__sqrt}{detail::compute\_sqrt<vecType,\ T,\ P,\ detail::is\_aligned<P>::value}}>::call(x);}
+\DoxyCodeLine{00126\ \ \ \ \ \}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{comment}{//\ inversesqrt}}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00130\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ \mbox{\hyperlink{group__core__func__exponential_ga87f62b87948dcee5420f774b5406e9ec}{inversesqrt}}(genType\ x)}
+\DoxyCodeLine{00131\ \ \ \ \ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}genType\textcolor{keyword}{>}(1)\ /\ \mbox{\hyperlink{group__core__func__exponential_ga5c784ec51a1765be0a623104db2577b6}{sqrt}}(x);}
+\DoxyCodeLine{00133\ \ \ \ \ \}}
+\DoxyCodeLine{00134\ \ \ \ \ }
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00136\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__exponential_ga87f62b87948dcee5420f774b5406e9ec}{inversesqrt}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00137\ \ \ \ \ \{}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<T>::is\_iec559,\ \textcolor{stringliteral}{"{}'inversesqrt'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__inversesqrt}{detail::compute\_inversesqrt<vecType,\ T,\ P,\ detail::is\_aligned<P>::value}}>::call(x);}
+\DoxyCodeLine{00140\ \ \ \ \ \}}
+\DoxyCodeLine{00141\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#if\ GLM\_ARCH\ !=\ GLM\_ARCH\_PURE\ \&\&\ GLM\_HAS\_UNRESTRICTED\_UNIONS}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#\ \ \ include\ "{}func\_exponential\_simd.inl"{}}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00146\ }
+
+\end{DoxyCode}

@@ -1,0 +1,800 @@
+\doxysection{quaternion.\+inl}
+\hypertarget{gtc_2quaternion_8inl_source}{}\label{gtc_2quaternion_8inl_source}\index{include/GLM/gtc/quaternion.inl@{include/GLM/gtc/quaternion.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../trigonometric.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../geometric.hpp"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}../exponential.hpp"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }glm\{}
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__dot}{compute\_dot}}<\mbox{\hyperlink{structglm_1_1tquat}{tquat}},\ T,\ P,\ Aligned>}
+\DoxyCodeLine{00014\ \ \ \ \ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ GLM\_FUNC\_QUALIFIER\ T\ call(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\&\ x,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\&\ y)}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ tmp(x.x\ *\ y.x,\ x.y\ *\ y.y,\ x.z\ *\ y.z,\ x.w\ *\ y.w);}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (tmp.x\ +\ tmp.y)\ +\ (tmp.z\ +\ tmp.w);}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00020\ \ \ \ \ \};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__quat__add}{compute\_quat\_add}}}
+\DoxyCodeLine{00024\ \ \ \ \ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\&\ q,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\&\ p)}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(q.w\ +\ p.w,\ q.x\ +\ p.x,\ q.y\ +\ p.y,\ q.z\ +\ p.z);}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00029\ \ \ \ \ \};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__quat__sub}{compute\_quat\_sub}}}
+\DoxyCodeLine{00033\ \ \ \ \ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\&\ q,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\&\ p)}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(q.w\ -\/\ p.w,\ q.x\ -\/\ p.x,\ q.y\ -\/\ p.y,\ q.z\ -\/\ p.z);}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00038\ \ \ \ \ \};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__quat__mul__scalar}{compute\_quat\_mul\_scalar}}}
+\DoxyCodeLine{00042\ \ \ \ \ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\&\ q,\ T\ s)}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(q.w\ *\ s,\ q.x\ *\ s,\ q.y\ *\ s,\ q.z\ *\ s);}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00047\ \ \ \ \ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__quat__div__scalar}{compute\_quat\_div\_scalar}}}
+\DoxyCodeLine{00051\ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\&\ q,\ T\ s)}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(q.w\ /\ s,\ q.x\ /\ s,\ q.y\ /\ s,\ q.z\ /\ s);}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__quat__mul__vec4}{compute\_quat\_mul\_vec4}}}
+\DoxyCodeLine{00060\ \ \ \ \ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(q\ *\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}(v),\ v.w);}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \};}
+\DoxyCodeLine{00066\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Component\ accesses\ -\/-\/}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00071\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \&\ tquat<T,\ P>::operator[](\textcolor{keyword}{typename}\ tquat<T,\ P>::length\_type\ i)}
+\DoxyCodeLine{00072\ \ \ \ \ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ assert(i\ >=\ 0\ \&\&\ i\ <\ this-\/>\mbox{\hyperlink{group__core__func__geometric_ga18d45e3d4c7705e67ccfabd99e521604}{length}}());}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&x)[i];}
+\DoxyCodeLine{00075\ \ \ \ \ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00078\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \textcolor{keyword}{const}\ \&\ tquat<T,\ P>::operator[](\textcolor{keyword}{typename}\ tquat<T,\ P>::length\_type\ i)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ assert(i\ >=\ 0\ \&\&\ i\ <\ this-\/>\mbox{\hyperlink{group__core__func__geometric_ga18d45e3d4c7705e67ccfabd99e521604}{length}}());}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&x)[i];}
+\DoxyCodeLine{00082\ \ \ \ \ \}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Implicit\ basic\ constructors\ -\/-\/}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#\ \ \ if\ !GLM\_HAS\_DEFAULTED\_FUNCTIONS\ ||\ !defined(GLM\_FORCE\_NO\_CTOR\_INIT)}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ tquat<T,\ P>::tquat()}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ ifndef\ GLM\_FORCE\_NO\_CTOR\_INIT}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ x(0),\ y(0),\ z(0),\ w(1)}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \{\}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#\ \ \ if\ !GLM\_HAS\_DEFAULTED\_FUNCTIONS}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ tquat<T,\ P>::tquat(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ :\ x(q.x),\ y(q.y),\ z(q.z),\ w(q.w)}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \{\}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{template}\ <precision\ Q>}
+\DoxyCodeLine{00104\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ tquat<T,\ P>::tquat(tquat<T,\ Q>\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ :\ x(q.x),\ y(q.y),\ z(q.z),\ w(q.w)}
+\DoxyCodeLine{00106\ \ \ \ \ \{\}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Explicit\ basic\ constructors\ -\/-\/}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00111\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tquat<T,\ P>::tquat(ctor)}
+\DoxyCodeLine{00112\ \ \ \ \ \{\}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00115\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ tquat<T,\ P>::tquat(T\ \textcolor{keyword}{const}\ \&\ s,\ tvec3<T,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ :\ x(v.x),\ y(v.y),\ z(v.z),\ w(s)}
+\DoxyCodeLine{00117\ \ \ \ \ \{\}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00120\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ tquat<T,\ P>::tquat(T\ \textcolor{keyword}{const}\ \&\ w,\ T\ \textcolor{keyword}{const}\ \&\ x,\ T\ \textcolor{keyword}{const}\ \&\ y,\ T\ \textcolor{keyword}{const}\ \&\ z)}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ :\ x(x),\ y(y),\ z(z),\ w(w)}
+\DoxyCodeLine{00122\ \ \ \ \ \{\}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Conversion\ constructors\ -\/-\/}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U,\ precision\ Q>}
+\DoxyCodeLine{00128\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ tquat<T,\ P>::tquat(\mbox{\hyperlink{structglm_1_1tquat}{tquat<U,\ Q>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(q.x))}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(q.y))}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(q.z))}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(q.w))}
+\DoxyCodeLine{00133\ \ \ \ \ \{\}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{comment}{//template\ <typename\ valType>\ }}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{comment}{//GLM\_FUNC\_QUALIFIER\ tquat<valType>::tquat}}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{comment}{//(}}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{comment}{//\ \ valType\ const\ \&\ pitch,}}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{comment}{//\ \ valType\ const\ \&\ yaw,}}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{comment}{//\ \ valType\ const\ \&\ roll}}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{comment}{//)}}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{comment}{//\ \ tvec3<valType>\ eulerAngle(pitch\ *\ valType(0.5),\ yaw\ *\ valType(0.5),\ roll\ *\ valType(0.5));}}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{comment}{//\ \ tvec3<valType>\ c\ =\ glm::cos(eulerAngle\ *\ valType(0.5));}}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{comment}{//\ \ tvec3<valType>\ s\ =\ glm::sin(eulerAngle\ *\ valType(0.5));}}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{comment}{//\ \ }}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{comment}{//\ \ this-\/>w\ =\ c.x\ *\ c.y\ *\ c.z\ +\ s.x\ *\ s.y\ *\ s.z;}}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{comment}{//\ \ this-\/>x\ =\ s.x\ *\ c.y\ *\ c.z\ -\/\ c.x\ *\ s.y\ *\ s.z;}}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{comment}{//\ \ this-\/>y\ =\ c.x\ *\ s.y\ *\ c.z\ +\ s.x\ *\ c.y\ *\ s.z;}}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{comment}{//\ \ this-\/>z\ =\ c.x\ *\ c.y\ *\ s.z\ -\/\ s.x\ *\ s.y\ *\ c.z;}}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00154\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tquat<T,\ P>::tquat(\mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ u,\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00155\ \ \ \ \ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ LocalW(\mbox{\hyperlink{group__core__func__geometric_ga349f34d7cc9cd71393f96b953a91441a}{cross}}(u,\ v));}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ T\ Dot\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__dot}{detail::compute\_dot<tvec3,\ T,\ P,\ detail::is\_aligned<P>::value}}>::call(u,\ v);}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ tquat<T,\ P>\ q(T(1)\ +\ Dot,\ LocalW.x,\ LocalW.y,\ LocalW.z);}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{group__core__func__geometric_gae0393602d545a23c13f84538e35a739d}{normalize}}(q);}
+\DoxyCodeLine{00161\ \ \ \ \ \}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00164\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tquat<T,\ P>::tquat(\mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ eulerAngle)}
+\DoxyCodeLine{00165\ \ \ \ \ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ c\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(eulerAngle\ *\ T(0.5));}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ s\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(eulerAngle\ *\ T(0.5));}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ this-\/>w\ =\ c.x\ *\ c.y\ *\ c.z\ +\ s.x\ *\ s.y\ *\ s.z;}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ this-\/>x\ =\ s.x\ *\ c.y\ *\ c.z\ -\/\ c.x\ *\ s.y\ *\ s.z;}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ this-\/>y\ =\ c.x\ *\ s.y\ *\ c.z\ +\ s.x\ *\ c.y\ *\ s.z;}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ this-\/>z\ =\ c.x\ *\ c.y\ *\ s.z\ -\/\ s.x\ *\ s.y\ *\ c.z;}
+\DoxyCodeLine{00173\ \ \ \ \ \}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00176\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tquat<T,\ P>::tquat(\mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m)}
+\DoxyCodeLine{00177\ \ \ \ \ \{}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{group__gtc__quaternion_gaac2cb2371568e550e827c0e0ab20f05b}{quat\_cast}}(m);}
+\DoxyCodeLine{00179\ \ \ \ \ \}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00182\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tquat<T,\ P>::tquat(tmat4x4<T,\ P>\ \textcolor{keyword}{const}\ \&\ m)}
+\DoxyCodeLine{00183\ \ \ \ \ \{}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{group__gtc__quaternion_gaac2cb2371568e550e827c0e0ab20f05b}{quat\_cast}}(m);}
+\DoxyCodeLine{00185\ \ \ \ \ \}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_HAS\_EXPLICIT\_CONVERSION\_OPERATORS}}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00189\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>::operator}}\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}()}
+\DoxyCodeLine{00190\ \ \ \ \ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__gtc__quaternion_ga6a75640550d3d7fa983a1e27907b5bc4}{mat3\_cast}}(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00192\ \ \ \ \ \}}
+\DoxyCodeLine{00193\ \ \ \ \ }
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>\ \ }
+\DoxyCodeLine{00195\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>::operator}}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}()}
+\DoxyCodeLine{00196\ \ \ \ \ \{}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__gtc__quaternion_ga4682a4e90a27ecfff16f42bdb905d1a7}{mat4\_cast}}(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00198\ \ \ \ \ \}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#\ \ \ endif}\textcolor{comment}{//GLM\_HAS\_EXPLICIT\_CONVERSION\_OPERATORS}}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00202\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \mbox{\hyperlink{group__gtc__quaternion_ga0ebb6e8dee597121fd1c6913c4820691}{conjugate}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00203\ \ \ \ \ \{}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(q.w,\ -\/q.x,\ -\/q.y,\ -\/q.z);}
+\DoxyCodeLine{00205\ \ \ \ \ \}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00208\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \mbox{\hyperlink{group__core__func__matrix_gaff4e89603cf51cdbcedebc57cd8808a3}{inverse}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00209\ \ \ \ \ \{}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__gtc__quaternion_ga0ebb6e8dee597121fd1c6913c4820691}{conjugate}}(q)\ /\ \mbox{\hyperlink{group__core__func__geometric_ga7dada304da2ba7dd3376ab4f178c3f6b}{dot}}(q,\ q);}
+\DoxyCodeLine{00211\ \ \ \ \ \}}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ arithmetic\ operators\ -\/-\/}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#\ \ \ if\ !GLM\_HAS\_DEFAULTED\_FUNCTIONS}}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tquat<T,\ P>\ \&\ tquat<T,\ P>::operator=(tquat<T,\ P>\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>w\ =\ q.w;}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>x\ =\ q.x;}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>y\ =\ q.y;}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>z\ =\ q.z;}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00229\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tquat<T,\ P>\ \&\ tquat<T,\ P>::operator=(tquat<U,\ P>\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00230\ \ \ \ \ \{}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ this-\/>w\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.w);}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ this-\/>x\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.x);}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ this-\/>y\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.y);}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ this-\/>z\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.z);}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00236\ \ \ \ \ \}}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00240\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \&\ tquat<T,\ P>::operator+=(\mbox{\hyperlink{structglm_1_1tquat}{tquat<U,\ P>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00241\ \ \ \ \ \{}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__quat__add}{detail::compute\_quat\_add}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(q)));}
+\DoxyCodeLine{00243\ \ \ \ \ \}}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00247\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tquat<T,\ P>\ \&\ tquat<T,\ P>::operator-\/=(tquat<U,\ P>\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00248\ \ \ \ \ \{}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_quat\_sub<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ tquat<T,\ P>(q)));}
+\DoxyCodeLine{00250\ \ \ \ \ \}}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00254\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \&\ tquat<T,\ P>::operator*=(\mbox{\hyperlink{structglm_1_1tquat}{tquat<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ r)}
+\DoxyCodeLine{00255\ \ \ \ \ \{}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ p(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ q(r);}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ this-\/>w\ =\ p.w\ *\ q.w\ -\/\ p.x\ *\ q.x\ -\/\ p.y\ *\ q.y\ -\/\ p.z\ *\ q.z;}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ this-\/>x\ =\ p.w\ *\ q.x\ +\ p.x\ *\ q.w\ +\ p.y\ *\ q.z\ -\/\ p.z\ *\ q.y;}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ this-\/>y\ =\ p.w\ *\ q.y\ +\ p.y\ *\ q.w\ +\ p.z\ *\ q.x\ -\/\ p.x\ *\ q.z;}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ this-\/>z\ =\ p.w\ *\ q.z\ +\ p.z\ *\ q.w\ +\ p.x\ *\ q.y\ -\/\ p.y\ *\ q.x;}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00264\ \ \ \ \ \}}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00268\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \&\ tquat<T,\ P>::operator*=(U\ s)}
+\DoxyCodeLine{00269\ \ \ \ \ \{}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__quat__mul__scalar}{detail::compute\_quat\_mul\_scalar}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \textcolor{keyword}{static\_cast<}U\textcolor{keyword}{>}(s)));}
+\DoxyCodeLine{00271\ \ \ \ \ \}}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00275\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \&\ tquat<T,\ P>::operator/=(U\ s)}
+\DoxyCodeLine{00276\ \ \ \ \ \{}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__quat__div__scalar}{detail::compute\_quat\_div\_scalar}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \textcolor{keyword}{static\_cast<}U\textcolor{keyword}{>}(s)));}
+\DoxyCodeLine{00278\ \ \ \ \ \}}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ bit\ operators\ -\/-\/}}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00283\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ operator+(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00284\ \ \ \ \ \{}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ q;}
+\DoxyCodeLine{00286\ \ \ \ \ \}}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00289\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ operator-\/(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00290\ \ \ \ \ \{}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(-\/q.w,\ -\/q.x,\ -\/q.y,\ -\/q.z);}
+\DoxyCodeLine{00292\ \ \ \ \ \}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Binary\ operators\ -\/-\/}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00297\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ operator+(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ p)}
+\DoxyCodeLine{00298\ \ \ \ \ \{}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(q)\ +=\ p;}
+\DoxyCodeLine{00300\ \ \ \ \ \}}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00303\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ p)}
+\DoxyCodeLine{00304\ \ \ \ \ \{}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(q)\ *=\ p;}
+\DoxyCodeLine{00306\ \ \ \ \ \}}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00309\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q,\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00310\ \ \ \ \ \{}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ QuatVector(q.x,\ q.y,\ q.z);}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ uv(\mbox{\hyperlink{group__core__func__geometric_ga349f34d7cc9cd71393f96b953a91441a}{glm::cross}}(QuatVector,\ v));}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ uuv(\mbox{\hyperlink{group__core__func__geometric_ga349f34d7cc9cd71393f96b953a91441a}{glm::cross}}(QuatVector,\ uv));}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v\ +\ ((uv\ *\ q.w)\ +\ uuv)\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(2);}
+\DoxyCodeLine{00316\ \ \ \ \ \}}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00319\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00320\ \ \ \ \ \{}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__matrix_gaff4e89603cf51cdbcedebc57cd8808a3}{glm::inverse}}(q)\ *\ v;}
+\DoxyCodeLine{00322\ \ \ \ \ \}}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00325\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\&\ q,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00326\ \ \ \ \ \{}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__quat__mul__vec4}{detail::compute\_quat\_mul\_vec4<T,\ P,\ detail::is\_aligned<P>::value}}>::call(q,\ v);}
+\DoxyCodeLine{00328\ \ \ \ \ \}}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00331\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00332\ \ \ \ \ \{}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__matrix_gaff4e89603cf51cdbcedebc57cd8808a3}{glm::inverse}}(q)\ *\ v;}
+\DoxyCodeLine{00334\ \ \ \ \ \}}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00337\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q,\ T\ \textcolor{keyword}{const}\ \&\ s)}
+\DoxyCodeLine{00338\ \ \ \ \ \{}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ q.w\ *\ s,\ q.x\ *\ s,\ q.y\ *\ s,\ q.z\ *\ s);}
+\DoxyCodeLine{00341\ \ \ \ \ \}}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00344\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ operator*(T\ \textcolor{keyword}{const}\ \&\ s,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00345\ \ \ \ \ \{}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ q\ *\ s;}
+\DoxyCodeLine{00347\ \ \ \ \ \}}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00350\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ operator/(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q,\ T\ \textcolor{keyword}{const}\ \&\ s)}
+\DoxyCodeLine{00351\ \ \ \ \ \{}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \ \ \ \ q.w\ /\ s,\ q.x\ /\ s,\ q.y\ /\ s,\ q.z\ /\ s);}
+\DoxyCodeLine{00354\ \ \ \ \ \}}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Boolean\ operators\ -\/-\/}}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00359\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{bool}\ operator==(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q1,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q2)}
+\DoxyCodeLine{00360\ \ \ \ \ \{}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (q1.x\ ==\ q2.x)\ \&\&\ (q1.y\ ==\ q2.y)\ \&\&\ (q1.z\ ==\ q2.z)\ \&\&\ (q1.w\ ==\ q2.w);}
+\DoxyCodeLine{00362\ \ \ \ \ \}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00365\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{bool}\ operator!=(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q1,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q2)}
+\DoxyCodeLine{00366\ \ \ \ \ \{}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (q1.x\ !=\ q2.x)\ ||\ (q1.y\ !=\ q2.y)\ ||\ (q1.z\ !=\ q2.z)\ ||\ (q1.w\ !=\ q2.w);}
+\DoxyCodeLine{00368\ \ \ \ \ \}}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Operations\ -\/-\/}}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00373\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__core__func__geometric_ga18d45e3d4c7705e67ccfabd99e521604}{length}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00374\ \ \ \ \ \{}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__exponential_ga5c784ec51a1765be0a623104db2577b6}{glm::sqrt}}(\mbox{\hyperlink{group__core__func__geometric_ga7dada304da2ba7dd3376ab4f178c3f6b}{dot}}(q,\ q));}
+\DoxyCodeLine{00376\ \ \ \ \ \}}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00379\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \mbox{\hyperlink{group__core__func__geometric_gae0393602d545a23c13f84538e35a739d}{normalize}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00380\ \ \ \ \ \{}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ T\ len\ =\ \mbox{\hyperlink{group__core__func__geometric_ga18d45e3d4c7705e67ccfabd99e521604}{length}}(q);}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(len\ <=\ T(0))\ \textcolor{comment}{//\ Problem}}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(1,\ 0,\ 0,\ 0);}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ T\ oneOverLen\ =\ T(1)\ /\ len;}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(q.w\ *\ oneOverLen,\ q.x\ *\ oneOverLen,\ q.y\ *\ oneOverLen,\ q.z\ *\ oneOverLen);}
+\DoxyCodeLine{00386\ \ \ \ \ \}}
+\DoxyCodeLine{00387\ }
+\DoxyCodeLine{00388\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00389\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tquat<T,\ P>\ \mbox{\hyperlink{group__core__func__geometric_ga349f34d7cc9cd71393f96b953a91441a}{cross}}(tquat<T,\ P>\ \textcolor{keyword}{const}\ \&\ q1,\ tquat<T,\ P>\ \textcolor{keyword}{const}\ \&\ q2)}
+\DoxyCodeLine{00390\ \ \ \ \ \{}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tquat<T,\ P>(}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \ \ \ \ q1.w\ *\ q2.w\ -\/\ q1.x\ *\ q2.x\ -\/\ q1.y\ *\ q2.y\ -\/\ q1.z\ *\ q2.z,}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \ \ \ \ q1.w\ *\ q2.x\ +\ q1.x\ *\ q2.w\ +\ q1.y\ *\ q2.z\ -\/\ q1.z\ *\ q2.y,}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ q1.w\ *\ q2.y\ +\ q1.y\ *\ q2.w\ +\ q1.z\ *\ q2.x\ -\/\ q1.x\ *\ q2.z,}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ q1.w\ *\ q2.z\ +\ q1.z\ *\ q2.w\ +\ q1.x\ *\ q2.y\ -\/\ q1.y\ *\ q2.x);}
+\DoxyCodeLine{00396\ \ \ \ \ \}}
+\DoxyCodeLine{00397\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00398\ \textcolor{comment}{\ \ \ \ //\ (x\ *\ sin(1\ -\/\ a)\ *\ angle\ /\ sin(angle))\ +\ (y\ *\ sin(a)\ *\ angle\ /\ sin(angle))}}
+\DoxyCodeLine{00399\ \textcolor{comment}{\ \ \ \ template\ <typename\ T,\ precision\ P>}}
+\DoxyCodeLine{00400\ \textcolor{comment}{\ \ \ \ GLM\_FUNC\_QUALIFIER\ tquat<T,\ P>\ mix(tquat<T,\ P>\ const\ \&\ x,\ tquat<T,\ P>\ const\ \&\ y,\ T\ const\ \&\ a)}}
+\DoxyCodeLine{00401\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{00402\ \textcolor{comment}{\ \ \ \ \ \ \ \ if(a\ <=\ T(0))\ return\ x;}}
+\DoxyCodeLine{00403\ \textcolor{comment}{\ \ \ \ \ \ \ \ if(a\ >=\ T(1))\ return\ y;}}
+\DoxyCodeLine{00404\ \textcolor{comment}{}}
+\DoxyCodeLine{00405\ \textcolor{comment}{\ \ \ \ \ \ \ \ float\ fCos\ =\ dot(x,\ y);}}
+\DoxyCodeLine{00406\ \textcolor{comment}{\ \ \ \ \ \ \ \ tquat<T,\ P>\ y2(y);\ //BUG!!!\ tquat<T,\ P>\ y2;}}
+\DoxyCodeLine{00407\ \textcolor{comment}{\ \ \ \ \ \ \ \ if(fCos\ <\ T(0))}}
+\DoxyCodeLine{00408\ \textcolor{comment}{\ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{00409\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ y2\ =\ -\/y;}}
+\DoxyCodeLine{00410\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ fCos\ =\ -\/fCos;}}
+\DoxyCodeLine{00411\ \textcolor{comment}{\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00412\ \textcolor{comment}{}}
+\DoxyCodeLine{00413\ \textcolor{comment}{\ \ \ \ \ \ \ \ //if(fCos\ >\ 1.0f)\ //\ problem}}
+\DoxyCodeLine{00414\ \textcolor{comment}{\ \ \ \ \ \ \ \ float\ k0,\ k1;}}
+\DoxyCodeLine{00415\ \textcolor{comment}{\ \ \ \ \ \ \ \ if(fCos\ >\ T(0.9999))}}
+\DoxyCodeLine{00416\ \textcolor{comment}{\ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{00417\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ k0\ =\ T(1)\ -\/\ a;}}
+\DoxyCodeLine{00418\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ k1\ =\ T(0)\ +\ a;\ //BUG!!!\ 1.0f\ +\ a;}}
+\DoxyCodeLine{00419\ \textcolor{comment}{\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00420\ \textcolor{comment}{\ \ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00421\ \textcolor{comment}{\ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{00422\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ T\ fSin\ =\ sqrt(T(1)\ -\/\ fCos\ *\ fCos);}}
+\DoxyCodeLine{00423\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ T\ fAngle\ =\ atan(fSin,\ fCos);}}
+\DoxyCodeLine{00424\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ T\ fOneOverSin\ =\ static\_cast<T>(1)\ /\ fSin;}}
+\DoxyCodeLine{00425\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ k0\ =\ sin((T(1)\ -\/\ a)\ *\ fAngle)\ *\ fOneOverSin;}}
+\DoxyCodeLine{00426\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ k1\ =\ sin((T(0)\ +\ a)\ *\ fAngle)\ *\ fOneOverSin;}}
+\DoxyCodeLine{00427\ \textcolor{comment}{\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00428\ \textcolor{comment}{}}
+\DoxyCodeLine{00429\ \textcolor{comment}{\ \ \ \ \ \ \ \ return\ tquat<T,\ P>(}}
+\DoxyCodeLine{00430\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ k0\ *\ x.w\ +\ k1\ *\ y2.w,}}
+\DoxyCodeLine{00431\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ k0\ *\ x.x\ +\ k1\ *\ y2.x,}}
+\DoxyCodeLine{00432\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ k0\ *\ x.y\ +\ k1\ *\ y2.y,}}
+\DoxyCodeLine{00433\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ k0\ *\ x.z\ +\ k1\ *\ y2.z);}}
+\DoxyCodeLine{00434\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{00435\ \textcolor{comment}{}}
+\DoxyCodeLine{00436\ \textcolor{comment}{\ \ \ \ template\ <typename\ T,\ precision\ P>}}
+\DoxyCodeLine{00437\ \textcolor{comment}{\ \ \ \ GLM\_FUNC\_QUALIFIER\ tquat<T,\ P>\ mix2}}
+\DoxyCodeLine{00438\ \textcolor{comment}{\ \ \ \ (}}
+\DoxyCodeLine{00439\ \textcolor{comment}{\ \ \ \ \ \ \ \ tquat<T,\ P>\ const\ \&\ x,\ }}
+\DoxyCodeLine{00440\ \textcolor{comment}{\ \ \ \ \ \ \ \ tquat<T,\ P>\ const\ \&\ y,\ }}
+\DoxyCodeLine{00441\ \textcolor{comment}{\ \ \ \ \ \ \ \ T\ const\ \&\ a}}
+\DoxyCodeLine{00442\ \textcolor{comment}{\ \ \ \ )}}
+\DoxyCodeLine{00443\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{00444\ \textcolor{comment}{\ \ \ \ \ \ \ \ bool\ flip\ =\ false;}}
+\DoxyCodeLine{00445\ \textcolor{comment}{\ \ \ \ \ \ \ \ if(a\ <=\ static\_cast<T>(0))\ return\ x;}}
+\DoxyCodeLine{00446\ \textcolor{comment}{\ \ \ \ \ \ \ \ if(a\ >=\ static\_cast<T>(1))\ return\ y;}}
+\DoxyCodeLine{00447\ \textcolor{comment}{}}
+\DoxyCodeLine{00448\ \textcolor{comment}{\ \ \ \ \ \ \ \ T\ cos\_t\ =\ dot(x,\ y);}}
+\DoxyCodeLine{00449\ \textcolor{comment}{\ \ \ \ \ \ \ \ if(cos\_t\ <\ T(0))}}
+\DoxyCodeLine{00450\ \textcolor{comment}{\ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{00451\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ cos\_t\ =\ -\/cos\_t;}}
+\DoxyCodeLine{00452\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ flip\ =\ true;}}
+\DoxyCodeLine{00453\ \textcolor{comment}{\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00454\ \textcolor{comment}{}}
+\DoxyCodeLine{00455\ \textcolor{comment}{\ \ \ \ \ \ \ \ T\ alpha(0),\ beta(0);}}
+\DoxyCodeLine{00456\ \textcolor{comment}{}}
+\DoxyCodeLine{00457\ \textcolor{comment}{\ \ \ \ \ \ \ \ if(T(1)\ -\/\ cos\_t\ <\ 1e-\/7)}}
+\DoxyCodeLine{00458\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ beta\ =\ static\_cast<T>(1)\ -\/\ alpha;}}
+\DoxyCodeLine{00459\ \textcolor{comment}{\ \ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00460\ \textcolor{comment}{\ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{00461\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ T\ theta\ =\ acos(cos\_t);}}
+\DoxyCodeLine{00462\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ T\ sin\_t\ =\ sin(theta);}}
+\DoxyCodeLine{00463\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ beta\ =\ sin(theta\ *\ (T(1)\ -\/\ alpha))\ /\ sin\_t;}}
+\DoxyCodeLine{00464\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ alpha\ =\ sin(alpha\ *\ theta)\ /\ sin\_t;}}
+\DoxyCodeLine{00465\ \textcolor{comment}{\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00466\ \textcolor{comment}{}}
+\DoxyCodeLine{00467\ \textcolor{comment}{\ \ \ \ \ \ \ \ if(flip)}}
+\DoxyCodeLine{00468\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ alpha\ =\ -\/alpha;}}
+\DoxyCodeLine{00469\ \textcolor{comment}{\ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{00470\ \textcolor{comment}{\ \ \ \ \ \ \ \ return\ normalize(beta\ *\ x\ +\ alpha\ *\ y);}}
+\DoxyCodeLine{00471\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{00472\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00475\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y,\ T\ a)}
+\DoxyCodeLine{00476\ \ \ \ \ \{}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ T\ cosTheta\ =\ \mbox{\hyperlink{group__core__func__geometric_ga7dada304da2ba7dd3376ab4f178c3f6b}{dot}}(x,\ y);}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Perform\ a\ linear\ interpolation\ when\ cosTheta\ is\ close\ to\ 1\ to\ avoid\ side\ effect\ of\ sin(angle)\ becoming\ a\ zero\ denominator}}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(cosTheta\ >\ T(1)\ -\/\ \mbox{\hyperlink{group__gtc__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon<T>}}())}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Linear\ interpolation}}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(x.w,\ y.w,\ a),}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(x.x,\ y.x,\ a),}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(x.y,\ y.y,\ a),}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(x.z,\ y.z,\ a));}
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Essential\ Mathematics,\ page\ 467}}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \ \ \ \ T\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga01fa516ece73d88ecbe61b68e1001a41}{acos}}(cosTheta);}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}((T(1)\ -\/\ a)\ *\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}})\ *\ x\ +\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(a\ *\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}})\ *\ y)\ /\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}});}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00495\ \ \ \ \ \}}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00498\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \mbox{\hyperlink{group__gtc__quaternion_ga264cb1ad7608dcfeadf5f8d755001ae2}{lerp}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y,\ T\ a)}
+\DoxyCodeLine{00499\ \ \ \ \ \{}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Lerp\ is\ only\ defined\ in\ [0,\ 1]}}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ assert(a\ >=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0));}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ assert(a\ <=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x\ *\ (T(1)\ -\/\ a)\ +\ (y\ *\ a);}
+\DoxyCodeLine{00505\ \ \ \ \ \}}
+\DoxyCodeLine{00506\ }
+\DoxyCodeLine{00507\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00508\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \mbox{\hyperlink{group__gtc__quaternion_ga216da7ed129a42b8f13ad04a14a33061}{slerp}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y,\ T\ a)}
+\DoxyCodeLine{00509\ \ \ \ \ \{}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ z\ =\ y;}
+\DoxyCodeLine{00511\ }
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ T\ cosTheta\ =\ \mbox{\hyperlink{group__core__func__geometric_ga7dada304da2ba7dd3376ab4f178c3f6b}{dot}}(x,\ y);}
+\DoxyCodeLine{00513\ }
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ cosTheta\ <\ 0,\ the\ interpolation\ will\ take\ the\ long\ way\ around\ the\ sphere.\ }}
+\DoxyCodeLine{00515\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ To\ fix\ this,\ one\ quat\ must\ be\ negated.}}
+\DoxyCodeLine{00516\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cosTheta\ <\ T(0))}
+\DoxyCodeLine{00517\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ \ \ \ \ z\ \ \ \ \ \ \ \ =\ -\/y;}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ \ \ \ \ cosTheta\ =\ -\/cosTheta;}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00521\ }
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Perform\ a\ linear\ interpolation\ when\ cosTheta\ is\ close\ to\ 1\ to\ avoid\ side\ effect\ of\ sin(angle)\ becoming\ a\ zero\ denominator}}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(cosTheta\ >\ T(1)\ -\/\ \mbox{\hyperlink{group__gtc__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon<T>}}())}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Linear\ interpolation}}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(x.w,\ z.w,\ a),}
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(x.x,\ z.x,\ a),}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(x.y,\ z.y,\ a),}
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(x.z,\ z.z,\ a));}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Essential\ Mathematics,\ page\ 467}}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \ \ \ \ T\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga01fa516ece73d88ecbe61b68e1001a41}{acos}}(cosTheta);}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}((T(1)\ -\/\ a)\ *\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}})\ *\ x\ +\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(a\ *\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}})\ *\ z)\ /\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}});}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00538\ \ \ \ \ \}}
+\DoxyCodeLine{00539\ }
+\DoxyCodeLine{00540\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00541\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \mbox{\hyperlink{group__gtc__matrix__transform_ga5f1687db728fff252eb6272530df88fc}{rotate}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q,\ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}},\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00542\ \ \ \ \ \{}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ Tmp\ =\ v;}
+\DoxyCodeLine{00544\ }
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Axis\ of\ rotation\ must\ be\ normalised}}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ T\ len\ =\ \mbox{\hyperlink{group__core__func__geometric_ga18d45e3d4c7705e67ccfabd99e521604}{glm::length}}(Tmp);}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{group__core__func__common_ga693d77696ff36572a0da79efec965acd}{abs}}(len\ -\/\ T(1))\ >\ T(0.001))}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \ \ \ \ T\ oneOverLen\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ /\ len;}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \ \ \ \ Tmp.x\ *=\ oneOverLen;}
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \ \ \ \ Tmp.y\ *=\ oneOverLen;}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ \ \ \ \ Tmp.z\ *=\ oneOverLen;}
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00554\ }
+\DoxyCodeLine{00555\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ AngleRad(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}});}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Sin\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{sin}}(AngleRad\ *\ T(0.5));}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ q\ *\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}(\mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{cos}}(AngleRad\ *\ T(0.5)),\ Tmp.x\ *\ Sin,\ Tmp.y\ *\ Sin,\ Tmp.z\ *\ Sin);}
+\DoxyCodeLine{00559\ \ \ \ \ \ \ \ \ \textcolor{comment}{//return\ gtc::quaternion::cross(q,\ tquat<T,\ P>(cos(AngleRad\ *\ T(0.5)),\ Tmp.x\ *\ fSin,\ Tmp.y\ *\ fSin,\ Tmp.z\ *\ fSin));}}
+\DoxyCodeLine{00560\ \ \ \ \ \}}
+\DoxyCodeLine{00561\ }
+\DoxyCodeLine{00562\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00563\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \mbox{\hyperlink{group__gtc__quaternion_ga8eda8ae7b522a9628000922a983887af}{eulerAngles}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00564\ \ \ \ \ \{}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}(\mbox{\hyperlink{group__gtc__quaternion_ga2c08b93a4261c10748fd4d2104346f17}{pitch}}(x),\ \mbox{\hyperlink{group__gtc__quaternion_ga724a5df282b70cec0a6cb0d6dcddb6d6}{yaw}}(x),\ \mbox{\hyperlink{group__gtc__quaternion_ga4fd705376c6c1fd667be0055a0ea58ec}{roll}}(x));}
+\DoxyCodeLine{00566\ \ \ \ \ \}}
+\DoxyCodeLine{00567\ }
+\DoxyCodeLine{00568\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00569\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__gtc__quaternion_ga4fd705376c6c1fd667be0055a0ea58ec}{roll}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00570\ \ \ \ \ \{}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ T(\mbox{\hyperlink{group__core__func__trigonometric_ga72cc880c647a2b0ba5cf6dc037cfb685}{atan}}(T(2)\ *\ (q.x\ *\ q.y\ +\ q.w\ *\ q.z),\ q.w\ *\ q.w\ +\ q.x\ *\ q.x\ -\/\ q.y\ *\ q.y\ -\/\ q.z\ *\ q.z));}
+\DoxyCodeLine{00572\ \ \ \ \ \}}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00574\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00575\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__gtc__quaternion_ga2c08b93a4261c10748fd4d2104346f17}{pitch}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00576\ \ \ \ \ \{}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ T(\mbox{\hyperlink{group__core__func__trigonometric_ga72cc880c647a2b0ba5cf6dc037cfb685}{atan}}(T(2)\ *\ (q.y\ *\ q.z\ +\ q.w\ *\ q.x),\ q.w\ *\ q.w\ -\/\ q.x\ *\ q.x\ -\/\ q.y\ *\ q.y\ +\ q.z\ *\ q.z));}
+\DoxyCodeLine{00578\ \ \ \ \ \}}
+\DoxyCodeLine{00579\ }
+\DoxyCodeLine{00580\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00581\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__gtc__quaternion_ga724a5df282b70cec0a6cb0d6dcddb6d6}{yaw}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00582\ \ \ \ \ \{}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__trigonometric_gae8df0f1d35d4749b83d3f7788e420f67}{asin}}(\mbox{\hyperlink{group__core__func__common_ga93bce26c7d80d30a62f5c508f8498a6c}{clamp}}(T(-\/2)\ *\ (q.x\ *\ q.z\ -\/\ q.w\ *\ q.y),\ T(-\/1),\ T(1)));}
+\DoxyCodeLine{00584\ \ \ \ \ \}}
+\DoxyCodeLine{00585\ }
+\DoxyCodeLine{00586\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00587\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \mbox{\hyperlink{group__gtc__quaternion_ga6a75640550d3d7fa983a1e27907b5bc4}{mat3\_cast}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00588\ \ \ \ \ \{}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ Result(T(1));}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ T\ qxx(q.x\ *\ q.x);}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ T\ qyy(q.y\ *\ q.y);}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ T\ qzz(q.z\ *\ q.z);}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ T\ qxz(q.x\ *\ q.z);}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ T\ qxy(q.x\ *\ q.y);}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ T\ qyz(q.y\ *\ q.z);}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ \ \ T\ qwx(q.w\ *\ q.x);}
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ T\ qwy(q.w\ *\ q.y);}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ T\ qwz(q.w\ *\ q.z);}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ T(1)\ -\/\ T(2)\ *\ (qyy\ +\ \ qzz);}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ Result[0][1]\ =\ T(2)\ *\ (qxy\ +\ qwz);}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ Result[0][2]\ =\ T(2)\ *\ (qxz\ -\/\ qwy);}
+\DoxyCodeLine{00603\ }
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ Result[1][0]\ =\ T(2)\ *\ (qxy\ -\/\ qwz);}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ T(1)\ -\/\ T(2)\ *\ (qxx\ +\ \ qzz);}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ Result[1][2]\ =\ T(2)\ *\ (qyz\ +\ qwx);}
+\DoxyCodeLine{00607\ }
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ Result[2][0]\ =\ T(2)\ *\ (qxz\ +\ qwy);}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ Result[2][1]\ =\ T(2)\ *\ (qyz\ -\/\ qwx);}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ Result[2][2]\ =\ T(1)\ -\/\ T(2)\ *\ (qxx\ +\ \ qyy);}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00612\ \ \ \ \ \}}
+\DoxyCodeLine{00613\ }
+\DoxyCodeLine{00614\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00615\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \mbox{\hyperlink{group__gtc__quaternion_ga4682a4e90a27ecfff16f42bdb905d1a7}{mat4\_cast}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)}
+\DoxyCodeLine{00616\ \ \ \ \ \{}
+\DoxyCodeLine{00617\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}(\mbox{\hyperlink{group__gtc__quaternion_ga6a75640550d3d7fa983a1e27907b5bc4}{mat3\_cast}}(q));}
+\DoxyCodeLine{00618\ \ \ \ \ \}}
+\DoxyCodeLine{00619\ }
+\DoxyCodeLine{00620\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00621\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \mbox{\hyperlink{group__gtc__quaternion_gaac2cb2371568e550e827c0e0ab20f05b}{quat\_cast}}(\mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m)}
+\DoxyCodeLine{00622\ \ \ \ \ \{}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ T\ fourXSquaredMinus1\ =\ m[0][0]\ -\/\ m[1][1]\ -\/\ m[2][2];}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \ \ T\ fourYSquaredMinus1\ =\ m[1][1]\ -\/\ m[0][0]\ -\/\ m[2][2];}
+\DoxyCodeLine{00625\ \ \ \ \ \ \ \ \ T\ fourZSquaredMinus1\ =\ m[2][2]\ -\/\ m[0][0]\ -\/\ m[1][1];}
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ T\ fourWSquaredMinus1\ =\ m[0][0]\ +\ m[1][1]\ +\ m[2][2];}
+\DoxyCodeLine{00627\ }
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ biggestIndex\ =\ 0;}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ T\ fourBiggestSquaredMinus1\ =\ fourWSquaredMinus1;}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(fourXSquaredMinus1\ >\ fourBiggestSquaredMinus1)}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00632\ \ \ \ \ \ \ \ \ \ \ \ \ fourBiggestSquaredMinus1\ =\ fourXSquaredMinus1;}
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \ \ \ \ biggestIndex\ =\ 1;}
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(fourYSquaredMinus1\ >\ fourBiggestSquaredMinus1)}
+\DoxyCodeLine{00636\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \ \ \ \ \ \ fourBiggestSquaredMinus1\ =\ fourYSquaredMinus1;}
+\DoxyCodeLine{00638\ \ \ \ \ \ \ \ \ \ \ \ \ biggestIndex\ =\ 2;}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(fourZSquaredMinus1\ >\ fourBiggestSquaredMinus1)}
+\DoxyCodeLine{00641\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ \ \ \ \ fourBiggestSquaredMinus1\ =\ fourZSquaredMinus1;}
+\DoxyCodeLine{00643\ \ \ \ \ \ \ \ \ \ \ \ \ biggestIndex\ =\ 3;}
+\DoxyCodeLine{00644\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00645\ }
+\DoxyCodeLine{00646\ \ \ \ \ \ \ \ \ T\ biggestVal\ =\ \mbox{\hyperlink{group__core__func__exponential_ga5c784ec51a1765be0a623104db2577b6}{sqrt}}(fourBiggestSquaredMinus1\ +\ T(1))\ *\ T(0.5);}
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ T\ mult\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.25)\ /\ biggestVal;}
+\DoxyCodeLine{00648\ }
+\DoxyCodeLine{00649\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ Result(uninitialize);}
+\DoxyCodeLine{00650\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(biggestIndex)}
+\DoxyCodeLine{00651\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00652\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 0:}
+\DoxyCodeLine{00653\ \ \ \ \ \ \ \ \ \ \ \ \ Result.w\ =\ biggestVal;}
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \ \ \ \ Result.x\ =\ (m[1][2]\ -\/\ m[2][1])\ *\ mult;}
+\DoxyCodeLine{00655\ \ \ \ \ \ \ \ \ \ \ \ \ Result.y\ =\ (m[2][0]\ -\/\ m[0][2])\ *\ mult;}
+\DoxyCodeLine{00656\ \ \ \ \ \ \ \ \ \ \ \ \ Result.z\ =\ (m[0][1]\ -\/\ m[1][0])\ *\ mult;}
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00658\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 1:}
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \ \ \ \ \ \ Result.w\ =\ (m[1][2]\ -\/\ m[2][1])\ *\ mult;}
+\DoxyCodeLine{00660\ \ \ \ \ \ \ \ \ \ \ \ \ Result.x\ =\ biggestVal;}
+\DoxyCodeLine{00661\ \ \ \ \ \ \ \ \ \ \ \ \ Result.y\ =\ (m[0][1]\ +\ m[1][0])\ *\ mult;}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \ \ \ \ Result.z\ =\ (m[2][0]\ +\ m[0][2])\ *\ mult;}
+\DoxyCodeLine{00663\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ \ \ \ \ Result.w\ =\ (m[2][0]\ -\/\ m[0][2])\ *\ mult;}
+\DoxyCodeLine{00666\ \ \ \ \ \ \ \ \ \ \ \ \ Result.x\ =\ (m[0][1]\ +\ m[1][0])\ *\ mult;}
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ \ \ \ \ Result.y\ =\ biggestVal;}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \ \ \ \ Result.z\ =\ (m[1][2]\ +\ m[2][1])\ *\ mult;}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 3:}
+\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ \ \ \ \ Result.w\ =\ (m[0][1]\ -\/\ m[1][0])\ *\ mult;}
+\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ \ \ \ \ Result.x\ =\ (m[2][0]\ +\ m[0][2])\ *\ mult;}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ \ \ \ \ Result.y\ =\ (m[1][2]\ +\ m[2][1])\ *\ mult;}
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \ \ \ \ Result.z\ =\ biggestVal;}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Silence\ a\ -\/Wswitch-\/default\ warning\ in\ GCC.\ Should\ never\ actually\ get\ here.\ Assert\ is\ just\ for\ sanity.}}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \ \ \ \ assert(\textcolor{keyword}{false});}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00682\ \ \ \ \ \}}
+\DoxyCodeLine{00683\ }
+\DoxyCodeLine{00684\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00685\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \mbox{\hyperlink{group__gtc__quaternion_gaac2cb2371568e550e827c0e0ab20f05b}{quat\_cast}}(\mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m4)}
+\DoxyCodeLine{00686\ \ \ \ \ \{}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__gtc__quaternion_gaac2cb2371568e550e827c0e0ab20f05b}{quat\_cast}}(\mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}(m4));}
+\DoxyCodeLine{00688\ \ \ \ \ \}}
+\DoxyCodeLine{00689\ }
+\DoxyCodeLine{00690\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00691\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00692\ \ \ \ \ \{}
+\DoxyCodeLine{00693\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__trigonometric_ga01fa516ece73d88ecbe61b68e1001a41}{acos}}(x.w)\ *\ T(2);}
+\DoxyCodeLine{00694\ \ \ \ \ \}}
+\DoxyCodeLine{00695\ }
+\DoxyCodeLine{00696\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00697\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \mbox{\hyperlink{group__gtc__quaternion_gaa91c4bad900d8a49be924b43874cbe2f}{axis}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00698\ \ \ \ \ \{}
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ T\ tmp1\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ -\/\ x.w\ *\ x.w;}
+\DoxyCodeLine{00700\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(tmp1\ <=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0))}
+\DoxyCodeLine{00701\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}(0,\ 0,\ 1);}
+\DoxyCodeLine{00702\ \ \ \ \ \ \ \ \ T\ tmp2\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ /\ \mbox{\hyperlink{group__core__func__exponential_ga5c784ec51a1765be0a623104db2577b6}{sqrt}}(tmp1);}
+\DoxyCodeLine{00703\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}(x.x\ *\ tmp2,\ x.y\ *\ tmp2,\ x.z\ *\ tmp2);}
+\DoxyCodeLine{00704\ \ \ \ \ \}}
+\DoxyCodeLine{00705\ }
+\DoxyCodeLine{00706\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00707\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \mbox{\hyperlink{group__gtc__quaternion_gacd9c7f5bc1feb87abf91990ac1974b00}{angleAxis}}(T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}},\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00708\ \ \ \ \ \{}
+\DoxyCodeLine{00709\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ Result(uninitialize);}
+\DoxyCodeLine{00710\ }
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ a(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}});}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ s\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(a\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5));}
+\DoxyCodeLine{00713\ }
+\DoxyCodeLine{00714\ \ \ \ \ \ \ \ \ Result.w\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(a\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5));}
+\DoxyCodeLine{00715\ \ \ \ \ \ \ \ \ Result.x\ =\ v.x\ *\ s;}
+\DoxyCodeLine{00716\ \ \ \ \ \ \ \ \ Result.y\ =\ v.y\ *\ s;}
+\DoxyCodeLine{00717\ \ \ \ \ \ \ \ \ Result.z\ =\ v.z\ *\ s;}
+\DoxyCodeLine{00718\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00719\ \ \ \ \ \}}
+\DoxyCodeLine{00720\ }
+\DoxyCodeLine{00721\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00722\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ \mbox{\hyperlink{group__core__func__vector__relational_gadb626e8c1b32ecb79f8de0cce5069e5c}{lessThan}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00723\ \ \ \ \ \{}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ Result(uninitialize);}
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ x.length();\ ++i)}
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ x[i]\ <\ y[i];}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00728\ \ \ \ \ \}}
+\DoxyCodeLine{00729\ }
+\DoxyCodeLine{00730\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00731\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ \mbox{\hyperlink{group__core__func__vector__relational_gab95731a0c2912db21effb0c9391def8f}{lessThanEqual}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00732\ \ \ \ \ \{}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ Result(uninitialize);}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ x.length();\ ++i)}
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ x[i]\ <=\ y[i];}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00737\ \ \ \ \ \}}
+\DoxyCodeLine{00738\ }
+\DoxyCodeLine{00739\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00740\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ \mbox{\hyperlink{group__core__func__vector__relational_ga278939a85cf8159a964835bbabf840a8}{greaterThan}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00741\ \ \ \ \ \{}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ Result(uninitialize);}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ x.length();\ ++i)}
+\DoxyCodeLine{00744\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ x[i]\ >\ y[i];}
+\DoxyCodeLine{00745\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00746\ \ \ \ \ \}}
+\DoxyCodeLine{00747\ }
+\DoxyCodeLine{00748\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00749\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ \mbox{\hyperlink{group__core__func__vector__relational_gaf95a6672601cb2e4c539f2e45136b240}{greaterThanEqual}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00750\ \ \ \ \ \{}
+\DoxyCodeLine{00751\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ Result(uninitialize);}
+\DoxyCodeLine{00752\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ x.length();\ ++i)}
+\DoxyCodeLine{00753\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ x[i]\ >=\ y[i];}
+\DoxyCodeLine{00754\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00755\ \ \ \ \ \}}
+\DoxyCodeLine{00756\ }
+\DoxyCodeLine{00757\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00758\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ \mbox{\hyperlink{group__core__func__vector__relational_ga229aa6c48f93155ae6547210e005f06c}{equal}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00759\ \ \ \ \ \{}
+\DoxyCodeLine{00760\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ Result(uninitialize);}
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ x.length();\ ++i)}
+\DoxyCodeLine{00762\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ x[i]\ ==\ y[i];}
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00764\ \ \ \ \ \}}
+\DoxyCodeLine{00765\ }
+\DoxyCodeLine{00766\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00767\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ \mbox{\hyperlink{group__core__func__vector__relational_ga5ed495eccb82f7b772bfe1fcbeab1e66}{notEqual}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y)}
+\DoxyCodeLine{00768\ \ \ \ \ \{}
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ Result(uninitialize);}
+\DoxyCodeLine{00770\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0;\ i\ <\ x.length();\ ++i)}
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ \ \ \ \ Result[i]\ =\ x[i]\ !=\ y[i];}
+\DoxyCodeLine{00772\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00773\ \ \ \ \ \}}
+\DoxyCodeLine{00774\ }
+\DoxyCodeLine{00775\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00776\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ \mbox{\hyperlink{group__core__func__common_gad671e13ab8cbf231b9c30e4158b26dd5}{isnan}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00777\ \ \ \ \ \{}
+\DoxyCodeLine{00778\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<T>::is\_iec559,\ \textcolor{stringliteral}{"{}'isnan'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00779\ }
+\DoxyCodeLine{00780\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}(\mbox{\hyperlink{group__core__func__common_gad671e13ab8cbf231b9c30e4158b26dd5}{isnan}}(q.x),\ \mbox{\hyperlink{group__core__func__common_gad671e13ab8cbf231b9c30e4158b26dd5}{isnan}}(q.y),\ \mbox{\hyperlink{group__core__func__common_gad671e13ab8cbf231b9c30e4158b26dd5}{isnan}}(q.z),\ \mbox{\hyperlink{group__core__func__common_gad671e13ab8cbf231b9c30e4158b26dd5}{isnan}}(q.w));}
+\DoxyCodeLine{00781\ \ \ \ \ \}}
+\DoxyCodeLine{00782\ }
+\DoxyCodeLine{00783\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00784\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ \mbox{\hyperlink{group__core__func__common_ga7287c2c07cf211f53b51bf25b7be29aa}{isinf}}(\mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ P>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00785\ \ \ \ \ \{}
+\DoxyCodeLine{00786\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<T>::is\_iec559,\ \textcolor{stringliteral}{"{}'isinf'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00787\ }
+\DoxyCodeLine{00788\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}(\mbox{\hyperlink{group__core__func__common_ga7287c2c07cf211f53b51bf25b7be29aa}{isinf}}(q.x),\ \mbox{\hyperlink{group__core__func__common_ga7287c2c07cf211f53b51bf25b7be29aa}{isinf}}(q.y),\ \mbox{\hyperlink{group__core__func__common_ga7287c2c07cf211f53b51bf25b7be29aa}{isinf}}(q.z),\ \mbox{\hyperlink{group__core__func__common_ga7287c2c07cf211f53b51bf25b7be29aa}{isinf}}(q.w));}
+\DoxyCodeLine{00789\ \ \ \ \ \}}
+\DoxyCodeLine{00790\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00791\ }
+\DoxyCodeLine{00792\ \textcolor{preprocessor}{\#if\ GLM\_ARCH\ !=\ GLM\_ARCH\_PURE\ \&\&\ GLM\_HAS\_ALIGNED\_TYPE}}
+\DoxyCodeLine{00793\ \textcolor{preprocessor}{\#\ \ \ include\ "{}quaternion\_simd.inl"{}}}
+\DoxyCodeLine{00794\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00795\ }
+
+\end{DoxyCode}

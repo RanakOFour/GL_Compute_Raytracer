@@ -1,0 +1,33 @@
+\doxysection{SDL\+\_\+\+Game\+Controller\+Button\+Bind Struct Reference}
+\hypertarget{structSDL__GameControllerButtonBind}{}\label{structSDL__GameControllerButtonBind}\index{SDL\_GameControllerButtonBind@{SDL\_GameControllerButtonBind}}
+
+
+{\ttfamily \#include $<$SDL\+\_\+gamecontroller.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structSDL__GameControllerButtonBind_a032fd941b0e8e5e2cdf52b7597f559b9}\label{structSDL__GameControllerButtonBind_a032fd941b0e8e5e2cdf52b7597f559b9} 
+SDL\+\_\+\+Game\+Controller\+Bind\+Type {\bfseries bind\+Type}
+\item 
+\Hypertarget{structSDL__GameControllerButtonBind_a3609d8e6b19f59dd7508bfd6ac553da6}\label{structSDL__GameControllerButtonBind_a3609d8e6b19f59dd7508bfd6ac553da6} 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>int {\bfseries button}\\
+\>int {\bfseries axis}\\
+\>struct \{\\
+\>\>int {\bfseries hat}\\
+\>\>int {\bfseries hat\_mask}\\
+\>\} {\bfseries hat}\\
+\} {\bfseries value}\\
+
+\end{tabbing}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Get the SDL joystick layer binding for this controller button/axis mapping 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+SDL/\mbox{\hyperlink{SDL__gamecontroller_8h}{SDL\+\_\+gamecontroller.\+h}}\end{DoxyCompactItemize}

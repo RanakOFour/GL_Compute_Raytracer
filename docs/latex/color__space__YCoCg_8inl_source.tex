@@ -1,0 +1,113 @@
+\doxysection{color\+\_\+space\+\_\+\+YCo\+Cg.\+inl}
+\hypertarget{color__space__YCoCg_8inl_source}{}\label{color__space__YCoCg_8inl_source}\index{include/GLM/gtx/color\_space\_YCoCg.inl@{include/GLM/gtx/color\_space\_YCoCg.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00005\ \{}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00007\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__color__space__YCoCg_ga87152f8f526119b4cdc5c8ee03692a67}{rgb2YCoCg}}}
+\DoxyCodeLine{00008\ \ \ \ \ (}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}}
+\DoxyCodeLine{00010\ \ \ \ \ )}
+\DoxyCodeLine{00011\ \ \ \ \ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ result;}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ result.x\textcolor{comment}{/*Y\ */}\ =\ \ \ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.r\ /\ T(4)\ +\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.g\ /\ T(2)\ +\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.b\ /\ T(4);}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ result.y\textcolor{comment}{/*Co*/}\ =\ \ \ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.r\ /\ T(2)\ +\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.g\ *\ T(0)\ -\/\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.b\ /\ T(2);}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ result.z\textcolor{comment}{/*Cg*/}\ =\ -\/\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.r\ /\ T(4)\ +\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.g\ /\ T(2)\ -\/\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.b\ /\ T(4);}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00017\ \ \ \ \ \}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00020\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__color__space__YCoCg_ga052cfe68f9558c9aed9061ccb2cade1d}{YCoCg2rgb}}}
+\DoxyCodeLine{00021\ \ \ \ \ (}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ YCoCgColor}
+\DoxyCodeLine{00023\ \ \ \ \ )}
+\DoxyCodeLine{00024\ \ \ \ \ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ result;}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ result.r\ =\ YCoCgColor.x\ +\ YCoCgColor.y\ -\/\ YCoCgColor.z;}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ result.g\ =\ YCoCgColor.x\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ YCoCgColor.z;}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ result.b\ =\ YCoCgColor.x\ -\/\ YCoCgColor.y\ -\/\ YCoCgColor.z;}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00030\ \ \ \ \ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ isInteger>}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classglm_1_1compute__YCoCgR}{compute\_YCoCgR}}\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ rgb2YCoCgR}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ (}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ result;}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ result.x\textcolor{comment}{/*Y\ */}\ =\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.g\ /\ T(2)\ +\ (\mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.r\ +\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.b)\ /\ T(4);}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ result.y\textcolor{comment}{/*Co*/}\ =\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.r\ -\/\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.b;}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ result.z\textcolor{comment}{/*Cg*/}\ =\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.g\ -\/\ (\mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.r\ +\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.b)\ /\ T(2);}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ YCoCgR2rgb}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ (}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ YCoCgRColor}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ result;}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ T\ tmp\ =\ YCoCgRColor.x\ -\/\ (YCoCgRColor.z\ /\ T(2));}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ result.g\ =\ YCoCgRColor.z\ +\ tmp;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ result.b\ =\ tmp\ -\/\ (YCoCgRColor.y\ /\ T(2));}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ result.r\ =\ result.b\ +\ YCoCgRColor.y;}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00059\ \ \ \ \ \};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classglm_1_1compute__YCoCgR}{compute\_YCoCgR}}<T,\ P,\ true>\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ rgb2YCoCgR}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ (}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ result;}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ result.y\textcolor{comment}{/*Co*/}\ =\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.r\ -\/\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.b;}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ T\ tmp\ =\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.b\ +\ (result.y\ >>\ 1);}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ result.z\textcolor{comment}{/*Cg*/}\ =\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}.g\ -\/\ tmp;}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ result.x\textcolor{comment}{/*Y\ */}\ =\ tmp\ +\ (result.z\ >>\ 1);}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ YCoCgR2rgb}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ (}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ YCoCgRColor}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ result;}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ T\ tmp\ =\ YCoCgRColor.x\ -\/\ (YCoCgRColor.z\ >>\ 1);}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ result.g\ =\ YCoCgRColor.z\ +\ tmp;}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ result.b\ =\ tmp\ -\/\ (YCoCgRColor.y\ >>\ 1);}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ result.r\ =\ result.b\ +\ YCoCgRColor.y;}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00089\ \ \ \ \ \};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00092\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__color__space__YCoCg_ga026d2fb242588bd8b9bf141fc71d760b}{rgb2YCoCgR}}}
+\DoxyCodeLine{00093\ \ \ \ \ (}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}}}
+\DoxyCodeLine{00095\ \ \ \ \ )}
+\DoxyCodeLine{00096\ \ \ \ \ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classglm_1_1compute__YCoCgR}{compute\_YCoCgR<T,\ P,\ std::numeric\_limits<T>::is\_integer}}>\mbox{\hyperlink{group__gtx__color__space__YCoCg_ga026d2fb242588bd8b9bf141fc71d760b}{::rgb2YCoCgR}}(\mbox{\hyperlink{group__gtx__color__space_ga522f585453ac39b4f9257b63ee593c89}{rgbColor}});}
+\DoxyCodeLine{00098\ \ \ \ \ \}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00101\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__color__space__YCoCg_ga622e9d026dee9d391a28dfcacac1b3c3}{YCoCgR2rgb}}}
+\DoxyCodeLine{00102\ \ \ \ \ (}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ YCoCgRColor}
+\DoxyCodeLine{00104\ \ \ \ \ )}
+\DoxyCodeLine{00105\ \ \ \ \ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classglm_1_1compute__YCoCgR}{compute\_YCoCgR<T,\ P,\ std::numeric\_limits<T>::is\_integer}}>\mbox{\hyperlink{group__gtx__color__space__YCoCg_ga622e9d026dee9d391a28dfcacac1b3c3}{::YCoCgR2rgb}}(YCoCgRColor);}
+\DoxyCodeLine{00107\ \ \ \ \ \}}
+\DoxyCodeLine{00108\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

@@ -1,0 +1,56 @@
+\doxysection{Framebuffer Class Reference}
+\hypertarget{classFramebuffer}{}\label{classFramebuffer}\index{Framebuffer@{Framebuffer}}
+
+
+Collaboration diagram for Framebuffer\+:
+% FIG 0
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classFramebuffer_a913aad6651d9c0333b8bb8a285c9ee64}\label{classFramebuffer_a913aad6651d9c0333b8bb8a285c9ee64} 
+{\bfseries Framebuffer} (unsigned int w, unsigned int h)
+\item 
+\Hypertarget{classFramebuffer_a5aa7a24ff53d3f98641b57d1f566e25b}\label{classFramebuffer_a5aa7a24ff53d3f98641b57d1f566e25b} 
+void {\bfseries Draw\+Pixel} (\mbox{\hyperlink{group__core__types_ga9e6ce9cfc7919976b318197e18d8a065}{glm\+::ivec2}} position, \mbox{\hyperlink{group__core__types_ga1c47e8b3386109bc992b6c48e91b0be7}{glm\+::vec3}} colour)
+\item 
+\Hypertarget{classFramebuffer_aa3057e4789cf07b2f18cc14f28605334}\label{classFramebuffer_aa3057e4789cf07b2f18cc14f28605334} 
+void {\bfseries Set\+All\+Pixels} (\mbox{\hyperlink{group__core__types_ga1c47e8b3386109bc992b6c48e91b0be7}{glm\+::vec3}} colour)
+\item 
+\Hypertarget{classFramebuffer_a075f844a2df313579839806d7680b472}\label{classFramebuffer_a075f844a2df313579839806d7680b472} 
+void {\bfseries Update\+GL} ()
+\item 
+\Hypertarget{classFramebuffer_a74ed8c5c3a4475e9188195e2dc2851bd}\label{classFramebuffer_a74ed8c5c3a4475e9188195e2dc2851bd} 
+void {\bfseries Bind\+GLTex} ()
+\item 
+\Hypertarget{classFramebuffer_af6f333fa720765f5674288edce8aed52}\label{classFramebuffer_af6f333fa720765f5674288edce8aed52} 
+void {\bfseries Bind\+GLImage} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classFramebuffer_a1ead892cf61b8af1d4490c168f06c758}\label{classFramebuffer_a1ead892cf61b8af1d4490c168f06c758} 
+void {\bfseries Gen\+Local\+Framebuffer} ()
+\item 
+\Hypertarget{classFramebuffer_aedca1e48339d58eb89344eb6a4e5bceb}\label{classFramebuffer_aedca1e48339d58eb89344eb6a4e5bceb} 
+void {\bfseries Gen\+GLFramebuffer} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classFramebuffer_afb305cb8964fdcfdb49063caf8e465ea}\label{classFramebuffer_afb305cb8964fdcfdb49063caf8e465ea} 
+unsigned int {\bfseries \+\_\+gl\+Tex\+Name} = 0
+\item 
+\Hypertarget{classFramebuffer_a67f6a66a179f2696dd442fd99737a135}\label{classFramebuffer_a67f6a66a179f2696dd442fd99737a135} 
+unsigned int {\bfseries \+\_\+width} = 0
+\item 
+\Hypertarget{classFramebuffer_a58ae545c2349f530ce9b9f8ec9c533e0}\label{classFramebuffer_a58ae545c2349f530ce9b9f8ec9c533e0} 
+unsigned int {\bfseries \+\_\+height} = 0
+\item 
+\Hypertarget{classFramebuffer_ae3982f3778c1b65c37f65d5ad3919829}\label{classFramebuffer_ae3982f3778c1b65c37f65d5ad3919829} 
+\mbox{\hyperlink{group__core__types_ga1c47e8b3386109bc992b6c48e91b0be7}{glm\+::vec3}} \texorpdfstring{$\ast$}{*} {\bfseries \+\_\+local\+Buffer} = nullptr
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/GCP\+\_\+\+GFX\+\_\+\+Framework.\+cpp\end{DoxyCompactItemize}

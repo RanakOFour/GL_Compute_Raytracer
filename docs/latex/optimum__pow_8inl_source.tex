@@ -1,0 +1,28 @@
+\doxysection{optimum\+\_\+pow.\+inl}
+\hypertarget{optimum__pow_8inl_source}{}\label{optimum__pow_8inl_source}\index{include/GLM/gtx/optimum\_pow.inl@{include/GLM/gtx/optimum\_pow.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00005\ \{}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00007\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ pow2(genType\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00008\ \ \ \ \ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x\ *\ x;}
+\DoxyCodeLine{00010\ \ \ \ \ \}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00013\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ pow3(genType\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00014\ \ \ \ \ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x\ *\ x\ *\ x;}
+\DoxyCodeLine{00016\ \ \ \ \ \}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00019\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ pow4(genType\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00020\ \ \ \ \ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (x\ *\ x)\ *\ (x\ *\ x);}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

@@ -1,0 +1,98 @@
+\doxysubsection{GLM\+\_\+\+GTC\+\_\+ulp }
+\hypertarget{group__gtc__ulp}{}\label{group__gtc__ulp}\index{GLM\_GTC\_ulp@{GLM\_GTC\_ulp}}
+
+
+Allow the measurement of the accuracy of a function against a reference implementation. This extension works on floating-\/point data and provide results in ULP. \texorpdfstring{$<$}{<}glm/gtc/ulp.\+hpp\texorpdfstring{$>$}{>} need to be included to use these features.  
+
+
+Collaboration diagram for GLM\+\_\+\+GTC\+\_\+ulp\+:
+% FIG 0
+\doxysubsubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename gen\+Type$>$ }\\GLM\+\_\+\+FUNC\+\_\+\+DECL gen\+Type \mbox{\hyperlink{group__gtc__ulp_gae516ae554faa6117660828240e8bdaf0}{glm\+::next\+\_\+float}} (gen\+Type const \&x)
+\item 
+{\footnotesize template$<$typename gen\+Type$>$ }\\GLM\+\_\+\+FUNC\+\_\+\+DECL gen\+Type \mbox{\hyperlink{group__gtc__ulp_ga2fcbb7bfbfc595712bfddc51b0715b07}{glm\+::prev\+\_\+float}} (gen\+Type const \&x)
+\item 
+{\footnotesize template$<$typename gen\+Type$>$ }\\GLM\+\_\+\+FUNC\+\_\+\+DECL gen\+Type \mbox{\hyperlink{group__gtc__ulp_gad107ec3d9697ef82032a33338a73ebdd}{glm\+::next\+\_\+float}} (gen\+Type const \&x, \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}} const \&Distance)
+\item 
+{\footnotesize template$<$typename gen\+Type$>$ }\\GLM\+\_\+\+FUNC\+\_\+\+DECL gen\+Type \mbox{\hyperlink{group__gtc__ulp_gaa399d5b6472a70e8952f9b26ecaacdec}{glm\+::prev\+\_\+float}} (gen\+Type const \&x, \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}} const \&Distance)
+\item 
+{\footnotesize template$<$typename T$>$ }\\GLM\+\_\+\+FUNC\+\_\+\+DECL \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}} \mbox{\hyperlink{group__gtc__ulp_ga2e09bd6c8b0a9c91f6f5683d68245634}{glm\+::float\+\_\+distance}} (T const \&x, T const \&y)
+\item 
+{\footnotesize template$<$typename T, template$<$ typename $>$ class vec\+Type$>$ }\\GLM\+\_\+\+FUNC\+\_\+\+DECL vec\+Type$<$ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}} $>$ \mbox{\hyperlink{group__gtc__ulp_ga66a672d503ee2bcb11f1829e56d3cc35}{glm\+::float\+\_\+distance}} (vec\+Type$<$ T $>$ const \&x, vec\+Type$<$ T $>$ const \&y)
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+Allow the measurement of the accuracy of a function against a reference implementation. This extension works on floating-\/point data and provide results in ULP. \texorpdfstring{$<$}{<}glm/gtc/ulp.\+hpp\texorpdfstring{$>$}{>} need to be included to use these features. 
+
+
+
+\label{doc-func-members}
+\Hypertarget{group__gtc__ulp_doc-func-members}
+\doxysubsubsection{Function Documentation}
+\Hypertarget{group__gtc__ulp_ga2e09bd6c8b0a9c91f6f5683d68245634}\index{GLM\_GTC\_ulp@{GLM\_GTC\_ulp}!float\_distance@{float\_distance}}
+\index{float\_distance@{float\_distance}!GLM\_GTC\_ulp@{GLM\_GTC\_ulp}}
+\doxysubsubsubsection{\texorpdfstring{float\_distance()}{float\_distance()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{group__gtc__ulp_ga2e09bd6c8b0a9c91f6f5683d68245634} 
+template$<$typename T$>$ \\
+GLM\+\_\+\+FUNC\+\_\+\+DECL \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}} glm\+::float\+\_\+distance (\begin{DoxyParamCaption}\item[{T const \&}]{x}{, }\item[{T const \&}]{y}{}\end{DoxyParamCaption})}
+
+Return the distance in the number of ULP between 2 scalars. \begin{DoxySeeAlso}{See also}
+\doxylink{group__gtc__ulp}{GLM\+\_\+\+GTC\+\_\+ulp} 
+\end{DoxySeeAlso}
+Here is the call graph for this function\+:
+% FIG 1
+\Hypertarget{group__gtc__ulp_ga66a672d503ee2bcb11f1829e56d3cc35}\index{GLM\_GTC\_ulp@{GLM\_GTC\_ulp}!float\_distance@{float\_distance}}
+\index{float\_distance@{float\_distance}!GLM\_GTC\_ulp@{GLM\_GTC\_ulp}}
+\doxysubsubsubsection{\texorpdfstring{float\_distance()}{float\_distance()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{group__gtc__ulp_ga66a672d503ee2bcb11f1829e56d3cc35} 
+template$<$typename T, template$<$ typename $>$ class vec\+Type$>$ \\
+GLM\+\_\+\+FUNC\+\_\+\+DECL vec\+Type$<$ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}} $>$ glm\+::float\+\_\+distance (\begin{DoxyParamCaption}\item[{vec\+Type$<$ T $>$ const \&}]{x}{, }\item[{vec\+Type$<$ T $>$ const \&}]{y}{}\end{DoxyParamCaption})}
+
+Return the distance in the number of ULP between 2 vectors. \begin{DoxySeeAlso}{See also}
+\doxylink{group__gtc__ulp}{GLM\+\_\+\+GTC\+\_\+ulp} 
+\end{DoxySeeAlso}
+\Hypertarget{group__gtc__ulp_gae516ae554faa6117660828240e8bdaf0}\index{GLM\_GTC\_ulp@{GLM\_GTC\_ulp}!next\_float@{next\_float}}
+\index{next\_float@{next\_float}!GLM\_GTC\_ulp@{GLM\_GTC\_ulp}}
+\doxysubsubsubsection{\texorpdfstring{next\_float()}{next\_float()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{group__gtc__ulp_gae516ae554faa6117660828240e8bdaf0} 
+template$<$typename gen\+Type$>$ \\
+GLM\+\_\+\+FUNC\+\_\+\+DECL gen\+Type glm\+::next\+\_\+float (\begin{DoxyParamCaption}\item[{gen\+Type const \&}]{x}{}\end{DoxyParamCaption})}
+
+Return the next ULP value(s) after the input value(s). \begin{DoxySeeAlso}{See also}
+\doxylink{group__gtc__ulp}{GLM\+\_\+\+GTC\+\_\+ulp} 
+\end{DoxySeeAlso}
+Here is the caller graph for this function\+:
+% FIG 2
+\Hypertarget{group__gtc__ulp_gad107ec3d9697ef82032a33338a73ebdd}\index{GLM\_GTC\_ulp@{GLM\_GTC\_ulp}!next\_float@{next\_float}}
+\index{next\_float@{next\_float}!GLM\_GTC\_ulp@{GLM\_GTC\_ulp}}
+\doxysubsubsubsection{\texorpdfstring{next\_float()}{next\_float()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{group__gtc__ulp_gad107ec3d9697ef82032a33338a73ebdd} 
+template$<$typename gen\+Type$>$ \\
+GLM\+\_\+\+FUNC\+\_\+\+DECL gen\+Type glm\+::next\+\_\+float (\begin{DoxyParamCaption}\item[{gen\+Type const \&}]{x}{, }\item[{\mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}} const \&}]{Distance}{}\end{DoxyParamCaption})}
+
+Return the value(s) ULP distance after the input value(s). \begin{DoxySeeAlso}{See also}
+\doxylink{group__gtc__ulp}{GLM\+\_\+\+GTC\+\_\+ulp} 
+\end{DoxySeeAlso}
+\Hypertarget{group__gtc__ulp_ga2fcbb7bfbfc595712bfddc51b0715b07}\index{GLM\_GTC\_ulp@{GLM\_GTC\_ulp}!prev\_float@{prev\_float}}
+\index{prev\_float@{prev\_float}!GLM\_GTC\_ulp@{GLM\_GTC\_ulp}}
+\doxysubsubsubsection{\texorpdfstring{prev\_float()}{prev\_float()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{group__gtc__ulp_ga2fcbb7bfbfc595712bfddc51b0715b07} 
+template$<$typename gen\+Type$>$ \\
+GLM\+\_\+\+FUNC\+\_\+\+DECL gen\+Type glm\+::prev\+\_\+float (\begin{DoxyParamCaption}\item[{gen\+Type const \&}]{x}{}\end{DoxyParamCaption})}
+
+Return the previous ULP value(s) before the input value(s). \begin{DoxySeeAlso}{See also}
+\doxylink{group__gtc__ulp}{GLM\+\_\+\+GTC\+\_\+ulp} 
+\end{DoxySeeAlso}
+\Hypertarget{group__gtc__ulp_gaa399d5b6472a70e8952f9b26ecaacdec}\index{GLM\_GTC\_ulp@{GLM\_GTC\_ulp}!prev\_float@{prev\_float}}
+\index{prev\_float@{prev\_float}!GLM\_GTC\_ulp@{GLM\_GTC\_ulp}}
+\doxysubsubsubsection{\texorpdfstring{prev\_float()}{prev\_float()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{group__gtc__ulp_gaa399d5b6472a70e8952f9b26ecaacdec} 
+template$<$typename gen\+Type$>$ \\
+GLM\+\_\+\+FUNC\+\_\+\+DECL gen\+Type glm\+::prev\+\_\+float (\begin{DoxyParamCaption}\item[{gen\+Type const \&}]{x}{, }\item[{\mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}} const \&}]{Distance}{}\end{DoxyParamCaption})}
+
+Return the value(s) ULP distance before the input value(s). \begin{DoxySeeAlso}{See also}
+\doxylink{group__gtc__ulp}{GLM\+\_\+\+GTC\+\_\+ulp} 
+\end{DoxySeeAlso}

@@ -1,0 +1,62 @@
+\doxysection{norm.\+hpp}
+\hypertarget{norm_8hpp_source}{}\label{norm_8hpp_source}\index{include/GLM/gtx/norm.hpp@{include/GLM/gtx/norm.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Dependency:}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../detail/func\_geometric.hpp"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}../gtx/quaternion.hpp"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_EXT\_INCLUDED)}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_GTX\_norm\ extension\ included"{})}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00025\ \{}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00032\ \ \ \ \ GLM\_FUNC\_DECL\ T\ \mbox{\hyperlink{group__gtx__norm_ga6d326d62fd9b7f4f0a1b79e56492a7e4}{length2}}(}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00038\ \ \ \ \ GLM\_FUNC\_DECL\ T\ \mbox{\hyperlink{group__gtx__norm_ga647d2602008801d6ed78f9708eb439cc}{distance2}}(}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ p0,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ p1);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00045\ \ \ \ \ GLM\_FUNC\_DECL\ T\ \mbox{\hyperlink{group__gtx__norm_gaebe5a39b06e262e615622129f37da4f4}{l1Norm}}(}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y);}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00052\ \ \ \ \ GLM\_FUNC\_DECL\ T\ \mbox{\hyperlink{group__gtx__norm_gaebe5a39b06e262e615622129f37da4f4}{l1Norm}}(}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v);}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00058\ \ \ \ \ GLM\_FUNC\_DECL\ T\ \mbox{\hyperlink{group__gtx__norm_gafa6fbbc99cd44d81bf030e74eaf7ad64}{l2Norm}}(}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y);}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00065\ \ \ \ \ GLM\_FUNC\_DECL\ T\ \mbox{\hyperlink{group__gtx__norm_gafa6fbbc99cd44d81bf030e74eaf7ad64}{l2Norm}}(}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00071\ \ \ \ \ GLM\_FUNC\_DECL\ T\ \mbox{\hyperlink{group__gtx__norm_ga932bb0854e5c5a6ab5a14b023c451ca7}{lxNorm}}(}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y,}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ Depth);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00079\ \ \ \ \ GLM\_FUNC\_DECL\ T\ \mbox{\hyperlink{group__gtx__norm_ga932bb0854e5c5a6ab5a14b023c451ca7}{lxNorm}}(}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ Depth);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00084\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#include\ "{}norm.inl"{}}}
+
+\end{DoxyCode}

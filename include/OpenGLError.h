@@ -1,3 +1,4 @@
+// Code taken from previous work
 #ifndef OPENGLERROR_H
 
 #define OPENGLERROR_H
@@ -7,7 +8,7 @@
 #include <string>
 
 /*
-	Error logging static for OpenGLObjects
+*	Error logging static for OpenGL
 */
 class OpenGLError
 {
@@ -25,10 +26,13 @@ public:
 		//std::cin.get();
 	}
 
+	/*
+	*	Sets OpenGLError::DisplayDebugMessage() as the debug message callback
+	*/
 	static void Init()
 	{
-		//glEnable(GL_DEBUG_OUTPUT);
-		//glDebugMessageCallback(DisplayDebugMessage, 0);
+		glEnable(GL_DEBUG_OUTPUT);
+		glDebugMessageCallback(DisplayDebugMessage, 0);
 		printf("OpenGLError Initialized\n");
 	}
 };

@@ -1,0 +1,133 @@
+\doxysection{component\+\_\+wise.\+inl}
+\hypertarget{component__wise_8inl_source}{}\label{component__wise_8inl_source}\index{include/GLM/gtx/component\_wise.inl@{include/GLM/gtx/component\_wise.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }glm\{}
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00008\ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ \textcolor{keywordtype}{float}Type,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keywordtype}{bool}\ isInteger,\ \textcolor{keywordtype}{bool}\ signedType>}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__compNormalize}{compute\_compNormalize}}}
+\DoxyCodeLine{00011\ \ \ \ \ \{\};}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ \textcolor{keywordtype}{float}Type,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__compNormalize}{compute\_compNormalize}}<T,\ floatType,\ P,\ vecType,\ true,\ true>}
+\DoxyCodeLine{00015\ \ \ \ \ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<floatType,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ floatType\ \textcolor{keyword}{const}\ Min\ =\ \textcolor{keyword}{static\_cast<}floatType\textcolor{keyword}{>}(std::numeric\_limits<T>::min());}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ floatType\ \textcolor{keyword}{const}\ Max\ =\ \textcolor{keyword}{static\_cast<}floatType\textcolor{keyword}{>}(std::numeric\_limits<T>::max());}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (vecType<floatType,\ P>(v)\ -\/\ Min)\ /\ (Max\ -\/\ Min)\ *\ \textcolor{keyword}{static\_cast<}floatType\textcolor{keyword}{>}(2)\ -\/\ \textcolor{keyword}{static\_cast<}floatType\textcolor{keyword}{>}(1);}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00022\ \ \ \ \ \};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ \textcolor{keywordtype}{float}Type,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__compNormalize}{compute\_compNormalize}}<T,\ floatType,\ P,\ vecType,\ true,\ false>}
+\DoxyCodeLine{00026\ \ \ \ \ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<floatType,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vecType<floatType,\ P>(v)\ /\ \textcolor{keyword}{static\_cast<}floatType\textcolor{keyword}{>}(std::numeric\_limits<T>::max());}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00031\ \ \ \ \ \};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ \textcolor{keywordtype}{float}Type,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__compNormalize}{compute\_compNormalize}}<T,\ floatType,\ P,\ vecType,\ false,\ true>}
+\DoxyCodeLine{00035\ \ \ \ \ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<floatType,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00040\ \ \ \ \ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ \textcolor{keywordtype}{float}Type,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keywordtype}{bool}\ isInteger,\ \textcolor{keywordtype}{bool}\ signedType>}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__compScale}{compute\_compScale}}}
+\DoxyCodeLine{00044\ \ \ \ \ \{\};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ \textcolor{keywordtype}{float}Type,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__compScale}{compute\_compScale}}<T,\ floatType,\ P,\ vecType,\ true,\ true>}
+\DoxyCodeLine{00048\ \ \ \ \ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<T,\ P>\ call(vecType<floatType,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ floatType\ \textcolor{keyword}{const}\ Max\ =\ \textcolor{keyword}{static\_cast<}floatType\textcolor{keyword}{>}(std::numeric\_limits<T>::max())\ +\ \textcolor{keyword}{static\_cast<}floatType\textcolor{keyword}{>}(0.5);}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ vecType<floatType,\ P>\ \textcolor{keyword}{const}\ Scaled(v\ *\ Max);}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ vecType<T,\ P>\ \textcolor{keyword}{const}\ Result(Scaled\ -\/\ \textcolor{keyword}{static\_cast<}floatType\textcolor{keyword}{>}(0.5));}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ \textcolor{keywordtype}{float}Type,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__compScale}{compute\_compScale}}<T,\ floatType,\ P,\ vecType,\ true,\ false>}
+\DoxyCodeLine{00060\ \ \ \ \ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<T,\ P>\ call(vecType<floatType,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vecType<T,\ P>(vecType<floatType,\ P>(v)\ *\ \textcolor{keyword}{static\_cast<}floatType\textcolor{keyword}{>}(std::numeric\_limits<T>::max()));}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ \textcolor{keywordtype}{float}Type,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__compScale}{compute\_compScale}}<T,\ floatType,\ P,\ vecType,\ false,\ true>}
+\DoxyCodeLine{00069\ \ \ \ \ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<T,\ P>\ call(vecType<floatType,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00074\ \ \ \ \ \};}
+\DoxyCodeLine{00075\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ \textcolor{keywordtype}{float}Type,\ \textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00078\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<floatType,\ P>\ \mbox{\hyperlink{group__gtx__component__wise_gadc681e52bc9900613c20611aa916ef30}{compNormalize}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00079\ \ \ \ \ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<floatType>::is\_iec559,\ \textcolor{stringliteral}{"{}'compNormalize'\ accepts\ only\ floating-\/point\ types\ for\ 'floatType'\ template\ parameter"{}});}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__compNormalize}{detail::compute\_compNormalize<T,\ floatType,\ P,\ vecType,\ std::numeric\_limits<T>::is\_integer}},\ std::numeric\_limits<T>::is\_signed>::call(v);}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ \textcolor{keywordtype}{float}Type,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00086\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtx__component__wise_ga55f5312bd787b0c9e7a27b8d2dca88b7}{compScale}}(vecType<floatType,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00087\ \ \ \ \ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<floatType>::is\_iec559,\ \textcolor{stringliteral}{"{}'compScale'\ accepts\ only\ floating-\/point\ types\ for\ 'floatType'\ template\ parameter"{}});}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__compScale}{detail::compute\_compScale<T,\ floatType,\ P,\ vecType,\ std::numeric\_limits<T>::is\_integer}},\ std::numeric\_limits<T>::is\_signed>::call(v);}
+\DoxyCodeLine{00091\ \ \ \ \ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00094\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__gtx__component__wise_gaf71833350e15e74d31cbf8a3e7f27051}{compAdd}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00095\ \ \ \ \ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ T\ Result(0);}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0,\ n\ =\ v.length();\ i\ <\ n;\ ++i)}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ Result\ +=\ v[i];}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00100\ \ \ \ \ \}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00103\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__gtx__component__wise_gae8ab88024197202c9479d33bdc5a8a5d}{compMul}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00104\ \ \ \ \ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ T\ Result(1);}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 0,\ n\ =\ v.length();\ i\ <\ n;\ ++i)}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ Result\ *=\ v[i];}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00109\ \ \ \ \ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00112\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__gtx__component__wise_gab5d0832b5c7bb01b8d7395973bfb1425}{compMin}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00113\ \ \ \ \ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ T\ Result(v[0]);}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 1,\ n\ =\ v.length();\ i\ <\ n;\ ++i)}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ Result\ =\ \mbox{\hyperlink{group__core__func__common_ga2c2bde1cec025b7ddff83c74a1113719}{min}}(Result,\ v[i]);}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00118\ \ \ \ \ \}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00121\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__gtx__component__wise_gabfa4bb19298c8c73d4217ba759c496b6}{compMax}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00122\ \ \ \ \ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ T\ Result(v[0]);}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i\ =\ 1,\ n\ =\ v.length();\ i\ <\ n;\ ++i)}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ Result\ =\ \mbox{\hyperlink{group__core__func__common_ga98caa7f95a94c86a86ebce893a45326c}{max}}(Result,\ v[i]);}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00127\ \ \ \ \ \}}
+\DoxyCodeLine{00128\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

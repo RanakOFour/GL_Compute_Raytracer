@@ -1,0 +1,104 @@
+\doxysection{Model Class Reference}
+\hypertarget{classModel}{}\label{classModel}\index{Model@{Model}}
+
+
+{\ttfamily \#include $<$Model.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classModel_ae3b375de5f6df4faf74a95d64748e048}{Model}} ()
+\item 
+\mbox{\hyperlink{classModel_a8fcf98f45c97c04c93012d0019d2196d}{Model}} (const std\+::string \&\+\_\+path)
+\item 
+\mbox{\hyperlink{classModel_a69a79332fd8a9de8690b148a169921e7}{Model}} (const \mbox{\hyperlink{classModel}{Model}} \&\+\_\+copy)
+\item 
+\mbox{\hyperlink{classModel}{Model}} \& \mbox{\hyperlink{classModel_aa451798aa00e88d67a4dd94c275cd536}{operator=}} (const \mbox{\hyperlink{classModel}{Model}} \&\+\_\+assign)
+\item 
+virtual \mbox{\hyperlink{classModel_ad6ebd2062a0b823db841a0b88baac4c0}{\texorpdfstring{$\sim$}{\string~}\+Model}} ()
+\item 
+std\+::vector$<$ \mbox{\hyperlink{structFace}{Face}} $>$ \& \mbox{\hyperlink{classModel_a848030d6e59d267cb96d14a944006655}{Get\+Faces}} ()
+\item 
+GLsizei \mbox{\hyperlink{classModel_a97c94933b6adca3fded198160e1bf5f8}{Get\+Vertex\+Count}} () const
+\item 
+std\+::vector$<$ \mbox{\hyperlink{structTriangle}{Triangle}} $>$ \mbox{\hyperlink{classModel_a4f121d6d69eae8cf1f4544fcc84b2303}{Get\+Triangles}} (glm\+::vec3 \+\_\+position)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+glm\+::vec3 \mbox{\hyperlink{classModel_af1de9a151d77a2a7c9448fc796c2aee1}{m\+\_\+position}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{classModel_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classModel_ae3b375de5f6df4faf74a95d64748e048}\index{Model@{Model}!Model@{Model}}
+\index{Model@{Model}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{Model()}{Model()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{classModel_ae3b375de5f6df4faf74a95d64748e048} 
+Model\+::\+Model (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classModel_a8fcf98f45c97c04c93012d0019d2196d}\index{Model@{Model}!Model@{Model}}
+\index{Model@{Model}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{Model()}{Model()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{classModel_a8fcf98f45c97c04c93012d0019d2196d} 
+Model\+::\+Model (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{\+\_\+path}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classModel_a69a79332fd8a9de8690b148a169921e7}\index{Model@{Model}!Model@{Model}}
+\index{Model@{Model}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{Model()}{Model()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{classModel_a69a79332fd8a9de8690b148a169921e7} 
+Model\+::\+Model (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classModel}{Model}} \&}]{\+\_\+copy}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classModel_ad6ebd2062a0b823db841a0b88baac4c0}\index{Model@{Model}!````~Model@{\texorpdfstring{$\sim$}{\string~}Model}}
+\index{````~Model@{\texorpdfstring{$\sim$}{\string~}Model}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Model()}{\string~Model()}}
+{\footnotesize\ttfamily \label{classModel_ad6ebd2062a0b823db841a0b88baac4c0} 
+Model\+::\texorpdfstring{$\sim$}{\string~}\+Model (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{classModel_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classModel_a848030d6e59d267cb96d14a944006655}\index{Model@{Model}!GetFaces@{GetFaces}}
+\index{GetFaces@{GetFaces}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{GetFaces()}{GetFaces()}}
+{\footnotesize\ttfamily \label{classModel_a848030d6e59d267cb96d14a944006655} 
+std\+::vector$<$ \mbox{\hyperlink{structFace}{Face}} $>$ \& Model\+::\+Get\+Faces (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classModel_a4f121d6d69eae8cf1f4544fcc84b2303}\index{Model@{Model}!GetTriangles@{GetTriangles}}
+\index{GetTriangles@{GetTriangles}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{GetTriangles()}{GetTriangles()}}
+{\footnotesize\ttfamily \label{classModel_a4f121d6d69eae8cf1f4544fcc84b2303} 
+std\+::vector$<$ \mbox{\hyperlink{structTriangle}{Triangle}} $>$ Model\+::\+Get\+Triangles (\begin{DoxyParamCaption}\item[{glm\+::vec3}]{\+\_\+position}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classModel_a97c94933b6adca3fded198160e1bf5f8}\index{Model@{Model}!GetVertexCount@{GetVertexCount}}
+\index{GetVertexCount@{GetVertexCount}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{GetVertexCount()}{GetVertexCount()}}
+{\footnotesize\ttfamily \label{classModel_a97c94933b6adca3fded198160e1bf5f8} 
+GLsizei Model\+::\+Get\+Vertex\+Count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classModel_aa451798aa00e88d67a4dd94c275cd536}\index{Model@{Model}!operator=@{operator=}}
+\index{operator=@{operator=}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \label{classModel_aa451798aa00e88d67a4dd94c275cd536} 
+\mbox{\hyperlink{classModel}{Model}} \& Model\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classModel}{Model}} \&}]{\+\_\+assign}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\label{doc-variable-members}
+\Hypertarget{classModel_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classModel_af1de9a151d77a2a7c9448fc796c2aee1}\index{Model@{Model}!m\_position@{m\_position}}
+\index{m\_position@{m\_position}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{m\_position}{m\_position}}
+{\footnotesize\ttfamily \label{classModel_af1de9a151d77a2a7c9448fc796c2aee1} 
+glm\+::vec3 Model\+::m\+\_\+position}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{Model_8h}{Model.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,41 @@
+\doxysection{color\+\_\+space.\+hpp}
+\hypertarget{gtc_2color__space_8hpp_source}{}\label{gtc_2color__space_8hpp_source}\index{include/GLM/gtc/color\_space.hpp@{include/GLM/gtc/color\_space.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Dependencies}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../detail/setup.hpp"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}../detail/precision.hpp"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}../exponential.hpp"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}../vec3.hpp"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}../vec4.hpp"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_EXT\_INCLUDED)}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_GTC\_color\_space\ extension\ included"{})}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00036\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__color__space_gad846fa2705fd768f59b996a63cc26cda}{convertLinearToSRGB}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ ColorLinear);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00041\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__color__space_gad846fa2705fd768f59b996a63cc26cda}{convertLinearToSRGB}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ ColorLinear,\ T\ Gamma);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00046\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__color__space_ga3bb7119c5ba7622a16cb6e1af86931ad}{convertSRGBToLinear}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ ColorSRGB);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{comment}{//\ IEC\ 61966-\/2-\/1:1999\ specification\ https://www.w3.org/Graphics/Color/srgb}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00051\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__gtc__color__space_ga3bb7119c5ba7622a16cb6e1af86931ad}{convertSRGBToLinear}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ ColorSRGB,\ T\ Gamma);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00054\ \}\ \textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#include\ "{}color\_space.inl"{}}}
+
+\end{DoxyCode}

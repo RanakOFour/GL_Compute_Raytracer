@@ -1,0 +1,209 @@
+\doxysection{SDL\+\_\+system.\+h}
+\hypertarget{SDL__system_8h_source}{}\label{SDL__system_8h_source}\index{include/SDL/SDL\_system.h@{include/SDL/SDL\_system.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2025\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#ifndef\ SDL\_system\_h\_}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ SDL\_system\_h\_}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ "{}SDL\_stdinc.h"{}}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ "{}SDL\_keyboard.h"{}}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ "{}SDL\_render.h"{}}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ "{}SDL\_video.h"{}}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ "{}begin\_code.h"{}}}
+\DoxyCodeLine{00037\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00039\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{comment}{/*\ Platform\ specific\ functions\ for\ Windows\ */}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#if\ defined(\_\_WIN32\_\_)\ ||\ defined(\_\_GDK\_\_)}}
+\DoxyCodeLine{00045\ \ \ \ \ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{typedef}\ void\ (SDLCALL\ *\ SDL\_WindowsMessageHook)(\textcolor{keywordtype}{void}\ *userdata,\ \textcolor{keywordtype}{void}\ *hWnd,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ message,\ Uint64\ wParam,\ Sint64\ lParam);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SetWindowsMessageHook(SDL\_WindowsMessageHook\ callback,\ \textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ defined(\_\_WIN32\_\_)\ ||\ defined(\_\_GDK\_\_)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#if\ defined(\_\_WIN32\_\_)\ ||\ defined(\_\_WINGDK\_\_)}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_Direct3D9GetAdapterIndex(\ \textcolor{keywordtype}{int}\ displayIndex\ );}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }IDirect3DDevice9\ IDirect3DDevice9;}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00091\ \textcolor{keyword}{extern}\ DECLSPEC\ IDirect3DDevice9*\ SDLCALL\ SDL\_RenderGetD3D9Device(SDL\_Renderer\ *\ renderer);}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ID3D11Device\ ID3D11Device;}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00107\ \textcolor{keyword}{extern}\ DECLSPEC\ ID3D11Device*\ SDLCALL\ SDL\_RenderGetD3D11Device(SDL\_Renderer\ *\ renderer);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ defined(\_\_WIN32\_\_)\ ||\ defined(\_\_WINGDK\_\_)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#if\ defined(\_\_WIN32\_\_)\ ||\ defined(\_\_GDK\_\_)}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ID3D12Device\ ID3D12Device;}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00127\ \textcolor{keyword}{extern}\ DECLSPEC\ ID3D12Device*\ SDLCALL\ SDL\_RenderGetD3D12Device(SDL\_Renderer*\ renderer);}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ defined(\_\_WIN32\_\_)\ ||\ defined(\_\_GDK\_\_)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#if\ defined(\_\_WIN32\_\_)\ ||\ defined(\_\_WINGDK\_\_)}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00151\ \textcolor{keyword}{extern}\ DECLSPEC\ SDL\_bool\ SDLCALL\ SDL\_DXGIGetOutputInfo(\ \textcolor{keywordtype}{int}\ displayIndex,\ \textcolor{keywordtype}{int}\ *adapterIndex,\ \textcolor{keywordtype}{int}\ *outputIndex\ );}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ defined(\_\_WIN32\_\_)\ ||\ defined(\_\_WINGDK\_\_)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{comment}{/*\ Platform\ specific\ functions\ for\ Linux\ */}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#ifdef\ \_\_LINUX\_\_}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00169\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_LinuxSetThreadPriority(Sint64\ threadID,\ \textcolor{keywordtype}{int}\ priority);}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00184\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_LinuxSetThreadPriorityAndPolicy(Sint64\ threadID,\ \textcolor{keywordtype}{int}\ sdlPriority,\ \textcolor{keywordtype}{int}\ schedPolicy);}
+\DoxyCodeLine{00185\ \ }
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_\_LINUX\_\_\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00187\ \ \ \ \ }
+\DoxyCodeLine{00188\ \textcolor{comment}{/*\ Platform\ specific\ functions\ for\ iOS\ */}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#ifdef\ \_\_IPHONEOS\_\_}}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \textcolor{keyword}{typedef}\ void\ (SDLCALL\ *SDL\_iOSAnimationCallback)(\textcolor{keywordtype}{void}*);}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00225\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_iPhoneSetAnimationCallback(SDL\_Window\ *\ window,\ \textcolor{keywordtype}{int}\ interval,\ SDL\_iOSAnimationCallback\ callback,\ \textcolor{keywordtype}{void}\ *callbackParam);}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ SDL\_iOSSetAnimationCallback(window,\ interval,\ callback,\ callbackParam)\ SDL\_iPhoneSetAnimationCallback(window,\ interval,\ callback,\ callbackParam)}}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00244\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_iPhoneSetEventPump(SDL\_bool\ enabled);}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#define\ SDL\_iOSSetEventPump(enabled)\ SDL\_iPhoneSetEventPump(enabled)}}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \textcolor{comment}{/*\ end\ of\ iOS-\/specific\ functions.\ */}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_\_IPHONEOS\_\_\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \textcolor{comment}{/*\ Platform\ specific\ functions\ for\ Android\ */}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#ifdef\ \_\_ANDROID\_\_}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00272\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_AndroidGetJNIEnv(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00294\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_AndroidGetActivity(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00326\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetAndroidSDKVersion(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00335\ \textcolor{keyword}{extern}\ DECLSPEC\ SDL\_bool\ SDLCALL\ SDL\_IsAndroidTV(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00344\ \textcolor{keyword}{extern}\ DECLSPEC\ SDL\_bool\ SDLCALL\ SDL\_IsChromebook(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00353\ \textcolor{keyword}{extern}\ DECLSPEC\ SDL\_bool\ SDLCALL\ SDL\_IsDeXMode(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00360\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_AndroidBackButton(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\#define\ SDL\_ANDROID\_EXTERNAL\_STORAGE\_READ\ \ \ 0x01}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\#define\ SDL\_ANDROID\_EXTERNAL\_STORAGE\_WRITE\ \ 0x02}}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00385\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_AndroidGetInternalStoragePath(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00402\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_AndroidGetExternalStorageState(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00420\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_AndroidGetExternalStoragePath(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00432\ \textcolor{keyword}{extern}\ DECLSPEC\ SDL\_bool\ SDLCALL\ SDL\_AndroidRequestPermission(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *permission);}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00457\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_AndroidShowToast(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ message,\ \textcolor{keywordtype}{int}\ duration,\ \textcolor{keywordtype}{int}\ gravity,\ \textcolor{keywordtype}{int}\ xoffset,\ \textcolor{keywordtype}{int}\ yoffset);}
+\DoxyCodeLine{00458\ }
+\DoxyCodeLine{00469\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_AndroidSendMessage(Uint32\ command,\ \textcolor{keywordtype}{int}\ param);}
+\DoxyCodeLine{00470\ }
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_\_ANDROID\_\_\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ \textcolor{comment}{/*\ Platform\ specific\ functions\ for\ WinRT\ */}}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\#ifdef\ \_\_WINRT\_\_}}
+\DoxyCodeLine{00475\ }
+\DoxyCodeLine{00479\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_WinRT\_Path}
+\DoxyCodeLine{00480\ \{}
+\DoxyCodeLine{00483\ \ \ \ \ SDL\_WINRT\_PATH\_INSTALLED\_LOCATION,}
+\DoxyCodeLine{00484\ }
+\DoxyCodeLine{00486\ \ \ \ \ SDL\_WINRT\_PATH\_LOCAL\_FOLDER,}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00492\ \ \ \ \ SDL\_WINRT\_PATH\_ROAMING\_FOLDER,}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00496\ \ \ \ \ SDL\_WINRT\_PATH\_TEMP\_FOLDER}
+\DoxyCodeLine{00497\ \}\ SDL\_WinRT\_Path;}
+\DoxyCodeLine{00498\ }
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00503\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_WinRT\_DeviceFamily}
+\DoxyCodeLine{00504\ \{}
+\DoxyCodeLine{00506\ \ \ \ \ SDL\_WINRT\_DEVICEFAMILY\_UNKNOWN,}
+\DoxyCodeLine{00507\ }
+\DoxyCodeLine{00509\ \ \ \ \ SDL\_WINRT\_DEVICEFAMILY\_DESKTOP,}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00512\ \ \ \ \ SDL\_WINRT\_DEVICEFAMILY\_MOBILE,}
+\DoxyCodeLine{00513\ }
+\DoxyCodeLine{00515\ \ \ \ \ SDL\_WINRT\_DEVICEFAMILY\_XBOX,}
+\DoxyCodeLine{00516\ \}\ SDL\_WinRT\_DeviceFamily;}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ }
+\DoxyCodeLine{00540\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *\ SDLCALL\ SDL\_WinRTGetFSPathUNICODE(SDL\_WinRT\_Path\ pathType);}
+\DoxyCodeLine{00541\ }
+\DoxyCodeLine{00563\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_WinRTGetFSPathUTF8(SDL\_WinRT\_Path\ pathType);}
+\DoxyCodeLine{00564\ }
+\DoxyCodeLine{00572\ \textcolor{keyword}{extern}\ DECLSPEC\ SDL\_WinRT\_DeviceFamily\ SDLCALL\ SDL\_WinRTGetDeviceFamily();}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00574\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_\_WINRT\_\_\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00575\ }
+\DoxyCodeLine{00585\ \textcolor{keyword}{extern}\ DECLSPEC\ SDL\_bool\ SDLCALL\ SDL\_IsTablet(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00586\ }
+\DoxyCodeLine{00587\ \textcolor{comment}{/*\ Functions\ used\ by\ iOS\ application\ delegates\ to\ notify\ SDL\ about\ state\ changes\ */}}
+\DoxyCodeLine{00588\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_OnApplicationWillTerminate(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00589\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_OnApplicationDidReceiveMemoryWarning(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00590\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_OnApplicationWillResignActive(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00591\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_OnApplicationDidEnterBackground(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00592\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_OnApplicationWillEnterForeground(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00593\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_OnApplicationDidBecomeActive(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00594\ \textcolor{preprocessor}{\#ifdef\ \_\_IPHONEOS\_\_}}
+\DoxyCodeLine{00595\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_OnApplicationDidChangeStatusBarOrientation(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00596\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00597\ }
+\DoxyCodeLine{00598\ \textcolor{comment}{/*\ Functions\ used\ only\ by\ GDK\ */}}
+\DoxyCodeLine{00599\ \textcolor{preprocessor}{\#if\ defined(\_\_GDK\_\_)}}
+\DoxyCodeLine{00600\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }XTaskQueueObject\ *XTaskQueueHandle;}
+\DoxyCodeLine{00601\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }XUser\ *XUserHandle;}
+\DoxyCodeLine{00602\ }
+\DoxyCodeLine{00616\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GDKGetTaskQueue(XTaskQueueHandle\ *\ outTaskQueue);}
+\DoxyCodeLine{00617\ }
+\DoxyCodeLine{00630\ \textcolor{keyword}{extern}\ DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GDKGetDefaultUser(XUserHandle\ *\ outUserHandle);}
+\DoxyCodeLine{00631\ }
+\DoxyCodeLine{00632\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00633\ }
+\DoxyCodeLine{00634\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{00635\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00636\ \}}
+\DoxyCodeLine{00637\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00638\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{close__code_8h}{close\_code.h}}"{}}}
+\DoxyCodeLine{00639\ }
+\DoxyCodeLine{00640\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_system\_h\_\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00641\ }
+\DoxyCodeLine{00642\ \textcolor{comment}{/*\ vi:\ set\ ts=4\ sw=4\ expandtab:\ */}}
+
+\end{DoxyCode}

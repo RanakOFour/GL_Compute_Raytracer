@@ -1,0 +1,27 @@
+digraph "glm::polar"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="LR";
+  Node1 [id="Node000001",label="glm::polar",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [id="edge23_Node000001_Node000002",color="steelblue1",style="solid",tooltip=" "];
+  Node2 [id="Node000002",label="glm::asin",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__core__func__trigonometric.html#gae8df0f1d35d4749b83d3f7788e420f67",tooltip=" "];
+  Node2 -> Node2 [id="edge24_Node000002_Node000002",color="steelblue1",style="solid",tooltip=" "];
+  Node1 -> Node3 [id="edge25_Node000001_Node000003",color="steelblue1",style="solid",tooltip=" "];
+  Node3 [id="Node000003",label="glm::atan",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__core__func__trigonometric.html#ga72cc880c647a2b0ba5cf6dc037cfb685",tooltip=" "];
+  Node1 -> Node4 [id="edge26_Node000001_Node000004",color="steelblue1",style="solid",tooltip=" "];
+  Node4 [id="Node000004",label="glm::euclidean",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__gtx__polar__coordinates.html#gad23e1158021f1cc1d4f49187753e5f42",tooltip=" "];
+  Node4 -> Node5 [id="edge27_Node000004_Node000005",color="steelblue1",style="solid",tooltip=" "];
+  Node5 [id="Node000005",label="glm::cos",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__core__func__trigonometric.html#ga9511f60b18cb8ce18d455029d7571219",tooltip=" "];
+  Node5 -> Node5 [id="edge28_Node000005_Node000005",color="steelblue1",style="solid",tooltip=" "];
+  Node4 -> Node1 [id="edge29_Node000004_Node000001",color="steelblue1",style="solid",tooltip=" "];
+  Node4 -> Node6 [id="edge30_Node000004_Node000006",color="steelblue1",style="solid",tooltip=" "];
+  Node6 [id="Node000006",label="glm::sin",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__core__func__trigonometric.html#ga626e6663f52e5ffefd16ba0f52ccbd90",tooltip=" "];
+  Node6 -> Node6 [id="edge31_Node000006_Node000006",color="steelblue1",style="solid",tooltip=" "];
+  Node1 -> Node7 [id="edge32_Node000001_Node000007",color="steelblue1",style="solid",tooltip=" "];
+  Node7 [id="Node000007",label="glm::length",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__core__func__geometric.html#ga18d45e3d4c7705e67ccfabd99e521604",tooltip=" "];
+  Node1 -> Node8 [id="edge33_Node000001_Node000008",color="steelblue1",style="solid",tooltip=" "];
+  Node8 [id="Node000008",label="glm::sqrt",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__core__func__exponential.html#ga5c784ec51a1765be0a623104db2577b6",tooltip=" "];
+}

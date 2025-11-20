@@ -1,0 +1,49 @@
+\doxysection{matrix\+\_\+query.\+hpp}
+\hypertarget{matrix__query_8hpp_source}{}\label{matrix__query_8hpp_source}\index{include/GLM/gtx/matrix\_query.hpp@{include/GLM/gtx/matrix\_query.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Dependency:}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../glm.hpp"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}../gtx/vector\_query.hpp"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_EXT\_INCLUDED)}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_GTX\_matrix\_query\ extension\ included"{})}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00026\ \{}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00033\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{group__gtx__matrix__query_ga37e535cbeaea383b8c1247b98875cd4b}{isNull}}(\mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}});}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00038\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{group__gtx__matrix__query_ga37e535cbeaea383b8c1247b98875cd4b}{isNull}}(\mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}});}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00043\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{group__gtx__matrix__query_ga37e535cbeaea383b8c1247b98875cd4b}{isNull}}(\mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}});}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }matType>}
+\DoxyCodeLine{00048\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{group__gtx__matrix__query_gafc1ce12c738b8c5d007179e615609330}{isIdentity}}(matType<T,\ P>\ \textcolor{keyword}{const}\ \&\ m,\ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}});}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00053\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{group__gtx__matrix__query_ga11a8d5cdb36496b85f61e4f5f7f2602c}{isNormalized}}(\mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}});}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00058\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{group__gtx__matrix__query_ga11a8d5cdb36496b85f61e4f5f7f2602c}{isNormalized}}(\mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}});}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00063\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{group__gtx__matrix__query_ga11a8d5cdb36496b85f61e4f5f7f2602c}{isNormalized}}(\mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m,\ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}});}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }matType>}
+\DoxyCodeLine{00068\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{group__gtx__matrix__query_gab2cb5d23df77b4e4e63ad2965acd31b3}{isOrthogonal}}(matType<T,\ P>\ \textcolor{keyword}{const}\ \&\ m,\ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}});}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00071\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#include\ "{}matrix\_query.inl"{}}}
+
+\end{DoxyCode}

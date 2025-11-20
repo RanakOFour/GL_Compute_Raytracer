@@ -1,0 +1,130 @@
+\doxysection{hash.\+hpp}
+\hypertarget{hash_8hpp_source}{}\label{hash_8hpp_source}\index{include/GLM/gtx/hash.hpp@{include/GLM/gtx/hash.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../vec2.hpp"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}../vec3.hpp"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}../vec4.hpp"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}../gtc/vec1.hpp"{}}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}../gtc/quaternion.hpp"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}../gtx/dual\_quaternion.hpp"{}}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}../mat2x2.hpp"{}}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}../mat2x3.hpp"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}../mat2x4.hpp"{}}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}../mat3x2.hpp"{}}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ "{}../mat3x3.hpp"{}}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ "{}../mat3x4.hpp"{}}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ "{}../mat4x2.hpp"{}}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ "{}../mat4x3.hpp"{}}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ "{}../mat4x4.hpp"{}}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#if\ !GLM\_HAS\_CXX11\_STL}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#\ \ \ error\ "{}GLM\_GTX\_hash\ requires\ C++11\ standard\ library\ support"{}}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{namespace\ }std}
+\DoxyCodeLine{00042\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tvec1<T,P>\ >}
+\DoxyCodeLine{00045\ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tvec1}{glm::tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00047\ \ \ \ \ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tvec2<T,P>\ >}
+\DoxyCodeLine{00051\ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tvec2}{glm::tvec2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00053\ \ \ \ \ \};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tvec3<T,P>\ >}
+\DoxyCodeLine{00057\ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tvec3}{glm::tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00059\ \ \ \ \ \};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tvec4<T,P>\ >}
+\DoxyCodeLine{00063\ \ \ \ \ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tvec4}{glm::tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00065\ \ \ \ \ \};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tquat<T,P>>}
+\DoxyCodeLine{00069\ \ \ \ \ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tquat}{glm::tquat<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ q)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00071\ \ \ \ \ \};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tdualquat<T,P>\ >}
+\DoxyCodeLine{00075\ \ \ \ \ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tdualquat}{glm::tdualquat<T,P>}}\ \textcolor{keyword}{const}\ \&\ q)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00077\ \ \ \ \ \};}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tmat2x2<T,P>\ >}
+\DoxyCodeLine{00081\ \ \ \ \ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tmat2x2}{glm::tmat2x2<T,P>}}\ \textcolor{keyword}{const}\ \&\ m)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00083\ \ \ \ \ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tmat2x3<T,P>\ >}
+\DoxyCodeLine{00087\ \ \ \ \ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tmat2x3}{glm::tmat2x3<T,P>}}\ \textcolor{keyword}{const}\ \&\ m)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00089\ \ \ \ \ \};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tmat2x4<T,P>\ >}
+\DoxyCodeLine{00093\ \ \ \ \ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tmat2x4}{glm::tmat2x4<T,P>}}\ \textcolor{keyword}{const}\ \&\ m)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00095\ \ \ \ \ \};}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tmat3x2<T,P>\ >}
+\DoxyCodeLine{00099\ \ \ \ \ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tmat3x2}{glm::tmat3x2<T,P>}}\ \textcolor{keyword}{const}\ \&\ m)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00101\ \ \ \ \ \};}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tmat3x3<T,P>\ >}
+\DoxyCodeLine{00105\ \ \ \ \ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tmat3x3}{glm::tmat3x3<T,P>}}\ \textcolor{keyword}{const}\ \&\ m)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00107\ \ \ \ \ \};}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tmat3x4<T,P>\ >}
+\DoxyCodeLine{00111\ \ \ \ \ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tmat3x4}{glm::tmat3x4<T,P>}}\ \textcolor{keyword}{const}\ \&\ m)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00113\ \ \ \ \ \};}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tmat4x2<T,P>\ >}
+\DoxyCodeLine{00117\ \ \ \ \ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tmat4x2}{glm::tmat4x2<T,P>}}\ \textcolor{keyword}{const}\ \&\ m)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00119\ \ \ \ \ \};}
+\DoxyCodeLine{00120\ \ \ \ \ }
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tmat4x3<T,P>\ >}
+\DoxyCodeLine{00123\ \ \ \ \ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tmat4x3}{glm::tmat4x3<T,P>}}\ \textcolor{keyword}{const}\ \&\ m)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00125\ \ \ \ \ \};}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P>}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{struct\ }hash<glm::tmat4x4<T,P>\ >}
+\DoxyCodeLine{00129\ \ \ \ \ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{size\_t}\ operator()(\mbox{\hyperlink{structglm_1_1tmat4x4}{glm::tmat4x4<T,P>}}\ \textcolor{keyword}{const}\ \&\ m)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00131\ \ \ \ \ \};}
+\DoxyCodeLine{00132\ \}\ \textcolor{comment}{//\ namespace\ std}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#include\ "{}hash.inl"{}}}
+
+\end{DoxyCode}

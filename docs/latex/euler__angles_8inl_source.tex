@@ -1,0 +1,317 @@
+\doxysection{euler\+\_\+angles.\+inl}
+\hypertarget{euler__angles_8inl_source}{}\label{euler__angles_8inl_source}\index{include/GLM/gtx/euler\_angles.inl@{include/GLM/gtx/euler\_angles.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}compatibility.hpp"{}}\ \textcolor{comment}{//\ glm::atan2}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00007\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00009\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga3e45408f3a505213538544944dc11dac}{eulerAngleX}}}
+\DoxyCodeLine{00010\ \ \ \ \ (}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleX}
+\DoxyCodeLine{00012\ \ \ \ \ )}
+\DoxyCodeLine{00013\ \ \ \ \ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ T\ cosX\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(angleX);}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ T\ sinX\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(angleX);}
+\DoxyCodeLine{00016\ \ \ \ \ }
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}(}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ T(1),\ T(0),\ T(0),\ T(0),}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ T(0),\ cosX,\ sinX,\ T(0),}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ T(0),-\/sinX,\ cosX,\ T(0),}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ T(0),\ T(0),\ T(0),\ T(1));}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00025\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga5e423539c3d00318726cab253216530a}{eulerAngleY}}}
+\DoxyCodeLine{00026\ \ \ \ \ (}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleY}
+\DoxyCodeLine{00028\ \ \ \ \ )}
+\DoxyCodeLine{00029\ \ \ \ \ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ T\ cosY\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(angleY);}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ T\ sinY\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(angleY);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}(}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ cosY,\ \ \ T(0),\ \ \ -\/sinY,\ \ T(0),}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ T(0),\ \ \ T(1),\ \ \ T(0),\ \ \ T(0),}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ sinY,\ \ \ T(0),\ \ \ cosY,\ \ \ T(0),}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ T(0),\ \ \ T(0),\ \ \ T(0),\ \ \ T(1));}
+\DoxyCodeLine{00038\ \ \ \ \ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00041\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_gae72a30b11bad2573cf7cdd06dc504d43}{eulerAngleZ}}}
+\DoxyCodeLine{00042\ \ \ \ \ (}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleZ}
+\DoxyCodeLine{00044\ \ \ \ \ )}
+\DoxyCodeLine{00045\ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ T\ cosZ\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(angleZ);}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ T\ sinZ\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(angleZ);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}(}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ cosZ,\ \ \ sinZ,\ \ \ T(0),\ T(0),}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ -\/sinZ,\ \ cosZ,\ \ \ T(0),\ T(0),}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ T(0),\ \ \ T(0),\ \ \ T(1),\ T(0),}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ T(0),\ \ \ T(0),\ \ \ T(0),\ T(1));}
+\DoxyCodeLine{00054\ \ \ \ \ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00057\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga11f73d28faf0d70ca3a06bb97380bc81}{eulerAngleXY}}}
+\DoxyCodeLine{00058\ \ \ \ \ (}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleX,}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleY}
+\DoxyCodeLine{00061\ \ \ \ \ )}
+\DoxyCodeLine{00062\ \ \ \ \ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ T\ cosX\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(angleX);}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ T\ sinX\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(angleX);}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ T\ cosY\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(angleY);}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ T\ sinY\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(angleY);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}(}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ cosY,\ \ \ -\/sinX\ *\ -\/sinY,\ \ cosX\ *\ -\/sinY,\ \ \ T(0),}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ T(0),\ \ \ cosX,\ \ \ \ \ \ \ \ \ \ \ sinX,\ \ \ \ \ \ \ \ \ \ \ T(0),}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ sinY,\ \ \ -\/sinX\ *\ cosY,\ \ \ cosX\ *\ cosY,\ \ \ \ T(0),}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ T(0),\ \ \ T(0),\ \ \ \ \ \ \ \ \ \ \ T(0),\ \ \ \ \ \ \ \ \ \ \ T(1));}
+\DoxyCodeLine{00073\ \ \ \ \ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00076\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_gacc070fa5d92bfe27d9734f948c5650fa}{eulerAngleYX}}}
+\DoxyCodeLine{00077\ \ \ \ \ (}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleY,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleX}
+\DoxyCodeLine{00080\ \ \ \ \ )}
+\DoxyCodeLine{00081\ \ \ \ \ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ T\ cosX\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(angleX);}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ T\ sinX\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(angleX);}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ T\ cosY\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(angleY);}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ T\ sinY\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(angleY);}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}(}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ cosY,\ \ \ \ \ \ \ \ \ \ 0,\ \ \ \ \ \ -\/sinY,\ \ \ \ T(0),}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ sinY\ *\ sinX,\ \ cosX,\ cosY\ *\ sinX,\ T(0),}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ sinY\ *\ cosX,\ -\/sinX,\ cosY\ *\ cosX,\ T(0),}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ T(0),\ \ \ \ \ \ \ \ \ T(0),\ \ \ \ \ T(0),\ \ \ \ T(1));}
+\DoxyCodeLine{00092\ \ \ \ \ \}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00095\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga23c4307fe459c57082e053685bc31fe1}{eulerAngleXZ}}}
+\DoxyCodeLine{00096\ \ \ \ \ (}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleX,}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleZ}
+\DoxyCodeLine{00099\ \ \ \ \ )}
+\DoxyCodeLine{00100\ \ \ \ \ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__gtx__euler__angles_ga3e45408f3a505213538544944dc11dac}{eulerAngleX}}(angleX)\ *\ \mbox{\hyperlink{group__gtx__euler__angles_gae72a30b11bad2573cf7cdd06dc504d43}{eulerAngleZ}}(angleZ);}
+\DoxyCodeLine{00102\ \ \ \ \ \}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00105\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga0591541a7f585447b3a3c74b2baf6cc3}{eulerAngleZX}}}
+\DoxyCodeLine{00106\ \ \ \ \ (}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleZ,}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleX}
+\DoxyCodeLine{00109\ \ \ \ \ )}
+\DoxyCodeLine{00110\ \ \ \ \ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__gtx__euler__angles_gae72a30b11bad2573cf7cdd06dc504d43}{eulerAngleZ}}(angleZ)\ *\ \mbox{\hyperlink{group__gtx__euler__angles_ga3e45408f3a505213538544944dc11dac}{eulerAngleX}}(angleX);}
+\DoxyCodeLine{00112\ \ \ \ \ \}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00115\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga526bd933cdc68aa29e75e598655f8705}{eulerAngleYZ}}}
+\DoxyCodeLine{00116\ \ \ \ \ (}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleY,}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleZ}
+\DoxyCodeLine{00119\ \ \ \ \ )}
+\DoxyCodeLine{00120\ \ \ \ \ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__gtx__euler__angles_ga5e423539c3d00318726cab253216530a}{eulerAngleY}}(angleY)\ *\ \mbox{\hyperlink{group__gtx__euler__angles_gae72a30b11bad2573cf7cdd06dc504d43}{eulerAngleZ}}(angleZ);}
+\DoxyCodeLine{00122\ \ \ \ \ \}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00125\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_gae845273ef2e28022fd5149ecdfc0a37c}{eulerAngleZY}}}
+\DoxyCodeLine{00126\ \ \ \ \ (}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleZ,}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleY}
+\DoxyCodeLine{00129\ \ \ \ \ )}
+\DoxyCodeLine{00130\ \ \ \ \ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__gtx__euler__angles_gae72a30b11bad2573cf7cdd06dc504d43}{eulerAngleZ}}(angleZ)\ *\ \mbox{\hyperlink{group__gtx__euler__angles_ga5e423539c3d00318726cab253216530a}{eulerAngleY}}(angleY);}
+\DoxyCodeLine{00132\ \ \ \ \ \}}
+\DoxyCodeLine{00133\ \ \ \ \ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00135\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga07db6b8e1025cab995b93cb5b19b9b20}{eulerAngleXYZ}}}
+\DoxyCodeLine{00136\ \ \ \ \ (}
+\DoxyCodeLine{00137\ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ t1,}
+\DoxyCodeLine{00138\ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ t2,}
+\DoxyCodeLine{00139\ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ t3}
+\DoxyCodeLine{00140\ \ \ \ \ \ )}
+\DoxyCodeLine{00141\ \ \ \ \ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ T\ c1\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(-\/t1);}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ T\ c2\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(-\/t2);}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ T\ c3\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(-\/t3);}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ T\ s1\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(-\/t1);}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ T\ s2\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(-\/t2);}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ T\ s3\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(-\/t3);}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ Result;}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ c2\ *\ c3;}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ Result[0][1]\ =-\/c1\ *\ s3\ +\ s1\ *\ s2\ *\ c3;}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ Result[0][2]\ =\ s1\ *\ s3\ +\ c1\ *\ s2\ *\ c3;}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ Result[0][3]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ Result[1][0]\ =\ c2\ *\ s3;}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ c1\ *\ c3\ +\ s1\ *\ s2\ *\ s3;}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ Result[1][2]\ =-\/s1\ *\ c3\ +\ c1\ *\ s2\ *\ s3;}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ Result[1][3]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ Result[2][0]\ =-\/s2;}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ Result[2][1]\ =\ s1\ *\ c2;}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ Result[2][2]\ =\ c1\ *\ c2;}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ Result[2][3]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ Result[3][0]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ Result[3][1]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ Result[3][2]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ Result[3][3]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1);}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00167\ \ \ \ \ \}}
+\DoxyCodeLine{00168\ \ \ \ \ }
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00170\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_gacf0fbb0e36c3eb34374e57ac3469e35d}{eulerAngleYXZ}}}
+\DoxyCodeLine{00171\ \ \ \ \ (}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_ga724a5df282b70cec0a6cb0d6dcddb6d6}{yaw}},}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_ga2c08b93a4261c10748fd4d2104346f17}{pitch}},}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_ga4fd705376c6c1fd667be0055a0ea58ec}{roll}}}
+\DoxyCodeLine{00175\ \ \ \ \ )}
+\DoxyCodeLine{00176\ \ \ \ \ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ T\ tmp\_ch\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(\mbox{\hyperlink{group__gtc__quaternion_ga724a5df282b70cec0a6cb0d6dcddb6d6}{yaw}});}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ T\ tmp\_sh\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(\mbox{\hyperlink{group__gtc__quaternion_ga724a5df282b70cec0a6cb0d6dcddb6d6}{yaw}});}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ T\ tmp\_cp\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(\mbox{\hyperlink{group__gtc__quaternion_ga2c08b93a4261c10748fd4d2104346f17}{pitch}});}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ T\ tmp\_sp\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(\mbox{\hyperlink{group__gtc__quaternion_ga2c08b93a4261c10748fd4d2104346f17}{pitch}});}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ T\ tmp\_cb\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(\mbox{\hyperlink{group__gtc__quaternion_ga4fd705376c6c1fd667be0055a0ea58ec}{roll}});}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ T\ tmp\_sb\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(\mbox{\hyperlink{group__gtc__quaternion_ga4fd705376c6c1fd667be0055a0ea58ec}{roll}});}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ Result;}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ tmp\_ch\ *\ tmp\_cb\ +\ tmp\_sh\ *\ tmp\_sp\ *\ tmp\_sb;}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ Result[0][1]\ =\ tmp\_sb\ *\ tmp\_cp;}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ Result[0][2]\ =\ -\/tmp\_sh\ *\ tmp\_cb\ +\ tmp\_ch\ *\ tmp\_sp\ *\ tmp\_sb;}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ Result[0][3]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ Result[1][0]\ =\ -\/tmp\_ch\ *\ tmp\_sb\ +\ tmp\_sh\ *\ tmp\_sp\ *\ tmp\_cb;}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ tmp\_cb\ *\ tmp\_cp;}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ Result[1][2]\ =\ tmp\_sb\ *\ tmp\_sh\ +\ tmp\_ch\ *\ tmp\_sp\ *\ tmp\_cb;}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ Result[1][3]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ Result[2][0]\ =\ tmp\_sh\ *\ tmp\_cp;}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ Result[2][1]\ =\ -\/tmp\_sp;}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ Result[2][2]\ =\ tmp\_ch\ *\ tmp\_cp;}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ Result[2][3]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ Result[3][0]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ Result[3][1]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ Result[3][2]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ Result[3][3]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1);}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00202\ \ \ \ \ \}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00205\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_gae0be77366a1fdf318a9566e5f646d56d}{yawPitchRoll}}}
+\DoxyCodeLine{00206\ \ \ \ \ (}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_ga724a5df282b70cec0a6cb0d6dcddb6d6}{yaw}},}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_ga2c08b93a4261c10748fd4d2104346f17}{pitch}},}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_ga4fd705376c6c1fd667be0055a0ea58ec}{roll}}}
+\DoxyCodeLine{00210\ \ \ \ \ )}
+\DoxyCodeLine{00211\ \ \ \ \ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ T\ tmp\_ch\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(\mbox{\hyperlink{group__gtc__quaternion_ga724a5df282b70cec0a6cb0d6dcddb6d6}{yaw}});}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ T\ tmp\_sh\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(\mbox{\hyperlink{group__gtc__quaternion_ga724a5df282b70cec0a6cb0d6dcddb6d6}{yaw}});}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ T\ tmp\_cp\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(\mbox{\hyperlink{group__gtc__quaternion_ga2c08b93a4261c10748fd4d2104346f17}{pitch}});}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ T\ tmp\_sp\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(\mbox{\hyperlink{group__gtc__quaternion_ga2c08b93a4261c10748fd4d2104346f17}{pitch}});}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ T\ tmp\_cb\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(\mbox{\hyperlink{group__gtc__quaternion_ga4fd705376c6c1fd667be0055a0ea58ec}{roll}});}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ T\ tmp\_sb\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(\mbox{\hyperlink{group__gtc__quaternion_ga4fd705376c6c1fd667be0055a0ea58ec}{roll}});}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ Result;}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ tmp\_ch\ *\ tmp\_cb\ +\ tmp\_sh\ *\ tmp\_sp\ *\ tmp\_sb;}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ Result[0][1]\ =\ tmp\_sb\ *\ tmp\_cp;}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ Result[0][2]\ =\ -\/tmp\_sh\ *\ tmp\_cb\ +\ tmp\_ch\ *\ tmp\_sp\ *\ tmp\_sb;}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ Result[0][3]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ Result[1][0]\ =\ -\/tmp\_ch\ *\ tmp\_sb\ +\ tmp\_sh\ *\ tmp\_sp\ *\ tmp\_cb;}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ tmp\_cb\ *\ tmp\_cp;}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ Result[1][2]\ =\ tmp\_sb\ *\ tmp\_sh\ +\ tmp\_ch\ *\ tmp\_sp\ *\ tmp\_cb;}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ Result[1][3]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ Result[2][0]\ =\ tmp\_sh\ *\ tmp\_cp;}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ Result[2][1]\ =\ -\/tmp\_sp;}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ Result[2][2]\ =\ tmp\_ch\ *\ tmp\_cp;}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ Result[2][3]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ Result[3][0]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ Result[3][1]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ Result[3][2]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ Result[3][3]\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1);}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00237\ \ \ \ \ \}}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00240\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga624028f5c7bc33ba0cecd9c27e401342}{orientate2}}}
+\DoxyCodeLine{00241\ \ \ \ \ (}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}}
+\DoxyCodeLine{00243\ \ \ \ \ )}
+\DoxyCodeLine{00244\ \ \ \ \ \{}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ T\ c\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}});}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ T\ s\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}});}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ defaultp>}}\ Result;}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ c;}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ Result[0][1]\ =\ s;}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ Result[1][0]\ =\ -\/s;}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ c;}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00254\ \ \ \ \ \}}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00257\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga2fb4d4d662094e906b934086c0318468}{orientate3}}}
+\DoxyCodeLine{00258\ \ \ \ \ (}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}}
+\DoxyCodeLine{00260\ \ \ \ \ )}
+\DoxyCodeLine{00261\ \ \ \ \ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ T\ c\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}});}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ T\ s\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(\mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}});}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ defaultp>}}\ Result;}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ c;}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ Result[0][1]\ =\ s;}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ Result[0][2]\ =\ 0.0f;}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ Result[1][0]\ =\ -\/s;}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ c;}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ Result[1][2]\ =\ 0.0f;}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ Result[2][0]\ =\ 0.0f;}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ Result[2][1]\ =\ 0.0f;}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ Result[2][2]\ =\ 1.0f;}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00276\ \ \ \ \ \}}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00279\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga2fb4d4d662094e906b934086c0318468}{orientate3}}}
+\DoxyCodeLine{00280\ \ \ \ \ (}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ angles}
+\DoxyCodeLine{00282\ \ \ \ \ )}
+\DoxyCodeLine{00283\ \ \ \ \ \{}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}(\mbox{\hyperlink{group__gtx__euler__angles_gae0be77366a1fdf318a9566e5f646d56d}{yawPitchRoll}}(angles.z,\ angles.x,\ angles.y));}
+\DoxyCodeLine{00285\ \ \ \ \ \}}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00288\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga75daa34d76064045209dc3d8f60f68d6}{orientate4}}}
+\DoxyCodeLine{00289\ \ \ \ \ (}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ angles}
+\DoxyCodeLine{00291\ \ \ \ \ )}
+\DoxyCodeLine{00292\ \ \ \ \ \{}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__gtx__euler__angles_gae0be77366a1fdf318a9566e5f646d56d}{yawPitchRoll}}(angles.z,\ angles.x,\ angles.y);}
+\DoxyCodeLine{00294\ \ \ \ \ \}}
+\DoxyCodeLine{00295\ \ \ \ \ }
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00297\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__gtx__euler__angles_gad5838a4c87ce2b8ee4c4e17bd162fd14}{extractEulerAngleXYZ}}(\mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \textcolor{keyword}{const}\ \&\ M,}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T\ \&\ t1,}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T\ \&\ t2,}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T\ \&\ t3)}
+\DoxyCodeLine{00301\ \ \ \ \ \{}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ T1\ =\ \mbox{\hyperlink{group__gtx__compatibility_gac63011205bf6d0be82589dc56dd26708}{glm::atan2<T,\ defaultp>}}(M[2][1],\ M[2][2]);}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ C2\ =\ \mbox{\hyperlink{group__core__func__exponential_ga5c784ec51a1765be0a623104db2577b6}{glm::sqrt}}(M[0][0]*M[0][0]\ +\ M[1][0]*M[1][0]);}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ T2\ =\ \mbox{\hyperlink{group__gtx__compatibility_gac63011205bf6d0be82589dc56dd26708}{glm::atan2<T,\ defaultp>}}(-\/M[2][0],\ C2);}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ S1\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga626e6663f52e5ffefd16ba0f52ccbd90}{glm::sin}}(T1);}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ C1\ =\ \mbox{\hyperlink{group__core__func__trigonometric_ga9511f60b18cb8ce18d455029d7571219}{glm::cos}}(T1);}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ T3\ =\ \mbox{\hyperlink{group__gtx__compatibility_gac63011205bf6d0be82589dc56dd26708}{glm::atan2<T,\ defaultp>}}(S1*M[0][2]\ -\/\ C1*M[0][1],\ C1*M[1][1]\ -\/\ S1*M[1][2\ \ ]);}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ t1\ =\ -\/T1;}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ t2\ =\ -\/T2;}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ t3\ =\ -\/T3;}
+\DoxyCodeLine{00311\ \ \ \ \ \}}
+\DoxyCodeLine{00312\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

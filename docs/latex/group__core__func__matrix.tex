@@ -1,0 +1,113 @@
+\doxysubsection{Matrix functions }
+\hypertarget{group__core__func__matrix}{}\label{group__core__func__matrix}\index{Matrix functions@{Matrix functions}}
+Collaboration diagram for Matrix functions\+:
+% FIG 0
+\doxysubsubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T, precision P, template$<$ typename, precision $>$ class mat\+Type$>$ }\\GLM\+\_\+\+FUNC\+\_\+\+DECL mat\+Type$<$ T, P $>$ \mbox{\hyperlink{group__core__func__matrix_ga32bd7e365e5b29e869c0c4cb821bdc14}{glm\+::matrix\+Comp\+Mult}} (mat\+Type$<$ T, P $>$ const \&x, mat\+Type$<$ T, P $>$ const \&y)
+\item 
+{\footnotesize template$<$typename T, precision P, template$<$ typename, precision $>$ class vec\+TypeA, template$<$ typename, precision $>$ class vec\+TypeB$>$ }\\GLM\+\_\+\+FUNC\+\_\+\+DECL \mbox{\hyperlink{structglm_1_1detail_1_1outerProduct__trait}{detail\+::outer\+Product\+\_\+trait}}$<$ T, P, vec\+TypeA, vec\+TypeB $>$\mbox{\hyperlink{structglm_1_1type}{\+::type}} \mbox{\hyperlink{group__core__func__matrix_ga4008856dc87a8abcf95a90004379618e}{glm\+::outer\+Product}} (vec\+TypeA$<$ T, P $>$ const \&c, vec\+TypeB$<$ T, P $>$ const \&r)
+\item 
+{\footnotesize template$<$typename T, precision P, template$<$ typename, precision $>$ class mat\+Type$>$ }\\GLM\+\_\+\+FUNC\+\_\+\+DECL T \mbox{\hyperlink{group__core__func__matrix_ga26ea77c574802bc6fc193c40478718d2}{glm\+::determinant}} (mat\+Type$<$ T, P $>$ const \&m)
+\item 
+{\footnotesize template$<$typename T, precision P, template$<$ typename, precision $>$ class mat\+Type$>$ }\\GLM\+\_\+\+FUNC\+\_\+\+DECL mat\+Type$<$ T, P $>$ \mbox{\hyperlink{group__core__func__matrix_gaff4e89603cf51cdbcedebc57cd8808a3}{glm\+::inverse}} (mat\+Type$<$ T, P $>$ const \&m)
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+For each of the following built-\/in matrix functions, there is both a single-\/precision floating point version, where all arguments and return values are single precision, and a double-\/precision floating version, where all arguments and return values are double precision. Only the single-\/precision floating point version is shown.
+
+\label{doc-func-members}
+\Hypertarget{group__core__func__matrix_doc-func-members}
+\doxysubsubsection{Function Documentation}
+\Hypertarget{group__core__func__matrix_ga26ea77c574802bc6fc193c40478718d2}\index{Matrix functions@{Matrix functions}!determinant@{determinant}}
+\index{determinant@{determinant}!Matrix functions@{Matrix functions}}
+\doxysubsubsubsection{\texorpdfstring{determinant()}{determinant()}}
+{\footnotesize\ttfamily \label{group__core__func__matrix_ga26ea77c574802bc6fc193c40478718d2} 
+template$<$typename T, precision P, template$<$ typename, precision $>$ class mat\+Type$>$ \\
+GLM\+\_\+\+FUNC\+\_\+\+DECL T glm\+::determinant (\begin{DoxyParamCaption}\item[{mat\+Type$<$ T, P $>$ const \&}]{m}{}\end{DoxyParamCaption})}
+
+Returns the transposed matrix of x
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em mat\+Type} & Floating-\/point matrix types.\\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxySeeAlso}{See also}
+\href{http://www.opengl.org/sdk/docs/manglsl/xhtml/transpose.xml}{\texttt{GLSL transpose man page}} 
+
+\href{http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf}{\texttt{GLSL 4.\+20.\+8 specification, section 8.\+6 Matrix Functions}} Return the \doxylink{group__core__func__matrix_ga26ea77c574802bc6fc193c40478718d2}{determinant} of a squared matrix.
+\end{DoxySeeAlso}
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em val\+Type} & Floating-\/point scalar types.\\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxySeeAlso}{See also}
+\href{http://www.opengl.org/sdk/docs/manglsl/xhtml/determinant.xml}{\texttt{GLSL determinant man page}} 
+
+\href{http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf}{\texttt{GLSL 4.\+20.\+8 specification, section 8.\+6 Matrix Functions}} 
+\end{DoxySeeAlso}
+Here is the caller graph for this function\+:
+% FIG 1
+\Hypertarget{group__core__func__matrix_gaff4e89603cf51cdbcedebc57cd8808a3}\index{Matrix functions@{Matrix functions}!inverse@{inverse}}
+\index{inverse@{inverse}!Matrix functions@{Matrix functions}}
+\doxysubsubsubsection{\texorpdfstring{inverse()}{inverse()}}
+{\footnotesize\ttfamily \label{group__core__func__matrix_gaff4e89603cf51cdbcedebc57cd8808a3} 
+template$<$typename T, precision P, template$<$ typename, precision $>$ class mat\+Type$>$ \\
+GLM\+\_\+\+FUNC\+\_\+\+DECL mat\+Type$<$ T, P $>$ glm\+::inverse (\begin{DoxyParamCaption}\item[{mat\+Type$<$ T, P $>$ const \&}]{m}{}\end{DoxyParamCaption})}
+
+Return the inverse of a squared matrix.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em val\+Type} & Floating-\/point scalar types.\\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxySeeAlso}{See also}
+\href{http://www.opengl.org/sdk/docs/manglsl/xhtml/inverse.xml}{\texttt{GLSL inverse man page}} 
+
+\href{http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf}{\texttt{GLSL 4.\+20.\+8 specification, section 8.\+6 Matrix Functions}} 
+\end{DoxySeeAlso}
+Here is the caller graph for this function\+:
+% FIG 2
+\Hypertarget{group__core__func__matrix_ga32bd7e365e5b29e869c0c4cb821bdc14}\index{Matrix functions@{Matrix functions}!matrixCompMult@{matrixCompMult}}
+\index{matrixCompMult@{matrixCompMult}!Matrix functions@{Matrix functions}}
+\doxysubsubsubsection{\texorpdfstring{matrixCompMult()}{matrixCompMult()}}
+{\footnotesize\ttfamily \label{group__core__func__matrix_ga32bd7e365e5b29e869c0c4cb821bdc14} 
+template$<$typename T, precision P, template$<$ typename, precision $>$ class mat\+Type$>$ \\
+GLM\+\_\+\+FUNC\+\_\+\+DECL mat\+Type$<$ T, P $>$ glm\+::matrix\+Comp\+Mult (\begin{DoxyParamCaption}\item[{mat\+Type$<$ T, P $>$ const \&}]{x}{, }\item[{mat\+Type$<$ T, P $>$ const \&}]{y}{}\end{DoxyParamCaption})}
+
+Multiply matrix x by matrix y component-\/wise, i.\+e., result\mbox{[}i\mbox{]}\mbox{[}j\mbox{]} is the scalar product of x\mbox{[}i\mbox{]}\mbox{[}j\mbox{]} and y\mbox{[}i\mbox{]}\mbox{[}j\mbox{]}.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em mat\+Type} & Floating-\/point matrix types.\\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxySeeAlso}{See also}
+\href{http://www.opengl.org/sdk/docs/manglsl/xhtml/matrixCompMult.xml}{\texttt{GLSL matrix\+Comp\+Mult man page}} 
+
+\href{http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf}{\texttt{GLSL 4.\+20.\+8 specification, section 8.\+6 Matrix Functions}} 
+\end{DoxySeeAlso}
+\Hypertarget{group__core__func__matrix_ga4008856dc87a8abcf95a90004379618e}\index{Matrix functions@{Matrix functions}!outerProduct@{outerProduct}}
+\index{outerProduct@{outerProduct}!Matrix functions@{Matrix functions}}
+\doxysubsubsubsection{\texorpdfstring{outerProduct()}{outerProduct()}}
+{\footnotesize\ttfamily \label{group__core__func__matrix_ga4008856dc87a8abcf95a90004379618e} 
+template$<$typename T, precision P, template$<$ typename, precision $>$ class vec\+TypeA, template$<$ typename, precision $>$ class vec\+TypeB$>$ \\
+GLM\+\_\+\+FUNC\+\_\+\+DECL \mbox{\hyperlink{structglm_1_1detail_1_1outerProduct__trait}{detail\+::outer\+Product\+\_\+trait}}$<$ T, P, vec\+TypeA, vec\+TypeB $>$\mbox{\hyperlink{structglm_1_1type}{\+::type}} glm\+::outer\+Product (\begin{DoxyParamCaption}\item[{vec\+TypeA$<$ T, P $>$ const \&}]{c}{, }\item[{vec\+TypeB$<$ T, P $>$ const \&}]{r}{}\end{DoxyParamCaption})}
+
+Treats the first parameter c as a column vector and the second parameter r as a row vector and does a linear algebraic matrix multiply c \texorpdfstring{$\ast$}{*} r.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em mat\+Type} & Floating-\/point matrix types.\\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxySeeAlso}{See also}
+\href{http://www.opengl.org/sdk/docs/manglsl/xhtml/outerProduct.xml}{\texttt{GLSL outer\+Product man page}} 
+
+\href{http://www.opengl.org/registry/doc/GLSLangSpec.4.20.8.pdf}{\texttt{GLSL 4.\+20.\+8 specification, section 8.\+6 Matrix Functions}} 
+\end{DoxySeeAlso}

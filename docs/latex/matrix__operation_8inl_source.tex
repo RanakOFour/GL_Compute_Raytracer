@@ -1,0 +1,123 @@
+\doxysection{matrix\+\_\+operation.\+inl}
+\hypertarget{matrix__operation_8inl_source}{}\label{matrix__operation_8inl_source}\index{include/GLM/gtx/matrix\_operation.inl@{include/GLM/gtx/matrix\_operation.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00005\ \{}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00007\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ P>}}\ \mbox{\hyperlink{group__gtx__matrix__operation_ga6ab2b5d3a91507b8722d376b43cd5892}{diagonal2x2}}}
+\DoxyCodeLine{00008\ \ \ \ \ (}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v}
+\DoxyCodeLine{00010\ \ \ \ \ )}
+\DoxyCodeLine{00011\ \ \ \ \ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ P>}}\ Result(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ v[0];}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ v[1];}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00016\ \ \ \ \ \}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00019\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat2x3}{tmat2x3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__matrix__operation_gad811a3ad45dcba4776dfd8c5b1cb4443}{diagonal2x3}}}
+\DoxyCodeLine{00020\ \ \ \ \ (}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v}
+\DoxyCodeLine{00022\ \ \ \ \ )}
+\DoxyCodeLine{00023\ \ \ \ \ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat2x3}{tmat2x3<T,\ P>}}\ Result(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ v[0];}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ v[1];}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00028\ \ \ \ \ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00031\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat2x4}{tmat2x4<T,\ P>}}\ \mbox{\hyperlink{group__gtx__matrix__operation_gacf105470a4454d091d3435d5182e6900}{diagonal2x4}}}
+\DoxyCodeLine{00032\ \ \ \ \ (}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v}
+\DoxyCodeLine{00034\ \ \ \ \ )}
+\DoxyCodeLine{00035\ \ \ \ \ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat2x4}{tmat2x4<T,\ P>}}\ Result(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ v[0];}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ v[1];}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00043\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ \mbox{\hyperlink{group__gtx__matrix__operation_ga1e8ed07942a0201927b75c758516b9a6}{diagonal3x2}}}
+\DoxyCodeLine{00044\ \ \ \ \ (}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v}
+\DoxyCodeLine{00046\ \ \ \ \ )}
+\DoxyCodeLine{00047\ \ \ \ \ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ Result(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ v[0];}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ v[1];}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00052\ \ \ \ \ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00055\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__matrix__operation_ga95d2d7bd56838732459018c4a71f6de2}{diagonal3x3}}}
+\DoxyCodeLine{00056\ \ \ \ \ (}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v}
+\DoxyCodeLine{00058\ \ \ \ \ )}
+\DoxyCodeLine{00059\ \ \ \ \ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ Result(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ v[0];}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ v[1];}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ Result[2][2]\ =\ v[2];}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00065\ \ \ \ \ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00068\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat3x4}{tmat3x4<T,\ P>}}\ \mbox{\hyperlink{group__gtx__matrix__operation_ga0591e7a03fe28d897ae3b32f4f9d6b3f}{diagonal3x4}}}
+\DoxyCodeLine{00069\ \ \ \ \ (}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v}
+\DoxyCodeLine{00071\ \ \ \ \ )}
+\DoxyCodeLine{00072\ \ \ \ \ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat3x4}{tmat3x4<T,\ P>}}\ Result(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ v[0];}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ v[1];}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ Result[2][2]\ =\ v[2];}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00078\ \ \ \ \ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00081\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \mbox{\hyperlink{group__gtx__matrix__operation_gafcee89ade1c8ba73576fd5e76dba0096}{diagonal4x4}}}
+\DoxyCodeLine{00082\ \ \ \ \ (}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v}
+\DoxyCodeLine{00084\ \ \ \ \ )}
+\DoxyCodeLine{00085\ \ \ \ \ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ Result(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ v[0];}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ v[1];}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ Result[2][2]\ =\ v[2];}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ Result[3][3]\ =\ v[3];}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;\ \ \ \ \ \ }
+\DoxyCodeLine{00092\ \ \ \ \ \}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00095\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x3}{tmat4x3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__matrix__operation_ga2fbbeefa3ca351b59d11c69de6cc6ebe}{diagonal4x3}}}
+\DoxyCodeLine{00096\ \ \ \ \ (}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v}
+\DoxyCodeLine{00098\ \ \ \ \ )}
+\DoxyCodeLine{00099\ \ \ \ \ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat4x3}{tmat4x3<T,\ P>}}\ Result(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ v[0];}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ v[1];}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ Result[2][2]\ =\ v[2];}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;\ \ \ \ \ \ }
+\DoxyCodeLine{00105\ \ \ \ \ \}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00108\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x2}{tmat4x2<T,\ P>}}\ \mbox{\hyperlink{group__gtx__matrix__operation_ga4fc40ca75401ac3763ad0c99370b95a6}{diagonal4x2}}}
+\DoxyCodeLine{00109\ \ \ \ \ (}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v}
+\DoxyCodeLine{00111\ \ \ \ \ )}
+\DoxyCodeLine{00112\ \ \ \ \ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat4x2}{tmat4x2<T,\ P>}}\ Result(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ Result[0][0]\ =\ v[0];}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ Result[1][1]\ =\ v[1];}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;\ \ \ \ \ \ }
+\DoxyCodeLine{00117\ \ \ \ \ \}}
+\DoxyCodeLine{00118\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

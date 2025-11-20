@@ -1,0 +1,54 @@
+\doxysection{SDL\+\_\+\+Sys\+WMEvent Struct Reference}
+\hypertarget{structSDL__SysWMEvent}{}\label{structSDL__SysWMEvent}\index{SDL\_SysWMEvent@{SDL\_SysWMEvent}}
+
+
+{\ttfamily \#include $<$SDL\+\_\+events.\+h$>$}
+
+
+
+Collaboration diagram for SDL\+\_\+\+Sys\+WMEvent\+:
+% FIG 0
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__SysWMEvent_a84697e96cb16bf6a570e10b5bfdcd392}{type}}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__SysWMEvent_a5d3cb97006d99b620c2671c27bd82c06}{timestamp}}
+\item 
+\mbox{\hyperlink{structSDL__SysWMmsg}{SDL\+\_\+\+Sys\+WMmsg}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structSDL__SysWMEvent_ad5e3dc68aa15582cd0641847d41c74e8}{msg}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A video driver dependent system event (event.\+syswm.\texorpdfstring{$\ast$}{*})
+
+This event is disabled by default, you can enable it with SDL\+\_\+\+Event\+State()
+
+If you want to use this event, you should include \doxylink{SDL__syswm_8h_source}{SDL\+\_\+syswm.\+h}. 
+
+\label{doc-variable-members}
+\Hypertarget{structSDL__SysWMEvent_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structSDL__SysWMEvent_ad5e3dc68aa15582cd0641847d41c74e8}\index{SDL\_SysWMEvent@{SDL\_SysWMEvent}!msg@{msg}}
+\index{msg@{msg}!SDL\_SysWMEvent@{SDL\_SysWMEvent}}
+\doxysubsubsection{\texorpdfstring{msg}{msg}}
+{\footnotesize\ttfamily \label{structSDL__SysWMEvent_ad5e3dc68aa15582cd0641847d41c74e8} 
+\mbox{\hyperlink{structSDL__SysWMmsg}{SDL\+\_\+\+Sys\+WMmsg}}\texorpdfstring{$\ast$}{*} SDL\+\_\+\+Sys\+WMEvent\+::msg}
+
+driver dependent data, defined in \doxylink{SDL__syswm_8h_source}{SDL\+\_\+syswm.\+h} \Hypertarget{structSDL__SysWMEvent_a5d3cb97006d99b620c2671c27bd82c06}\index{SDL\_SysWMEvent@{SDL\_SysWMEvent}!timestamp@{timestamp}}
+\index{timestamp@{timestamp}!SDL\_SysWMEvent@{SDL\_SysWMEvent}}
+\doxysubsubsection{\texorpdfstring{timestamp}{timestamp}}
+{\footnotesize\ttfamily \label{structSDL__SysWMEvent_a5d3cb97006d99b620c2671c27bd82c06} 
+Uint32 SDL\+\_\+\+Sys\+WMEvent\+::timestamp}
+
+In milliseconds, populated using SDL\+\_\+\+Get\+Ticks() \Hypertarget{structSDL__SysWMEvent_a84697e96cb16bf6a570e10b5bfdcd392}\index{SDL\_SysWMEvent@{SDL\_SysWMEvent}!type@{type}}
+\index{type@{type}!SDL\_SysWMEvent@{SDL\_SysWMEvent}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{structSDL__SysWMEvent_a84697e96cb16bf6a570e10b5bfdcd392} 
+Uint32 SDL\+\_\+\+Sys\+WMEvent\+::type}
+
+SDL\+\_\+\+SYSWMEVENT 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+SDL/SDL\+\_\+events.\+h\end{DoxyCompactItemize}

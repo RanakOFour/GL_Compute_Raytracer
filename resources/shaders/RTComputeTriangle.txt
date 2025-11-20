@@ -13,12 +13,10 @@ struct Triangle
 
 struct Node
 {
-    int leftIndex;
-    int firstTriangle;
-    int triangleCount;
-
     vec3 minBound;
+    int leftFirst;
     vec3 maxBound;
+    int triangleCount;
 };
 
 layout(std430, binding = 1) readonly buffer b_trianglesSSBO
@@ -188,9 +186,9 @@ RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
         {
             if(node.triangleCount > 0)
             {
-                for(int first = node.firstTriangle, i = 0; i < node.triangleCount; i++)
+                for(int i = 0; i < node.triangleCount; i++)
                 {
-                    RaycastResult newResult = triangleIntersect(_ray, modelData[bvhTriangleIndexes[first + i]], bvhTriangleIndexes[first + i]);
+                    RaycastResult newResult = triangleIntersect(_ray, modelData[bvhTriangleIndexes[node.leftFirst + i]], bvhTriangleIndexes[node.leftFirst + i]);
                     if(newResult.hit && newResult.distance < _result.distance)
                     {
                         _result = newResult;
@@ -199,9 +197,9 @@ RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
             }
             else
             {
-                indexStack[top] = node.leftIndex;
+                indexStack[top] = node.leftFirst;
                 top++;
-                indexStack[top] = node.leftIndex + 1;
+                indexStack[top] = node.leftFirst + 1;
                 top++;
             }
         }
@@ -235,14 +233,14 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
         {
             if(node.triangleCount > 0)
             {
-                for(int first = node.firstTriangle, i = 0; i < node.triangleCount; i++)
+                for(int i = 0; i < node.triangleCount; i++)
                 {
-                    if(bvhTriangleIndexes[first + i] == raycastHit.triangleIndex)
+                    if(bvhTriangleIndexes[node.leftFirst + i] == raycastHit.triangleIndex)
                     {
                         continue;
                     }
 
-                    RaycastResult shadowHit = triangleIntersect(shadowRay, modelData[bvhTriangleIndexes[first + i]], bvhTriangleIndexes[first + i]);
+                    RaycastResult shadowHit = triangleIntersect(shadowRay, modelData[bvhTriangleIndexes[node.leftFirst + i]], bvhTriangleIndexes[node.leftFirst + i]);
                     if(shadowHit.hit && shadowHit.distance < lightDistance)
                     {
                         return true;
@@ -251,9 +249,9 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
             }
             else
             {
-                indexStack[top] = node.leftIndex;
+                indexStack[top] = node.leftFirst;
                 top++;
-                indexStack[top] = node.leftIndex + 1;
+                indexStack[top] = node.leftFirst + 1;
                 top++;
             }
         }

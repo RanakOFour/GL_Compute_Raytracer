@@ -1,0 +1,153 @@
+\doxysection{func\+\_\+common.\+hpp}
+\hypertarget{func__common_8hpp_source}{}\label{func__common_8hpp_source}\index{include/GLM/detail/func\_common.hpp@{include/GLM/detail/func\_common.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}setup.hpp"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}precision.hpp"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}type\_int.hpp"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\_fixes.hpp"{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00030\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__core__func__common_ga693d77696ff36572a0da79efec965acd}{abs}}(genType\ x);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00033\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga693d77696ff36572a0da79efec965acd}{abs}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00042\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga71566845a77ba339992893adef79fe17}{sign}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00051\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga71c916c953d321f642c567159db21dad}{floor}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00061\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga08b1c39b2c1ddebe5bb1ffb5faa749ec}{trunc}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00074\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_gabf111d6915720188a3c891b476308e80}{round}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00086\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga9ef57244a53219adc64e1d96325a1ead}{roundEven}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00096\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_gafec7c85890a55e51a0c3905255d47207}{ceil}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00105\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__core__func__common_ga8ba89e40e55ae5cdf228548f9b7639c7}{fract}}(genType\ x);}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00108\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga8ba89e40e55ae5cdf228548f9b7639c7}{fract}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00118\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__core__func__common_ga12201563ef902e3b07e0d1d7656efdb1}{mod}}(genType\ x,\ genType\ y);}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00121\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga12201563ef902e3b07e0d1d7656efdb1}{mod}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ T\ y);}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00124\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga12201563ef902e3b07e0d1d7656efdb1}{mod}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y);}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00136\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__core__func__common_ga85e33f139b8db1b39b590a5713b9e679}{modf}}(genType\ x,\ genType\ \&\ i);}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00145\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__core__func__common_ga2c2bde1cec025b7ddff83c74a1113719}{min}}(genType\ x,\ genType\ y);}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00148\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga2c2bde1cec025b7ddff83c74a1113719}{min}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ T\ y);}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00151\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga2c2bde1cec025b7ddff83c74a1113719}{min}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y);}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00160\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__core__func__common_ga98caa7f95a94c86a86ebce893a45326c}{max}}(genType\ x,\ genType\ y);}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00163\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga98caa7f95a94c86a86ebce893a45326c}{max}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ T\ y);}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00166\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga98caa7f95a94c86a86ebce893a45326c}{max}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y);}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00176\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__core__func__common_ga93bce26c7d80d30a62f5c508f8498a6c}{clamp}}(genType\ x,\ genType\ minVal,\ genType\ maxVal);}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00179\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga93bce26c7d80d30a62f5c508f8498a6c}{clamp}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ T\ minVal,\ T\ maxVal);}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00182\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga93bce26c7d80d30a62f5c508f8498a6c}{clamp}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ minVal,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ maxVal);}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ U,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00227\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y,\ vecType<U,\ P>\ \textcolor{keyword}{const}\ \&\ a);}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ U,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00230\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y,\ U\ a);}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genTypeT,\ \textcolor{keyword}{typename}\ genTypeU>}
+\DoxyCodeLine{00233\ \ \ \ \ GLM\_FUNC\_DECL\ genTypeT\ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(genTypeT\ x,\ genTypeT\ y,\ genTypeU\ a);}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00240\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__core__func__common_ga015a1261ff23e12650211aa872863cce}{step}}(genType\ edge,\ genType\ x);}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00247\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga015a1261ff23e12650211aa872863cce}{step}}(T\ edge,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00254\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga015a1261ff23e12650211aa872863cce}{step}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ edge,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00271\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__core__func__common_ga562edf7eca082cc5b7a0aaf180436daf}{smoothstep}}(genType\ edge0,\ genType\ edge1,\ genType\ x);}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00274\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga562edf7eca082cc5b7a0aaf180436daf}{smoothstep}}(T\ edge0,\ T\ edge1,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00277\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga562edf7eca082cc5b7a0aaf180436daf}{smoothstep}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ edge0,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ edge1,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00292\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<bool,\ P>\ \mbox{\hyperlink{group__core__func__common_gad671e13ab8cbf231b9c30e4158b26dd5}{isnan}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00305\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<bool,\ P>\ \mbox{\hyperlink{group__core__func__common_ga7287c2c07cf211f53b51bf25b7be29aa}{isinf}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00313\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__core__func__common_gadc6a536a7bef046c3293d2ccad6d9ca2}{floatBitsToInt}}(\textcolor{keywordtype}{float}\ \textcolor{keyword}{const}\ \&\ v);}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType,\ precision\ P>}
+\DoxyCodeLine{00322\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<int,\ P>\ \mbox{\hyperlink{group__core__func__common_gadc6a536a7bef046c3293d2ccad6d9ca2}{floatBitsToInt}}(vecType<float,\ P>\ \textcolor{keyword}{const}\ \&\ v);}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00330\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \mbox{\hyperlink{group__core__func__common_ga748b4d2819b48d28ca09dc8733488873}{floatBitsToUint}}(\textcolor{keywordtype}{float}\ \textcolor{keyword}{const}\ \&\ v);}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00338\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType,\ precision\ P>}
+\DoxyCodeLine{00339\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<uint,\ P>\ \mbox{\hyperlink{group__core__func__common_ga748b4d2819b48d28ca09dc8733488873}{floatBitsToUint}}(vecType<float,\ P>\ \textcolor{keyword}{const}\ \&\ v);}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00349\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{group__core__func__common_ga2650dc57b2148a6ffbce20944fb4d97a}{intBitsToFloat}}(\textcolor{keywordtype}{int}\ \textcolor{keyword}{const}\ \&\ v);}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType,\ precision\ P>}
+\DoxyCodeLine{00360\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<float,\ P>\ \mbox{\hyperlink{group__core__func__common_ga2650dc57b2148a6ffbce20944fb4d97a}{intBitsToFloat}}(vecType<int,\ P>\ \textcolor{keyword}{const}\ \&\ v);}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00370\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{group__core__func__common_ga97464ca9ff4267de30ea408f700d4ca8}{uintBitsToFloat}}(\mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \textcolor{keyword}{const}\ \&\ v);}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType,\ precision\ P>}
+\DoxyCodeLine{00381\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<float,\ P>\ \mbox{\hyperlink{group__core__func__common_ga97464ca9ff4267de30ea408f700d4ca8}{uintBitsToFloat}}(vecType<uint,\ P>\ \textcolor{keyword}{const}\ \&\ v);}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00389\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00390\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__core__func__common_gad0f444d4b81cc53c3b6edf5aa25078c2}{fma}}(genType\ \textcolor{keyword}{const}\ \&\ a,\ genType\ \textcolor{keyword}{const}\ \&\ b,\ genType\ \textcolor{keyword}{const}\ \&\ c);}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00406\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType,\ \textcolor{keyword}{typename}\ genIType>}
+\DoxyCodeLine{00407\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__core__func__common_ga20620e83544d1a988857a3bc4ebe0e1d}{frexp}}(genType\ \textcolor{keyword}{const}\ \&\ x,\ genIType\ \&\ \mbox{\hyperlink{group__core__func__exponential_ga6e9557409b21768860d8f7d974bb41dc}{exp}});}
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00420\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType,\ \textcolor{keyword}{typename}\ genIType>}
+\DoxyCodeLine{00421\ \ \ \ \ GLM\_FUNC\_DECL\ genType\ \mbox{\hyperlink{group__core__func__common_ga52e319d7289b849ec92055abd4830533}{ldexp}}(genType\ \textcolor{keyword}{const}\ \&\ x,\ genIType\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__core__func__exponential_ga6e9557409b21768860d8f7d974bb41dc}{exp}});}
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00424\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\#include\ "{}func\_common.inl"{}}}
+\DoxyCodeLine{00427\ }
+
+\end{DoxyCode}

@@ -1,0 +1,35 @@
+\doxysection{Raycast\+Result.\+h}
+\hypertarget{RaycastResult_8h_source}{}\label{RaycastResult_8h_source}\index{include/CPURaytracer/RaycastResult.h@{include/CPURaytracer/RaycastResult.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ RAYCAST\_RESULT\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ RAYCAST\_RESULT\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}GLM/glm.hpp"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{struct\ }RaycastResult}
+\DoxyCodeLine{00009\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keywordtype}{bool}\ connect;}
+\DoxyCodeLine{00011\ \ \ \ \ \mbox{\hyperlink{group__core__types_ga1c47e8b3386109bc992b6c48e91b0be7}{glm::vec3}}\ position;}
+\DoxyCodeLine{00012\ \ \ \ \ \mbox{\hyperlink{group__core__types_ga1c47e8b3386109bc992b6c48e91b0be7}{glm::vec3}}\ normal;}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ RaycastResult()}
+\DoxyCodeLine{00015\ \ \ \ \ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ connect\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ position\ =\ \mbox{\hyperlink{group__core__types_ga1c47e8b3386109bc992b6c48e91b0be7}{glm::vec3}}(0);}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ normal\ =\ position;}
+\DoxyCodeLine{00019\ \ \ \ \ \}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ RaycastResult(\textcolor{keywordtype}{bool}\ \_connect,\ \mbox{\hyperlink{group__core__types_ga1c47e8b3386109bc992b6c48e91b0be7}{glm::vec3}}\ \_pos,\ \mbox{\hyperlink{group__core__types_ga1c47e8b3386109bc992b6c48e91b0be7}{glm::vec3}}\ \_norm)}
+\DoxyCodeLine{00022\ \ \ \ \ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ connect\ =\ \_connect;}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ position\ =\ \_pos;}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ normal\ =\ \_norm;}
+\DoxyCodeLine{00026\ \ \ \ \ \}}
+\DoxyCodeLine{00027\ \};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

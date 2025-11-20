@@ -1,0 +1,974 @@
+\doxysection{type\+\_\+vec4.\+inl}
+\hypertarget{type__vec4_8inl_source}{}\label{type__vec4_8inl_source}\index{include/GLM/detail/type\_vec4.inl@{include/GLM/detail/type\_vec4.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keyword}{namespace\ }glm\{}
+\DoxyCodeLine{00005\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00006\ \{}
+\DoxyCodeLine{00007\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1is__int}{is\_int}}}
+\DoxyCodeLine{00009\ \ \ \ \ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ test\ \{value\ =\ 0\};}
+\DoxyCodeLine{00011\ \ \ \ \ \};}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1is__int}{is\_int}}<uint32>}
+\DoxyCodeLine{00015\ \ \ \ \ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ test\ \{value\ =\ \string~0\};}
+\DoxyCodeLine{00017\ \ \ \ \ \};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1is__int}{is\_int}}<int32>}
+\DoxyCodeLine{00021\ \ \ \ \ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ test\ \{value\ =\ \string~0\};}
+\DoxyCodeLine{00023\ \ \ \ \ \};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1is__int}{is\_int}}<uint64>}
+\DoxyCodeLine{00027\ \ \ \ \ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ test\ \{value\ =\ \string~0\};}
+\DoxyCodeLine{00029\ \ \ \ \ \};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1is__int}{is\_int}}<int64>}
+\DoxyCodeLine{00033\ \ \ \ \ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ test\ \{value\ =\ \string~0\};}
+\DoxyCodeLine{00035\ \ \ \ \ \};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__add}{compute\_vec4\_add}}}
+\DoxyCodeLine{00039\ \ \ \ \ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ b)}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(a.x\ +\ b.x,\ a.y\ +\ b.y,\ a.z\ +\ b.z,\ a.w\ +\ b.w);}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00044\ \ \ \ \ \};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__sub}{compute\_vec4\_sub}}}
+\DoxyCodeLine{00048\ \ \ \ \ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ b)}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(a.x\ -\/\ b.x,\ a.y\ -\/\ b.y,\ a.z\ -\/\ b.z,\ a.w\ -\/\ b.w);}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00053\ \ \ \ \ \};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__mul}{compute\_vec4\_mul}}}
+\DoxyCodeLine{00057\ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ b)}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(a.x\ *\ b.x,\ a.y\ *\ b.y,\ a.z\ *\ b.z,\ a.w\ *\ b.w);}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ \};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__div}{compute\_vec4\_div}}}
+\DoxyCodeLine{00066\ \ \ \ \ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ b)}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(a.x\ /\ b.x,\ a.y\ /\ b.y,\ a.z\ /\ b.z,\ a.w\ /\ b.w);}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00071\ \ \ \ \ \};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__mod}{compute\_vec4\_mod}}}
+\DoxyCodeLine{00075\ \ \ \ \ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ b)}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(a.x\ \%\ b.x,\ a.y\ \%\ b.y,\ a.z\ \%\ b.z,\ a.w\ \%\ b.w);}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00080\ \ \ \ \ \};}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{int}\ IsInt,\ std::\textcolor{keywordtype}{size\_t}\ Size,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__and}{compute\_vec4\_and}}}
+\DoxyCodeLine{00084\ \ \ \ \ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ b)}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(a.x\ \&\ b.x,\ a.y\ \&\ b.y,\ a.z\ \&\ b.z,\ a.w\ \&\ b.w);}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00089\ \ \ \ \ \};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{int}\ IsInt,\ std::\textcolor{keywordtype}{size\_t}\ Size,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__or}{compute\_vec4\_or}}}
+\DoxyCodeLine{00093\ \ \ \ \ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ b)}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(a.x\ |\ b.x,\ a.y\ |\ b.y,\ a.z\ |\ b.z,\ a.w\ |\ b.w);}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00098\ \ \ \ \ \};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{int}\ IsInt,\ std::\textcolor{keywordtype}{size\_t}\ Size,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__xor}{compute\_vec4\_xor}}}
+\DoxyCodeLine{00102\ \ \ \ \ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ b)}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(a.x\ \string^\ b.x,\ a.y\ \string^\ b.y,\ a.z\ \string^\ b.z,\ a.w\ \string^\ b.w);}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00107\ \ \ \ \ \};}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{int}\ IsInt,\ std::\textcolor{keywordtype}{size\_t}\ Size,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__shift__left}{compute\_vec4\_shift\_left}}}
+\DoxyCodeLine{00111\ \ \ \ \ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ b)}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(a.x\ <<\ b.x,\ a.y\ <<\ b.y,\ a.z\ <<\ b.z,\ a.w\ <<\ b.w);}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00116\ \ \ \ \ \};}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{int}\ IsInt,\ std::\textcolor{keywordtype}{size\_t}\ Size,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__shift__right}{compute\_vec4\_shift\_right}}}
+\DoxyCodeLine{00120\ \ \ \ \ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ b)}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(a.x\ >>\ b.x,\ a.y\ >>\ b.y,\ a.z\ >>\ b.z,\ a.w\ >>\ b.w);}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00125\ \ \ \ \ \};}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{int}\ IsInt,\ std::\textcolor{keywordtype}{size\_t}\ Size,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__equal}{compute\_vec4\_equal}}}
+\DoxyCodeLine{00129\ \ \ \ \ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ call(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (v1.x\ ==\ v2.x)\ \&\&\ (v1.y\ ==\ v2.y)\ \&\&\ (v1.z\ ==\ v2.z)\ \&\&\ (v1.w\ ==\ v2.w);}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00134\ \ \ \ \ \};}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{int}\ IsInt,\ std::\textcolor{keywordtype}{size\_t}\ Size,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__nequal}{compute\_vec4\_nequal}}}
+\DoxyCodeLine{00138\ \ \ \ \ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ call(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (v1.x\ !=\ v2.x)\ ||\ (v1.y\ !=\ v2.y)\ ||\ (v1.z\ !=\ v2.z)\ ||\ (v1.w\ !=\ v2.w);}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00143\ \ \ \ \ \};}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keywordtype}{int}\ IsInt,\ std::\textcolor{keywordtype}{size\_t}\ Size,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__bitwise__not}{compute\_vec4\_bitwise\_not}}}
+\DoxyCodeLine{00147\ \ \ \ \ \{}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ call(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(\string~v.x,\ \string~v.y,\ \string~v.z,\ \string~v.w);}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00152\ \ \ \ \ \};}
+\DoxyCodeLine{00153\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Implicit\ basic\ constructors\ -\/-\/}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#\ \ \ if\ !GLM\_HAS\_DEFAULTED\_FUNCTIONS\ ||\ !defined(GLM\_FORCE\_NO\_CTOR\_INIT)}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_SIMD\ tvec4<T,\ P>::tvec4()}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ ifndef\ GLM\_FORCE\_NO\_CTOR\_INIT}}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ x(0),\ y(0),\ z(0),\ w(0)}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \{\}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#\ \ \ if\ !GLM\_HAS\_DEFAULTED\_FUNCTIONS}}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_SIMD\ tvec4<T,\ P>::tvec4(tvec4<T,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ :\ x(v.x),\ y(v.y),\ z(v.z),\ w(v.w)}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \{\}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keyword}{template}\ <precision\ Q>}
+\DoxyCodeLine{00175\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_SIMD\ tvec4<T,\ P>::tvec4(tvec4<T,\ Q>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ :\ x(v.x),\ y(v.y),\ z(v.z),\ w(v.w)}
+\DoxyCodeLine{00177\ \ \ \ \ \{\}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Explicit\ basic\ constructors\ -\/-\/}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00182\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_SIMD\ tvec4<T,\ P>::tvec4(ctor)}
+\DoxyCodeLine{00183\ \ \ \ \ \{\}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00186\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_SIMD\ tvec4<T,\ P>::tvec4(T\ scalar)}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ :\ x(scalar),\ y(scalar),\ z(scalar),\ w(scalar)}
+\DoxyCodeLine{00188\ \ \ \ \ \{\}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00191\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_SIMD\ tvec4<T,\ P>::tvec4(T\ a,\ T\ b,\ T\ c,\ T\ d)}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ :\ x(a),\ y(b),\ z(c),\ w(d)}
+\DoxyCodeLine{00193\ \ \ \ \ \{\}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Conversion\ scalar\ constructors\ -\/-\/}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ \textcolor{keyword}{typename}\ D>}
+\DoxyCodeLine{00199\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_SIMD\ tvec4<T,\ P>::tvec4(A\ a,\ B\ b,\ C\ c,\ D\ d)\ :}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ x(static\_cast<T>(a)),}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ y(static\_cast<T>(b)),}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ z(static\_cast<T>(c)),}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ w(static\_cast<T>(d))}
+\DoxyCodeLine{00204\ \ \ \ \ \{\}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ \textcolor{keyword}{typename}\ D>}
+\DoxyCodeLine{00208\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tvec4<T,\ P>::tvec4(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<A,\ P>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<B,\ P>}}\ \textcolor{keyword}{const}\ \&\ b,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<C,\ P>}}\ \textcolor{keyword}{const}\ \&\ c,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<D,\ P>}}\ \textcolor{keyword}{const}\ \&\ d)\ :}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ x(static\_cast<T>(a.x)),}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ y(static\_cast<T>(b.x)),}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ z(static\_cast<T>(c.x)),}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ w(static\_cast<T>(d.x))}
+\DoxyCodeLine{00213\ \ \ \ \ \{\}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Conversion\ vector\ constructors\ -\/-\/}}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ precision\ Q>}
+\DoxyCodeLine{00219\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tvec4<T,\ P>::tvec4(\mbox{\hyperlink{structglm_1_1tvec2}{tvec2<A,\ Q>}}\ \textcolor{keyword}{const}\ \&\ a,\ B\ b,\ C\ c)\ :}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ x(static\_cast<T>(a.x)),}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ y(static\_cast<T>(a.y)),}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ z(static\_cast<T>(b)),}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ w(static\_cast<T>(c))}
+\DoxyCodeLine{00224\ \ \ \ \ \{\}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ precision\ Q>}
+\DoxyCodeLine{00228\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tvec4<T,\ P>::tvec4(\mbox{\hyperlink{structglm_1_1tvec2}{tvec2<A,\ Q>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<B,\ Q>}}\ \textcolor{keyword}{const}\ \&\ b,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<C,\ Q>}}\ \textcolor{keyword}{const}\ \&\ c)\ :}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ x(static\_cast<T>(a.x)),}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ y(static\_cast<T>(a.y)),}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ z(static\_cast<T>(b.x)),}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ w(static\_cast<T>(c.x))}
+\DoxyCodeLine{00233\ \ \ \ \ \{\}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ precision\ Q>}
+\DoxyCodeLine{00237\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tvec4<T,\ P>::tvec4(A\ s1,\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<B,\ Q>}}\ \textcolor{keyword}{const}\ \&\ v,\ C\ s2)\ :}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ x(static\_cast<T>(s1)),}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ y(static\_cast<T>(v.x)),}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ z(static\_cast<T>(v.y)),}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ w(static\_cast<T>(s2))}
+\DoxyCodeLine{00242\ \ \ \ \ \{\}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ precision\ Q>}
+\DoxyCodeLine{00246\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tvec4<T,\ P>::tvec4(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<A,\ Q>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<B,\ Q>}}\ \textcolor{keyword}{const}\ \&\ b,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<C,\ Q>}}\ \textcolor{keyword}{const}\ \&\ c)\ :}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ x(static\_cast<T>(a.x)),}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ y(static\_cast<T>(b.x)),}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ z(static\_cast<T>(b.y)),}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ w(static\_cast<T>(c.x))}
+\DoxyCodeLine{00251\ \ \ \ \ \{\}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ precision\ Q>}
+\DoxyCodeLine{00255\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tvec4<T,\ P>::tvec4(A\ s1,\ B\ s2,\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<C,\ Q>}}\ \textcolor{keyword}{const}\ \&\ v)\ :}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ x(static\_cast<T>(s1)),}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ y(static\_cast<T>(s2)),}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ z(static\_cast<T>(v.x)),}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ w(static\_cast<T>(v.y))}
+\DoxyCodeLine{00260\ \ \ \ \ \{\}}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ precision\ Q>}
+\DoxyCodeLine{00264\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tvec4<T,\ P>::tvec4(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<A,\ Q>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<B,\ Q>}}\ \textcolor{keyword}{const}\ \&\ b,\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<C,\ Q>}}\ \textcolor{keyword}{const}\ \&\ c)\ :}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ x(static\_cast<T>(a.x)),}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ y(static\_cast<T>(b.x)),}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ z(static\_cast<T>(c.x)),}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ w(static\_cast<T>(c.y))}
+\DoxyCodeLine{00269\ \ \ \ \ \{\}}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ precision\ Q>}
+\DoxyCodeLine{00273\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tvec4<T,\ P>::tvec4(\mbox{\hyperlink{structglm_1_1tvec3}{tvec3<A,\ Q>}}\ \textcolor{keyword}{const}\ \&\ a,\ B\ b)\ :}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ x(static\_cast<T>(a.x)),}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ y(static\_cast<T>(a.y)),}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ z(static\_cast<T>(a.z)),}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ w(static\_cast<T>(b))}
+\DoxyCodeLine{00278\ \ \ \ \ \{\}}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ precision\ Q>}
+\DoxyCodeLine{00282\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tvec4<T,\ P>::tvec4(\mbox{\hyperlink{structglm_1_1tvec3}{tvec3<A,\ Q>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<B,\ Q>}}\ \textcolor{keyword}{const}\ \&\ b)\ :}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ x(static\_cast<T>(a.x)),}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ y(static\_cast<T>(a.y)),}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ z(static\_cast<T>(a.z)),}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ w(static\_cast<T>(b.x))}
+\DoxyCodeLine{00287\ \ \ \ \ \{\}}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ precision\ Q>}
+\DoxyCodeLine{00291\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tvec4<T,\ P>::tvec4(A\ a,\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<B,\ Q>}}\ \textcolor{keyword}{const}\ \&\ b)\ :}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ x(static\_cast<T>(a)),}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ y(static\_cast<T>(b.x)),}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ z(static\_cast<T>(b.y)),}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ w(static\_cast<T>(b.z))}
+\DoxyCodeLine{00296\ \ \ \ \ \{\}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ precision\ Q>}
+\DoxyCodeLine{00300\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tvec4<T,\ P>::tvec4(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<A,\ Q>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<B,\ Q>}}\ \textcolor{keyword}{const}\ \&\ b)\ :}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ x(static\_cast<T>(a.x)),}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ y(static\_cast<T>(b.x)),}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ z(static\_cast<T>(b.y)),}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ w(static\_cast<T>(b.z))}
+\DoxyCodeLine{00305\ \ \ \ \ \{\}}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00308\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ precision\ Q>}
+\DoxyCodeLine{00309\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tvec4<T,\ P>::tvec4(\mbox{\hyperlink{structglm_1_1tvec2}{tvec2<A,\ Q>}}\ \textcolor{keyword}{const}\ \&\ a,\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<B,\ Q>}}\ \textcolor{keyword}{const}\ \&\ b)\ :}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ x(static\_cast<T>(a.x)),}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ y(static\_cast<T>(a.y)),}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ z(static\_cast<T>(b.x)),}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ w(static\_cast<T>(b.y))}
+\DoxyCodeLine{00314\ \ \ \ \ \{\}}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00317\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U,\ precision\ Q>}
+\DoxyCodeLine{00318\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\_CTOR\ tvec4<T,\ P>::tvec4(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<U,\ Q>}}\ \textcolor{keyword}{const}\ \&\ v)\ :}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ x(static\_cast<T>(v.x)),}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ y(static\_cast<T>(v.y)),}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ z(static\_cast<T>(v.z)),}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ w(static\_cast<T>(v.w))}
+\DoxyCodeLine{00323\ \ \ \ \ \{\}}
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Component\ accesses\ -\/-\/}}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00328\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \&\ tvec4<T,\ P>::operator[](\textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1tvec4_a4e2b34a427cac7e72b6f73173c206feb}{tvec4<T,\ P>::length\_type}}\ i)}
+\DoxyCodeLine{00329\ \ \ \ \ \{}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ assert(i\ >=\ 0\ \&\&\ i\ <\ this-\/>\mbox{\hyperlink{group__core__func__geometric_ga18d45e3d4c7705e67ccfabd99e521604}{length}}());}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&x)[i];}
+\DoxyCodeLine{00332\ \ \ \ \ \}}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00335\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \textcolor{keyword}{const}\ \&\ tvec4<T,\ P>::operator[](\textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1tvec4_a4e2b34a427cac7e72b6f73173c206feb}{tvec4<T,\ P>::length\_type}}\ i)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00336\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ assert(i\ >=\ 0\ \&\&\ i\ <\ this-\/>\mbox{\hyperlink{group__core__func__geometric_ga18d45e3d4c7705e67ccfabd99e521604}{length}}());}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&x)[i];}
+\DoxyCodeLine{00339\ \ \ \ \ \}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ arithmetic\ operators\ -\/-\/}}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#\ \ \ if\ !GLM\_HAS\_DEFAULTED\_FUNCTIONS}}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\&\ tvec4<T,\ P>::operator=(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>x\ =\ v.x;}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>y\ =\ v.y;}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>z\ =\ v.z;}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>w\ =\ v.w;}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00356\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00357\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tvec4<T,\ P>\&\ tvec4<T,\ P>::operator=(tvec4<U,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00358\ \ \ \ \ \{}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ this-\/>x\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(v.x);}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ this-\/>y\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(v.y);}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ this-\/>z\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(v.z);}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ this-\/>w\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(v.w);}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00364\ \ \ \ \ \}}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00367\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00368\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator+=(U\ scalar)}
+\DoxyCodeLine{00369\ \ \ \ \ \{}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__add}{detail::compute\_vec4\_add}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)));}
+\DoxyCodeLine{00371\ \ \ \ \ \}}
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00374\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00375\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tvec4<T,\ P>\ \&\ tvec4<T,\ P>::operator+=(tvec1<U,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00376\ \ \ \ \ \{}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec4\_add<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ tvec4<T,\ P>(v.x)));}
+\DoxyCodeLine{00378\ \ \ \ \ \}}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00382\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator+=(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00383\ \ \ \ \ \{}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__add}{detail::compute\_vec4\_add}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00385\ \ \ \ \ \}}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00388\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00389\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator-\/=(U\ scalar)}
+\DoxyCodeLine{00390\ \ \ \ \ \{}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__sub}{detail::compute\_vec4\_sub}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)));}
+\DoxyCodeLine{00392\ \ \ \ \ \}}
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00396\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator-\/=(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00397\ \ \ \ \ \{}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__sub}{detail::compute\_vec4\_sub}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v.x)));}
+\DoxyCodeLine{00399\ \ \ \ \ \}}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00403\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator-\/=(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00404\ \ \ \ \ \{}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__sub}{detail::compute\_vec4\_sub}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00406\ \ \ \ \ \}}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00409\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00410\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator*=(U\ scalar)}
+\DoxyCodeLine{00411\ \ \ \ \ \{}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__mul}{detail::compute\_vec4\_mul}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)));}
+\DoxyCodeLine{00413\ \ \ \ \ \}}
+\DoxyCodeLine{00414\ }
+\DoxyCodeLine{00415\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00416\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00417\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator*=(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00418\ \ \ \ \ \{}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__mul}{detail::compute\_vec4\_mul}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v.x)));}
+\DoxyCodeLine{00420\ \ \ \ \ \}}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00422\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00423\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00424\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator*=(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00425\ \ \ \ \ \{}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__mul}{detail::compute\_vec4\_mul}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00427\ \ \ \ \ \}}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00429\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00430\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00431\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator/=(U\ scalar)}
+\DoxyCodeLine{00432\ \ \ \ \ \{}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__div}{detail::compute\_vec4\_div}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)));}
+\DoxyCodeLine{00434\ \ \ \ \ \}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00438\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator/=(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00439\ \ \ \ \ \{}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__div}{detail::compute\_vec4\_div}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v.x)));}
+\DoxyCodeLine{00441\ \ \ \ \ \}}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00444\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00445\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator/=(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00446\ \ \ \ \ \{}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__div}{detail::compute\_vec4\_div}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00448\ \ \ \ \ \}}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Increment\ and\ decrement\ operators\ -\/-\/}}
+\DoxyCodeLine{00451\ }
+\DoxyCodeLine{00452\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00453\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator++()}
+\DoxyCodeLine{00454\ \ \ \ \ \{}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ ++this-\/>x;}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ ++this-\/>y;}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ ++this-\/>z;}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ ++this-\/>w;}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00460\ \ \ \ \ \}}
+\DoxyCodeLine{00461\ }
+\DoxyCodeLine{00462\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00463\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator-\/-\/()}
+\DoxyCodeLine{00464\ \ \ \ \ \{}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ -\/-\/this-\/>x;}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ -\/-\/this-\/>y;}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ -\/-\/this-\/>z;}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ -\/-\/this-\/>w;}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00470\ \ \ \ \ \}}
+\DoxyCodeLine{00471\ }
+\DoxyCodeLine{00472\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>\ }
+\DoxyCodeLine{00473\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ tvec4<T,\ P>::operator++(\textcolor{keywordtype}{int})}
+\DoxyCodeLine{00474\ \ \ \ \ \{}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ Result(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ ++*\textcolor{keyword}{this};}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00478\ \ \ \ \ \}}
+\DoxyCodeLine{00479\ }
+\DoxyCodeLine{00480\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>\ }
+\DoxyCodeLine{00481\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ tvec4<T,\ P>::operator-\/-\/(\textcolor{keywordtype}{int})}
+\DoxyCodeLine{00482\ \ \ \ \ \{}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ Result(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ -\/-\/*\textcolor{keyword}{this};}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00486\ \ \ \ \ \}}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00488\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ bit\ operators\ -\/-\/}}
+\DoxyCodeLine{00489\ }
+\DoxyCodeLine{00490\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00491\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00492\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator\%=(U\ scalar)}
+\DoxyCodeLine{00493\ \ \ \ \ \{}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__mod}{detail::compute\_vec4\_mod}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)));}
+\DoxyCodeLine{00495\ \ \ \ \ \}}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00498\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00499\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator\%=(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<U,\ P>}}\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00500\ \ \ \ \ \{}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__mod}{detail::compute\_vec4\_mod}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00502\ \ \ \ \ \}}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00505\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00506\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator\%=(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<U,\ P>}}\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00507\ \ \ \ \ \{}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__mod}{detail::compute\_vec4\_mod}}<T,\ P,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00509\ \ \ \ \ \}}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00512\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00513\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator\&=(U\ scalar)}
+\DoxyCodeLine{00514\ \ \ \ \ \{}
+\DoxyCodeLine{00515\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__and}{detail::compute\_vec4\_and}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)));}
+\DoxyCodeLine{00516\ \ \ \ \ \}}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00519\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00520\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator\&=(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00521\ \ \ \ \ \{}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__and}{detail::compute\_vec4\_and}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00523\ \ \ \ \ \}}
+\DoxyCodeLine{00524\ }
+\DoxyCodeLine{00525\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00526\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00527\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator\&=(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00528\ \ \ \ \ \{}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__and}{detail::compute\_vec4\_and}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00530\ \ \ \ \ \}}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00533\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00534\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator|=(U\ scalar)}
+\DoxyCodeLine{00535\ \ \ \ \ \{}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__or}{detail::compute\_vec4\_or}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)));}
+\DoxyCodeLine{00537\ \ \ \ \ \}}
+\DoxyCodeLine{00538\ }
+\DoxyCodeLine{00539\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00540\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00541\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator|=(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00542\ \ \ \ \ \{}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__or}{detail::compute\_vec4\_or}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00544\ \ \ \ \ \}}
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00546\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00547\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00548\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator|=(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00549\ \ \ \ \ \{}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__or}{detail::compute\_vec4\_or}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00551\ \ \ \ \ \}}
+\DoxyCodeLine{00552\ }
+\DoxyCodeLine{00553\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00554\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00555\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator\string^=(U\ scalar)}
+\DoxyCodeLine{00556\ \ \ \ \ \{}
+\DoxyCodeLine{00557\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__xor}{detail::compute\_vec4\_xor}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)));}
+\DoxyCodeLine{00558\ \ \ \ \ \}}
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00562\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator\string^=(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00563\ \ \ \ \ \{}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__xor}{detail::compute\_vec4\_xor}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00565\ \ \ \ \ \}}
+\DoxyCodeLine{00566\ }
+\DoxyCodeLine{00567\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00568\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00569\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator\string^=(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00570\ \ \ \ \ \{}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__xor}{detail::compute\_vec4\_xor}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00572\ \ \ \ \ \}}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00574\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00575\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00576\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator<<=(U\ scalar)}
+\DoxyCodeLine{00577\ \ \ \ \ \{}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__shift__left}{detail::compute\_vec4\_shift\_left}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)));}
+\DoxyCodeLine{00579\ \ \ \ \ \}}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00582\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00583\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator<<=(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00584\ \ \ \ \ \{}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__shift__left}{detail::compute\_vec4\_shift\_left}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00586\ \ \ \ \ \}}
+\DoxyCodeLine{00587\ }
+\DoxyCodeLine{00588\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00589\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00590\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator<<=(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00591\ \ \ \ \ \{}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__shift__left}{detail::compute\_vec4\_shift\_left}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00593\ \ \ \ \ \}}
+\DoxyCodeLine{00594\ }
+\DoxyCodeLine{00595\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00596\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00597\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator>>=(U\ scalar)}
+\DoxyCodeLine{00598\ \ \ \ \ \{}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__shift__right}{detail::compute\_vec4\_shift\_right}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)));}
+\DoxyCodeLine{00600\ \ \ \ \ \}}
+\DoxyCodeLine{00601\ }
+\DoxyCodeLine{00602\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00603\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00604\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator>>=(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00605\ \ \ \ \ \{}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__shift__right}{detail::compute\_vec4\_shift\_right}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00607\ \ \ \ \ \}}
+\DoxyCodeLine{00608\ }
+\DoxyCodeLine{00609\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00610\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ U>\ }
+\DoxyCodeLine{00611\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \&\ tvec4<T,\ P>::operator>>=(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<U,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00612\ \ \ \ \ \{}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__shift__right}{detail::compute\_vec4\_shift\_right}}<T,\ P,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(*\textcolor{keyword}{this},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)));}
+\DoxyCodeLine{00614\ \ \ \ \ \}}
+\DoxyCodeLine{00615\ }
+\DoxyCodeLine{00616\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ constant\ operators\ -\/-\/}}
+\DoxyCodeLine{00617\ }
+\DoxyCodeLine{00618\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00619\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator+(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00620\ \ \ \ \ \{}
+\DoxyCodeLine{00621\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00622\ \ \ \ \ \}}
+\DoxyCodeLine{00623\ }
+\DoxyCodeLine{00624\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00625\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator-\/(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00626\ \ \ \ \ \{}
+\DoxyCodeLine{00627\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(0)\ -\/=\ v;}
+\DoxyCodeLine{00628\ \ \ \ \ \}}
+\DoxyCodeLine{00629\ }
+\DoxyCodeLine{00630\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Binary\ arithmetic\ operators\ -\/-\/}}
+\DoxyCodeLine{00631\ }
+\DoxyCodeLine{00632\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00633\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator+(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,\ T\ scalar)}
+\DoxyCodeLine{00634\ \ \ \ \ \{}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)\ +=\ scalar;}
+\DoxyCodeLine{00636\ \ \ \ \ \}}
+\DoxyCodeLine{00637\ }
+\DoxyCodeLine{00638\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00639\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator+(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00640\ \ \ \ \ \{}
+\DoxyCodeLine{00641\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ +=\ v2;}
+\DoxyCodeLine{00642\ \ \ \ \ \}}
+\DoxyCodeLine{00643\ }
+\DoxyCodeLine{00644\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00645\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator+(T\ scalar,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00646\ \ \ \ \ \{}
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)\ +=\ scalar;}
+\DoxyCodeLine{00648\ \ \ \ \ \}}
+\DoxyCodeLine{00649\ }
+\DoxyCodeLine{00650\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00651\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator+(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00652\ \ \ \ \ \{}
+\DoxyCodeLine{00653\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v2)\ +=\ v1;}
+\DoxyCodeLine{00654\ \ \ \ \ \}}
+\DoxyCodeLine{00655\ }
+\DoxyCodeLine{00656\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00657\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator+(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00658\ \ \ \ \ \{}
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ +=\ v2;}
+\DoxyCodeLine{00660\ \ \ \ \ \}}
+\DoxyCodeLine{00661\ }
+\DoxyCodeLine{00662\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00663\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator-\/(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,\ T\ scalar)}
+\DoxyCodeLine{00664\ \ \ \ \ \{}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)\ -\/=\ scalar;}
+\DoxyCodeLine{00666\ \ \ \ \ \}}
+\DoxyCodeLine{00667\ }
+\DoxyCodeLine{00668\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00669\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator-\/(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00670\ \ \ \ \ \{}
+\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ -\/=\ v2;}
+\DoxyCodeLine{00672\ \ \ \ \ \}}
+\DoxyCodeLine{00673\ }
+\DoxyCodeLine{00674\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00675\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator-\/(T\ scalar,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00676\ \ \ \ \ \{}
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)\ -\/=\ v;}
+\DoxyCodeLine{00678\ \ \ \ \ \}}
+\DoxyCodeLine{00679\ }
+\DoxyCodeLine{00680\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00681\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator-\/(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00682\ \ \ \ \ \{}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1.x)\ -\/=\ v2;}
+\DoxyCodeLine{00684\ \ \ \ \ \}}
+\DoxyCodeLine{00685\ }
+\DoxyCodeLine{00686\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00687\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator-\/(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00688\ \ \ \ \ \{}
+\DoxyCodeLine{00689\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ -\/=\ v2;}
+\DoxyCodeLine{00690\ \ \ \ \ \}}
+\DoxyCodeLine{00691\ }
+\DoxyCodeLine{00692\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00693\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,\ T\ scalar)}
+\DoxyCodeLine{00694\ \ \ \ \ \{}
+\DoxyCodeLine{00695\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)\ *=\ scalar;}
+\DoxyCodeLine{00696\ \ \ \ \ \}}
+\DoxyCodeLine{00697\ }
+\DoxyCodeLine{00698\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00699\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00700\ \ \ \ \ \{}
+\DoxyCodeLine{00701\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ *=\ v2;}
+\DoxyCodeLine{00702\ \ \ \ \ \}}
+\DoxyCodeLine{00703\ }
+\DoxyCodeLine{00704\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00705\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator*(T\ scalar,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00706\ \ \ \ \ \{}
+\DoxyCodeLine{00707\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)\ *=\ scalar;}
+\DoxyCodeLine{00708\ \ \ \ \ \}}
+\DoxyCodeLine{00709\ }
+\DoxyCodeLine{00710\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00711\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00712\ \ \ \ \ \{}
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v2)\ *=\ v1;}
+\DoxyCodeLine{00714\ \ \ \ \ \}}
+\DoxyCodeLine{00715\ }
+\DoxyCodeLine{00716\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00717\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator*(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00718\ \ \ \ \ \{}
+\DoxyCodeLine{00719\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ *=\ v2;}
+\DoxyCodeLine{00720\ \ \ \ \ \}}
+\DoxyCodeLine{00721\ }
+\DoxyCodeLine{00722\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00723\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator/(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,\ T\ scalar)}
+\DoxyCodeLine{00724\ \ \ \ \ \{}
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)\ /=\ scalar;}
+\DoxyCodeLine{00726\ \ \ \ \ \}}
+\DoxyCodeLine{00727\ }
+\DoxyCodeLine{00728\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00729\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator/(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00730\ \ \ \ \ \{}
+\DoxyCodeLine{00731\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ /=\ v2;}
+\DoxyCodeLine{00732\ \ \ \ \ \}}
+\DoxyCodeLine{00733\ }
+\DoxyCodeLine{00734\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00735\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator/(T\ scalar,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00736\ \ \ \ \ \{}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)\ /=\ v;}
+\DoxyCodeLine{00738\ \ \ \ \ \}}
+\DoxyCodeLine{00739\ }
+\DoxyCodeLine{00740\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00741\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator/(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00742\ \ \ \ \ \{}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1.x)\ /=\ v2;}
+\DoxyCodeLine{00744\ \ \ \ \ \}}
+\DoxyCodeLine{00745\ }
+\DoxyCodeLine{00746\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00747\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator/(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00748\ \ \ \ \ \{}
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ /=\ v2;}
+\DoxyCodeLine{00750\ \ \ \ \ \}}
+\DoxyCodeLine{00751\ }
+\DoxyCodeLine{00752\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Binary\ bit\ operators\ -\/-\/}}
+\DoxyCodeLine{00753\ }
+\DoxyCodeLine{00754\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00755\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\%(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,\ T\ scalar)}
+\DoxyCodeLine{00756\ \ \ \ \ \{}
+\DoxyCodeLine{00757\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)\ \%=\ scalar;}
+\DoxyCodeLine{00758\ \ \ \ \ \}}
+\DoxyCodeLine{00759\ }
+\DoxyCodeLine{00760\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00761\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\%(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00762\ \ \ \ \ \{}
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ \%=\ v2.x;}
+\DoxyCodeLine{00764\ \ \ \ \ \}}
+\DoxyCodeLine{00765\ }
+\DoxyCodeLine{00766\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00767\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\%(T\ scalar,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00768\ \ \ \ \ \{}
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)\ \%=\ v;}
+\DoxyCodeLine{00770\ \ \ \ \ \}}
+\DoxyCodeLine{00771\ }
+\DoxyCodeLine{00772\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00773\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\%(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ scalar,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00774\ \ \ \ \ \{}
+\DoxyCodeLine{00775\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar.x)\ \%=\ v;}
+\DoxyCodeLine{00776\ \ \ \ \ \}}
+\DoxyCodeLine{00777\ }
+\DoxyCodeLine{00778\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00779\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\%(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00780\ \ \ \ \ \{}
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ \%=\ v2;}
+\DoxyCodeLine{00782\ \ \ \ \ \}}
+\DoxyCodeLine{00783\ }
+\DoxyCodeLine{00784\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00785\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\&(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,\ T\ scalar)}
+\DoxyCodeLine{00786\ \ \ \ \ \{}
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)\ \&=\ scalar;}
+\DoxyCodeLine{00788\ \ \ \ \ \}}
+\DoxyCodeLine{00789\ }
+\DoxyCodeLine{00790\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00791\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\&(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ scalar)}
+\DoxyCodeLine{00792\ \ \ \ \ \{}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)\ \&=\ scalar;}
+\DoxyCodeLine{00794\ \ \ \ \ \}}
+\DoxyCodeLine{00795\ }
+\DoxyCodeLine{00796\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00797\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\&(T\ scalar,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00798\ \ \ \ \ \{}
+\DoxyCodeLine{00799\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)\ \&=\ v;}
+\DoxyCodeLine{00800\ \ \ \ \ \}}
+\DoxyCodeLine{00801\ }
+\DoxyCodeLine{00802\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00803\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\&(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00804\ \ \ \ \ \{}
+\DoxyCodeLine{00805\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1.x)\ \&=\ v2;}
+\DoxyCodeLine{00806\ \ \ \ \ \}}
+\DoxyCodeLine{00807\ }
+\DoxyCodeLine{00808\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00809\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\&(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00810\ \ \ \ \ \{}
+\DoxyCodeLine{00811\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ \&=\ v2;}
+\DoxyCodeLine{00812\ \ \ \ \ \}}
+\DoxyCodeLine{00813\ }
+\DoxyCodeLine{00814\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00815\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator|(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,\ T\ scalar)}
+\DoxyCodeLine{00816\ \ \ \ \ \{}
+\DoxyCodeLine{00817\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)\ |=\ scalar;}
+\DoxyCodeLine{00818\ \ \ \ \ \}}
+\DoxyCodeLine{00819\ }
+\DoxyCodeLine{00820\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00821\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator|(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00822\ \ \ \ \ \{}
+\DoxyCodeLine{00823\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ |=\ v2.x;}
+\DoxyCodeLine{00824\ \ \ \ \ \}}
+\DoxyCodeLine{00825\ }
+\DoxyCodeLine{00826\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00827\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator|(T\ scalar,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00828\ \ \ \ \ \{}
+\DoxyCodeLine{00829\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)\ |=\ v;}
+\DoxyCodeLine{00830\ \ \ \ \ \}}
+\DoxyCodeLine{00831\ }
+\DoxyCodeLine{00832\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00833\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator|(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00834\ \ \ \ \ \{}
+\DoxyCodeLine{00835\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1.x)\ |=\ v2;}
+\DoxyCodeLine{00836\ \ \ \ \ \}}
+\DoxyCodeLine{00837\ }
+\DoxyCodeLine{00838\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00839\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator|(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00840\ \ \ \ \ \{}
+\DoxyCodeLine{00841\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ |=\ v2;}
+\DoxyCodeLine{00842\ \ \ \ \ \}}
+\DoxyCodeLine{00843\ }
+\DoxyCodeLine{00844\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00845\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\string^(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,\ T\ scalar)}
+\DoxyCodeLine{00846\ \ \ \ \ \{}
+\DoxyCodeLine{00847\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)\ \string^=\ scalar;}
+\DoxyCodeLine{00848\ \ \ \ \ \}}
+\DoxyCodeLine{00849\ }
+\DoxyCodeLine{00850\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00851\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\string^(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00852\ \ \ \ \ \{}
+\DoxyCodeLine{00853\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ \string^=\ v2.x;}
+\DoxyCodeLine{00854\ \ \ \ \ \}}
+\DoxyCodeLine{00855\ }
+\DoxyCodeLine{00856\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00857\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\string^(T\ scalar,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00858\ \ \ \ \ \{}
+\DoxyCodeLine{00859\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)\ \string^=\ v;}
+\DoxyCodeLine{00860\ \ \ \ \ \}}
+\DoxyCodeLine{00861\ }
+\DoxyCodeLine{00862\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00863\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\string^(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00864\ \ \ \ \ \{}
+\DoxyCodeLine{00865\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1.x)\ \string^=\ v2;}
+\DoxyCodeLine{00866\ \ \ \ \ \}}
+\DoxyCodeLine{00867\ }
+\DoxyCodeLine{00868\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00869\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\string^(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00870\ \ \ \ \ \{}
+\DoxyCodeLine{00871\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ \string^=\ v2;}
+\DoxyCodeLine{00872\ \ \ \ \ \}}
+\DoxyCodeLine{00873\ }
+\DoxyCodeLine{00874\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00875\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator<<(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,\ T\ scalar)}
+\DoxyCodeLine{00876\ \ \ \ \ \{}
+\DoxyCodeLine{00877\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)\ <<=\ scalar;}
+\DoxyCodeLine{00878\ \ \ \ \ \}}
+\DoxyCodeLine{00879\ }
+\DoxyCodeLine{00880\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00881\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator<<(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00882\ \ \ \ \ \{}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ <<=\ v2.x;}
+\DoxyCodeLine{00884\ \ \ \ \ \}}
+\DoxyCodeLine{00885\ }
+\DoxyCodeLine{00886\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00887\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator<<(T\ scalar,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00888\ \ \ \ \ \{}
+\DoxyCodeLine{00889\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)\ <<=\ v;}
+\DoxyCodeLine{00890\ \ \ \ \ \}}
+\DoxyCodeLine{00891\ }
+\DoxyCodeLine{00892\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00893\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator<<(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00894\ \ \ \ \ \{}
+\DoxyCodeLine{00895\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1.x)\ <<=\ v2;}
+\DoxyCodeLine{00896\ \ \ \ \ \}}
+\DoxyCodeLine{00897\ }
+\DoxyCodeLine{00898\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00899\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator<<(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00900\ \ \ \ \ \{}
+\DoxyCodeLine{00901\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ <<=\ v2;}
+\DoxyCodeLine{00902\ \ \ \ \ \}}
+\DoxyCodeLine{00903\ }
+\DoxyCodeLine{00904\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00905\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator>>(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v,\ T\ scalar)}
+\DoxyCodeLine{00906\ \ \ \ \ \{}
+\DoxyCodeLine{00907\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v)\ >>=\ scalar;}
+\DoxyCodeLine{00908\ \ \ \ \ \}}
+\DoxyCodeLine{00909\ }
+\DoxyCodeLine{00910\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00911\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator>>(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00912\ \ \ \ \ \{}
+\DoxyCodeLine{00913\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ >>=\ v2.x;}
+\DoxyCodeLine{00914\ \ \ \ \ \}}
+\DoxyCodeLine{00915\ }
+\DoxyCodeLine{00916\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00917\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator>>(T\ scalar,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00918\ \ \ \ \ \{}
+\DoxyCodeLine{00919\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(scalar)\ >>=\ v;}
+\DoxyCodeLine{00920\ \ \ \ \ \}}
+\DoxyCodeLine{00921\ }
+\DoxyCodeLine{00922\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00923\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator>>(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00924\ \ \ \ \ \{}
+\DoxyCodeLine{00925\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1.x)\ >>=\ v2;}
+\DoxyCodeLine{00926\ \ \ \ \ \}}
+\DoxyCodeLine{00927\ }
+\DoxyCodeLine{00928\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00929\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator>>(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00930\ \ \ \ \ \{}
+\DoxyCodeLine{00931\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(v1)\ >>=\ v2;}
+\DoxyCodeLine{00932\ \ \ \ \ \}}
+\DoxyCodeLine{00933\ }
+\DoxyCodeLine{00934\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>\ }
+\DoxyCodeLine{00935\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ operator\string~(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00936\ \ \ \ \ \{}
+\DoxyCodeLine{00937\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__bitwise__not}{detail::compute\_vec4\_bitwise\_not<T,\ P,\ detail::is\_int<T>::value}},\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(v);}
+\DoxyCodeLine{00938\ \ \ \ \ \}}
+\DoxyCodeLine{00939\ }
+\DoxyCodeLine{00940\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Boolean\ operators\ -\/-\/}}
+\DoxyCodeLine{00941\ }
+\DoxyCodeLine{00942\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00943\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{bool}\ operator==(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00944\ \ \ \ \ \{}
+\DoxyCodeLine{00945\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__equal}{detail::compute\_vec4\_equal<T,\ P,\ detail::is\_int<T>::value}},\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(v1,\ v2);}
+\DoxyCodeLine{00946\ \ \ \ \ \}}
+\DoxyCodeLine{00947\ }
+\DoxyCodeLine{00948\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00949\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{bool}\ operator!=(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00950\ \ \ \ \ \{}
+\DoxyCodeLine{00951\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__vec4__nequal}{detail::compute\_vec4\_nequal<T,\ P,\ detail::is\_int<T>::value}},\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<P>::value>::call(v1,\ v2);}
+\DoxyCodeLine{00952\ \ \ \ \ \}}
+\DoxyCodeLine{00953\ }
+\DoxyCodeLine{00954\ \ \ \ \ \textcolor{keyword}{template}\ <precision\ P>}
+\DoxyCodeLine{00955\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ operator\&\&(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00956\ \ \ \ \ \{}
+\DoxyCodeLine{00957\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}(v1.x\ \&\&\ v2.x,\ v1.y\ \&\&\ v2.y,\ v1.z\ \&\&\ v2.z,\ v1.w\ \&\&\ v2.w);}
+\DoxyCodeLine{00958\ \ \ \ \ \}}
+\DoxyCodeLine{00959\ }
+\DoxyCodeLine{00960\ \ \ \ \ \textcolor{keyword}{template}\ <precision\ P>}
+\DoxyCodeLine{00961\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ operator||(\mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ \textcolor{keyword}{const}\ \&\ v1,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}\ \textcolor{keyword}{const}\ \&\ v2)}
+\DoxyCodeLine{00962\ \ \ \ \ \{}
+\DoxyCodeLine{00963\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<bool,\ P>}}(v1.x\ ||\ v2.x,\ v1.y\ ||\ v2.y,\ v1.z\ ||\ v2.z,\ v1.w\ ||\ v2.w);}
+\DoxyCodeLine{00964\ \ \ \ \ \}}
+\DoxyCodeLine{00965\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00966\ }
+\DoxyCodeLine{00967\ \textcolor{preprocessor}{\#if\ GLM\_ARCH\ !=\ GLM\_ARCH\_PURE\ \&\&\ GLM\_HAS\_ALIGNED\_TYPE}}
+\DoxyCodeLine{00968\ \textcolor{preprocessor}{\#\ \ \ include\ "{}type\_vec4\_simd.inl"{}}}
+\DoxyCodeLine{00969\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,47 @@
+\doxysection{Open\+GLError.\+h}
+\hypertarget{OpenGLError_8h_source}{}\label{OpenGLError_8h_source}\index{include/OpenGLError.h@{include/OpenGLError.h}}
+\mbox{\hyperlink{OpenGLError_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Code\ taken\ from\ previous\ work}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#ifndef\ OPENGLERROR\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ OPENGLERROR\_H}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <GL/glew.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00011\ \textcolor{comment}{*\ \ \ Error\ logging\ static\ for\ OpenGL}}
+\DoxyCodeLine{00012\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00013\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classOpenGLError}{OpenGLError}}}
+\DoxyCodeLine{00014\ \{}
+\DoxyCodeLine{00015\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ \ \ \ Set\ as\ a\ callback\ by\ glDebugMessageCallback(),\ which\ just\ prints\ debug\ info\ when\ necessary}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classOpenGLError_a0a20ec0a2148c6b960abe1771aeb581d}{DisplayDebugMessage}}(GLenum\ \_source,\ GLenum\ \_type,\ GLuint\ \_id,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLenum\ \_severity,\ GLsizei\ \_length,\ \textcolor{keyword}{const}\ GLchar*\ \_message,}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \_userParam)}
+\DoxyCodeLine{00023\ \ \ \ \ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}GL\ CALLBACK:\ from\ =\ 0x\%x\ type\ =\ 0x\%x,\ severity\ =\ 0x\%x,\ message\ =\ \%s\(\backslash\)n"{}},}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_source,\ \_type,\ \_severity,\ \_message\ );}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{comment}{//std::cin.get();}}
+\DoxyCodeLine{00027\ \ \ \ \ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ \ \ \ *\ \ \ Sets\ OpenGLError::DisplayDebugMessage()\ as\ the\ debug\ message\ callback}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classOpenGLError_ab896fdd970ee4b2e0470549fbd98f27c}{Init}}()}
+\DoxyCodeLine{00033\ \ \ \ \ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ glEnable(GL\_DEBUG\_OUTPUT);}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ glDebugMessageCallback(\mbox{\hyperlink{classOpenGLError_a0a20ec0a2148c6b960abe1771aeb581d}{DisplayDebugMessage}},\ 0);}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}OpenGLError\ Initialized\(\backslash\)n"{}});}
+\DoxyCodeLine{00037\ \ \ \ \ \}}
+\DoxyCodeLine{00038\ \};}
+\DoxyCodeLine{00039\ \ }
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

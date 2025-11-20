@@ -1,0 +1,43 @@
+\doxysection{include/\+SDL/\+SDL\+\_\+bits.h File Reference}
+\hypertarget{SDL__bits_8h}{}\label{SDL__bits_8h}\index{include/SDL/SDL\_bits.h@{include/SDL/SDL\_bits.h}}
+{\ttfamily \#include "{}SDL\+\_\+stdinc.\+h"{}}\newline
+{\ttfamily \#include "{}begin\+\_\+code.\+h"{}}\newline
+{\ttfamily \#include "{}close\+\_\+code.\+h"{}}\newline
+Include dependency graph for SDL\+\_\+bits.\+h\+:
+% FIG 0
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+SDL\+\_\+\+FORCE\+\_\+\+INLINE int \mbox{\hyperlink{SDL__bits_8h_ada8cd16089cc635936dfe1a6884729a4}{SDL\+\_\+\+Most\+Significant\+Bit\+Index32}} (Uint32 x)
+\item 
+\Hypertarget{SDL__bits_8h_a9ca9ab50814f9cfbce5c1cba379b001d}\label{SDL__bits_8h_a9ca9ab50814f9cfbce5c1cba379b001d} 
+SDL\+\_\+\+FORCE\+\_\+\+INLINE SDL\+\_\+bool {\bfseries SDL\+\_\+\+Has\+Exactly\+One\+Bit\+Set32} (Uint32 x)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{SDL__bits_8h_autotoc_md2}{}\doxysubsection{\texorpdfstring{Category\+Bits}{Category\+Bits}}\label{SDL__bits_8h_autotoc_md2}
+Functions for fiddling with bits and bitmasks. 
+
+\label{doc-func-members}
+\Hypertarget{SDL__bits_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{SDL__bits_8h_ada8cd16089cc635936dfe1a6884729a4}\index{SDL\_bits.h@{SDL\_bits.h}!SDL\_MostSignificantBitIndex32@{SDL\_MostSignificantBitIndex32}}
+\index{SDL\_MostSignificantBitIndex32@{SDL\_MostSignificantBitIndex32}!SDL\_bits.h@{SDL\_bits.h}}
+\doxysubsubsection{\texorpdfstring{SDL\_MostSignificantBitIndex32()}{SDL\_MostSignificantBitIndex32()}}
+{\footnotesize\ttfamily \label{SDL__bits_8h_ada8cd16089cc635936dfe1a6884729a4} 
+SDL\+\_\+\+FORCE\+\_\+\+INLINE int SDL\+\_\+\+Most\+Significant\+Bit\+Index32 (\begin{DoxyParamCaption}\item[{Uint32}]{x}{}\end{DoxyParamCaption})}
+
+Get the index of the most significant bit. Result is undefined when called with 0. This operation can also be stated as "{}count leading zeroes"{} and "{}log base 2"{}.
+
+\begin{DoxyReturn}{Returns}
+the index of the most significant bit, or -\/1 if the value is 0. Use this function to get the index of the most significant (set) bit in a
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em x} & the number to find the MSB of. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the index of the most significant bit of x, or -\/1 if x is 0. 
+\end{DoxyReturn}

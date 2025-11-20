@@ -1,3 +1,4 @@
+// Code taken from previous work, then modified with Triangle
 #ifndef MODEL_H
 
 #define MODEL_H

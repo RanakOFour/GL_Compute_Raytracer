@@ -3,6 +3,11 @@
 
 #include "GLM/glm.hpp"
 
+/**
+ * Stores the three vertexes and normal of a triangle
+ * Padding bits added for bit alignment with OpenGL
+*/
+
 struct Triangle
 {
     glm::vec3 a;
@@ -15,7 +20,11 @@ struct Triangle
     float _padding_n;
 };
 
-// Outside of struct so they can be uploaded to opengl without any further padding nonsense;
+/**
+ * Calculates normal of given Triangle.
+ * Taken outside of Triangle struct to avoid OpenGL schenanigans
+ * with uploading to the GPU
+*/
 inline void CalculateNormal(Triangle& _tri)
 {
     glm::vec3 edge1 = _tri.c - _tri.a;
@@ -23,6 +32,11 @@ inline void CalculateNormal(Triangle& _tri)
     _tri.normal = glm::normalize(glm::cross(edge1, edge2));
 };
 
+/**
+ * Calculates center point on the face of the given Triangle.
+ * Taken outside of Triangle struct to avoid OpenGL schenanigans
+ * with uploading to the GPU
+*/
 inline glm::vec3 CalculateCentroid(Triangle& _tri)
 {
     return (_tri.a + _tri.b + _tri.c) * 0.333f;

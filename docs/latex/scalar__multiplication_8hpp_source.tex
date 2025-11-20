@@ -1,0 +1,65 @@
+\doxysection{scalar\+\_\+multiplication.\+hpp}
+\hypertarget{scalar__multiplication_8hpp_source}{}\label{scalar__multiplication_8hpp_source}\index{include/GLM/gtx/scalar\_multiplication.hpp@{include/GLM/gtx/scalar\_multiplication.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}../detail/setup.hpp"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#if\ !GLM\_HAS\_TEMPLATE\_ALIASES\ \&\&\ !(GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#\ \ \ error\ "{}GLM\_GTX\_scalar\_multiplication\ requires\ C++11\ support\ or\ alias\ templates\ and\ if\ not\ support\ for\ GCC"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}../vec2.hpp"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}../vec3.hpp"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}../vec4.hpp"{}}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}../mat2x2.hpp"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Vec>}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{using\ }return\_type\_scalar\_multiplication\ =\ \textcolor{keyword}{typename}\ std::enable\_if<}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ !std::is\_same<T,\ float>::value\ \ \ \ \ \ \ \textcolor{comment}{//\ T\ may\ not\ be\ a\ float}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \&\&\ std::is\_arithmetic<T>::value,\ Vec\ \textcolor{comment}{//\ But\ it\ may\ be\ an\ int\ or\ double\ (no\ vec3\ or\ mat3,\ ...)}}
+\DoxyCodeLine{00033\ \ \ \ \ >::type;}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ GLM\_IMPLEMENT\_SCAL\_MULT(Vec)\ \(\backslash\)}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\ \ \ \ template\ <typename\ T>\ \(\backslash\)}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\ \ \ \ return\_type\_scalar\_multiplication<T,\ Vec>\ \(\backslash\)}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\ \ \ \ operator*(T\ const\ \&\ s,\ Vec\ rh)\{\ \(\backslash\)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ return\ rh\ *=\ static\_cast<float>(s);\ \(\backslash\)}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\ \ \ \ \}\ \(\backslash\)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\ \ \ \ template\ <typename\ T>\ \(\backslash\)}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\ \ \ \ return\_type\_scalar\_multiplication<T,\ Vec>\ \(\backslash\)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\ \ \ \ operator*(Vec\ lh,\ T\ const\ \&\ s)\{\ \(\backslash\)}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ return\ lh\ *=\ static\_cast<float>(s);\ \(\backslash\)}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\ \ \ \ \}\ \(\backslash\)}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\ \ \ \ template\ <typename\ T>\ \(\backslash\)}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\ \ \ \ return\_type\_scalar\_multiplication<T,\ Vec>\ \(\backslash\)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\ \ \ \ operator/(Vec\ lh,\ T\ const\ \&\ s)\{\ \(\backslash\)}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ return\ lh\ *=\ 1.0f\ /\ s;\ \(\backslash\)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\ \ \ \ \}}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ GLM\_IMPLEMENT\_SCAL\_MULT(\mbox{\hyperlink{group__core__types_gaa1618f51db67eaa145db101d8c8431d8}{vec2}})}
+\DoxyCodeLine{00055\ GLM\_IMPLEMENT\_SCAL\_MULT(\mbox{\hyperlink{group__core__types_ga1c47e8b3386109bc992b6c48e91b0be7}{vec3}})}
+\DoxyCodeLine{00056\ GLM\_IMPLEMENT\_SCAL\_MULT(\mbox{\hyperlink{group__core__types_ga5881b1b022d7fd1b7218f5916532dd02}{vec4}})}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ GLM\_IMPLEMENT\_SCAL\_MULT(\mbox{\hyperlink{group__core__types_ga8357ec0aab6f8cf69313592492663c3f}{mat2}})}
+\DoxyCodeLine{00059\ GLM\_IMPLEMENT\_SCAL\_MULT(\mbox{\hyperlink{group__core__types_gaea02797b8231f6dd9380345f6ff12155}{mat2x3}})}
+\DoxyCodeLine{00060\ GLM\_IMPLEMENT\_SCAL\_MULT(\mbox{\hyperlink{group__core__types_gaa9bfb36efaf88ecad32369ec8a01d901}{mat2x4}})}
+\DoxyCodeLine{00061\ GLM\_IMPLEMENT\_SCAL\_MULT(\mbox{\hyperlink{group__core__types_gad7476e0e866186f12ee87975c6b01552}{mat3x2}})}
+\DoxyCodeLine{00062\ GLM\_IMPLEMENT\_SCAL\_MULT(\mbox{\hyperlink{group__core__types_gadfaff2a7dce5cbf4e77a47ecea42ac5b}{mat3}})}
+\DoxyCodeLine{00063\ GLM\_IMPLEMENT\_SCAL\_MULT(\mbox{\hyperlink{group__core__types_ga5524ae15d7fc00a68b8e0e3a0733cc2a}{mat3x4}})}
+\DoxyCodeLine{00064\ GLM\_IMPLEMENT\_SCAL\_MULT(\mbox{\hyperlink{group__core__types_ga72cf8ec4f4cda85943f4683531e421bc}{mat4x2}})}
+\DoxyCodeLine{00065\ GLM\_IMPLEMENT\_SCAL\_MULT(\mbox{\hyperlink{group__core__types_gad3f3f750dcdc74a9037342c5cae55f5e}{mat4x3}})}
+\DoxyCodeLine{00066\ GLM\_IMPLEMENT\_SCAL\_MULT(\mbox{\hyperlink{group__core__types_ga7dcd2365c2e368e6af5b7adeb6a9c8df}{mat4}})}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#undef\ GLM\_IMPLEMENT\_SCAL\_MULT}}
+\DoxyCodeLine{00069\ \}\ \textcolor{comment}{//\ namespace\ glm}}
+
+\end{DoxyCode}

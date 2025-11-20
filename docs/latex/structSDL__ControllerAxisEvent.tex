@@ -1,0 +1,74 @@
+\doxysection{SDL\+\_\+\+Controller\+Axis\+Event Struct Reference}
+\hypertarget{structSDL__ControllerAxisEvent}{}\label{structSDL__ControllerAxisEvent}\index{SDL\_ControllerAxisEvent@{SDL\_ControllerAxisEvent}}
+
+
+{\ttfamily \#include $<$SDL\+\_\+events.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__ControllerAxisEvent_aa904b61e4763d28d887cf8afcc3cbb7c}{type}}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__ControllerAxisEvent_afc92dba0b4d1652a1ecf9e85606d1f14}{timestamp}}
+\item 
+\mbox{\hyperlink{SDL__joystick_8h_a3c3d32500cb08f76ee8077983912c0bd}{SDL\+\_\+\+Joystick\+ID}} \mbox{\hyperlink{structSDL__ControllerAxisEvent_a07087f68ea9d64b50047d65312ee7b94}{which}}
+\item 
+Uint8 \mbox{\hyperlink{structSDL__ControllerAxisEvent_aba6543c143521aebce06a41a8cf79db0}{axis}}
+\item 
+\Hypertarget{structSDL__ControllerAxisEvent_af980495b1e24f9a868f2ccb25ce9629b}\label{structSDL__ControllerAxisEvent_af980495b1e24f9a868f2ccb25ce9629b} 
+Uint8 {\bfseries padding1}
+\item 
+\Hypertarget{structSDL__ControllerAxisEvent_a4a04fcd20a54db21c5258ab0e40c6ab5}\label{structSDL__ControllerAxisEvent_a4a04fcd20a54db21c5258ab0e40c6ab5} 
+Uint8 {\bfseries padding2}
+\item 
+\Hypertarget{structSDL__ControllerAxisEvent_ab82598fe5621dca9b1a41f7b2ca1e9a0}\label{structSDL__ControllerAxisEvent_ab82598fe5621dca9b1a41f7b2ca1e9a0} 
+Uint8 {\bfseries padding3}
+\item 
+Sint16 \mbox{\hyperlink{structSDL__ControllerAxisEvent_a1ed7f14255ed01b982d40a38791d475a}{value}}
+\item 
+\Hypertarget{structSDL__ControllerAxisEvent_ae0ad0f279b9978bbbac9f5b22ae8020b}\label{structSDL__ControllerAxisEvent_ae0ad0f279b9978bbbac9f5b22ae8020b} 
+Uint16 {\bfseries padding4}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Game controller axis motion event structure (event.\+caxis.\texorpdfstring{$\ast$}{*}) 
+
+\label{doc-variable-members}
+\Hypertarget{structSDL__ControllerAxisEvent_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structSDL__ControllerAxisEvent_aba6543c143521aebce06a41a8cf79db0}\index{SDL\_ControllerAxisEvent@{SDL\_ControllerAxisEvent}!axis@{axis}}
+\index{axis@{axis}!SDL\_ControllerAxisEvent@{SDL\_ControllerAxisEvent}}
+\doxysubsubsection{\texorpdfstring{axis}{axis}}
+{\footnotesize\ttfamily \label{structSDL__ControllerAxisEvent_aba6543c143521aebce06a41a8cf79db0} 
+Uint8 SDL\+\_\+\+Controller\+Axis\+Event\+::axis}
+
+The controller axis (\doxylink{SDL__gamecontroller_8h_a96d0bda99d806397e4c697241ccffa1c}{SDL\+\_\+\+Game\+Controller\+Axis}) \Hypertarget{structSDL__ControllerAxisEvent_afc92dba0b4d1652a1ecf9e85606d1f14}\index{SDL\_ControllerAxisEvent@{SDL\_ControllerAxisEvent}!timestamp@{timestamp}}
+\index{timestamp@{timestamp}!SDL\_ControllerAxisEvent@{SDL\_ControllerAxisEvent}}
+\doxysubsubsection{\texorpdfstring{timestamp}{timestamp}}
+{\footnotesize\ttfamily \label{structSDL__ControllerAxisEvent_afc92dba0b4d1652a1ecf9e85606d1f14} 
+Uint32 SDL\+\_\+\+Controller\+Axis\+Event\+::timestamp}
+
+In milliseconds, populated using SDL\+\_\+\+Get\+Ticks() \Hypertarget{structSDL__ControllerAxisEvent_aa904b61e4763d28d887cf8afcc3cbb7c}\index{SDL\_ControllerAxisEvent@{SDL\_ControllerAxisEvent}!type@{type}}
+\index{type@{type}!SDL\_ControllerAxisEvent@{SDL\_ControllerAxisEvent}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{structSDL__ControllerAxisEvent_aa904b61e4763d28d887cf8afcc3cbb7c} 
+Uint32 SDL\+\_\+\+Controller\+Axis\+Event\+::type}
+
+SDL\+\_\+\+CONTROLLERAXISMOTION \Hypertarget{structSDL__ControllerAxisEvent_a1ed7f14255ed01b982d40a38791d475a}\index{SDL\_ControllerAxisEvent@{SDL\_ControllerAxisEvent}!value@{value}}
+\index{value@{value}!SDL\_ControllerAxisEvent@{SDL\_ControllerAxisEvent}}
+\doxysubsubsection{\texorpdfstring{value}{value}}
+{\footnotesize\ttfamily \label{structSDL__ControllerAxisEvent_a1ed7f14255ed01b982d40a38791d475a} 
+Sint16 SDL\+\_\+\+Controller\+Axis\+Event\+::value}
+
+The axis value (range\+: -\/32768 to 32767) \Hypertarget{structSDL__ControllerAxisEvent_a07087f68ea9d64b50047d65312ee7b94}\index{SDL\_ControllerAxisEvent@{SDL\_ControllerAxisEvent}!which@{which}}
+\index{which@{which}!SDL\_ControllerAxisEvent@{SDL\_ControllerAxisEvent}}
+\doxysubsubsection{\texorpdfstring{which}{which}}
+{\footnotesize\ttfamily \label{structSDL__ControllerAxisEvent_a07087f68ea9d64b50047d65312ee7b94} 
+\mbox{\hyperlink{SDL__joystick_8h_a3c3d32500cb08f76ee8077983912c0bd}{SDL\+\_\+\+Joystick\+ID}} SDL\+\_\+\+Controller\+Axis\+Event\+::which}
+
+The joystick instance id 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+SDL/SDL\+\_\+events.\+h\end{DoxyCompactItemize}

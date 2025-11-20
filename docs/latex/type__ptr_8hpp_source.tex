@@ -1,0 +1,87 @@
+\doxysection{type\+\_\+ptr.\+hpp}
+\hypertarget{type__ptr_8hpp_source}{}\label{type__ptr_8hpp_source}\index{include/GLM/gtc/type\_ptr.hpp@{include/GLM/gtc/type\_ptr.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ Dependency:}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ "{}../gtc/quaternion.hpp"{}}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ "{}../vec2.hpp"{}}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ "{}../vec3.hpp"{}}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ "{}../vec4.hpp"{}}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ "{}../mat2x2.hpp"{}}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ "{}../mat2x3.hpp"{}}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ "{}../mat2x4.hpp"{}}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ "{}../mat3x2.hpp"{}}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ "{}../mat3x3.hpp"{}}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#include\ "{}../mat3x4.hpp"{}}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#include\ "{}../mat4x2.hpp"{}}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#include\ "{}../mat4x3.hpp"{}}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#include\ "{}../mat4x4.hpp"{}}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_EXT\_INCLUDED)}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_GTC\_type\_ptr\ extension\ included"{})}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00057\ \{}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00064\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keyword}{typename}\ genType::value\_type\ \textcolor{keyword}{const}\ *\ \mbox{\hyperlink{group__gtc__type__ptr_gaa6abca1c01d37b11c0d524bdf74b2094}{value\_ptr}}(genType\ \textcolor{keyword}{const}\ \&\ vec);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00069\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_gaf519da4bbd66c55270f5e6c0154855de}{make\_vec2}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00074\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_ga9adb703c143777b5426e6744069323f0}{make\_vec3}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00079\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_ga24cb563173edf1c703594abb4c0fc895}{make\_vec4}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00084\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_ga8dd958d11c393bb2b7cbdffdffce0ca0}{make\_mat2x2}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00089\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat2x3}{tmat2x3<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_gabfba9e396394b5ca035bd16e0182c85e}{make\_mat2x3}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00094\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat2x4}{tmat2x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_ga9e5ec2cacd6dd11a9b505d69b8c865ca}{make\_mat2x4}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00099\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_ga850cce182a41f31ee4cefa12576c299b}{make\_mat3x2}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00104\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_gac86f1ba3cc2885c9363bc010122c468f}{make\_mat3x3}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00109\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x4}{tmat3x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_gae4575febbacad6c06d03699fd785263d}{make\_mat3x4}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00114\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x2}{tmat4x2<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_gadd81cc2e6df59312f80fd12a4b0a9866}{make\_mat4x2}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00119\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x3}{tmat4x3<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_gae6da0f0e4cc0f815314c23818b4aeb46}{make\_mat4x3}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00124\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_gad7b816704b2c30314912a99f71f01c56}{make\_mat4x4}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00125\ \ \ \ \ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00129\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_gab420668adfc04bf2ba31a9bc46f7af34}{make\_mat2}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00134\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_ga3216ce23d1210f9e1d23e67a4d4a4a0d}{make\_mat3}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00139\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_gaabb298bfafb4ec9d6724453c3798b164}{make\_mat4}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00144\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tquat}{tquat<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtc__type__ptr_ga0b4bf5fa645f1d11b1f215ca8da1712c}{make\_quat}}(T\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ ptr);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00147\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#include\ "{}type\_ptr.inl"{}}}
+
+\end{DoxyCode}

@@ -1,0 +1,19 @@
+digraph "glm::mask"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="RL";
+  Node1 [id="Node000001",label="glm::mask",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [id="edge6_Node000001_Node000002",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node2 [id="Node000002",label="glm::bitfieldFillOne",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__gtc__bitfield.html#ga46f9295abe3b5c7658f5b13c7f819f0a",tooltip=" "];
+  Node1 -> Node3 [id="edge7_Node000001_Node000003",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node3 [id="Node000003",label="glm::bitfieldFillOne",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__gtc__bitfield.html#ga093639c104960094383040c13928b910",tooltip=" "];
+  Node1 -> Node4 [id="edge8_Node000001_Node000004",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node4 [id="Node000004",label="glm::bitfieldFillZero",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__gtc__bitfield.html#ga697b86998b7d74ee0a69d8e9f8819fee",tooltip=" "];
+  Node1 -> Node5 [id="edge9_Node000001_Node000005",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node5 [id="Node000005",label="glm::bitfieldFillZero",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__gtc__bitfield.html#gabea14ed9d849ed0710a707d5cb88f2e9",tooltip=" "];
+  Node1 -> Node6 [id="edge10_Node000001_Node000006",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node6 [id="Node000006",label="glm::mask",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$group__gtc__bitfield.html#ga834649310e0f63ee0aa94c4de0c21fc6",tooltip=" "];
+}

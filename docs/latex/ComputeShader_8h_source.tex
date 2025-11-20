@@ -1,0 +1,47 @@
+\doxysection{Compute\+Shader.\+h}
+\hypertarget{ComputeShader_8h_source}{}\label{ComputeShader_8h_source}\index{include/ComputeShader.h@{include/ComputeShader.h}}
+\mbox{\hyperlink{ComputeShader_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ COMPUTESHADER\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ COMPUTESHADER\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}GL/glew.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}GLM/ext.hpp"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00010\ \textcolor{comment}{*\ \ \ Wrapper\ for\ OpenGL\ Compute\ shaders}}
+\DoxyCodeLine{00011\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classComputeShader_a30e1e78bd322e3e8353a752e3dae40a9}{ComputeShader}}}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ *\ \ \ Loads\ a\ new\ Compute\ shader\ from\ the\ given\ filepath.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ \ \ *\ \ \ Program\ does\ not\ crash\ if\ a\ wrong\ path\ is\ given.}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{classComputeShader_a30e1e78bd322e3e8353a752e3dae40a9}{ComputeShader}}(std::string\ \_path);}
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{classComputeShader_a6ed5c0cf02fdb926cd25acaf313f3bd1}{\string~ComputeShader}}();}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ \ \ \ *\ \ \ Sets\ the\ shader\ to\ be\ used\ by\ OpenGl}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classComputeShader_a252c0422abdc92a1492dcd0255450fa9}{use}}();}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00028\ \ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classComputeShader_a1819449816731728776c4d7bae50ac8e}{SetUniform}}(std::string\ \_name,\ \textcolor{keywordtype}{bool}\ \_value);}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classComputeShader_a6c4229f79eaeac49d4d3acb92c294fe7}{SetUniform}}(std::string\ \_name,\ \textcolor{keywordtype}{int}\ \_value);}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classComputeShader_a4b2c8f26bb56d8444876c437500ca98b}{SetUniform}}(std::string\ \_name,\ \textcolor{keywordtype}{float}\ \_value);}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classComputeShader_a62825befabb1549edbab591af6be7e12}{SetUniform}}(std::string\ \_name,\ glm::vec2\ \_value);}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classComputeShader_a84dacf3bb325ac9ed1ffa34bf203774a}{SetUniform}}(std::string\ \_name,\ glm::vec3\ \_value);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00038\ \textcolor{comment}{\ \ \ \ *\ \ \ ShaderID\ of\ the\ compiled\ program\ on\ the\ GPU}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00040\ \ \ \ \ GLint\ m\_ID;}
+\DoxyCodeLine{00041\ \};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

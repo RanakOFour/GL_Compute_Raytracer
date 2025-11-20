@@ -1,0 +1,29 @@
+\doxysection{normalize\+\_\+dot.\+hpp}
+\hypertarget{normalize__dot_8hpp_source}{}\label{normalize__dot_8hpp_source}\index{include/GLM/gtx/normalize\_dot.hpp@{include/GLM/gtx/normalize\_dot.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Dependency:}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../gtx/fast\_square\_root.hpp"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_EXT\_INCLUDED)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_GTX\_normalize\_dot\ extension\ included"{})}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00033\ \ \ \ \ GLM\_FUNC\_DECL\ T\ \mbox{\hyperlink{group__gtx__normalize__dot_gaffbc2f2cb15838de8886a68048f9004d}{normalizeDot}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00040\ \ \ \ \ GLM\_FUNC\_DECL\ T\ \mbox{\hyperlink{group__gtx__normalize__dot_ga8593b21bc2fe22184f01d5e08b5a2024}{fastNormalizeDot}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00043\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ "{}normalize\_dot.inl"{}}}
+
+\end{DoxyCode}

@@ -1,0 +1,373 @@
+\doxysection{func\+\_\+integer.\+inl}
+\hypertarget{func__integer_8inl_source}{}\label{func__integer_8inl_source}\index{include/GLM/detail/func\_integer.inl@{include/GLM/detail/func\_integer.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}type\_vec2.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}type\_vec3.hpp"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}type\_vec4.hpp"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}type\_int.hpp"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\_vectorize.hpp"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#if(GLM\_ARCH\ \&\ GLM\_ARCH\_X86\ \&\&\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#\ \ \ include\ <intrin.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#\ \ \ pragma\ intrinsic(\_BitScanReverse)}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//(GLM\_ARCH\ \&\ GLM\_ARCH\_X86\ \&\&\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#if\ !GLM\_HAS\_EXTENDED\_INTEGER\_TYPE}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_GCC}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ GCC\ diagnostic\ ignored\ "{}-\/Wlong-\/long"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#\ \ \ if\ (GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ pragma\ clang\ diagnostic\ ignored\ "{}-\/Wc++11-\/long-\/long"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{namespace\ }glm\{}
+\DoxyCodeLine{00025\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00026\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00028\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ mask(T\ Bits)}
+\DoxyCodeLine{00029\ \ \ \ \ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Bits\ >=\ \textcolor{keyword}{sizeof}(T)\ *\ 8\ ?\ \string~\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0)\ :\ (\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ <<\ Bits)\ -\/\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1);}
+\DoxyCodeLine{00031\ \ \ \ \ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ glm::precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keywordtype}{bool}\ Aligned,\ \textcolor{keywordtype}{bool}\ EXEC>}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldReverseStep}{compute\_bitfieldReverseStep}}}
+\DoxyCodeLine{00035\ \ \ \ \ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<T,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v,\ T,\ T)}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00040\ \ \ \ \ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ glm::precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldReverseStep}{compute\_bitfieldReverseStep}}<T,\ P,\ vecType,\ Aligned,\ true>}
+\DoxyCodeLine{00044\ \ \ \ \ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<T,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v,\ T\ Mask,\ T\ Shift)}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (v\ \&\ Mask)\ <<\ Shift\ |\ (v\ \&\ (\string~Mask))\ >>\ Shift;}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ glm::precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keywordtype}{bool}\ Aligned,\ \textcolor{keywordtype}{bool}\ EXEC>}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldBitCountStep}{compute\_bitfieldBitCountStep}}}
+\DoxyCodeLine{00053\ \ \ \ \ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<T,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v,\ T,\ T)}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ glm::precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldBitCountStep}{compute\_bitfieldBitCountStep}}<T,\ P,\ vecType,\ Aligned,\ true>}
+\DoxyCodeLine{00062\ \ \ \ \ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<T,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v,\ T\ Mask,\ T\ Shift)}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (v\ \&\ Mask)\ +\ ((v\ >>\ Shift)\ \&\ Mask);}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00067\ \ \ \ \ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType,\ \textcolor{keywordtype}{size\_t}\ Bits>}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__findLSB}{compute\_findLSB}}}
+\DoxyCodeLine{00071\ \ \ \ \ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ call(genIUType\ Value)}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(Value\ ==\ 0)}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__integer_ga44abfe3379e11cbd29425a843420d0d6}{glm::bitCount}}(\string~Value\ \&\ (Value\ -\/\ \textcolor{keyword}{static\_cast<}genIUType\textcolor{keyword}{>}(1)));}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00079\ \ \ \ \ \};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_HAS\_BITSCAN\_WINDOWS}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__findLSB}{compute\_findLSB}}<genIUType,\ 32>}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ call(genIUType\ Value)}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ Result(0);}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ IsNotNull\ =\ \_BitScanForward(\&Result,\ *\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}*\textcolor{keyword}{>}(\&Value));}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ IsNotNull\ ?\ int(Result)\ :\ -\/1;}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ !((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_MODEL\ ==\ GLM\_MODEL\_32))}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }compute\_findLSB<genIUType,\ 64>}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ call(genIUType\ Value)}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ Result(0);}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ IsNotNull\ =\ \_BitScanForward64(\&Result,\ *\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{unsigned}\ \_\_int64*\textcolor{keyword}{>}(\&Value));}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ IsNotNull\ ?\ int(Result)\ :\ -\/1;}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#\ \ \ endif}\textcolor{comment}{//GLM\_HAS\_BITSCAN\_WINDOWS}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class},\ glm::precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keywordtype}{bool}\ EXEC\ =\ \textcolor{keyword}{true}>}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__findMSB__step__vec}{compute\_findMSB\_step\_vec}}}
+\DoxyCodeLine{00109\ \ \ \ \ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<T,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ T\ Shift)}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x\ |\ (x\ >>\ Shift);}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00114\ \ \ \ \ \};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ glm::precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__findMSB__step__vec}{compute\_findMSB\_step\_vec}}<T,\ P,\ vecType,\ false>}
+\DoxyCodeLine{00118\ \ \ \ \ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<T,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ T)}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00123\ \ \ \ \ \};}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ glm::precision>\ \textcolor{keyword}{class\ }vecType,\ \textcolor{keywordtype}{int}>}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__findMSB__vec}{compute\_findMSB\_vec}}}
+\DoxyCodeLine{00127\ \ \ \ \ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<int,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ vec)}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ vecType<T,\ P>\ x(vec);}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__findMSB__step__vec}{compute\_findMSB\_step\_vec}}<T,\ P,\ vecType,\ \textcolor{keyword}{sizeof}(T)\ *\ 8\ >=\ \ 8>::call(x,\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(\ 1));}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__findMSB__step__vec}{compute\_findMSB\_step\_vec}}<T,\ P,\ vecType,\ \textcolor{keyword}{sizeof}(T)\ *\ 8\ >=\ \ 8>::call(x,\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(\ 2));}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__findMSB__step__vec}{compute\_findMSB\_step\_vec}}<T,\ P,\ vecType,\ \textcolor{keyword}{sizeof}(T)\ *\ 8\ >=\ \ 8>::call(x,\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(\ 4));}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__findMSB__step__vec}{compute\_findMSB\_step\_vec}}<T,\ P,\ vecType,\ \textcolor{keyword}{sizeof}(T)\ *\ 8\ >=\ 16>::call(x,\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(\ 8));}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__findMSB__step__vec}{compute\_findMSB\_step\_vec}}<T,\ P,\ vecType,\ \textcolor{keyword}{sizeof}(T)\ *\ 8\ >=\ 32>::call(x,\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(16));}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__findMSB__step__vec}{compute\_findMSB\_step\_vec}}<T,\ P,\ vecType,\ \textcolor{keyword}{sizeof}(T)\ *\ 8\ >=\ 64>::call(x,\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(32));}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vecType<int,\ P>(\textcolor{keyword}{sizeof}(T)\ *\ 8\ -\/\ 1)\ -\/\ \mbox{\hyperlink{group__core__func__integer_ga44abfe3379e11cbd29425a843420d0d6}{glm::bitCount}}(\string~x);}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00139\ \ \ \ \ \};}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_HAS\_BITSCAN\_WINDOWS}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{int}\ compute\_findMSB\_32(genIUType\ Value)}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ Result(0);}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ IsNotNull\ =\ \_BitScanReverse(\&Result,\ *\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}*\textcolor{keyword}{>}(\&Value));}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ IsNotNull\ ?\ int(Result)\ :\ -\/1;}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P,\ \textcolor{keyword}{template}<\textcolor{keyword}{typename},\ glm::precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }compute\_findMSB\_vec<T,\ P,\ vecType,\ 32>}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<int,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<int,\ T,\ P,\ vecType>::call}}(compute\_findMSB\_32,\ x);}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ if\ !((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_MODEL\ ==\ GLM\_MODEL\_32))}}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{int}\ compute\_findMSB\_64(genIUType\ Value)}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ Result(0);}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ IsNotNull\ =\ \_BitScanReverse64(\&Result,\ *\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{unsigned}\ \_\_int64*\textcolor{keyword}{>}(\&Value));}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ IsNotNull\ ?\ int(Result)\ :\ -\/1;}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class},\ glm::precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1compute__findMSB__vec}{compute\_findMSB\_vec}}<T,\ P,\ vecType,\ 64>}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vecType<int,\ P>\ call(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::functor1<int,\ T,\ P,\ vecType>::call(compute\_findMSB\_64,\ x);}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#\ \ \ endif}\textcolor{comment}{//GLM\_HAS\_BITSCAN\_WINDOWS}}
+\DoxyCodeLine{00178\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{comment}{//\ uaddCarry}}
+\DoxyCodeLine{00181\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \mbox{\hyperlink{group__core__func__integer_ga1274fb11e571526f064dd59b6ffaea4d}{uaddCarry}}(\mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \textcolor{keyword}{const}\ \&\ y,\ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \&\ Carry)}
+\DoxyCodeLine{00182\ \ \ \ \ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\ \textcolor{keyword}{const}\ Value64(\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(x)\ +\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(y));}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\ \textcolor{keyword}{const}\ Max32((\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(1)\ <<\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(32))\ -\/\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ Carry\ =\ Value64\ >\ Max32\ ?\ 1u\ :\ 0u;}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga202b6a53c105fcb7e531f9b443518451}{uint32}}\textcolor{keyword}{>}(Value64\ \%\ (Max32\ +\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(1)));}
+\DoxyCodeLine{00187\ \ \ \ \ \}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keyword}{template}\ <precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00190\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<uint,\ P>\ \mbox{\hyperlink{group__core__func__integer_ga1274fb11e571526f064dd59b6ffaea4d}{uaddCarry}}(vecType<uint,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<uint,\ P>\ \textcolor{keyword}{const}\ \&\ y,\ vecType<uint,\ P>\ \&\ Carry)}
+\DoxyCodeLine{00191\ \ \ \ \ \{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ vecType<uint64,\ P>\ Value64(vecType<uint64,\ P>(x)\ +\ vecType<uint64,\ P>(y));}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ vecType<uint64,\ P>\ Max32((\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(1)\ <<\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(32))\ -\/\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ Carry\ =\ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(vecType<uint32,\ P>(0),\ vecType<uint32,\ P>(1),\ \mbox{\hyperlink{group__core__func__vector__relational_ga278939a85cf8159a964835bbabf840a8}{greaterThan}}(Value64,\ Max32));}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vecType<uint32,P>(Value64\ \%\ (Max32\ +\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(1)));}
+\DoxyCodeLine{00196\ \ \ \ \ \}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{comment}{//\ usubBorrow}}
+\DoxyCodeLine{00199\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \mbox{\hyperlink{group__core__func__integer_gae7517eddd1053487d919d8d8600fd068}{usubBorrow}}(\mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \textcolor{keyword}{const}\ \&\ y,\ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \&\ Borrow)}
+\DoxyCodeLine{00200\ \ \ \ \ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(\textcolor{keyword}{sizeof}(\mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}})\ ==\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{group__gtc__type__precision_ga202b6a53c105fcb7e531f9b443518451}{uint32}}),\ \textcolor{stringliteral}{"{}uint\ and\ uint32\ size\ mismatch"{}});}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ Borrow\ =\ x\ >=\ y\ ?\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga202b6a53c105fcb7e531f9b443518451}{uint32}}\textcolor{keyword}{>}(0)\ :\ static\_cast<\mbox{\hyperlink{group__gtc__type__precision_ga202b6a53c105fcb7e531f9b443518451}{uint32}}>(1);}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(y\ >=\ x)}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ y\ -\/\ x;}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga202b6a53c105fcb7e531f9b443518451}{uint32}}\textcolor{keyword}{>}((\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga435d75819cce297cc5fa21bd84ef89a5}{int64}}\textcolor{keyword}{>}(1)\ <<\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga435d75819cce297cc5fa21bd84ef89a5}{int64}}\textcolor{keyword}{>}(32))\ +\ (\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga435d75819cce297cc5fa21bd84ef89a5}{int64}}\textcolor{keyword}{>}(y)\ -\/\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga435d75819cce297cc5fa21bd84ef89a5}{int64}}\textcolor{keyword}{>}(x)));}
+\DoxyCodeLine{00208\ \ \ \ \ \}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keyword}{template}\ <precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00211\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<uint,\ P>\ \mbox{\hyperlink{group__core__func__integer_gae7517eddd1053487d919d8d8600fd068}{usubBorrow}}(vecType<uint,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<uint,\ P>\ \textcolor{keyword}{const}\ \&\ y,\ vecType<uint,\ P>\ \&\ Borrow)}
+\DoxyCodeLine{00212\ \ \ \ \ \{}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ Borrow\ =\ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(vecType<uint,\ P>(1),\ vecType<uint,\ P>(0),\ \mbox{\hyperlink{group__core__func__vector__relational_gaf95a6672601cb2e4c539f2e45136b240}{greaterThanEqual}}(x,\ y));}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ vecType<uint,\ P>\ \textcolor{keyword}{const}\ YgeX(y\ -\/\ x);}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ vecType<uint,\ P>\ \textcolor{keyword}{const}\ XgeY(vecType<uint32,\ P>((\textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga435d75819cce297cc5fa21bd84ef89a5}{int64}}\textcolor{keyword}{>}(1)\ <<\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga435d75819cce297cc5fa21bd84ef89a5}{int64}}\textcolor{keyword}{>}(32))\ +\ (vecType<int64,\ P>(y)\ -\/\ vecType<int64,\ P>(x))));}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(XgeY,\ YgeX,\ \mbox{\hyperlink{group__core__func__vector__relational_gaf95a6672601cb2e4c539f2e45136b240}{greaterThanEqual}}(y,\ x));}
+\DoxyCodeLine{00217\ \ \ \ \ \}}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{comment}{//\ umulExtended}}
+\DoxyCodeLine{00220\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__core__func__integer_ga456ff9dcec42f6769a9ae2a2af7f1ce1}{umulExtended}}(\mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \textcolor{keyword}{const}\ \&\ x,\ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \textcolor{keyword}{const}\ \&\ y,\ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \&\ msb,\ \mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\ \&\ lsb)}
+\DoxyCodeLine{00221\ \ \ \ \ \{}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(\textcolor{keyword}{sizeof}(\mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}})\ ==\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{group__gtc__type__precision_ga202b6a53c105fcb7e531f9b443518451}{uint32}}),\ \textcolor{stringliteral}{"{}uint\ and\ uint32\ size\ mismatch"{}});}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\ Value64\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(x)\ *\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(y);}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ msb\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\textcolor{keyword}{>}(Value64\ >>\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(32));}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ lsb\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}}\textcolor{keyword}{>}(Value64);}
+\DoxyCodeLine{00227\ \ \ \ \ \}}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{template}\ <precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00230\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__core__func__integer_ga456ff9dcec42f6769a9ae2a2af7f1ce1}{umulExtended}}(vecType<uint,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<uint,\ P>\ \textcolor{keyword}{const}\ \&\ y,\ vecType<uint,\ P>\ \&\ msb,\ vecType<uint,\ P>\ \&\ lsb)}
+\DoxyCodeLine{00231\ \ \ \ \ \{}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(\textcolor{keyword}{sizeof}(\mbox{\hyperlink{group__core__precision_ga4fd29415871152bfb5abd588334147c8}{uint}})\ ==\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{group__gtc__type__precision_ga202b6a53c105fcb7e531f9b443518451}{uint32}}),\ \textcolor{stringliteral}{"{}uint\ and\ uint32\ size\ mismatch"{}});}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ vecType<uint64,\ P>\ Value64(vecType<uint64,\ P>(x)\ *\ vecType<uint64,\ P>(y));}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ msb\ =\ vecType<uint32,\ P>(Value64\ >>\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_gae3632bf9b37da66233d78930dd06378a}{uint64}}\textcolor{keyword}{>}(32));}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ lsb\ =\ vecType<uint32,\ P>(Value64);}
+\DoxyCodeLine{00237\ \ \ \ \ \}}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{comment}{//\ imulExtended}}
+\DoxyCodeLine{00240\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__core__func__integer_ga6e6e8b29ca40d8ca2df10b58ed17d426}{imulExtended}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ \&\ msb,\ \textcolor{keywordtype}{int}\ \&\ lsb)}
+\DoxyCodeLine{00241\ \ \ \ \ \{}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ ==\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{group__gtc__type__precision_ga632d8b25f6b61659f39ea4321fab92a4}{int32}}),\ \textcolor{stringliteral}{"{}int\ and\ int32\ size\ mismatch"{}});}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__gtc__type__precision_ga435d75819cce297cc5fa21bd84ef89a5}{int64}}\ Value64\ =\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga435d75819cce297cc5fa21bd84ef89a5}{int64}}\textcolor{keyword}{>}(x)\ *\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga435d75819cce297cc5fa21bd84ef89a5}{int64}}\textcolor{keyword}{>}(y);}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ msb\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(Value64\ >>\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga435d75819cce297cc5fa21bd84ef89a5}{int64}}\textcolor{keyword}{>}(32));}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ lsb\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(Value64);}
+\DoxyCodeLine{00247\ \ \ \ \ \}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keyword}{template}\ <precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00250\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__core__func__integer_ga6e6e8b29ca40d8ca2df10b58ed17d426}{imulExtended}}(vecType<int,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<int,\ P>\ \textcolor{keyword}{const}\ \&\ y,\ vecType<int,\ P>\ \&\ msb,\ vecType<int,\ P>\ \&\ lsb)}
+\DoxyCodeLine{00251\ \ \ \ \ \{}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ ==\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{group__gtc__type__precision_ga632d8b25f6b61659f39ea4321fab92a4}{int32}}),\ \textcolor{stringliteral}{"{}int\ and\ int32\ size\ mismatch"{}});}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ vecType<int64,\ P>\ Value64(vecType<int64,\ P>(x)\ *\ vecType<int64,\ P>(y));}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ lsb\ =\ vecType<int32,\ P>(Value64\ \&\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga435d75819cce297cc5fa21bd84ef89a5}{int64}}\textcolor{keyword}{>}(0xFFFFFFFF));}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ msb\ =\ vecType<int32,\ P>((Value64\ >>\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga435d75819cce297cc5fa21bd84ef89a5}{int64}}\textcolor{keyword}{>}(32))\ \&\ \textcolor{keyword}{static\_cast<}\mbox{\hyperlink{group__gtc__type__precision_ga435d75819cce297cc5fa21bd84ef89a5}{int64}}\textcolor{keyword}{>}(0xFFFFFFFF));}
+\DoxyCodeLine{00257\ \ \ \ \ \}}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{comment}{//\ bitfieldExtract}}
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00261\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genIUType\ \mbox{\hyperlink{group__core__func__integer_ga06164659c72cb10555ea706f444cf17e}{bitfieldExtract}}(genIUType\ Value,\ \textcolor{keywordtype}{int}\ Offset,\ \textcolor{keywordtype}{int}\ Bits)}
+\DoxyCodeLine{00262\ \ \ \ \ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__integer_ga06164659c72cb10555ea706f444cf17e}{bitfieldExtract}}(tvec1<genIUType>(Value),\ Offset,\ Bits).x;}
+\DoxyCodeLine{00264\ \ \ \ \ \}}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00267\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__integer_ga06164659c72cb10555ea706f444cf17e}{bitfieldExtract}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ Value,\ \textcolor{keywordtype}{int}\ Offset,\ \textcolor{keywordtype}{int}\ Bits)}
+\DoxyCodeLine{00268\ \ \ \ \ \{}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<T>::is\_integer,\ \textcolor{stringliteral}{"{}'bitfieldExtract'\ only\ accept\ integer\ inputs"{}});}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (Value\ >>\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(Offset))\ \&\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(detail::mask(Bits));}
+\DoxyCodeLine{00272\ \ \ \ \ \}}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{comment}{//\ bitfieldInsert}}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00276\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genIUType\ \mbox{\hyperlink{group__core__func__integer_gad28513ac5d6a069374123ac16c250fff}{bitfieldInsert}}(genIUType\ \textcolor{keyword}{const}\ \&\ Base,\ genIUType\ \textcolor{keyword}{const}\ \&\ Insert,\ \textcolor{keywordtype}{int}\ Offset,\ \textcolor{keywordtype}{int}\ Bits)}
+\DoxyCodeLine{00277\ \ \ \ \ \{}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__integer_gad28513ac5d6a069374123ac16c250fff}{bitfieldInsert}}(tvec1<genIUType>(Base),\ tvec1<genIUType>(Insert),\ Offset,\ Bits).x;}
+\DoxyCodeLine{00279\ \ \ \ \ \}}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00282\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__integer_gad28513ac5d6a069374123ac16c250fff}{bitfieldInsert}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ Base,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ Insert,\ \textcolor{keywordtype}{int}\ Offset,\ \textcolor{keywordtype}{int}\ Bits)}
+\DoxyCodeLine{00283\ \ \ \ \ \{}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<T>::is\_integer,\ \textcolor{stringliteral}{"{}'bitfieldInsert'\ only\ accept\ integer\ values"{}});}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Mask\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(detail::mask(Bits)\ <<\ Offset);}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (Base\ \&\ \string~Mask)\ |\ (Insert\ \&\ Mask);}
+\DoxyCodeLine{00288\ \ \ \ \ \}}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{comment}{//\ bitfieldReverse}}
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00292\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ \mbox{\hyperlink{group__core__func__integer_gacafef6a96479ed461aec29fde0d5bd57}{bitfieldReverse}}(genType\ x)}
+\DoxyCodeLine{00293\ \ \ \ \ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__integer_gacafef6a96479ed461aec29fde0d5bd57}{bitfieldReverse}}(\mbox{\hyperlink{structglm_1_1tvec1}{glm::tvec1<genType,\ glm::defaultp>}}(x)).x;}
+\DoxyCodeLine{00295\ \ \ \ \ \}}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ glm::precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00298\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__integer_gacafef6a96479ed461aec29fde0d5bd57}{bitfieldReverse}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00299\ \ \ \ \ \{}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ x(v);}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldReverseStep}{detail::compute\_bitfieldReverseStep<T,\ P,\ vecType,\ detail::is\_aligned<P>::value}},\ \textcolor{keyword}{sizeof}(T)\ *\ 8>=\ \ 2>::call(x,\ T(0x5555555555555555ull),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(\ 1));}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldReverseStep}{detail::compute\_bitfieldReverseStep<T,\ P,\ vecType,\ detail::is\_aligned<P>::value}},\ \textcolor{keyword}{sizeof}(T)\ *\ 8>=\ \ 4>::call(x,\ T(0x3333333333333333ull),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(\ 2));}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldReverseStep}{detail::compute\_bitfieldReverseStep<T,\ P,\ vecType,\ detail::is\_aligned<P>::value}},\ \textcolor{keyword}{sizeof}(T)\ *\ 8>=\ \ 8>::call(x,\ T(0x0F0F0F0F0F0F0F0Full),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(\ 4));}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldReverseStep}{detail::compute\_bitfieldReverseStep<T,\ P,\ vecType,\ detail::is\_aligned<P>::value}},\ \textcolor{keyword}{sizeof}(T)\ *\ 8>=\ 16>::call(x,\ T(0x00FF00FF00FF00FFull),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(\ 8));}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldReverseStep}{detail::compute\_bitfieldReverseStep<T,\ P,\ vecType,\ detail::is\_aligned<P>::value}},\ \textcolor{keyword}{sizeof}(T)\ *\ 8>=\ 32>::call(x,\ T(0x0000FFFF0000FFFFull),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(16));}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldReverseStep}{detail::compute\_bitfieldReverseStep<T,\ P,\ vecType,\ detail::is\_aligned<P>::value}},\ \textcolor{keyword}{sizeof}(T)\ *\ 8>=\ 64>::call(x,\ T(0x00000000FFFFFFFFull),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(32));}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00308\ \ \ \ \ \}}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{comment}{//\ bitCount}}
+\DoxyCodeLine{00311\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00312\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__core__func__integer_ga44abfe3379e11cbd29425a843420d0d6}{bitCount}}(genType\ x)}
+\DoxyCodeLine{00313\ \ \ \ \ \{}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__integer_ga44abfe3379e11cbd29425a843420d0d6}{bitCount}}(\mbox{\hyperlink{structglm_1_1tvec1}{glm::tvec1<genType,\ glm::defaultp>}}(x)).x;}
+\DoxyCodeLine{00315\ \ \ \ \ \}}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ glm::precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ glm::precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00318\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<int,\ P>\ \mbox{\hyperlink{group__core__func__integer_ga44abfe3379e11cbd29425a843420d0d6}{bitCount}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ v)}
+\DoxyCodeLine{00319\ \ \ \ \ \{}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ vecType<typename\ detail::make\_unsigned<T>::type,\ P>\ x(*\textcolor{keyword}{reinterpret\_cast<}vecType<typename\ detail::make\_unsigned<T>::type,\ P\textcolor{keyword}{>}\ \textcolor{keyword}{const}\ *>(\&v));}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldBitCountStep}{detail::compute\_bitfieldBitCountStep<typename\ detail::make\_unsigned<T>::type}},\ P,\ vecType,\ detail::is\_aligned<P>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8>=\ \ 2>::call(x,\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1detail_1_1make__unsigned}{detail::make\_unsigned<T>::type}}(0x5555555555555555ull),\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1detail_1_1make__unsigned}{detail::make\_unsigned<T>::type}}(\ 1));}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldBitCountStep}{detail::compute\_bitfieldBitCountStep<typename\ detail::make\_unsigned<T>::type}},\ P,\ vecType,\ detail::is\_aligned<P>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8>=\ \ 4>::call(x,\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1detail_1_1make__unsigned}{detail::make\_unsigned<T>::type}}(0x3333333333333333ull),\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1detail_1_1make__unsigned}{detail::make\_unsigned<T>::type}}(\ 2));}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldBitCountStep}{detail::compute\_bitfieldBitCountStep<typename\ detail::make\_unsigned<T>::type}},\ P,\ vecType,\ detail::is\_aligned<P>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8>=\ \ 8>::call(x,\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1detail_1_1make__unsigned}{detail::make\_unsigned<T>::type}}(0x0F0F0F0F0F0F0F0Full),\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1detail_1_1make__unsigned}{detail::make\_unsigned<T>::type}}(\ 4));}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldBitCountStep}{detail::compute\_bitfieldBitCountStep<typename\ detail::make\_unsigned<T>::type}},\ P,\ vecType,\ detail::is\_aligned<P>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8>=\ 16>::call(x,\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1detail_1_1make__unsigned}{detail::make\_unsigned<T>::type}}(0x00FF00FF00FF00FFull),\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1detail_1_1make__unsigned}{detail::make\_unsigned<T>::type}}(\ 8));}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldBitCountStep}{detail::compute\_bitfieldBitCountStep<typename\ detail::make\_unsigned<T>::type}},\ P,\ vecType,\ detail::is\_aligned<P>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8>=\ 32>::call(x,\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1detail_1_1make__unsigned}{detail::make\_unsigned<T>::type}}(0x0000FFFF0000FFFFull),\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1detail_1_1make__unsigned}{detail::make\_unsigned<T>::type}}(16));}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ x\ =\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__bitfieldBitCountStep}{detail::compute\_bitfieldBitCountStep<typename\ detail::make\_unsigned<T>::type}},\ P,\ vecType,\ detail::is\_aligned<P>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8>=\ 64>::call(x,\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1detail_1_1make__unsigned}{detail::make\_unsigned<T>::type}}(0x00000000FFFFFFFFull),\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1detail_1_1make__unsigned}{detail::make\_unsigned<T>::type}}(32));}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vecType<int,\ P>(x);}
+\DoxyCodeLine{00328\ \ \ \ \ \}}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{comment}{//\ findLSB}}
+\DoxyCodeLine{00331\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00332\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__core__func__integer_gaf74c4d969fa34ab8acb9d390f5ca5274}{findLSB}}(genIUType\ Value)}
+\DoxyCodeLine{00333\ \ \ \ \ \{}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<genIUType>::is\_integer,\ \textcolor{stringliteral}{"{}'findLSB'\ only\ accept\ integer\ values"{}});}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__findLSB}{detail::compute\_findLSB}}<genIUType,\ \textcolor{keyword}{sizeof}(genIUType)\ *\ 8>::call(Value);}
+\DoxyCodeLine{00337\ \ \ \ \ \}}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00340\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<int,\ P>\ \mbox{\hyperlink{group__core__func__integer_gaf74c4d969fa34ab8acb9d390f5ca5274}{findLSB}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00341\ \ \ \ \ \{}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<T>::is\_integer,\ \textcolor{stringliteral}{"{}'findLSB'\ only\ accept\ integer\ values"{}});}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<int,\ T,\ P,\ vecType>::call}}(\mbox{\hyperlink{group__core__func__integer_gaf74c4d969fa34ab8acb9d390f5ca5274}{findLSB}},\ x);}
+\DoxyCodeLine{00345\ \ \ \ \ \}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{comment}{//\ findMSB}}
+\DoxyCodeLine{00348\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00349\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__core__func__integer_ga7e4a794d766861c70bc961630f8ef621}{findMSB}}(genIUType\ x)}
+\DoxyCodeLine{00350\ \ \ \ \ \{}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<genIUType>::is\_integer,\ \textcolor{stringliteral}{"{}'findMSB'\ only\ accept\ integer\ values"{}});}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__integer_ga7e4a794d766861c70bc961630f8ef621}{findMSB}}(\mbox{\hyperlink{structglm_1_1tvec1}{tvec1<genIUType>}}(x)).x;}
+\DoxyCodeLine{00354\ \ \ \ \ \}}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00357\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<int,\ P>\ \mbox{\hyperlink{group__core__func__integer_ga7e4a794d766861c70bc961630f8ef621}{findMSB}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00358\ \ \ \ \ \{}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<T>::is\_integer,\ \textcolor{stringliteral}{"{}'findMSB'\ only\ accept\ integer\ values"{}});}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1detail_1_1compute__findMSB__vec}{detail::compute\_findMSB\_vec}}<T,\ P,\ vecType,\ \textcolor{keyword}{sizeof}(T)\ *\ 8>::call(x);}
+\DoxyCodeLine{00362\ \ \ \ \ \}}
+\DoxyCodeLine{00363\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\#if\ GLM\_ARCH\ !=\ GLM\_ARCH\_PURE\ \&\&\ GLM\_HAS\_UNRESTRICTED\_UNIONS}}
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\#\ \ \ include\ "{}func\_integer\_simd.inl"{}}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00368\ }
+
+\end{DoxyCode}

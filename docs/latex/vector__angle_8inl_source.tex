@@ -1,0 +1,62 @@
+\doxysection{vector\+\_\+angle.\+inl}
+\hypertarget{vector__angle_8inl_source}{}\label{vector__angle_8inl_source}\index{include/GLM/gtx/vector\_angle.inl@{include/GLM/gtx/vector\_angle.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00005\ \{}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genType>\ }
+\DoxyCodeLine{00007\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}}
+\DoxyCodeLine{00008\ \ \ \ \ (}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ x,}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ \&\ y}
+\DoxyCodeLine{00011\ \ \ \ \ )}
+\DoxyCodeLine{00012\ \ \ \ \ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<genType>::is\_iec559,\ \textcolor{stringliteral}{"{}'angle'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__trigonometric_ga01fa516ece73d88ecbe61b68e1001a41}{acos}}(\mbox{\hyperlink{group__core__func__common_ga93bce26c7d80d30a62f5c508f8498a6c}{clamp}}(\mbox{\hyperlink{group__core__func__geometric_ga7dada304da2ba7dd3376ab4f178c3f6b}{dot}}(x,\ y),\ genType(-\/1),\ genType(1)));}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>\ }
+\DoxyCodeLine{00018\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}}}
+\DoxyCodeLine{00019\ \ \ \ \ (}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y}
+\DoxyCodeLine{00022\ \ \ \ \ )}
+\DoxyCodeLine{00023\ \ \ \ \ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<T>::is\_iec559,\ \textcolor{stringliteral}{"{}'angle'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__trigonometric_ga01fa516ece73d88ecbe61b68e1001a41}{acos}}(\mbox{\hyperlink{group__core__func__common_ga93bce26c7d80d30a62f5c508f8498a6c}{clamp}}(\mbox{\hyperlink{group__core__func__geometric_ga7dada304da2ba7dd3376ab4f178c3f6b}{dot}}(x,\ y),\ T(-\/1),\ T(1)));}
+\DoxyCodeLine{00026\ \ \ \ \ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00030\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__gtx__vector__angle_ga82a19d474be13c92c7b10caab42a5a72}{orientedAngle}}}
+\DoxyCodeLine{00031\ \ \ \ \ (}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y}
+\DoxyCodeLine{00034\ \ \ \ \ )}
+\DoxyCodeLine{00035\ \ \ \ \ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<T>::is\_iec559,\ \textcolor{stringliteral}{"{}'orientedAngle'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Angle(\mbox{\hyperlink{group__core__func__trigonometric_ga01fa516ece73d88ecbe61b68e1001a41}{acos}}(\mbox{\hyperlink{group__core__func__common_ga93bce26c7d80d30a62f5c508f8498a6c}{clamp}}(\mbox{\hyperlink{group__core__func__geometric_ga7dada304da2ba7dd3376ab4f178c3f6b}{dot}}(x,\ y),\ T(-\/1),\ T(1))));}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{group__core__func__vector__relational_ga14bbc94f2ae2774a1d64d91f8767773e}{all}}(\mbox{\hyperlink{group__gtc__epsilon_ga9e7928b5361ec3cc5dc255b44a687fe3}{epsilonEqual}}(y,\ \mbox{\hyperlink{group__gtc__matrix__transform_ga5f1687db728fff252eb6272530df88fc}{glm::rotate}}(x,\ Angle),\ T(0.0001))))}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Angle;}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/Angle;}
+\DoxyCodeLine{00043\ \ \ \ \ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00046\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \mbox{\hyperlink{group__gtx__vector__angle_ga82a19d474be13c92c7b10caab42a5a72}{orientedAngle}}}
+\DoxyCodeLine{00047\ \ \ \ \ (}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ x,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ y,}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ ref}
+\DoxyCodeLine{00051\ \ \ \ \ )}
+\DoxyCodeLine{00052\ \ \ \ \ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ GLM\_STATIC\_ASSERT(std::numeric\_limits<T>::is\_iec559,\ \textcolor{stringliteral}{"{}'orientedAngle'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Angle(\mbox{\hyperlink{group__core__func__trigonometric_ga01fa516ece73d88ecbe61b68e1001a41}{acos}}(\mbox{\hyperlink{group__core__func__common_ga93bce26c7d80d30a62f5c508f8498a6c}{clamp}}(\mbox{\hyperlink{group__core__func__geometric_ga7dada304da2ba7dd3376ab4f178c3f6b}{dot}}(x,\ y),\ T(-\/1),\ T(1))));}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__core__func__common_ga4b16c70644199f341f30199915c72520}{mix}}(Angle,\ -\/Angle,\ \mbox{\hyperlink{group__core__func__geometric_ga7dada304da2ba7dd3376ab4f178c3f6b}{dot}}(ref,\ \mbox{\hyperlink{group__core__func__geometric_ga349f34d7cc9cd71393f96b953a91441a}{cross}}(x,\ y))\ <\ T(0));}
+\DoxyCodeLine{00057\ \ \ \ \ \}}
+\DoxyCodeLine{00058\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

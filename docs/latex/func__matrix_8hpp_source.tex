@@ -1,0 +1,107 @@
+\doxysection{func\+\_\+matrix.\+hpp}
+\hypertarget{func__matrix_8hpp_source}{}\label{func__matrix_8hpp_source}\index{include/GLM/detail/func\_matrix.hpp@{include/GLM/detail/func\_matrix.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ Dependencies}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}../detail/precision.hpp"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}../detail/setup.hpp"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}../detail/type\_mat.hpp"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}../vec2.hpp"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}../vec3.hpp"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}../vec4.hpp"{}}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}../mat2x2.hpp"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}../mat2x3.hpp"{}}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}../mat2x4.hpp"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}../mat3x2.hpp"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}../mat3x3.hpp"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}../mat3x4.hpp"{}}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ "{}../mat4x2.hpp"{}}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ "{}../mat4x3.hpp"{}}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ "{}../mat4x4.hpp"{}}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{namespace\ }glm\{}
+\DoxyCodeLine{00035\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1outerProduct__trait}{outerProduct\_trait}}<T,\ P,\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2}},\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2}}>}
+\DoxyCodeLine{00039\ \ \ \ \ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ P>}}\ type;}
+\DoxyCodeLine{00041\ \ \ \ \ \};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1outerProduct__trait}{outerProduct\_trait}}<T,\ P,\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2}},\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3}}>}
+\DoxyCodeLine{00045\ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structglm_1_1tmat3x2}{tmat3x2<T,\ P>}}\ type;}
+\DoxyCodeLine{00047\ \ \ \ \ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1outerProduct__trait}{outerProduct\_trait}}<T,\ P,\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2}},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4}}>}
+\DoxyCodeLine{00051\ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structglm_1_1tmat4x2}{tmat4x2<T,\ P>}}\ type;}
+\DoxyCodeLine{00053\ \ \ \ \ \};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1outerProduct__trait}{outerProduct\_trait}}<T,\ P,\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3}},\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2}}>}
+\DoxyCodeLine{00057\ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structglm_1_1tmat2x3}{tmat2x3<T,\ P>}}\ type;}
+\DoxyCodeLine{00059\ \ \ \ \ \};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1outerProduct__trait}{outerProduct\_trait}}<T,\ P,\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3}},\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3}}>}
+\DoxyCodeLine{00063\ \ \ \ \ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ type;}
+\DoxyCodeLine{00065\ \ \ \ \ \};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1outerProduct__trait}{outerProduct\_trait}}<T,\ P,\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3}},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4}}>}
+\DoxyCodeLine{00069\ \ \ \ \ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structglm_1_1tmat4x3}{tmat4x3<T,\ P>}}\ type;}
+\DoxyCodeLine{00071\ \ \ \ \ \};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1outerProduct__trait}{outerProduct\_trait}}<T,\ P,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4}},\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2}}>}
+\DoxyCodeLine{00075\ \ \ \ \ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structglm_1_1tmat2x4}{tmat2x4<T,\ P>}}\ type;}
+\DoxyCodeLine{00077\ \ \ \ \ \};}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1outerProduct__trait}{outerProduct\_trait}}<T,\ P,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4}},\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3}}>}
+\DoxyCodeLine{00081\ \ \ \ \ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structglm_1_1tmat3x4}{tmat3x4<T,\ P>}}\ type;}
+\DoxyCodeLine{00083\ \ \ \ \ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structglm_1_1detail_1_1outerProduct__trait}{outerProduct\_trait}}<T,\ P,\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4}},\ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4}}>}
+\DoxyCodeLine{00087\ \ \ \ \ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typedef}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ type;}
+\DoxyCodeLine{00089\ \ \ \ \ \};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }matType>}
+\DoxyCodeLine{00104\ \ \ \ \ GLM\_FUNC\_DECL\ matType<T,\ P>\ \mbox{\hyperlink{group__core__func__matrix_ga32bd7e365e5b29e869c0c4cb821bdc14}{matrixCompMult}}(matType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ matType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecTypeA,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecTypeB>}
+\DoxyCodeLine{00115\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structglm_1_1detail_1_1outerProduct__trait}{detail::outerProduct\_trait<T,\ P,\ vecTypeA,\ vecTypeB>::type}}\ \mbox{\hyperlink{group__core__func__matrix_ga4008856dc87a8abcf95a90004379618e}{outerProduct}}(vecTypeA<T,\ P>\ \textcolor{keyword}{const}\ \&\ c,\ vecTypeB<T,\ P>\ \textcolor{keyword}{const}\ \&\ r);}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#\ \ \ if((GLM\_COMPILER\ \&\ GLM\_COMPILER\_VC)\ \&\&\ (GLM\_COMPILER\ >=\ GLM\_COMPILER\_VC11))}}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }matType>}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keyword}{typename}\ matType<T,\ P>::transpose\_type\ transpose(matType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00127\ \ \ \ \ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }matType>}
+\DoxyCodeLine{00135\ \ \ \ \ GLM\_FUNC\_DECL\ T\ \mbox{\hyperlink{group__core__func__matrix_ga26ea77c574802bc6fc193c40478718d2}{determinant}}(matType<T,\ P>\ \textcolor{keyword}{const}\ \&\ m);}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }matType>}
+\DoxyCodeLine{00144\ \ \ \ \ GLM\_FUNC\_DECL\ matType<T,\ P>\ \mbox{\hyperlink{group__core__func__matrix_gaff4e89603cf51cdbcedebc57cd8808a3}{inverse}}(matType<T,\ P>\ \textcolor{keyword}{const}\ \&\ m);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00147\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#include\ "{}func\_matrix.inl"{}}}
+
+\end{DoxyCode}

@@ -1,0 +1,28 @@
+digraph "glm::detail::_swizzle_base0&lt; T, N &gt;"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="LR";
+  Node1 [id="Node000001",label="glm::detail::_swizzle\l_base0\< T, N \>",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [id="edge1_Node000001_Node000002",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node2 [id="Node000002",label="glm::detail::_swizzle\l_base1\< N, T, P, vecType,\l E0, E1, E2, E3, detail\l::is_aligned\< P \>::value \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structglm_1_1detail_1_1__swizzle__base1.html",tooltip=" "];
+  Node2 -> Node3 [id="edge2_Node000002_Node000003",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node3 [id="Node000003",label="glm::detail::_swizzle\l_base2\< N, T, P, vecType,\l E0, E1, E2, E3,(E0==E1\|\l\|E0==E2\|\|E0==E3\|\|E1==E2\|\|\lE1==E3\|\|E2==E3)\>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structglm_1_1detail_1_1__swizzle__base2.html",tooltip=" "];
+  Node3 -> Node4 [id="edge3_Node000003_Node000004",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node4 [id="Node000004",label="glm::detail::_swizzle\l\< N, T, P, vecType, E0,\l E1, E2, E3 \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structglm_1_1detail_1_1__swizzle.html",tooltip=" "];
+  Node2 -> Node5 [id="edge4_Node000002_Node000005",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node5 [id="Node000005",label="glm::detail::_swizzle\l_base2\< N, T, P, vecType,\l E0, E1, E2, E3, 1 \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structglm_1_1detail_1_1__swizzle__base2_3_01N_00_01T_00_01P_00_01vecType_00_01E0_00_01E1_00_01E2_00_01E3_00_011_01_4.html",tooltip=" "];
+  Node2 -> Node6 [id="edge5_Node000002_Node000006",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node6 [id="Node000006",label="glm::detail::_swizzle\l_base2\< N, T, P, vecType,\l E0, E1, E2, E3, DUPLICATE\l_ELEMENTS \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structglm_1_1detail_1_1__swizzle__base2.html",tooltip=" "];
+  Node2 -> Node5 [id="edge6_Node000002_Node000005",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node1 -> Node7 [id="edge7_Node000001_Node000007",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node7 [id="Node000007",label="glm::detail::_swizzle\l_base1\< 2, T, P, vecType,\l E0, E1,-1,-2, Aligned \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structglm_1_1detail_1_1__swizzle__base1_3_012_00_01T_00_01P_00_01vecType_00_01E0_00_01E1_00-1_00-2_00_01Aligned_01_4.html",tooltip=" "];
+  Node1 -> Node8 [id="edge8_Node000001_Node000008",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node8 [id="Node000008",label="glm::detail::_swizzle\l_base1\< 3, T, P, vecType,\l E0, E1, E2,-1, Aligned \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structglm_1_1detail_1_1__swizzle__base1_3_013_00_01T_00_01P_00_01vecType_00_01E0_00_01E1_00_01E2_00-1_00_01Aligned_01_4.html",tooltip=" "];
+  Node1 -> Node9 [id="edge9_Node000001_Node000009",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node9 [id="Node000009",label="glm::detail::_swizzle\l_base1\< 4, T, P, vecType,\l E0, E1, E2, E3, Aligned \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structglm_1_1detail_1_1__swizzle__base1_3_014_00_01T_00_01P_00_01vecType_00_01E0_00_01E1_00_01E2_00_01E3_00_01Aligned_01_4.html",tooltip=" "];
+  Node1 -> Node10 [id="edge10_Node000001_Node000010",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node10 [id="Node000010",label="glm::detail::_swizzle\l_base1\< N, T, P, vecType,\l E0, E1, E2, E3, Aligned \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structglm_1_1detail_1_1__swizzle__base1.html",tooltip=" "];
+}

@@ -1,0 +1,101 @@
+\doxysection{euler\+\_\+angles.\+hpp}
+\hypertarget{euler__angles_8hpp_source}{}\label{euler__angles_8hpp_source}\index{include/GLM/gtx/euler\_angles.hpp@{include/GLM/gtx/euler\_angles.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Dependency:}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../glm.hpp"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_EXT\_INCLUDED)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_GTX\_euler\_angles\ extension\ included"{})}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00031\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga3e45408f3a505213538544944dc11dac}{eulerAngleX}}(}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleX);}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00037\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga5e423539c3d00318726cab253216530a}{eulerAngleY}}(}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleY);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00043\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_gae72a30b11bad2573cf7cdd06dc504d43}{eulerAngleZ}}(}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleZ);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00049\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga11f73d28faf0d70ca3a06bb97380bc81}{eulerAngleXY}}(}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleX,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleY);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00056\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_gacc070fa5d92bfe27d9734f948c5650fa}{eulerAngleYX}}(}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleY,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleX);}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00063\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga23c4307fe459c57082e053685bc31fe1}{eulerAngleXZ}}(}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleX,}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleZ);}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00070\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga0591541a7f585447b3a3c74b2baf6cc3}{eulerAngleZX}}(}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}},}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleX);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00077\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga526bd933cdc68aa29e75e598655f8705}{eulerAngleYZ}}(}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleY,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleZ);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00084\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_gae845273ef2e28022fd5149ecdfc0a37c}{eulerAngleZY}}(}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleZ,}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ angleY);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00091\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga07db6b8e1025cab995b93cb5b19b9b20}{eulerAngleXYZ}}(}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ t1,}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ t2,}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ t3);}
+\DoxyCodeLine{00095\ \ \ \ \ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00099\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_gacf0fbb0e36c3eb34374e57ac3469e35d}{eulerAngleYXZ}}(}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_ga724a5df282b70cec0a6cb0d6dcddb6d6}{yaw}},}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_ga2c08b93a4261c10748fd4d2104346f17}{pitch}},}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_ga4fd705376c6c1fd667be0055a0ea58ec}{roll}});}
+\DoxyCodeLine{00103\ \ \ \ \ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00107\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_gae0be77366a1fdf318a9566e5f646d56d}{yawPitchRoll}}(}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_ga724a5df282b70cec0a6cb0d6dcddb6d6}{yaw}},}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_ga2c08b93a4261c10748fd4d2104346f17}{pitch}},}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_ga4fd705376c6c1fd667be0055a0ea58ec}{roll}});}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00115\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga624028f5c7bc33ba0cecd9c27e401342}{orientate2}}(T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}});}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00120\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ defaultp>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga2fb4d4d662094e906b934086c0318468}{orientate3}}(T\ \textcolor{keyword}{const}\ \&\ \mbox{\hyperlink{group__gtc__quaternion_gad4a4448baedb198b2b1e7880d2544dc9}{angle}});}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00125\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga2fb4d4d662094e906b934086c0318468}{orientate3}}(\mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ angles);}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00130\ \ \ \ \ GLM\_FUNC\_DECL\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \mbox{\hyperlink{group__gtx__euler__angles_ga75daa34d76064045209dc3d8f60f68d6}{orientate4}}(\mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ angles);}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00135\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__gtx__euler__angles_gad5838a4c87ce2b8ee4c4e17bd162fd14}{extractEulerAngleXYZ}}(\mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ defaultp>}}\ \textcolor{keyword}{const}\ \&\ M,}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T\ \&\ t1,}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T\ \&\ t2,}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T\ \&\ t3);}
+\DoxyCodeLine{00139\ \ \ \ \ }
+\DoxyCodeLine{00141\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#include\ "{}euler\_angles.inl"{}}}
+
+\end{DoxyCode}

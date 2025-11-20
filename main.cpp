@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
 	Model sphereModel("./resources/objects/sphere.obj");
     
     // Set camera uniforms
-    camera.SetShaderValues(&myShader);
+    camera.UpdateShader(myShader);
 
 	Light light;
 	light.position = glm::vec3(0.0f, 0.0f, 3.0f);
@@ -95,7 +95,6 @@ int main(int argc, char* argv[])
 		myShader.SetUniform("time", time);
 		myShader.SetUniform("lights[0].position", light.position);
 		myShader.SetUniform("u_camera.position", camera.Position());
-		myShader.SetUniform("u_camera.focalLength", camera.FocalLength());
 
 		_myFramework.SetGLTexture();
 		
@@ -123,12 +122,6 @@ int main(int argc, char* argv[])
 		glm::vec3 camPos = camera.Position();
 		ImGui::DragFloat3("Position", &(camPos[0]), 0.1f, -10.0f, 10.0f);
 		camera.Position(camPos);
-
-		float fl = camera.FocalLength();
-		ImGui::DragFloat("Focal Length", &(fl), 0.1f, -10.0f, 10.0f);
-		camera.FocalLength(fl);
-
-
 
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 

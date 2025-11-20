@@ -1,0 +1,125 @@
+\doxysection{matrix\+\_\+inverse.\+inl}
+\hypertarget{matrix__inverse_8inl_source}{}\label{matrix__inverse_8inl_source}\index{include/GLM/gtc/matrix\_inverse.inl@{include/GLM/gtc/matrix\_inverse.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00005\ \{}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00007\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \mbox{\hyperlink{group__gtc__matrix__inverse_gae0fcc5fc8783291f9702272de428fa0e}{affineInverse}}(\mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m)}
+\DoxyCodeLine{00008\ \ \ \ \ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ P>}}\ \textcolor{keyword}{const}\ Inv(\mbox{\hyperlink{group__core__func__matrix_gaff4e89603cf51cdbcedebc57cd8808a3}{inverse}}(\mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ P>}}(m)));}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}(}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}(Inv[0],\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0)),}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}(Inv[1],\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0)),}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}(-\/Inv\ *\ \mbox{\hyperlink{structglm_1_1tvec2}{tvec2<T,\ P>}}(m[2]),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)));}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00018\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \mbox{\hyperlink{group__gtc__matrix__inverse_gae0fcc5fc8783291f9702272de428fa0e}{affineInverse}}(\mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m)}
+\DoxyCodeLine{00019\ \ \ \ \ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \textcolor{keyword}{const}\ Inv(\mbox{\hyperlink{group__core__func__matrix_gaff4e89603cf51cdbcedebc57cd8808a3}{inverse}}(\mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}(m)));}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}(}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(Inv[0],\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0)),}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(Inv[1],\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0)),}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(Inv[2],\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0)),}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tvec4}{tvec4<T,\ P>}}(-\/Inv\ *\ \mbox{\hyperlink{structglm_1_1tvec3}{tvec3<T,\ P>}}(m[3]),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)));}
+\DoxyCodeLine{00027\ \ \ \ \ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00030\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ P>}}\ \mbox{\hyperlink{group__gtc__matrix__inverse_gab213cd0e3ead5f316d583f99d6312008}{inverseTranspose}}(\mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m)}
+\DoxyCodeLine{00031\ \ \ \ \ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ T\ Determinant\ =\ m[0][0]\ *\ m[1][1]\ -\/\ m[1][0]\ *\ m[0][1];}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat2x2}{tmat2x2<T,\ P>}}\ Inverse(}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ +\ m[1][1]\ /\ Determinant,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ m[0][1]\ /\ Determinant,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ m[1][0]\ /\ Determinant,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ +\ m[0][0]\ /\ Determinant);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Inverse;}
+\DoxyCodeLine{00041\ \ \ \ \ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00044\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \mbox{\hyperlink{group__gtc__matrix__inverse_gab213cd0e3ead5f316d583f99d6312008}{inverseTranspose}}(\mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m)}
+\DoxyCodeLine{00045\ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ T\ Determinant\ =}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ +\ m[0][0]\ *\ (m[1][1]\ *\ m[2][2]\ -\/\ m[1][2]\ *\ m[2][1])}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ m[0][1]\ *\ (m[1][0]\ *\ m[2][2]\ -\/\ m[1][2]\ *\ m[2][0])}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ +\ m[0][2]\ *\ (m[1][0]\ *\ m[2][1]\ -\/\ m[1][1]\ *\ m[2][0]);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat3x3}{tmat3x3<T,\ P>}}\ Inverse(uninitialize);}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ Inverse[0][0]\ =\ +\ (m[1][1]\ *\ m[2][2]\ -\/\ m[2][1]\ *\ m[1][2]);}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ Inverse[0][1]\ =\ -\/\ (m[1][0]\ *\ m[2][2]\ -\/\ m[2][0]\ *\ m[1][2]);}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ Inverse[0][2]\ =\ +\ (m[1][0]\ *\ m[2][1]\ -\/\ m[2][0]\ *\ m[1][1]);}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ Inverse[1][0]\ =\ -\/\ (m[0][1]\ *\ m[2][2]\ -\/\ m[2][1]\ *\ m[0][2]);}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ Inverse[1][1]\ =\ +\ (m[0][0]\ *\ m[2][2]\ -\/\ m[2][0]\ *\ m[0][2]);}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ Inverse[1][2]\ =\ -\/\ (m[0][0]\ *\ m[2][1]\ -\/\ m[2][0]\ *\ m[0][1]);}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ Inverse[2][0]\ =\ +\ (m[0][1]\ *\ m[1][2]\ -\/\ m[1][1]\ *\ m[0][2]);}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ Inverse[2][1]\ =\ -\/\ (m[0][0]\ *\ m[1][2]\ -\/\ m[1][0]\ *\ m[0][2]);}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ Inverse[2][2]\ =\ +\ (m[0][0]\ *\ m[1][1]\ -\/\ m[1][0]\ *\ m[0][1]);}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ Inverse\ /=\ Determinant;}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Inverse;}
+\DoxyCodeLine{00064\ \ \ \ \ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00067\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \mbox{\hyperlink{group__gtc__matrix__inverse_gab213cd0e3ead5f316d583f99d6312008}{inverseTranspose}}(\mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ \textcolor{keyword}{const}\ \&\ m)}
+\DoxyCodeLine{00068\ \ \ \ \ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ T\ SubFactor00\ =\ m[2][2]\ *\ m[3][3]\ -\/\ m[3][2]\ *\ m[2][3];}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ T\ SubFactor01\ =\ m[2][1]\ *\ m[3][3]\ -\/\ m[3][1]\ *\ m[2][3];}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ T\ SubFactor02\ =\ m[2][1]\ *\ m[3][2]\ -\/\ m[3][1]\ *\ m[2][2];}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ T\ SubFactor03\ =\ m[2][0]\ *\ m[3][3]\ -\/\ m[3][0]\ *\ m[2][3];}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ T\ SubFactor04\ =\ m[2][0]\ *\ m[3][2]\ -\/\ m[3][0]\ *\ m[2][2];}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ T\ SubFactor05\ =\ m[2][0]\ *\ m[3][1]\ -\/\ m[3][0]\ *\ m[2][1];}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ T\ SubFactor06\ =\ m[1][2]\ *\ m[3][3]\ -\/\ m[3][2]\ *\ m[1][3];}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ T\ SubFactor07\ =\ m[1][1]\ *\ m[3][3]\ -\/\ m[3][1]\ *\ m[1][3];}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ T\ SubFactor08\ =\ m[1][1]\ *\ m[3][2]\ -\/\ m[3][1]\ *\ m[1][2];}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ T\ SubFactor09\ =\ m[1][0]\ *\ m[3][3]\ -\/\ m[3][0]\ *\ m[1][3];}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ T\ SubFactor10\ =\ m[1][0]\ *\ m[3][2]\ -\/\ m[3][0]\ *\ m[1][2];}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ T\ SubFactor11\ =\ m[1][1]\ *\ m[3][3]\ -\/\ m[3][1]\ *\ m[1][3];}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ T\ SubFactor12\ =\ m[1][0]\ *\ m[3][1]\ -\/\ m[3][0]\ *\ m[1][1];}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ T\ SubFactor13\ =\ m[1][2]\ *\ m[2][3]\ -\/\ m[2][2]\ *\ m[1][3];}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ T\ SubFactor14\ =\ m[1][1]\ *\ m[2][3]\ -\/\ m[2][1]\ *\ m[1][3];}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ T\ SubFactor15\ =\ m[1][1]\ *\ m[2][2]\ -\/\ m[2][1]\ *\ m[1][2];}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ T\ SubFactor16\ =\ m[1][0]\ *\ m[2][3]\ -\/\ m[2][0]\ *\ m[1][3];}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ T\ SubFactor17\ =\ m[1][0]\ *\ m[2][2]\ -\/\ m[2][0]\ *\ m[1][2];}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ T\ SubFactor18\ =\ m[1][0]\ *\ m[2][1]\ -\/\ m[2][0]\ *\ m[1][1];}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structglm_1_1tmat4x4}{tmat4x4<T,\ P>}}\ Inverse(uninitialize);}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ Inverse[0][0]\ =\ +\ (m[1][1]\ *\ SubFactor00\ -\/\ m[1][2]\ *\ SubFactor01\ +\ m[1][3]\ *\ SubFactor02);}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ Inverse[0][1]\ =\ -\/\ (m[1][0]\ *\ SubFactor00\ -\/\ m[1][2]\ *\ SubFactor03\ +\ m[1][3]\ *\ SubFactor04);}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ Inverse[0][2]\ =\ +\ (m[1][0]\ *\ SubFactor01\ -\/\ m[1][1]\ *\ SubFactor03\ +\ m[1][3]\ *\ SubFactor05);}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ Inverse[0][3]\ =\ -\/\ (m[1][0]\ *\ SubFactor02\ -\/\ m[1][1]\ *\ SubFactor04\ +\ m[1][2]\ *\ SubFactor05);}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ Inverse[1][0]\ =\ -\/\ (m[0][1]\ *\ SubFactor00\ -\/\ m[0][2]\ *\ SubFactor01\ +\ m[0][3]\ *\ SubFactor02);}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ Inverse[1][1]\ =\ +\ (m[0][0]\ *\ SubFactor00\ -\/\ m[0][2]\ *\ SubFactor03\ +\ m[0][3]\ *\ SubFactor04);}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ Inverse[1][2]\ =\ -\/\ (m[0][0]\ *\ SubFactor01\ -\/\ m[0][1]\ *\ SubFactor03\ +\ m[0][3]\ *\ SubFactor05);}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ Inverse[1][3]\ =\ +\ (m[0][0]\ *\ SubFactor02\ -\/\ m[0][1]\ *\ SubFactor04\ +\ m[0][2]\ *\ SubFactor05);}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ Inverse[2][0]\ =\ +\ (m[0][1]\ *\ SubFactor06\ -\/\ m[0][2]\ *\ SubFactor07\ +\ m[0][3]\ *\ SubFactor08);}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ Inverse[2][1]\ =\ -\/\ (m[0][0]\ *\ SubFactor06\ -\/\ m[0][2]\ *\ SubFactor09\ +\ m[0][3]\ *\ SubFactor10);}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ Inverse[2][2]\ =\ +\ (m[0][0]\ *\ SubFactor11\ -\/\ m[0][1]\ *\ SubFactor09\ +\ m[0][3]\ *\ SubFactor12);}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ Inverse[2][3]\ =\ -\/\ (m[0][0]\ *\ SubFactor08\ -\/\ m[0][1]\ *\ SubFactor10\ +\ m[0][2]\ *\ SubFactor12);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ Inverse[3][0]\ =\ -\/\ (m[0][1]\ *\ SubFactor13\ -\/\ m[0][2]\ *\ SubFactor14\ +\ m[0][3]\ *\ SubFactor15);}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ Inverse[3][1]\ =\ +\ (m[0][0]\ *\ SubFactor13\ -\/\ m[0][2]\ *\ SubFactor16\ +\ m[0][3]\ *\ SubFactor17);}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ Inverse[3][2]\ =\ -\/\ (m[0][0]\ *\ SubFactor14\ -\/\ m[0][1]\ *\ SubFactor16\ +\ m[0][3]\ *\ SubFactor18);}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ Inverse[3][3]\ =\ +\ (m[0][0]\ *\ SubFactor15\ -\/\ m[0][1]\ *\ SubFactor17\ +\ m[0][2]\ *\ SubFactor18);}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ T\ Determinant\ =}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ +\ m[0][0]\ *\ Inverse[0][0]}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ +\ m[0][1]\ *\ Inverse[0][1]}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ +\ m[0][2]\ *\ Inverse[0][2]}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ +\ m[0][3]\ *\ Inverse[0][3];}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ Inverse\ /=\ Determinant;}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Inverse;}
+\DoxyCodeLine{00119\ \ \ \ \ \}}
+\DoxyCodeLine{00120\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

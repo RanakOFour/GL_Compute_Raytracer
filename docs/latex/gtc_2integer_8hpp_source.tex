@@ -1,0 +1,46 @@
+\doxysection{integer.\+hpp}
+\hypertarget{gtc_2integer_8hpp_source}{}\label{gtc_2integer_8hpp_source}\index{include/GLM/gtc/integer.hpp@{include/GLM/gtc/integer.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Dependencies}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}../detail/setup.hpp"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}../detail/precision.hpp"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}../detail/func\_common.hpp"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}../detail/func\_integer.hpp"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}../detail/func\_exponential.hpp"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#if\ GLM\_MESSAGES\ ==\ GLM\_MESSAGES\_ENABLED\ \&\&\ !defined(GLM\_EXT\_INCLUDED)}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_GTC\_integer\ extension\ included"{})}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{namespace\ }glm}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00036\ \ \ \ \ GLM\_FUNC\_DECL\ genIUType\ \mbox{\hyperlink{group__core__func__exponential_ga28c5e0cf5c0bc103d3ac62f416bcb9fa}{log2}}(genIUType\ x);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00047\ \ \ \ \ GLM\_FUNC\_DECL\ genIUType\ \mbox{\hyperlink{group__core__func__common_ga12201563ef902e3b07e0d1d7656efdb1}{mod}}(genIUType\ x,\ genIUType\ y);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00059\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga12201563ef902e3b07e0d1d7656efdb1}{mod}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ T\ y);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00071\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<T,\ P>\ \mbox{\hyperlink{group__core__func__common_ga12201563ef902e3b07e0d1d7656efdb1}{mod}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x,\ vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ y);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00084\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<int,\ P>\ \mbox{\hyperlink{group__gtc__integer_ga1cf68fff8068471fac854c5b780bf8a3}{iround}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P,\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename},\ precision>\ \textcolor{keyword}{class\ }vecType>}
+\DoxyCodeLine{00097\ \ \ \ \ GLM\_FUNC\_DECL\ vecType<uint,\ P>\ \mbox{\hyperlink{group__gtc__integer_ga1f487dfe3960621ef953d5d219eda36e}{uround}}(vecType<T,\ P>\ \textcolor{keyword}{const}\ \&\ x);}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00100\ \}\ \textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#include\ "{}integer.inl"{}}}
+
+\end{DoxyCode}

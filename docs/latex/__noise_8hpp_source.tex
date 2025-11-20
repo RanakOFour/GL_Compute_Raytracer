@@ -1,0 +1,112 @@
+\doxysection{\+\_\+noise.\+hpp}
+\hypertarget{__noise_8hpp_source}{}\label{__noise_8hpp_source}\index{include/GLM/detail/\_noise.hpp@{include/GLM/detail/\_noise.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}../vec2.hpp"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}../vec3.hpp"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}../vec4.hpp"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}../common.hpp"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{namespace\ }glm\{}
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00015\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ mod289(T\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00016\ \ \ \ \ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x\ -\/\ \mbox{\hyperlink{group__core__func__common_ga71c916c953d321f642c567159db21dad}{floor}}(x\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1.0)\ /\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(289.0))\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(289.0);}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00021\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ permute(T\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00022\ \ \ \ \ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mod289(((x\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(34))\ +\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1))\ *\ x);}
+\DoxyCodeLine{00024\ \ \ \ \ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00027\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tvec2<T,\ P>\ permute(tvec2<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00028\ \ \ \ \ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mod289(((x\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(34))\ +\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1))\ *\ x);}
+\DoxyCodeLine{00030\ \ \ \ \ \}}
+\DoxyCodeLine{00031\ \ \ \ \ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00033\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tvec3<T,\ P>\ permute(tvec3<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00034\ \ \ \ \ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mod289(((x\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(34))\ +\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1))\ *\ x);}
+\DoxyCodeLine{00036\ \ \ \ \ \}}
+\DoxyCodeLine{00037\ \ \ \ \ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00039\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tvec4<T,\ P>\ permute(tvec4<T,\ P>\ \textcolor{keyword}{const}\ \&\ x)}
+\DoxyCodeLine{00040\ \ \ \ \ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ mod289(((x\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(34))\ +\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1))\ *\ x);}
+\DoxyCodeLine{00042\ \ \ \ \ \}}
+\DoxyCodeLine{00043\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ \ \ \ template\ <typename\ T,\ precision\ P,\ template<typename>\ class\ vecType>}}
+\DoxyCodeLine{00045\ \textcolor{comment}{\ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ permute(vecType<T,\ P>\ const\ \&\ x)}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{00047\ \textcolor{comment}{\ \ \ \ \ \ \ \ return\ mod289(((x\ *\ T(34))\ +\ T(1))\ *\ x);}}
+\DoxyCodeLine{00048\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{00049\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00051\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ taylorInvSqrt(T\ \textcolor{keyword}{const}\ \&\ r)}
+\DoxyCodeLine{00052\ \ \ \ \ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ T(1.79284291400159)\ -\/\ T(0.85373472095314)\ *\ r;}
+\DoxyCodeLine{00054\ \ \ \ \ \}}
+\DoxyCodeLine{00055\ \ \ \ \ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00057\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tvec2<T,\ P>\ taylorInvSqrt(tvec2<T,\ P>\ \textcolor{keyword}{const}\ \&\ r)}
+\DoxyCodeLine{00058\ \ \ \ \ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ T(1.79284291400159)\ -\/\ T(0.85373472095314)\ *\ r;}
+\DoxyCodeLine{00060\ \ \ \ \ \}}
+\DoxyCodeLine{00061\ \ \ \ \ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00063\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tvec3<T,\ P>\ taylorInvSqrt(tvec3<T,\ P>\ \textcolor{keyword}{const}\ \&\ r)}
+\DoxyCodeLine{00064\ \ \ \ \ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ T(1.79284291400159)\ -\/\ T(0.85373472095314)\ *\ r;}
+\DoxyCodeLine{00066\ \ \ \ \ \}}
+\DoxyCodeLine{00067\ \ \ \ \ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00069\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tvec4<T,\ P>\ taylorInvSqrt(tvec4<T,\ P>\ \textcolor{keyword}{const}\ \&\ r)}
+\DoxyCodeLine{00070\ \ \ \ \ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ T(1.79284291400159)\ -\/\ T(0.85373472095314)\ *\ r;}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ \ \ \ template\ <typename\ T,\ precision\ P,\ template<typename>\ class\ vecType>}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ taylorInvSqrt(vecType<T,\ P>\ const\ \&\ r)}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ \ \ \ \ \ \ \ return\ T(1.79284291400159)\ -\/\ T(0.85373472095314)\ *\ r;}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{00079\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00080\ \ \ \ \ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00082\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tvec2<T,\ P>\ fade(tvec2<T,\ P>\ \textcolor{keyword}{const}\ \&\ t)}
+\DoxyCodeLine{00083\ \ \ \ \ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (t\ *\ t\ *\ t)\ *\ (t\ *\ (t\ *\ T(6)\ -\/\ T(15))\ +\ T(10));}
+\DoxyCodeLine{00085\ \ \ \ \ \}}
+\DoxyCodeLine{00086\ \ \ \ \ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00088\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tvec3<T,\ P>\ fade(tvec3<T,\ P>\ \textcolor{keyword}{const}\ \&\ t)}
+\DoxyCodeLine{00089\ \ \ \ \ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (t\ *\ t\ *\ t)\ *\ (t\ *\ (t\ *\ T(6)\ -\/\ T(15))\ +\ T(10));}
+\DoxyCodeLine{00091\ \ \ \ \ \}}
+\DoxyCodeLine{00092\ \ \ \ \ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ precision\ P>}
+\DoxyCodeLine{00094\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tvec4<T,\ P>\ fade(tvec4<T,\ P>\ \textcolor{keyword}{const}\ \&\ t)}
+\DoxyCodeLine{00095\ \ \ \ \ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (t\ *\ t\ *\ t)\ *\ (t\ *\ (t\ *\ T(6)\ -\/\ T(15))\ +\ T(10));}
+\DoxyCodeLine{00097\ \ \ \ \ \}}
+\DoxyCodeLine{00098\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00099\ \textcolor{comment}{\ \ \ \ template\ <typename\ T,\ precision\ P,\ template\ <typename>\ class\ vecType>}}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ \ \ \ GLM\_FUNC\_QUALIFIER\ vecType<T,\ P>\ fade(vecType<T,\ P>\ const\ \&\ t)}}
+\DoxyCodeLine{00101\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ \ \ \ \ \ \ \ return\ (t\ *\ t\ *\ t)\ *\ (t\ *\ (t\ *\ T(6)\ -\/\ T(15))\ +\ T(10));}}
+\DoxyCodeLine{00103\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{00104\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00105\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00106\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00107\ }
+
+\end{DoxyCode}

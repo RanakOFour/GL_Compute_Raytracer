@@ -1,0 +1,90 @@
+\doxysection{BVH.\+h}
+\hypertarget{BVH_8h_source}{}\label{BVH_8h_source}\index{include/BVH.h@{include/BVH.h}}
+\mbox{\hyperlink{BVH_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ BVH\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ BVH\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}GL/glew.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}GLM/glm.hpp"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{Triangle_8h}{Triangle.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{AABB_8h}{AABB.h}}"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structBVH_a186928fc2572882d5baac1ce55239bf6}{BVH}}}
+\DoxyCodeLine{00014\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00016\ \ \ \ \ GLuint\ m\_nodeSSBOID;}
+\DoxyCodeLine{00017\ \ \ \ \ GLuint\ m\_indexesSSBOID;}
+\DoxyCodeLine{00018\ \ \ \ \ GLuint\ m\_triangleSSBOID;}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_dirtyNodes;}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_dirtyIDs;}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_dirtyTris;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{comment}{//\ Bit\ alignment\ hocus\ pocus}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{struct\ }Node}
+\DoxyCodeLine{00025\ \ \ \ \ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ glm::vec3\ minBound;}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ leftFirst;}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ glm::vec3\ maxBound;}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ triangleCount;}
+\DoxyCodeLine{00030\ \ \ \ \ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ std::vector<Node>\ m\_nodes;}
+\DoxyCodeLine{00033\ \ \ \ \ std::vector<Triangle>\ m\_tris;}
+\DoxyCodeLine{00034\ \ \ \ \ std::vector<int>\ m\_triIndexes;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdateNodeBounds(\textcolor{keywordtype}{int}\ \_nodeIndex);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{float}\ CalculateSAH(Node\&\ \_node,\ \textcolor{keywordtype}{int}\ \_axis,\ \textcolor{keywordtype}{float}\ \_pos);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ Subdivide(\textcolor{keywordtype}{int}\ \_nodeIndex);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{structBVH_a186928fc2572882d5baac1ce55239bf6}{BVH}}(std::vector<Triangle>*\ \_tris)}
+\DoxyCodeLine{00044\ \ \ \ \ :\ m\_nodeSSBOID(0)}
+\DoxyCodeLine{00045\ \ \ \ \ ,\ m\_indexesSSBOID(0)}
+\DoxyCodeLine{00046\ \ \ \ \ ,\ m\_triangleSSBOID(0)}
+\DoxyCodeLine{00047\ \ \ \ \ ,\ m\_nodes()}
+\DoxyCodeLine{00048\ \ \ \ \ ,\ m\_tris(*\_tris)}
+\DoxyCodeLine{00049\ \ \ \ \ ,\ m\_triIndexes()}
+\DoxyCodeLine{00050\ \ \ \ \ ,\ m\_dirtyNodes(true)}
+\DoxyCodeLine{00051\ \ \ \ \ ,\ m\_dirtyIDs(true)}
+\DoxyCodeLine{00052\ \ \ \ \ ,\ m\_dirtyTris(true)}
+\DoxyCodeLine{00053\ \ \ \ \ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structBVH_a6c4fb8ed66af88dda283eefb3f66a154}{BuildBHV}}();}
+\DoxyCodeLine{00055\ \ \ \ \ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \mbox{\hyperlink{structBVH_a6cceb8c4f73abd2a9f58bb883ca371bf}{\string~BVH}}()}
+\DoxyCodeLine{00058\ \ \ \ \ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_indexesSSBOID)}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ glDeleteBuffers(1,\ \&m\_indexesSSBOID);}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_nodeSSBOID)}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ glDeleteBuffers(1,\ \&m\_nodeSSBOID);}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_triangleSSBOID)}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ glDeleteBuffers(1,\ \&m\_triangleSSBOID);}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00073\ \ \ \ \ \};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structBVH_a6c4fb8ed66af88dda283eefb3f66a154}{BuildBHV}}();}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ GLuint\ \mbox{\hyperlink{structBVH_a41898a6e886d6e78ce464cfdc2bc5324}{GetTriangleSSBO}}();}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ GLuint\ \mbox{\hyperlink{structBVH_a15dc7a753f2613aa94c14a4c8ece0d45}{GetIndexSSBO}}();}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ GLuint\ \mbox{\hyperlink{structBVH_a0ef0b1d832594e1f2d831963af2dbce0}{GetNodeSSBO}}();}
+\DoxyCodeLine{00082\ \};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

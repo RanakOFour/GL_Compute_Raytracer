@@ -1,0 +1,53 @@
+\doxysection{SDL\+\_\+\+Joy\+Device\+Event Struct Reference}
+\hypertarget{structSDL__JoyDeviceEvent}{}\label{structSDL__JoyDeviceEvent}\index{SDL\_JoyDeviceEvent@{SDL\_JoyDeviceEvent}}
+
+
+{\ttfamily \#include $<$SDL\+\_\+events.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__JoyDeviceEvent_a51f060ba1dd5669b458e9c97aece667e}{type}}
+\item 
+Uint32 \mbox{\hyperlink{structSDL__JoyDeviceEvent_a5c4a9271bfff5d5c2e09a0dc732df8f3}{timestamp}}
+\item 
+Sint32 \mbox{\hyperlink{structSDL__JoyDeviceEvent_af9b295798f033b799ebbda7de6cb5a7e}{which}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Joystick device event structure (event.\+jdevice.\texorpdfstring{$\ast$}{*})
+
+SDL will send JOYSTICK\+\_\+\+ADDED events for devices that are already plugged in during SDL\+\_\+\+Init.
+
+\begin{DoxySeeAlso}{See also}
+\doxylink{structSDL__ControllerDeviceEvent}{SDL\+\_\+\+Controller\+Device\+Event} 
+\end{DoxySeeAlso}
+
+
+\label{doc-variable-members}
+\Hypertarget{structSDL__JoyDeviceEvent_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structSDL__JoyDeviceEvent_a5c4a9271bfff5d5c2e09a0dc732df8f3}\index{SDL\_JoyDeviceEvent@{SDL\_JoyDeviceEvent}!timestamp@{timestamp}}
+\index{timestamp@{timestamp}!SDL\_JoyDeviceEvent@{SDL\_JoyDeviceEvent}}
+\doxysubsubsection{\texorpdfstring{timestamp}{timestamp}}
+{\footnotesize\ttfamily \label{structSDL__JoyDeviceEvent_a5c4a9271bfff5d5c2e09a0dc732df8f3} 
+Uint32 SDL\+\_\+\+Joy\+Device\+Event\+::timestamp}
+
+In milliseconds, populated using SDL\+\_\+\+Get\+Ticks() \Hypertarget{structSDL__JoyDeviceEvent_a51f060ba1dd5669b458e9c97aece667e}\index{SDL\_JoyDeviceEvent@{SDL\_JoyDeviceEvent}!type@{type}}
+\index{type@{type}!SDL\_JoyDeviceEvent@{SDL\_JoyDeviceEvent}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{structSDL__JoyDeviceEvent_a51f060ba1dd5669b458e9c97aece667e} 
+Uint32 SDL\+\_\+\+Joy\+Device\+Event\+::type}
+
+SDL\+\_\+\+JOYDEVICEADDED or SDL\+\_\+\+JOYDEVICEREMOVED \Hypertarget{structSDL__JoyDeviceEvent_af9b295798f033b799ebbda7de6cb5a7e}\index{SDL\_JoyDeviceEvent@{SDL\_JoyDeviceEvent}!which@{which}}
+\index{which@{which}!SDL\_JoyDeviceEvent@{SDL\_JoyDeviceEvent}}
+\doxysubsubsection{\texorpdfstring{which}{which}}
+{\footnotesize\ttfamily \label{structSDL__JoyDeviceEvent_af9b295798f033b799ebbda7de6cb5a7e} 
+Sint32 SDL\+\_\+\+Joy\+Device\+Event\+::which}
+
+The joystick device index for the ADDED event, instance id for the REMOVED event 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+SDL/SDL\+\_\+events.\+h\end{DoxyCompactItemize}
