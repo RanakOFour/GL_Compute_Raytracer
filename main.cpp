@@ -55,16 +55,17 @@ int main(int argc, char* argv[])
 
 	myShader.SetUniform("u_triCount", (int)(sphereModel.GetVertexCount() / 3));
 
-	std::vector<Triangle> tris = sphereModel.GetTriangles(glm::vec3(0.0f));
-	std::vector<Triangle> tris2 = sphereModel.GetTriangles(glm::vec3(1.0f, 0.0f, 1.0f));
-	std::vector<Triangle> tris3 = sphereModel.GetTriangles(glm::vec3(-1.0f, 0.0f, -1.0f));
+	std::vector<Triangle> tris[] = { sphereModel.GetTriangles(glm::vec3(0.0f))
+								   , sphereModel.GetTriangles(glm::vec3(1.0f, 0.0f, 1.0f))
+								   , sphereModel.GetTriangles(glm::vec3(-1.0f, 0.0f, -1.0f)) 
+	};
 
-	tris.insert(tris.end(), tris2.begin(), tris2.end());
-	tris.insert(tris.end(), tris3.begin(), tris3.end());
+	tris[0].insert(tris[0].end(), tris[1].begin(), tris[1].end());
+	tris[0].insert(tris[0].end(), tris[2].begin(), tris[2].end());
 
-	printf("%i Triangles sent to BVH\n", (int)tris.size());
+	printf("%i Triangles sent to BVH\n", (int)tris[0].size());
 
-	BVH myBVH(&tris);
+	BVH myBVH(&(tris[0]));
 
 
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, myBVH.GetTriangleSSBO());

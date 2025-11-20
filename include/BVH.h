@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 #include "GL/glew.h"
 #include "GLM/glm.hpp"
@@ -24,6 +25,7 @@ struct BVH
         int leftNodeIndex;
         int firstTriangle;
         int triangleCount;
+        int _pad;
 
         glm::vec3 minBound;
         float _pad_1;
@@ -54,46 +56,106 @@ struct BVH
         }
     }
 
+    struct aabb
+    {
+        glm::vec3 bmin;
+        glm::vec3 bmax;
+
+        aabb() :
+        bmin(1e30f),
+        bmax(-1e30f)
+        {
+
+        }
+
+        inline void grow(glm::vec3& _p)
+        {
+            bmin = glm::min(bmin, _p);
+            bmax = glm::max(bmax, _p);
+        };
+
+        inline float area()
+        {
+            glm::vec3 e = bmax - bmin;
+            return e.x * e.y + e.y * e.z + e.z * e.x;
+        };
+    };
+
+    float CalculateSAH(Node& _node, int _axis, float _pos)
+    {
+        aabb leftBox, rightBox;
+        int leftCount = 0, rightCount = 0;
+        for(int i = 0; i < _node.triangleCount; i++)
+        {
+            Triangle& tri = m_tris[m_triIndexes[_node.firstTriangle + i]];
+            if(CalculateCentroid(tri)[_axis] < _pos)
+            {
+                leftCount++;
+                leftBox.grow(tri.a);
+                leftBox.grow(tri.b);
+                leftBox.grow(tri.c);
+            }
+            else
+            {
+                rightCount++;
+                rightBox.grow(tri.a);
+                rightBox.grow(tri.b);
+                rightBox.grow(tri.c);
+            }
+        }
+        
+        float cost = leftCount * leftBox.area() + rightCount * rightBox.area();
+        return cost > 0 ? cost : 1e30f;
+    }
+
     void Subdivide(int _nodeIndex)
     {
-        printf("Splitting node %i: ", _nodeIndex);
+        //printf("Splitting node %i: ", _nodeIndex);
         Node& l_node = m_nodes[_nodeIndex];
         
         // Base case for recursion
         if (l_node.triangleCount <= 2)
         {
-            printf("Only has %i tris\n", l_node.triangleCount);
+            //printf("Only has %i tris\n", l_node.triangleCount);
             return;
         }
 
-        // Split axis
-        glm::vec3 l_extents = l_node.maxBound - l_node.minBound;
-        int axis = 0;
-        if(l_extents.y > l_extents.x)
+        // Use SAH for split axis
+        int bestAxis = -1;
+        float bestPos, bestCost = 1e30f;
+        for(int axis = 0; axis < 3; axis++)
         {
-            axis = 1;
+            for(int i = 0; i < l_node.triangleCount; i++)
+            {
+                Triangle& tri = m_tris[m_triIndexes[l_node.firstTriangle + i]];
+                float candidatePos = CalculateCentroid(tri)[axis];
+                float cost = CalculateSAH(l_node, axis, candidatePos);
+                if(cost < bestCost)
+                {
+                    bestPos = candidatePos;
+                    bestAxis = axis;
+                    bestCost = cost;
+                }
+            }
         }
-        if(l_extents.z > l_extents[axis])
-        {
-            axis = 2;
-        }
-        float l_splitPos = l_node.minBound[axis] + l_extents[axis] * 0.5f;
 
         //  In-place partition
         int i = l_node.firstTriangle;
         int j = i + l_node.triangleCount - 1;
         while(i <= j)
         {
-            if(CalculateCentroid(m_tris[m_triIndexes[i]])[axis] < l_splitPos)
+            if(CalculateCentroid(m_tris[m_triIndexes[i]])[bestAxis] < bestPos)
             {
                 i++;
             }
             else
             {
-                j--;
-                Triangle temp = m_tris[j];
-                m_tris[j] = m_tris[i];
-                m_tris[i] = temp;
+                // j--;
+                // int temp = m_triIndexes[j];
+                // m_triIndexes[j] = m_triIndexes[i];
+                // m_triIndexes[i]= temp;
+
+                std::swap(m_triIndexes[i], m_triIndexes[j--]);
             }
         }
 
@@ -101,9 +163,13 @@ struct BVH
         // Don't create empty sides
         int l_leftCount = i - l_node.firstTriangle;
 
-        printf("%i left, %i right\n", l_leftCount, l_node.triangleCount - l_leftCount);
+        //printf("%i left, %i right\n", l_leftCount, l_node.triangleCount - l_leftCount);
 
-        if (l_leftCount == 0 || l_leftCount == l_node.triangleCount)
+        glm::vec3 l_e = l_node.maxBound - l_node.minBound;
+        float l_parentArea = l_e.x * l_e.y + l_e.y * l_e.z + l_e.z * l_e.x;
+        float l_parentCost = l_node.triangleCount *l_parentArea;
+
+        if(bestCost >= l_parentCost)
         {
             return;
         }
@@ -112,7 +178,7 @@ struct BVH
         int l_leftChildIndex = m_nodes.size();
         int l_rightChildIndex = m_nodes.size() + 1;
 
-        printf("Creating 2 new nodes\n");
+        //printf("Creating 2 new nodes\n");
         
         Node l_left;
         l_left.firstTriangle = l_node.firstTriangle;
@@ -190,24 +256,16 @@ struct BVH
 
         printf("BVH build with %i nodes\n", (int)m_nodes.size());
 
-        for (int i = 0; i < m_nodes.size(); i++)
-        {
-            printf("Node %i: %i triangles, Min:(%f, %f, %f), Max(%f, %f, %f)\n", i, m_nodes[i].triangleCount,
-                m_nodes[i].minBound[0], m_nodes[i].minBound[1], m_nodes[i].minBound[2],
-                m_nodes[i].maxBound[0], m_nodes[i].maxBound[1], m_nodes[i].maxBound[2]);
+        // for (int i = 0; i < m_nodes.size(); i++)
+        // {
+        //     printf("Node %i: %i triangles, Min:(%f, %f, %f), Max(%f, %f, %f)\n", i, m_nodes[i].triangleCount,
+        //         m_nodes[i].minBound[0], m_nodes[i].minBound[1], m_nodes[i].minBound[2],
+        //         m_nodes[i].maxBound[0], m_nodes[i].maxBound[1], m_nodes[i].maxBound[2]);
 
-            /*printf("%f,%f,%f,%f,%f,%f\n",
-                m_nodes[i].minBound[0], m_nodes[i].minBound[1], m_nodes[i].minBound[2],
-                m_nodes[i].maxBound[0], m_nodes[i].maxBound[1], m_nodes[i].maxBound[2]);*/
-        }
-
-        for (int i = 0; i < m_triIndexes.size(); i++)
-        {
-            if (i != m_triIndexes[i])
-            {
-                printf("Indexes: %i, %i\n", i, m_triIndexes[i]);
-            }
-        }
+        //     /*printf("%f,%f,%f,%f,%f,%f\n",
+        //         m_nodes[i].minBound[0], m_nodes[i].minBound[1], m_nodes[i].minBound[2],
+        //         m_nodes[i].maxBound[0], m_nodes[i].maxBound[1], m_nodes[i].maxBound[2]);*/
+        // }
     }
 
     GLuint GetTriangleSSBO()
@@ -250,7 +308,7 @@ struct BVH
         {
             glGenBuffers(1, &m_nodeSSBOID);
             glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_nodeSSBOID);
-            glBufferData(GL_SHADER_STORAGE_BUFFER, ((3 * sizeof(GLint)) + (4 * sizeof(GLfloat) * 2)) * m_nodes.size(), &(m_nodes.at(0)), GL_DYNAMIC_READ);
+            glBufferData(GL_SHADER_STORAGE_BUFFER, ((4 * sizeof(GLint)) + (4 * sizeof(GLfloat) * 2)) * m_nodes.size(), &(m_nodes.at(0)), GL_DYNAMIC_READ);
             glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_nodeSSBOID);
             glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
