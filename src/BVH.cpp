@@ -2,6 +2,9 @@
 
 void BVH::BuildBHV()
 {
+    m_nodes = std::vector<BVHNode>();
+    m_triIndexes = std::vector<int>();
+
     printf("Building BVH with %i triangles\n", (int)m_tris.size());
     int rootNodeId = 0;
     for(int i = 0; i < m_tris.size(); i++)
@@ -80,6 +83,45 @@ float BVH::CalculateSAH(BVHNode& _node, int _axis, float _pos)
     return cost > 0 ? cost : 1e30f;
 }
 
+float BVH::FindBestSplitPlane(BVHNode& _node, int& _bestAxis, float& _bestPos)
+{
+    float l_bestCost = 1e30f;
+
+    for (int axis = 0; axis < 3; axis++)
+    {
+        float l_minBound = _node.minBound[axis];
+        float l_maxBound = _node.maxBound[axis];
+
+        if (l_minBound == l_maxBound)
+        {
+            continue;
+        }
+
+        float l_scale = (l_maxBound - l_minBound) / (float)m_planeCount;
+
+        for (int i = 1; i < m_planeCount; i++)
+        {
+            float l_candidatePos = l_minBound + i * l_scale;
+            float l_cost = CalculateSAH(_node, axis, l_candidatePos);
+            if (l_cost < l_bestCost)
+            {
+                l_bestCost = l_cost;
+                _bestPos = l_candidatePos;
+                _bestAxis = axis;
+            }
+        }
+    }
+
+    return l_bestCost;
+};
+
+float BVH::CalcNodeCost(BVHNode& _node)
+{
+    glm::vec3 l_extents = _node.maxBound - _node.minBound;
+    float l_surfaceArea = l_extents.x * l_extents.y + l_extents.y * l_extents.z + l_extents.z * l_extents.x;
+    return _node.triangleCount * l_surfaceArea;
+};
+
 void BVH::Subdivide(int _nodeIndex)
 {
     //printf("Splitting node %i: ", _nodeIndex);
@@ -93,30 +135,16 @@ void BVH::Subdivide(int _nodeIndex)
     }
 
     // Use SAH for split axis
-    int bestAxis = -1;
-    float bestPos, bestCost = 1e30f;
-    for(int axis = 0; axis < 3; axis++)
-    {
-        for(int i = 0; i < l_node.triangleCount; i++)
-        {
-            Triangle& tri = m_tris[m_triIndexes[l_node.leftFirst + i]];
-            float candidatePos = CalculateCentroid(tri)[axis];
-            float cost = CalculateSAH(l_node, axis, candidatePos);
-            if(cost < bestCost)
-            {
-                bestPos = candidatePos;
-                bestAxis = axis;
-                bestCost = cost;
-            }
-        }
-    }
+    int l_bestAxis = -1;
+    float l_bestPos, l_bestCost = 1e30f;
+    float l_splitCost = FindBestSplitPlane(l_node, l_bestAxis, l_bestPos);
 
     //  In-place partition
     int i = l_node.leftFirst;
     int j = i + l_node.triangleCount - 1;
     while(i <= j)
     {
-        if(CalculateCentroid(m_tris[m_triIndexes[i]])[bestAxis] < bestPos)
+        if(CalculateCentroid(m_tris[m_triIndexes[i]])[l_bestAxis] < l_bestPos)
         {
             i++;
         }
@@ -135,11 +163,9 @@ void BVH::Subdivide(int _nodeIndex)
 
     //printf("%i left, %i right\n", l_leftCount, l_node.triangleCount - l_leftCount);
 
-    glm::vec3 l_e = l_node.maxBound - l_node.minBound;
-    float l_parentArea = l_e.x * l_e.y + l_e.y * l_e.z + l_e.z * l_e.x;
-    float l_parentCost = l_node.triangleCount *l_parentArea;
+    float l_nodeCost = CalcNodeCost(l_node);
 
-    if(bestCost >= l_parentCost)
+    if(l_splitCost >= l_nodeCost)
     {
         return;
     }

@@ -56,9 +56,15 @@ class BVH
     std::vector<int> m_triIndexes;
     std::vector<BVHNode> m_nodes;
 
+    int m_planeCount;
+
     void UpdateNodeBounds(int _nodeIndex);
 
     float CalculateSAH(BVHNode& _node, int _axis, float _pos);
+
+    float FindBestSplitPlane(BVHNode& _node, int& _bestAxis, float& _bestPos);
+
+    float CalcNodeCost(BVHNode& _node);
 
     void Subdivide(int _nodeIndex);
 
@@ -73,6 +79,7 @@ class BVH
     , m_dirtyNodes(true)
     , m_dirtyIdxs(true)
     , m_dirtyTris(true)
+    , m_planeCount(100)
     {
         BuildBHV();
     };
@@ -94,6 +101,9 @@ class BVH
             glDeleteBuffers(1, &m_triangleSSBOID);
         }
     };
+
+    void PlaneCount(int _planes) { m_planeCount = _planes; };
+    int PlaneCount() { return m_planeCount; };
 
     void BuildBHV();
 

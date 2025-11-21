@@ -378,6 +378,7 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 		winPosX, winPosY,
 		winWidth, winHeight,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+
 	// The last parameter lets us specify a number of options
 	// Here, we tell SDL that we want the window to be shown and that it can be resized
 	// You can learn more about SDL_CreateWindow here: https://wiki.libsdl.org/SDL_CreateWindow?highlight=%28\bCategoryVideo\b%29|%28CategoryEnum%29|%28CategoryStruct%29

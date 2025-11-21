@@ -105,14 +105,8 @@ int main(int argc, char* argv[])
 		}
 
 		float time = (float)SDL_GetTicks64() * 1000.0f;
-
-		myBVH.BuildBHV();
 		
 		myShader.use();
-
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, myBVH.GetTriangleSSBO());
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, myBVH.GetIndexSSBO());
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, myBVH.GetNodeSSBO());
 
 		myShader.SetUniform("time", time);
 		myShader.SetUniform("lights[0].position", light.position);

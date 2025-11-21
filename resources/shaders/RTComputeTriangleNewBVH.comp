@@ -139,7 +139,7 @@ float IntersectAABB(in RaycastResult _result, in Ray _ray, vec3 _minBound, vec3 
 }
 
 
-RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
+RaycastResult TraverseBVH(in RaycastResult _result, inout Ray _ray)
 {
     int l_indexStack[64];
     int l_top = 0;
@@ -168,6 +168,8 @@ RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
             
             l_top--;
             l_node = bvhNodes[l_top];
+
+            continue;
         }
 
         Node l_child1 = bvhNodes[l_node.leftFirst];
@@ -200,12 +202,12 @@ RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
         }
         else
         {
+            l_node = l_child1;
             if(l_dist2 != 1e30f)
             {
-                l_top++;
                 l_indexStack[l_top] = l_node.leftFirst + 1;
+                l_top++;
             }
-            l_node = l_child1;
         }
     }
 
