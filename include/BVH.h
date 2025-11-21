@@ -28,12 +28,12 @@ class BVH
      * be reuploaded to the GPU
     */
     bool m_dirtyNodes;
-    bool m_dirtyIDs;
+    bool m_dirtyIdxs;
     bool m_dirtyTris;
     /**@} */
 
     // Bit alignment hocus pocus
-    struct Node
+    struct BVHNode
     {
         glm::vec3 minBound;
         int leftFirst;
@@ -41,13 +41,24 @@ class BVH
         int triangleCount;
     };
 
-    std::vector<Node> m_nodes;
+    /**
+     * @brief
+     * The list of raw triangles that the BVH will sort into a tree
+     */
     std::vector<Triangle> m_tris;
+
+    /**
+     * @brief
+     * When sorting the BVH nodes, the triangles are shifted around for better traversal later on.
+     * However, swapping raw triangles around is slow, and it's harder to preserve GPU parity
+     * with swapping the triangles around. Therefore, this indirection is used.
+     */
     std::vector<int> m_triIndexes;
+    std::vector<BVHNode> m_nodes;
 
     void UpdateNodeBounds(int _nodeIndex);
 
-    float CalculateSAH(Node& _node, int _axis, float _pos);
+    float CalculateSAH(BVHNode& _node, int _axis, float _pos);
 
     void Subdivide(int _nodeIndex);
 
@@ -60,7 +71,7 @@ class BVH
     , m_tris(*_tris)
     , m_triIndexes()
     , m_dirtyNodes(true)
-    , m_dirtyIDs(true)
+    , m_dirtyIdxs(true)
     , m_dirtyTris(true)
     {
         BuildBHV();

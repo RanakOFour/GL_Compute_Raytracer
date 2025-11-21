@@ -10,7 +10,7 @@ void BVH::BuildBHV()
         m_triIndexes.push_back(i);
     }
 
-    Node l_root;
+    BVHNode l_root;
     l_root.leftFirst = 0;
     l_root.triangleCount = m_tris.size();
     m_nodes.push_back(l_root);
@@ -18,13 +18,13 @@ void BVH::BuildBHV()
     UpdateNodeBounds(0);
     Subdivide(0);
     m_dirtyNodes = true;
-    m_dirtyIDs = true;
+    m_dirtyIdxs = true;
 
     printf("BVH build with %i nodes\n", (int)m_nodes.size());
 
     // for (int i = 0; i < m_nodes.size(); i++)
     // {
-    //     printf("Node %i: %i triangles, Min:(%f, %f, %f), Max(%f, %f, %f)\n", i, m_nodes[i].triangleCount,
+    //     printf("BVHNode %i: %i triangles, Min:(%f, %f, %f), Max(%f, %f, %f)\n", i, m_nodes[i].triangleCount,
     //         m_nodes[i].minBound[0], m_nodes[i].minBound[1], m_nodes[i].minBound[2],
     //         m_nodes[i].maxBound[0], m_nodes[i].maxBound[1], m_nodes[i].maxBound[2]);
 
@@ -36,7 +36,7 @@ void BVH::BuildBHV()
 
 void BVH::UpdateNodeBounds(int _nodeIndex)
 {
-    Node& l_nodeToUpdate = m_nodes[_nodeIndex];
+    BVHNode& l_nodeToUpdate = m_nodes[_nodeIndex];
     l_nodeToUpdate.minBound = glm::vec3(1e30f);
     l_nodeToUpdate.maxBound = glm::vec3(-1e30f);
     for(int i = 0; i < l_nodeToUpdate.triangleCount; i++)
@@ -53,7 +53,7 @@ void BVH::UpdateNodeBounds(int _nodeIndex)
     }
 }
 
-float BVH::CalculateSAH(Node& _node, int _axis, float _pos)
+float BVH::CalculateSAH(BVHNode& _node, int _axis, float _pos)
 {
     AABB leftBox, rightBox;
     int leftCount = 0, rightCount = 0;
@@ -83,7 +83,7 @@ float BVH::CalculateSAH(Node& _node, int _axis, float _pos)
 void BVH::Subdivide(int _nodeIndex)
 {
     //printf("Splitting node %i: ", _nodeIndex);
-    Node& l_node = m_nodes[_nodeIndex];
+    BVHNode& l_node = m_nodes[_nodeIndex];
     
     // Base case for recursion
     if (l_node.triangleCount <= 2)
@@ -150,10 +150,10 @@ void BVH::Subdivide(int _nodeIndex)
 
     //printf("Creating 2 new nodes\n");
     
-    Node l_left;
+    BVHNode l_left;
     l_left.leftFirst = l_node.leftFirst;
     l_left.triangleCount = l_leftCount;
-    Node l_right;
+    BVHNode l_right;
     l_right.leftFirst = i;
     l_right.triangleCount = l_node.triangleCount - l_leftCount;
 
@@ -189,7 +189,7 @@ GLuint BVH::GetTriangleSSBO()
 
 GLuint BVH::GetIndexSSBO()
 {
-    if (m_dirtyIDs)
+    if (m_dirtyIdxs)
     {
         glGenBuffers(1, &m_indexesSSBOID);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_indexesSSBOID);
@@ -198,7 +198,7 @@ GLuint BVH::GetIndexSSBO()
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
         printf("BVH indexes uploaded\n");
-        m_dirtyIDs = false;
+        m_dirtyIdxs = false;
     }
 
     return m_indexesSSBOID;
