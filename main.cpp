@@ -141,11 +141,11 @@ void HandleInput(Camera& _camera, SDL_KeyboardEvent& _keyEvent)
 	switch (l_key)
 	{
 		case SDLK_w:
-			_camera.Move(_camera.Forward() * (1.0f / 60.0f));
+			_camera.Move(_camera.Forward() * (1.0f / 15.0f));
 			break;
 
 		case SDLK_s:
-			_camera.Move(-_camera.Forward() * (1.0f / 60.0f));
+			_camera.Move(-_camera.Forward() * (1.0f / 15.0f));
 			break;
 	}
 };
