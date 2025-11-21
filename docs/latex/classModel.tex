@@ -28,6 +28,24 @@ std\+::vector$<$ \mbox{\hyperlink{structTriangle}{Triangle}} $>$ \mbox{\hyperlin
 \item 
 glm\+::vec3 \mbox{\hyperlink{classModel_af1de9a151d77a2a7c9448fc796c2aee1}{m\+\_\+position}}
 \end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classModel_a127cf983dda6f072192ef15a3485ce95}{Split\+String\+Whitespace}} (const std\+::string \&\+\_\+input, std\+::vector$<$ std\+::string $>$ \&\+\_\+output)
+\item 
+void \mbox{\hyperlink{classModel_accfc07fa186d233f249fe7590b909e9d}{Split\+String}} (const std\+::string \&\+\_\+input, char \+\_\+splitter, std\+::vector$<$ std\+::string $>$ \&\+\_\+output)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classModel}{Model}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classModel_a16dff54ea522f31a93a52c8ce9732781}{model}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{structFace}{Face}} $>$ \mbox{\hyperlink{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}{m\+\_\+faces}}
+\item 
+GLuint \mbox{\hyperlink{classModel_aa170b853344d01ea59475c24bfc5622a}{m\+\_\+ssbo\+Id}}
+\item 
+bool \mbox{\hyperlink{classModel_af662327ea6cbbe9fb4b5f4925793a3e4}{m\+\_\+dirty}}
+\end{DoxyCompactItemize}
 
 
 \label{doc-constructors}
@@ -86,19 +104,55 @@ GLsizei Model\+::\+Get\+Vertex\+Count (\begin{DoxyParamCaption}{}{}\end{DoxyPara
 {\footnotesize\ttfamily \label{classModel_aa451798aa00e88d67a4dd94c275cd536} 
 \mbox{\hyperlink{classModel}{Model}} \& Model\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classModel}{Model}} \&}]{\+\_\+assign}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+\Hypertarget{classModel_accfc07fa186d233f249fe7590b909e9d}\index{Model@{Model}!SplitString@{SplitString}}
+\index{SplitString@{SplitString}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{SplitString()}{SplitString()}}
+{\footnotesize\ttfamily \label{classModel_accfc07fa186d233f249fe7590b909e9d} 
+void Model\+::\+Split\+String (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{\+\_\+input}{, }\item[{char}]{\+\_\+splitter}{, }\item[{std\+::vector$<$ std\+::string $>$ \&}]{\+\_\+output}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+\Hypertarget{classModel_a127cf983dda6f072192ef15a3485ce95}\index{Model@{Model}!SplitStringWhitespace@{SplitStringWhitespace}}
+\index{SplitStringWhitespace@{SplitStringWhitespace}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{SplitStringWhitespace()}{SplitStringWhitespace()}}
+{\footnotesize\ttfamily \label{classModel_a127cf983dda6f072192ef15a3485ce95} 
+void Model\+::\+Split\+String\+Whitespace (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{\+\_\+input}{, }\item[{std\+::vector$<$ std\+::string $>$ \&}]{\+\_\+output}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
 
 
 \label{doc-variable-members}
 \Hypertarget{classModel_doc-variable-members}
 \doxysubsection{Member Data Documentation}
+\Hypertarget{classModel_af662327ea6cbbe9fb4b5f4925793a3e4}\index{Model@{Model}!m\_dirty@{m\_dirty}}
+\index{m\_dirty@{m\_dirty}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{m\_dirty}{m\_dirty}}
+{\footnotesize\ttfamily \label{classModel_af662327ea6cbbe9fb4b5f4925793a3e4} 
+bool Model\+::m\+\_\+dirty\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}\index{Model@{Model}!m\_faces@{m\_faces}}
+\index{m\_faces@{m\_faces}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{m\_faces}{m\_faces}}
+{\footnotesize\ttfamily \label{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d} 
+std\+::vector$<$\mbox{\hyperlink{structFace}{Face}}$>$ Model\+::m\+\_\+faces\hspace{0.3cm}{\ttfamily [private]}}
+
 \Hypertarget{classModel_af1de9a151d77a2a7c9448fc796c2aee1}\index{Model@{Model}!m\_position@{m\_position}}
 \index{m\_position@{m\_position}!Model@{Model}}
 \doxysubsubsection{\texorpdfstring{m\_position}{m\_position}}
 {\footnotesize\ttfamily \label{classModel_af1de9a151d77a2a7c9448fc796c2aee1} 
 glm\+::vec3 Model\+::m\+\_\+position}
 
+\Hypertarget{classModel_aa170b853344d01ea59475c24bfc5622a}\index{Model@{Model}!m\_ssboId@{m\_ssboId}}
+\index{m\_ssboId@{m\_ssboId}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{m\_ssboId}{m\_ssboId}}
+{\footnotesize\ttfamily \label{classModel_aa170b853344d01ea59475c24bfc5622a} 
+GLuint Model\+::m\+\_\+ssbo\+Id\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classModel_a16dff54ea522f31a93a52c8ce9732781}\index{Model@{Model}!model@{model}}
+\index{model@{model}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{model}{model}}
+{\footnotesize\ttfamily \label{classModel_a16dff54ea522f31a93a52c8ce9732781} 
+\mbox{\hyperlink{classModel}{Model}}\texorpdfstring{$\ast$}{*} Model\+::model\hspace{0.3cm}{\ttfamily [private]}}
+
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-include/\mbox{\hyperlink{Model_8h}{Model.\+h}}\end{DoxyCompactItemize}
+/home/owen/\+Documents/\+GCP\+\_\+\+Raytracer\+\_\+\+Framework\+\_\+\+CMAKE/include/\mbox{\hyperlink{Model_8h}{Model.\+h}}\end{DoxyCompactItemize}

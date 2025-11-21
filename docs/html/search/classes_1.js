@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bvh_0',['BVH',['../structBVH.html',1,'']]]
+  ['bvh_0',['BVH',['../classBVH.html',1,'']]]
 ];

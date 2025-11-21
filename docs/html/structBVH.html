@@ -94,6 +94,10 @@ $(function(){initNavTree('structBVH.html','','structBVH-members'); });
 
 <p><code>#include &lt;<a class="el" href="BVH_8h_source.html">BVH.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:Node" id="r_Node"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structBVH_1_1Node.html">Node</a></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a186928fc2572882d5baac1ce55239bf6" id="r_a186928fc2572882d5baac1ce55239bf6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a186928fc2572882d5baac1ce55239bf6">BVH</a> (std::vector&lt; <a class="el" href="structTriangle.html">Triangle</a> &gt; *_tris)</td></tr>
@@ -102,6 +106,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a41898a6e886d6e78ce464cfdc2bc5324" id="r_a41898a6e886d6e78ce464cfdc2bc5324"><td class="memItemLeft" align="right" valign="top">GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41898a6e886d6e78ce464cfdc2bc5324">GetTriangleSSBO</a> ()</td></tr>
 <tr class="memitem:a15dc7a753f2613aa94c14a4c8ece0d45" id="r_a15dc7a753f2613aa94c14a4c8ece0d45"><td class="memItemLeft" align="right" valign="top">GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a15dc7a753f2613aa94c14a4c8ece0d45">GetIndexSSBO</a> ()</td></tr>
 <tr class="memitem:a0ef0b1d832594e1f2d831963af2dbce0" id="r_a0ef0b1d832594e1f2d831963af2dbce0"><td class="memItemLeft" align="right" valign="top">GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ef0b1d832594e1f2d831963af2dbce0">GetNodeSSBO</a> ()</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pri-methods" class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:ad971e60d86bff6104daa68c51ce5a10f" id="r_ad971e60d86bff6104daa68c51ce5a10f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad971e60d86bff6104daa68c51ce5a10f">UpdateNodeBounds</a> (int _nodeIndex)</td></tr>
+<tr class="memitem:ab083a0115cd6a887083d009f30dc5e8e" id="r_ab083a0115cd6a887083d009f30dc5e8e"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab083a0115cd6a887083d009f30dc5e8e">CalculateSAH</a> (<a class="el" href="structBVH_1_1Node.html">Node</a> &amp;_node, int _axis, float _pos)</td></tr>
+<tr class="memitem:a7238dbd456b45f7e055c81f626c65689" id="r_a7238dbd456b45f7e055c81f626c65689"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7238dbd456b45f7e055c81f626c65689">Subdivide</a> (int _nodeIndex)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:adcfe9954d438c1f18295b496d07eb3aa" id="r_adcfe9954d438c1f18295b496d07eb3aa"><td class="memItemLeft" align="right" valign="top">GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcfe9954d438c1f18295b496d07eb3aa">m_nodeSSBOID</a></td></tr>
+<tr class="memitem:ad6dac13c8df2feb89982cc6cc658eebb" id="r_ad6dac13c8df2feb89982cc6cc658eebb"><td class="memItemLeft" align="right" valign="top">GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6dac13c8df2feb89982cc6cc658eebb">m_indexesSSBOID</a></td></tr>
+<tr class="memitem:ac95d3e8a1d51e42986de425ed0f5ad35" id="r_ac95d3e8a1d51e42986de425ed0f5ad35"><td class="memItemLeft" align="right" valign="top">GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac95d3e8a1d51e42986de425ed0f5ad35">m_triangleSSBOID</a></td></tr>
+<tr class="memitem:ae06b6bdccdeb6696d8e392e6ec79106d" id="r_ae06b6bdccdeb6696d8e392e6ec79106d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae06b6bdccdeb6696d8e392e6ec79106d">m_dirtyNodes</a></td></tr>
+<tr class="memitem:a37ddb659738016cf11b1e5deb066492d" id="r_a37ddb659738016cf11b1e5deb066492d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a37ddb659738016cf11b1e5deb066492d">m_dirtyIDs</a></td></tr>
+<tr class="memitem:aa9195168d652566aafc8033fd43a3c08" id="r_aa9195168d652566aafc8033fd43a3c08"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9195168d652566aafc8033fd43a3c08">m_dirtyTris</a></td></tr>
+<tr class="memitem:a3de35072dcdf614e21b1c52daca2a310" id="r_a3de35072dcdf614e21b1c52daca2a310"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structBVH_1_1Node.html">Node</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3de35072dcdf614e21b1c52daca2a310">m_nodes</a></td></tr>
+<tr class="memitem:a9c09824dcddcc0f68366caac397a800f" id="r_a9c09824dcddcc0f68366caac397a800f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structTriangle.html">Triangle</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c09824dcddcc0f68366caac397a800f">m_tris</a></td></tr>
+<tr class="memitem:a7cc6ab2183e9a5edb7041b634d9d9cd6" id="r_a7cc6ab2183e9a5edb7041b634d9d9cd6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7cc6ab2183e9a5edb7041b634d9d9cd6">m_triIndexes</a></td></tr>
 </table>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a186928fc2572882d5baac1ce55239bf6" name="a186928fc2572882d5baac1ce55239bf6"></a>
@@ -172,6 +194,40 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ab083a0115cd6a887083d009f30dc5e8e" name="ab083a0115cd6a887083d009f30dc5e8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab083a0115cd6a887083d009f30dc5e8e">&#9670;&#160;</a></span>CalculateSAH()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float BVH::CalculateSAH </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structBVH_1_1Node.html">Node</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>_node</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>_axis</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>_pos</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a15dc7a753f2613aa94c14a4c8ece0d45" name="a15dc7a753f2613aa94c14a4c8ece0d45"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a15dc7a753f2613aa94c14a4c8ece0d45">&#9670;&#160;</a></span>GetIndexSSBO()</h2>
 
@@ -223,8 +279,257 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a7238dbd456b45f7e055c81f626c65689" name="a7238dbd456b45f7e055c81f626c65689"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7238dbd456b45f7e055c81f626c65689">&#9670;&#160;</a></span>Subdivide()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void BVH::Subdivide </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>_nodeIndex</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad971e60d86bff6104daa68c51ce5a10f" name="ad971e60d86bff6104daa68c51ce5a10f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad971e60d86bff6104daa68c51ce5a10f">&#9670;&#160;</a></span>UpdateNodeBounds()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void BVH::UpdateNodeBounds </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>_nodeIndex</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a37ddb659738016cf11b1e5deb066492d" name="a37ddb659738016cf11b1e5deb066492d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37ddb659738016cf11b1e5deb066492d">&#9670;&#160;</a></span>m_dirtyIDs</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool BVH::m_dirtyIDs</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae06b6bdccdeb6696d8e392e6ec79106d" name="ae06b6bdccdeb6696d8e392e6ec79106d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae06b6bdccdeb6696d8e392e6ec79106d">&#9670;&#160;</a></span>m_dirtyNodes</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool BVH::m_dirtyNodes</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa9195168d652566aafc8033fd43a3c08" name="aa9195168d652566aafc8033fd43a3c08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9195168d652566aafc8033fd43a3c08">&#9670;&#160;</a></span>m_dirtyTris</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool BVH::m_dirtyTris</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad6dac13c8df2feb89982cc6cc658eebb" name="ad6dac13c8df2feb89982cc6cc658eebb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6dac13c8df2feb89982cc6cc658eebb">&#9670;&#160;</a></span>m_indexesSSBOID</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLuint BVH::m_indexesSSBOID</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3de35072dcdf614e21b1c52daca2a310" name="a3de35072dcdf614e21b1c52daca2a310"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3de35072dcdf614e21b1c52daca2a310">&#9670;&#160;</a></span>m_nodes</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="structBVH_1_1Node.html">Node</a>&gt; BVH::m_nodes</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adcfe9954d438c1f18295b496d07eb3aa" name="adcfe9954d438c1f18295b496d07eb3aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcfe9954d438c1f18295b496d07eb3aa">&#9670;&#160;</a></span>m_nodeSSBOID</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLuint BVH::m_nodeSSBOID</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac95d3e8a1d51e42986de425ed0f5ad35" name="ac95d3e8a1d51e42986de425ed0f5ad35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac95d3e8a1d51e42986de425ed0f5ad35">&#9670;&#160;</a></span>m_triangleSSBOID</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLuint BVH::m_triangleSSBOID</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7cc6ab2183e9a5edb7041b634d9d9cd6" name="a7cc6ab2183e9a5edb7041b634d9d9cd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cc6ab2183e9a5edb7041b634d9d9cd6">&#9670;&#160;</a></span>m_triIndexes</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;int&gt; BVH::m_triIndexes</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9c09824dcddcc0f68366caac397a800f" name="a9c09824dcddcc0f68366caac397a800f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c09824dcddcc0f68366caac397a800f">&#9670;&#160;</a></span>m_tris</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="structTriangle.html">Triangle</a>&gt; BVH::m_tris</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>include/<a class="el" href="BVH_8h_source.html">BVH.h</a></li>
+<li>/home/owen/Documents/GCP_Raytracer_Framework_CMAKE/include/<a class="el" href="BVH_8h_source.html">BVH.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

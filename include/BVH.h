@@ -10,15 +10,27 @@
 #include "Triangle.h"
 #include "AABB.h"
 
-struct BVH
+/**
+ * @details
+ * A Bounding Volume Hierarchy that groups triangles
+ * into a tree structure to accelerate Ray-Tracing processes
+ */
+class BVH
 {
     private:
     GLuint m_nodeSSBOID;
     GLuint m_indexesSSBOID;
     GLuint m_triangleSSBOID;
+
+    /**@{ 
+     * @name Dirty flags
+     * Dirty flags for denoting when data should
+     * be reuploaded to the GPU
+    */
     bool m_dirtyNodes;
     bool m_dirtyIDs;
     bool m_dirtyTris;
+    /**@} */
 
     // Bit alignment hocus pocus
     struct Node

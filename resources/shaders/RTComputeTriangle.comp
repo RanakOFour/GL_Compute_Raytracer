@@ -235,13 +235,16 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
             {
                 for(int i = 0; i < node.triangleCount; i++)
                 {
+                    // Skip the same triangle
                     if(bvhTriangleIndexes[node.leftFirst + i] == raycastHit.triangleIndex)
                     {
                         continue;
                     }
 
                     RaycastResult shadowHit = triangleIntersect(shadowRay, modelData[bvhTriangleIndexes[node.leftFirst + i]], bvhTriangleIndexes[node.leftFirst + i]);
-                    if(shadowHit.hit && shadowHit.distance < lightDistance)
+                    
+                    // More than a minimum value to ignore close triangles
+                    if(shadowHit.hit && shadowHit.distance < lightDistance && shadowHit.distance > 0.01f)
                     {
                         return true;
                     }

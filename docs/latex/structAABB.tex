@@ -2,6 +2,11 @@
 \hypertarget{structAABB}{}\label{structAABB}\index{AABB@{AABB}}
 
 
+A set of half-\/extents that describe a 3D cube area.  
+
+
+
+
 {\ttfamily \#include $<$AABB.\+h$>$}
 
 \doxysubsubsection*{Public Member Functions}
@@ -10,9 +15,9 @@
 \mbox{\hyperlink{structAABB_a5f5baf6c533905aa1456b3a3eb57bab2}{AABB}} ()
 \item 
 void \mbox{\hyperlink{structAABB_abd71af39ba536f2f5431c699e19bf224}{Grow}} (glm\+::vec3 \&\+\_\+p)
-\item 
+\begin{DoxyCompactList}\small\item\em Changes the size of the \doxylink{structAABB}{AABB} to contain the point passed in. \end{DoxyCompactList}\item 
 float \mbox{\hyperlink{structAABB_aab65effb09eb561b323a1e0f2e106b6e}{Area}} ()
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Calculates the area of the Cube described by the half extents \doxylink{structAABB_adf058bc078fc357fe71bdd3826057b37}{AABB\+::bmin} and \doxylink{structAABB_a827993b4d2bfe85c647c97d1c29670fb}{AABB\+::bmax}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -21,6 +26,9 @@ glm\+::vec3 \mbox{\hyperlink{structAABB_adf058bc078fc357fe71bdd3826057b37}{bmin}
 glm\+::vec3 \mbox{\hyperlink{structAABB_a827993b4d2bfe85c647c97d1c29670fb}{bmax}}
 \end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+A set of half-\/extents that describe a 3D cube area. 
 
 \label{doc-constructors}
 \Hypertarget{structAABB_doc-constructors}
@@ -42,11 +50,19 @@ AABB\+::\+AABB (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm
 {\footnotesize\ttfamily \label{structAABB_aab65effb09eb561b323a1e0f2e106b6e} 
 float AABB\+::\+Area (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+Calculates the area of the Cube described by the half extents \doxylink{structAABB_adf058bc078fc357fe71bdd3826057b37}{AABB\+::bmin} and \doxylink{structAABB_a827993b4d2bfe85c647c97d1c29670fb}{AABB\+::bmax}. 
+
 \Hypertarget{structAABB_abd71af39ba536f2f5431c699e19bf224}\index{AABB@{AABB}!Grow@{Grow}}
 \index{Grow@{Grow}!AABB@{AABB}}
 \doxysubsubsection{\texorpdfstring{Grow()}{Grow()}}
 {\footnotesize\ttfamily \label{structAABB_abd71af39ba536f2f5431c699e19bf224} 
 void AABB\+::\+Grow (\begin{DoxyParamCaption}\item[{glm\+::vec3 \&}]{\+\_\+p}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Changes the size of the \doxylink{structAABB}{AABB} to contain the point passed in. 
 
 
 
@@ -69,4 +85,4 @@ glm\+::vec3 AABB\+::bmin}
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-include/\mbox{\hyperlink{AABB_8h}{AABB.\+h}}\end{DoxyCompactItemize}
+/home/owen/\+Documents/\+GCP\+\_\+\+Raytracer\+\_\+\+Framework\+\_\+\+CMAKE/include/\mbox{\hyperlink{AABB_8h}{AABB.\+h}}\end{DoxyCompactItemize}

@@ -1,7 +1,7 @@
 var annotated_dup =
 [
     [ "AABB", "structAABB.html", "structAABB" ],
-    [ "BVH", "structBVH.html", "structBVH" ],
+    [ "BVH", "classBVH.html", "classBVH" ],
     [ "Camera", "classCamera.html", "classCamera" ],
     [ "ComputeShader", "classComputeShader.html", "classComputeShader" ],
     [ "Face", "structFace.html", "structFace" ],

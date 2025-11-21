@@ -2,6 +2,11 @@
 \hypertarget{classCamera}{}\label{classCamera}\index{Camera@{Camera}}
 
 
+Contains information on the scene camera.  
+
+
+
+
 {\ttfamily \#include $<$Camera.\+h$>$}
 
 \doxysubsubsection*{Public Member Functions}
@@ -33,7 +38,27 @@ glm\+::vec3 \& \mbox{\hyperlink{classCamera_afb65f48f9e022829071d21415fa2e843}{R
 glm\+::vec3 \& \mbox{\hyperlink{classCamera_a9db60aa52d41c1274cc2457a3fdff0f8}{Up}} ()
 \end{DoxyCompactItemize}
 \end{Indent}
+\doxysubsubsection*{Private Attributes}
+\begin{Indent}\textbf{ Properties}\par
+\begin{DoxyCompactItemize}
+\item 
+glm\+::vec3 \mbox{\hyperlink{classCamera_ace34ea6757c15c2282077bda120c9f9e}{m\+\_\+\+Position}}
+\item 
+glm\+::vec3 \mbox{\hyperlink{classCamera_aebe0c7545aa94c2785e3ec9698119ad6}{m\+\_\+\+Forward}} = glm\+::vec3(0.\+0f, 0.\+0f, -\/1.\+0f)
+\item 
+glm\+::vec3 \mbox{\hyperlink{classCamera_a18d75a804cfadfc09b95dad52f68c106}{m\+\_\+\+Right}} = glm\+::vec3(1.\+0f, 0.\+0f, 0.\+0f)
+\item 
+glm\+::vec3 \mbox{\hyperlink{classCamera_a981eecb1c8750bb446eb6f9429f742ed}{m\+\_\+\+Up}} = glm\+::vec3(0.\+0f, 1.\+0f, 0.\+0f)
+\item 
+glm\+::vec2 \mbox{\hyperlink{classCamera_aff9fa45f7bff83defd598a5552bb385c}{m\+\_\+\+Resolution}}
+\item 
+float \mbox{\hyperlink{classCamera_aa404a4e057fa16fb82ce8668d7a661b6}{m\+\_\+fov}}
+\end{DoxyCompactItemize}
+\end{Indent}
 
+
+\doxysubsection{Detailed Description}
+Contains information on the scene camera. 
 
 \label{doc-constructors}
 \Hypertarget{classCamera_doc-constructors}
@@ -115,6 +140,47 @@ Updates all camera related shader uniforms.
 
 
 
+\label{doc-variable-members}
+\Hypertarget{classCamera_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classCamera_aebe0c7545aa94c2785e3ec9698119ad6}\index{Camera@{Camera}!m\_Forward@{m\_Forward}}
+\index{m\_Forward@{m\_Forward}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{m\_Forward}{m\_Forward}}
+{\footnotesize\ttfamily \label{classCamera_aebe0c7545aa94c2785e3ec9698119ad6} 
+glm\+::vec3 Camera\+::m\+\_\+\+Forward = glm\+::vec3(0.\+0f, 0.\+0f, -\/1.\+0f)\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classCamera_aa404a4e057fa16fb82ce8668d7a661b6}\index{Camera@{Camera}!m\_fov@{m\_fov}}
+\index{m\_fov@{m\_fov}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{m\_fov}{m\_fov}}
+{\footnotesize\ttfamily \label{classCamera_aa404a4e057fa16fb82ce8668d7a661b6} 
+float Camera\+::m\+\_\+fov\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classCamera_ace34ea6757c15c2282077bda120c9f9e}\index{Camera@{Camera}!m\_Position@{m\_Position}}
+\index{m\_Position@{m\_Position}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{m\_Position}{m\_Position}}
+{\footnotesize\ttfamily \label{classCamera_ace34ea6757c15c2282077bda120c9f9e} 
+glm\+::vec3 Camera\+::m\+\_\+\+Position\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classCamera_aff9fa45f7bff83defd598a5552bb385c}\index{Camera@{Camera}!m\_Resolution@{m\_Resolution}}
+\index{m\_Resolution@{m\_Resolution}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{m\_Resolution}{m\_Resolution}}
+{\footnotesize\ttfamily \label{classCamera_aff9fa45f7bff83defd598a5552bb385c} 
+glm\+::vec2 Camera\+::m\+\_\+\+Resolution\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classCamera_a18d75a804cfadfc09b95dad52f68c106}\index{Camera@{Camera}!m\_Right@{m\_Right}}
+\index{m\_Right@{m\_Right}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{m\_Right}{m\_Right}}
+{\footnotesize\ttfamily \label{classCamera_a18d75a804cfadfc09b95dad52f68c106} 
+glm\+::vec3 Camera\+::m\+\_\+\+Right = glm\+::vec3(1.\+0f, 0.\+0f, 0.\+0f)\hspace{0.3cm}{\ttfamily [private]}}
+
+\Hypertarget{classCamera_a981eecb1c8750bb446eb6f9429f742ed}\index{Camera@{Camera}!m\_Up@{m\_Up}}
+\index{m\_Up@{m\_Up}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{m\_Up}{m\_Up}}
+{\footnotesize\ttfamily \label{classCamera_a981eecb1c8750bb446eb6f9429f742ed} 
+glm\+::vec3 Camera\+::m\+\_\+\+Up = glm\+::vec3(0.\+0f, 1.\+0f, 0.\+0f)\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-include/\mbox{\hyperlink{Camera_8h}{Camera.\+h}}\end{DoxyCompactItemize}
+/home/owen/\+Documents/\+GCP\+\_\+\+Raytracer\+\_\+\+Framework\+\_\+\+CMAKE/include/\mbox{\hyperlink{Camera_8h}{Camera.\+h}}\end{DoxyCompactItemize}

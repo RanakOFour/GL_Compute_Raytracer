@@ -108,6 +108,18 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:af1de9a151d77a2a7c9448fc796c2aee1" id="r_af1de9a151d77a2a7c9448fc796c2aee1"><td class="memItemLeft" align="right" valign="top">glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1de9a151d77a2a7c9448fc796c2aee1">m_position</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pri-methods" class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a127cf983dda6f072192ef15a3485ce95" id="r_a127cf983dda6f072192ef15a3485ce95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a127cf983dda6f072192ef15a3485ce95">SplitStringWhitespace</a> (const std::string &amp;_input, std::vector&lt; std::string &gt; &amp;_output)</td></tr>
+<tr class="memitem:accfc07fa186d233f249fe7590b909e9d" id="r_accfc07fa186d233f249fe7590b909e9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#accfc07fa186d233f249fe7590b909e9d">SplitString</a> (const std::string &amp;_input, char _splitter, std::vector&lt; std::string &gt; &amp;_output)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a16dff54ea522f31a93a52c8ce9732781" id="r_a16dff54ea522f31a93a52c8ce9732781"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classModel.html">Model</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16dff54ea522f31a93a52c8ce9732781">model</a></td></tr>
+<tr class="memitem:a09b1cf1b07c8d7aaaf9b6eabde81829d" id="r_a09b1cf1b07c8d7aaaf9b6eabde81829d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structFace.html">Face</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a09b1cf1b07c8d7aaaf9b6eabde81829d">m_faces</a></td></tr>
+<tr class="memitem:aa170b853344d01ea59475c24bfc5622a" id="r_aa170b853344d01ea59475c24bfc5622a"><td class="memItemLeft" align="right" valign="top">GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa170b853344d01ea59475c24bfc5622a">m_ssboId</a></td></tr>
+<tr class="memitem:af662327ea6cbbe9fb4b5f4925793a3e4" id="r_af662327ea6cbbe9fb4b5f4925793a3e4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af662327ea6cbbe9fb4b5f4925793a3e4">m_dirty</a></td></tr>
 </table>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae3b375de5f6df4faf74a95d64748e048" name="ae3b375de5f6df4faf74a95d64748e048"></a>
@@ -311,7 +323,114 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="accfc07fa186d233f249fe7590b909e9d" name="accfc07fa186d233f249fe7590b909e9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accfc07fa186d233f249fe7590b909e9d">&#9670;&#160;</a></span>SplitString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Model::SplitString </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>_input</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char</td>          <td class="paramname"><span class="paramname"><em>_splitter</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>_output</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a127cf983dda6f072192ef15a3485ce95" name="a127cf983dda6f072192ef15a3485ce95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a127cf983dda6f072192ef15a3485ce95">&#9670;&#160;</a></span>SplitStringWhitespace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Model::SplitStringWhitespace </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>_input</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>_output</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="af662327ea6cbbe9fb4b5f4925793a3e4" name="af662327ea6cbbe9fb4b5f4925793a3e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af662327ea6cbbe9fb4b5f4925793a3e4">&#9670;&#160;</a></span>m_dirty</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Model::m_dirty</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a09b1cf1b07c8d7aaaf9b6eabde81829d" name="a09b1cf1b07c8d7aaaf9b6eabde81829d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09b1cf1b07c8d7aaaf9b6eabde81829d">&#9670;&#160;</a></span>m_faces</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;<a class="el" href="structFace.html">Face</a>&gt; Model::m_faces</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af1de9a151d77a2a7c9448fc796c2aee1" name="af1de9a151d77a2a7c9448fc796c2aee1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af1de9a151d77a2a7c9448fc796c2aee1">&#9670;&#160;</a></span>m_position</h2>
 
@@ -326,8 +445,52 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aa170b853344d01ea59475c24bfc5622a" name="aa170b853344d01ea59475c24bfc5622a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa170b853344d01ea59475c24bfc5622a">&#9670;&#160;</a></span>m_ssboId</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">GLuint Model::m_ssboId</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a16dff54ea522f31a93a52c8ce9732781" name="a16dff54ea522f31a93a52c8ce9732781"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16dff54ea522f31a93a52c8ce9732781">&#9670;&#160;</a></span>model</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classModel.html">Model</a>* Model::model</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>include/<a class="el" href="Model_8h_source.html">Model.h</a></li>
+<li>/home/owen/Documents/GCP_Raytracer_Framework_CMAKE/include/<a class="el" href="Model_8h_source.html">Model.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

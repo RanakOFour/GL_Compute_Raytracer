@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.15.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>GCP_Raytracer: include/BVH.h Source File</title>
+<title>GCP_Raytracer: /home/owen/Documents/GCP_Raytracer_Framework_CMAKE/include/BVH.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -102,93 +102,113 @@ $(function(){initNavTree('BVH_8h_source.html','',''); });
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="Triangle_8h.html">Triangle.h</a>&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="AABB_8h.html">AABB.h</a>&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="foldopen" id="foldopen00013" data-start="{" data-end="};">
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="structBVH.html">   13</a></span><span class="keyword">struct </span><a class="code hl_function" href="structBVH.html#a186928fc2572882d5baac1ce55239bf6">BVH</a></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>{</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    GLuint m_nodeSSBOID;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    GLuint m_indexesSSBOID;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    GLuint m_triangleSSBOID;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keywordtype">bool</span> m_dirtyNodes;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keywordtype">bool</span> m_dirtyIDs;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keywordtype">bool</span> m_dirtyTris;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="comment">// Bit alignment hocus pocus</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">struct </span>Node</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        glm::vec3 minBound;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keywordtype">int</span> leftFirst;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        glm::vec3 maxBound;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keywordtype">int</span> triangleCount;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    };</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    std::vector&lt;Node&gt; m_nodes;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    std::vector&lt;Triangle&gt; m_tris;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    std::vector&lt;int&gt; m_triIndexes;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordtype">void</span> UpdateNodeBounds(<span class="keywordtype">int</span> _nodeIndex);</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">float</span> CalculateSAH(Node&amp; _node, <span class="keywordtype">int</span> _axis, <span class="keywordtype">float</span> _pos);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordtype">void</span> Subdivide(<span class="keywordtype">int</span> _nodeIndex);</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00043" data-start="{" data-end="}">
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="structBVH.html#a186928fc2572882d5baac1ce55239bf6">   43</a></span>    <a class="code hl_function" href="structBVH.html#a186928fc2572882d5baac1ce55239bf6">BVH</a>(std::vector&lt;Triangle&gt;* _tris)</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    : m_nodeSSBOID(0)</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    , m_indexesSSBOID(0)</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    , m_triangleSSBOID(0)</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    , m_nodes()</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    , m_tris(*_tris)</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    , m_triIndexes()</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    , m_dirtyNodes(true)</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    , m_dirtyIDs(true)</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    , m_dirtyTris(true)</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    {</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <a class="code hl_function" href="structBVH.html#a6c4fb8ed66af88dda283eefb3f66a154">BuildBHV</a>();</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    };</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span></div>
+<div class="foldopen" id="foldopen00018" data-start="{" data-end="};">
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classBVH.html">   18</a></span><span class="keyword">class </span><a class="code hl_function" href="classBVH.html#a186928fc2572882d5baac1ce55239bf6">BVH</a></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>{</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classBVH.html#adcfe9954d438c1f18295b496d07eb3aa">   21</a></span>    GLuint <a class="code hl_variable" href="classBVH.html#adcfe9954d438c1f18295b496d07eb3aa">m_nodeSSBOID</a>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classBVH.html#ad6dac13c8df2feb89982cc6cc658eebb">   22</a></span>    GLuint <a class="code hl_variable" href="classBVH.html#ad6dac13c8df2feb89982cc6cc658eebb">m_indexesSSBOID</a>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classBVH.html#ac95d3e8a1d51e42986de425ed0f5ad35">   23</a></span>    GLuint <a class="code hl_variable" href="classBVH.html#ac95d3e8a1d51e42986de425ed0f5ad35">m_triangleSSBOID</a>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classBVH.html#ae06b6bdccdeb6696d8e392e6ec79106d">   30</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="classBVH.html#ae06b6bdccdeb6696d8e392e6ec79106d">m_dirtyNodes</a>;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classBVH.html#a37ddb659738016cf11b1e5deb066492d">   31</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="classBVH.html#a37ddb659738016cf11b1e5deb066492d">m_dirtyIDs</a>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classBVH.html#aa9195168d652566aafc8033fd43a3c08">   32</a></span>    <span class="keywordtype">bool</span> <a class="code hl_variable" href="classBVH.html#aa9195168d652566aafc8033fd43a3c08">m_dirtyTris</a>;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="comment">// Bit alignment hocus pocus</span></div>
+<div class="foldopen" id="foldopen00036" data-start="{" data-end="};">
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="structBVH_1_1Node.html">   36</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structBVH_1_1Node.html">Node</a></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="structBVH_1_1Node.html#a521e94e5d57acee4f39264b979e73b96">   38</a></span>        glm::vec3 <a class="code hl_variable" href="structBVH_1_1Node.html#a521e94e5d57acee4f39264b979e73b96">minBound</a>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="structBVH_1_1Node.html#ae03d682e2ddffe05f4a95704fa6e02c9">   39</a></span>        <span class="keywordtype">int</span> <a class="code hl_variable" href="structBVH_1_1Node.html#ae03d682e2ddffe05f4a95704fa6e02c9">leftFirst</a>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="structBVH_1_1Node.html#ac63b8e043f032239eb56ed84f8bab28c">   40</a></span>        glm::vec3 <a class="code hl_variable" href="structBVH_1_1Node.html#ac63b8e043f032239eb56ed84f8bab28c">maxBound</a>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="structBVH_1_1Node.html#ac64408237df9edb33f245c6d39ecd3f8">   41</a></span>        <span class="keywordtype">int</span> <a class="code hl_variable" href="structBVH_1_1Node.html#ac64408237df9edb33f245c6d39ecd3f8">triangleCount</a>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    };</div>
 </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="foldopen" id="foldopen00057" data-start="{" data-end="}">
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="structBVH.html#a6cceb8c4f73abd2a9f58bb883ca371bf">   57</a></span>    <a class="code hl_function" href="structBVH.html#a6cceb8c4f73abd2a9f58bb883ca371bf">~BVH</a>()</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    {</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keywordflow">if</span> (m_indexesSSBOID)</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        {</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            glDeleteBuffers(1, &amp;m_indexesSSBOID);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        }</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        <span class="keywordflow">if</span> (m_nodeSSBOID)</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        {</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            glDeleteBuffers(1, &amp;m_nodeSSBOID);</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        }</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classBVH.html#a3de35072dcdf614e21b1c52daca2a310">   44</a></span>    std::vector&lt;Node&gt; <a class="code hl_variable" href="classBVH.html#a3de35072dcdf614e21b1c52daca2a310">m_nodes</a>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classBVH.html#a9c09824dcddcc0f68366caac397a800f">   45</a></span>    std::vector&lt;Triangle&gt; <a class="code hl_variable" href="classBVH.html#a9c09824dcddcc0f68366caac397a800f">m_tris</a>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classBVH.html#a7cc6ab2183e9a5edb7041b634d9d9cd6">   46</a></span>    std::vector&lt;int&gt; <a class="code hl_variable" href="classBVH.html#a7cc6ab2183e9a5edb7041b634d9d9cd6">m_triIndexes</a>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="classBVH.html#ad971e60d86bff6104daa68c51ce5a10f">   48</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classBVH.html#ad971e60d86bff6104daa68c51ce5a10f">UpdateNodeBounds</a>(<span class="keywordtype">int</span> _nodeIndex);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classBVH.html#ab083a0115cd6a887083d009f30dc5e8e">   50</a></span>    <span class="keywordtype">float</span> <a class="code hl_function" href="classBVH.html#ab083a0115cd6a887083d009f30dc5e8e">CalculateSAH</a>(<a class="code hl_struct" href="structBVH_1_1Node.html">Node</a>&amp; _node, <span class="keywordtype">int</span> _axis, <span class="keywordtype">float</span> _pos);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classBVH.html#a7238dbd456b45f7e055c81f626c65689">   52</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classBVH.html#a7238dbd456b45f7e055c81f626c65689">Subdivide</a>(<span class="keywordtype">int</span> _nodeIndex);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00055" data-start="{" data-end="}">
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classBVH.html#a186928fc2572882d5baac1ce55239bf6">   55</a></span>    <a class="code hl_function" href="classBVH.html#a186928fc2572882d5baac1ce55239bf6">BVH</a>(std::vector&lt;Triangle&gt;* _tris)</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    : <a class="code hl_variable" href="classBVH.html#adcfe9954d438c1f18295b496d07eb3aa">m_nodeSSBOID</a>(0)</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    , <a class="code hl_variable" href="classBVH.html#ad6dac13c8df2feb89982cc6cc658eebb">m_indexesSSBOID</a>(0)</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    , <a class="code hl_variable" href="classBVH.html#ac95d3e8a1d51e42986de425ed0f5ad35">m_triangleSSBOID</a>(0)</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    , <a class="code hl_variable" href="classBVH.html#a3de35072dcdf614e21b1c52daca2a310">m_nodes</a>()</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    , <a class="code hl_variable" href="classBVH.html#a9c09824dcddcc0f68366caac397a800f">m_tris</a>(*_tris)</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    , <a class="code hl_variable" href="classBVH.html#a7cc6ab2183e9a5edb7041b634d9d9cd6">m_triIndexes</a>()</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    , <a class="code hl_variable" href="classBVH.html#ae06b6bdccdeb6696d8e392e6ec79106d">m_dirtyNodes</a>(true)</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    , <a class="code hl_variable" href="classBVH.html#a37ddb659738016cf11b1e5deb066492d">m_dirtyIDs</a>(true)</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    , <a class="code hl_variable" href="classBVH.html#aa9195168d652566aafc8033fd43a3c08">m_dirtyTris</a>(true)</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <a class="code hl_function" href="classBVH.html#a6c4fb8ed66af88dda283eefb3f66a154">BuildBHV</a>();</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    };</div>
+</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        <span class="keywordflow">if</span> (m_triangleSSBOID)</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        {</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            glDeleteBuffers(1, &amp;m_triangleSSBOID);</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        }</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    };</div>
-</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="structBVH.html#a6c4fb8ed66af88dda283eefb3f66a154">   75</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="structBVH.html#a6c4fb8ed66af88dda283eefb3f66a154">BuildBHV</a>();</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="structBVH.html#a41898a6e886d6e78ce464cfdc2bc5324">   77</a></span>    GLuint <a class="code hl_function" href="structBVH.html#a41898a6e886d6e78ce464cfdc2bc5324">GetTriangleSSBO</a>();</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="structBVH.html#a15dc7a753f2613aa94c14a4c8ece0d45">   79</a></span>    GLuint <a class="code hl_function" href="structBVH.html#a15dc7a753f2613aa94c14a4c8ece0d45">GetIndexSSBO</a>();</div>
+<div class="foldopen" id="foldopen00069" data-start="{" data-end="}">
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classBVH.html#a6cceb8c4f73abd2a9f58bb883ca371bf">   69</a></span>    <a class="code hl_function" href="classBVH.html#a6cceb8c4f73abd2a9f58bb883ca371bf">~BVH</a>()</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    {</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classBVH.html#ad6dac13c8df2feb89982cc6cc658eebb">m_indexesSSBOID</a>)</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>            glDeleteBuffers(1, &amp;<a class="code hl_variable" href="classBVH.html#ad6dac13c8df2feb89982cc6cc658eebb">m_indexesSSBOID</a>);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        }</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classBVH.html#adcfe9954d438c1f18295b496d07eb3aa">m_nodeSSBOID</a>)</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            glDeleteBuffers(1, &amp;<a class="code hl_variable" href="classBVH.html#adcfe9954d438c1f18295b496d07eb3aa">m_nodeSSBOID</a>);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        }</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="structBVH.html#a0ef0b1d832594e1f2d831963af2dbce0">   81</a></span>    GLuint <a class="code hl_function" href="structBVH.html#a0ef0b1d832594e1f2d831963af2dbce0">GetNodeSSBO</a>();</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>};</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classBVH.html#ac95d3e8a1d51e42986de425ed0f5ad35">m_triangleSSBOID</a>)</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            glDeleteBuffers(1, &amp;<a class="code hl_variable" href="classBVH.html#ac95d3e8a1d51e42986de425ed0f5ad35">m_triangleSSBOID</a>);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        }</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    };</div>
 </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classBVH.html#a6c4fb8ed66af88dda283eefb3f66a154">   87</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classBVH.html#a6c4fb8ed66af88dda283eefb3f66a154">BuildBHV</a>();</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno"><a class="line" href="classBVH.html#a41898a6e886d6e78ce464cfdc2bc5324">   89</a></span>    GLuint <a class="code hl_function" href="classBVH.html#a41898a6e886d6e78ce464cfdc2bc5324">GetTriangleSSBO</a>();</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="classBVH.html#a15dc7a753f2613aa94c14a4c8ece0d45">   91</a></span>    GLuint <a class="code hl_function" href="classBVH.html#a15dc7a753f2613aa94c14a4c8ece0d45">GetIndexSSBO</a>();</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="classBVH.html#a0ef0b1d832594e1f2d831963af2dbce0">   93</a></span>    GLuint <a class="code hl_function" href="classBVH.html#a0ef0b1d832594e1f2d831963af2dbce0">GetNodeSSBO</a>();</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>};</div>
+</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aAABB_8h_html"><div class="ttname"><a href="AABB_8h.html">AABB.h</a></div></div>
 <div class="ttc" id="aTriangle_8h_html"><div class="ttname"><a href="Triangle_8h.html">Triangle.h</a></div></div>
-<div class="ttc" id="astructBVH_html_a0ef0b1d832594e1f2d831963af2dbce0"><div class="ttname"><a href="structBVH.html#a0ef0b1d832594e1f2d831963af2dbce0">BVH::GetNodeSSBO</a></div><div class="ttdeci">GLuint GetNodeSSBO()</div></div>
-<div class="ttc" id="astructBVH_html_a15dc7a753f2613aa94c14a4c8ece0d45"><div class="ttname"><a href="structBVH.html#a15dc7a753f2613aa94c14a4c8ece0d45">BVH::GetIndexSSBO</a></div><div class="ttdeci">GLuint GetIndexSSBO()</div></div>
-<div class="ttc" id="astructBVH_html_a186928fc2572882d5baac1ce55239bf6"><div class="ttname"><a href="structBVH.html#a186928fc2572882d5baac1ce55239bf6">BVH::BVH</a></div><div class="ttdeci">BVH(std::vector&lt; Triangle &gt; *_tris)</div><div class="ttdef"><b>Definition</b> BVH.h:43</div></div>
-<div class="ttc" id="astructBVH_html_a41898a6e886d6e78ce464cfdc2bc5324"><div class="ttname"><a href="structBVH.html#a41898a6e886d6e78ce464cfdc2bc5324">BVH::GetTriangleSSBO</a></div><div class="ttdeci">GLuint GetTriangleSSBO()</div></div>
-<div class="ttc" id="astructBVH_html_a6c4fb8ed66af88dda283eefb3f66a154"><div class="ttname"><a href="structBVH.html#a6c4fb8ed66af88dda283eefb3f66a154">BVH::BuildBHV</a></div><div class="ttdeci">void BuildBHV()</div></div>
-<div class="ttc" id="astructBVH_html_a6cceb8c4f73abd2a9f58bb883ca371bf"><div class="ttname"><a href="structBVH.html#a6cceb8c4f73abd2a9f58bb883ca371bf">BVH::~BVH</a></div><div class="ttdeci">~BVH()</div><div class="ttdef"><b>Definition</b> BVH.h:57</div></div>
+<div class="ttc" id="aclassBVH_html_a0ef0b1d832594e1f2d831963af2dbce0"><div class="ttname"><a href="classBVH.html#a0ef0b1d832594e1f2d831963af2dbce0">BVH::GetNodeSSBO</a></div><div class="ttdeci">GLuint GetNodeSSBO()</div></div>
+<div class="ttc" id="aclassBVH_html_a15dc7a753f2613aa94c14a4c8ece0d45"><div class="ttname"><a href="classBVH.html#a15dc7a753f2613aa94c14a4c8ece0d45">BVH::GetIndexSSBO</a></div><div class="ttdeci">GLuint GetIndexSSBO()</div></div>
+<div class="ttc" id="aclassBVH_html_a186928fc2572882d5baac1ce55239bf6"><div class="ttname"><a href="classBVH.html#a186928fc2572882d5baac1ce55239bf6">BVH::BVH</a></div><div class="ttdeci">BVH(std::vector&lt; Triangle &gt; *_tris)</div><div class="ttdef"><b>Definition</b> BVH.h:55</div></div>
+<div class="ttc" id="aclassBVH_html_a37ddb659738016cf11b1e5deb066492d"><div class="ttname"><a href="classBVH.html#a37ddb659738016cf11b1e5deb066492d">BVH::m_dirtyIDs</a></div><div class="ttdeci">bool m_dirtyIDs</div><div class="ttdef"><b>Definition</b> BVH.h:31</div></div>
+<div class="ttc" id="aclassBVH_html_a3de35072dcdf614e21b1c52daca2a310"><div class="ttname"><a href="classBVH.html#a3de35072dcdf614e21b1c52daca2a310">BVH::m_nodes</a></div><div class="ttdeci">std::vector&lt; Node &gt; m_nodes</div><div class="ttdef"><b>Definition</b> BVH.h:44</div></div>
+<div class="ttc" id="aclassBVH_html_a41898a6e886d6e78ce464cfdc2bc5324"><div class="ttname"><a href="classBVH.html#a41898a6e886d6e78ce464cfdc2bc5324">BVH::GetTriangleSSBO</a></div><div class="ttdeci">GLuint GetTriangleSSBO()</div></div>
+<div class="ttc" id="aclassBVH_html_a6c4fb8ed66af88dda283eefb3f66a154"><div class="ttname"><a href="classBVH.html#a6c4fb8ed66af88dda283eefb3f66a154">BVH::BuildBHV</a></div><div class="ttdeci">void BuildBHV()</div></div>
+<div class="ttc" id="aclassBVH_html_a6cceb8c4f73abd2a9f58bb883ca371bf"><div class="ttname"><a href="classBVH.html#a6cceb8c4f73abd2a9f58bb883ca371bf">BVH::~BVH</a></div><div class="ttdeci">~BVH()</div><div class="ttdef"><b>Definition</b> BVH.h:69</div></div>
+<div class="ttc" id="aclassBVH_html_a7238dbd456b45f7e055c81f626c65689"><div class="ttname"><a href="classBVH.html#a7238dbd456b45f7e055c81f626c65689">BVH::Subdivide</a></div><div class="ttdeci">void Subdivide(int _nodeIndex)</div></div>
+<div class="ttc" id="aclassBVH_html_a7cc6ab2183e9a5edb7041b634d9d9cd6"><div class="ttname"><a href="classBVH.html#a7cc6ab2183e9a5edb7041b634d9d9cd6">BVH::m_triIndexes</a></div><div class="ttdeci">std::vector&lt; int &gt; m_triIndexes</div><div class="ttdef"><b>Definition</b> BVH.h:46</div></div>
+<div class="ttc" id="aclassBVH_html_a9c09824dcddcc0f68366caac397a800f"><div class="ttname"><a href="classBVH.html#a9c09824dcddcc0f68366caac397a800f">BVH::m_tris</a></div><div class="ttdeci">std::vector&lt; Triangle &gt; m_tris</div><div class="ttdef"><b>Definition</b> BVH.h:45</div></div>
+<div class="ttc" id="aclassBVH_html_aa9195168d652566aafc8033fd43a3c08"><div class="ttname"><a href="classBVH.html#aa9195168d652566aafc8033fd43a3c08">BVH::m_dirtyTris</a></div><div class="ttdeci">bool m_dirtyTris</div><div class="ttdef"><b>Definition</b> BVH.h:32</div></div>
+<div class="ttc" id="aclassBVH_html_ab083a0115cd6a887083d009f30dc5e8e"><div class="ttname"><a href="classBVH.html#ab083a0115cd6a887083d009f30dc5e8e">BVH::CalculateSAH</a></div><div class="ttdeci">float CalculateSAH(Node &amp;_node, int _axis, float _pos)</div></div>
+<div class="ttc" id="aclassBVH_html_ac95d3e8a1d51e42986de425ed0f5ad35"><div class="ttname"><a href="classBVH.html#ac95d3e8a1d51e42986de425ed0f5ad35">BVH::m_triangleSSBOID</a></div><div class="ttdeci">GLuint m_triangleSSBOID</div><div class="ttdef"><b>Definition</b> BVH.h:23</div></div>
+<div class="ttc" id="aclassBVH_html_ad6dac13c8df2feb89982cc6cc658eebb"><div class="ttname"><a href="classBVH.html#ad6dac13c8df2feb89982cc6cc658eebb">BVH::m_indexesSSBOID</a></div><div class="ttdeci">GLuint m_indexesSSBOID</div><div class="ttdef"><b>Definition</b> BVH.h:22</div></div>
+<div class="ttc" id="aclassBVH_html_ad971e60d86bff6104daa68c51ce5a10f"><div class="ttname"><a href="classBVH.html#ad971e60d86bff6104daa68c51ce5a10f">BVH::UpdateNodeBounds</a></div><div class="ttdeci">void UpdateNodeBounds(int _nodeIndex)</div></div>
+<div class="ttc" id="aclassBVH_html_adcfe9954d438c1f18295b496d07eb3aa"><div class="ttname"><a href="classBVH.html#adcfe9954d438c1f18295b496d07eb3aa">BVH::m_nodeSSBOID</a></div><div class="ttdeci">GLuint m_nodeSSBOID</div><div class="ttdef"><b>Definition</b> BVH.h:21</div></div>
+<div class="ttc" id="aclassBVH_html_ae06b6bdccdeb6696d8e392e6ec79106d"><div class="ttname"><a href="classBVH.html#ae06b6bdccdeb6696d8e392e6ec79106d">BVH::m_dirtyNodes</a></div><div class="ttdeci">bool m_dirtyNodes</div><div class="ttdef"><b>Definition</b> BVH.h:30</div></div>
+<div class="ttc" id="astructBVH_1_1Node_html"><div class="ttname"><a href="structBVH_1_1Node.html">BVH::Node</a></div><div class="ttdef"><b>Definition</b> BVH.h:37</div></div>
+<div class="ttc" id="astructBVH_1_1Node_html_a521e94e5d57acee4f39264b979e73b96"><div class="ttname"><a href="structBVH_1_1Node.html#a521e94e5d57acee4f39264b979e73b96">BVH::Node::minBound</a></div><div class="ttdeci">glm::vec3 minBound</div><div class="ttdef"><b>Definition</b> BVH.h:38</div></div>
+<div class="ttc" id="astructBVH_1_1Node_html_ac63b8e043f032239eb56ed84f8bab28c"><div class="ttname"><a href="structBVH_1_1Node.html#ac63b8e043f032239eb56ed84f8bab28c">BVH::Node::maxBound</a></div><div class="ttdeci">glm::vec3 maxBound</div><div class="ttdef"><b>Definition</b> BVH.h:40</div></div>
+<div class="ttc" id="astructBVH_1_1Node_html_ac64408237df9edb33f245c6d39ecd3f8"><div class="ttname"><a href="structBVH_1_1Node.html#ac64408237df9edb33f245c6d39ecd3f8">BVH::Node::triangleCount</a></div><div class="ttdeci">int triangleCount</div><div class="ttdef"><b>Definition</b> BVH.h:41</div></div>
+<div class="ttc" id="astructBVH_1_1Node_html_ae03d682e2ddffe05f4a95704fa6e02c9"><div class="ttname"><a href="structBVH_1_1Node.html#ae03d682e2ddffe05f4a95704fa6e02c9">BVH::Node::leftFirst</a></div><div class="ttdeci">int leftFirst</div><div class="ttdef"><b>Definition</b> BVH.h:39</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

@@ -115,14 +115,15 @@ $(function(){initNavTree('functions.html','',''); });
 <li>b&#160;:&#160;<a class="el" href="structFace.html#a7050eb8b5ebab6d448c7d20c36615ac3">Face</a>, <a class="el" href="structTriangle.html#a926bd99a7e345b5527ccbee07f0e6b0b">Triangle</a></li>
 <li>bmax&#160;:&#160;<a class="el" href="structAABB.html#a827993b4d2bfe85c647c97d1c29670fb">AABB</a></li>
 <li>bmin&#160;:&#160;<a class="el" href="structAABB.html#adf058bc078fc357fe71bdd3826057b37">AABB</a></li>
-<li>BuildBHV()&#160;:&#160;<a class="el" href="structBVH.html#a6c4fb8ed66af88dda283eefb3f66a154">BVH</a></li>
-<li>BVH()&#160;:&#160;<a class="el" href="structBVH.html#a186928fc2572882d5baac1ce55239bf6">BVH</a></li>
+<li>BuildBHV()&#160;:&#160;<a class="el" href="classBVH.html#a6c4fb8ed66af88dda283eefb3f66a154">BVH</a></li>
+<li>BVH()&#160;:&#160;<a class="el" href="classBVH.html#a186928fc2572882d5baac1ce55239bf6">BVH</a></li>
 </ul>
 
 
 <h3 class="doxsection"><a id="index_c" name="index_c"></a>- c -</h3><ul>
 <li>c&#160;:&#160;<a class="el" href="structFace.html#abce160414bd015d51632d3aea6a7db4f">Face</a>, <a class="el" href="structTriangle.html#aaad6c6cb9cf100dd36798fc3e34b1936">Triangle</a></li>
 <li>CalculateNormal()&#160;:&#160;<a class="el" href="structFace.html#a402c5bc8d200b84b1902e2c9e0f12e74">Face</a></li>
+<li>CalculateSAH()&#160;:&#160;<a class="el" href="classBVH.html#ab083a0115cd6a887083d009f30dc5e8e">BVH</a></li>
 <li>Camera()&#160;:&#160;<a class="el" href="classCamera.html#aca027bd2e697c77c56fd997a153c34f4">Camera</a></li>
 <li>colour&#160;:&#160;<a class="el" href="structLight.html#a39420f4b2297b6f5668974fc3073e761">Light</a></li>
 <li>ComputeShader()&#160;:&#160;<a class="el" href="classComputeShader.html#a30e1e78bd322e3e8353a752e3dae40a9">ComputeShader</a></li>
@@ -143,10 +144,10 @@ $(function(){initNavTree('functions.html','',''); });
 
 <h3 class="doxsection"><a id="index_g" name="index_g"></a>- g -</h3><ul>
 <li>GetFaces()&#160;:&#160;<a class="el" href="classModel.html#a848030d6e59d267cb96d14a944006655">Model</a></li>
-<li>GetIndexSSBO()&#160;:&#160;<a class="el" href="structBVH.html#a15dc7a753f2613aa94c14a4c8ece0d45">BVH</a></li>
-<li>GetNodeSSBO()&#160;:&#160;<a class="el" href="structBVH.html#a0ef0b1d832594e1f2d831963af2dbce0">BVH</a></li>
+<li>GetIndexSSBO()&#160;:&#160;<a class="el" href="classBVH.html#a15dc7a753f2613aa94c14a4c8ece0d45">BVH</a></li>
+<li>GetNodeSSBO()&#160;:&#160;<a class="el" href="classBVH.html#a0ef0b1d832594e1f2d831963af2dbce0">BVH</a></li>
 <li>GetTriangles()&#160;:&#160;<a class="el" href="classModel.html#a4f121d6d69eae8cf1f4544fcc84b2303">Model</a></li>
-<li>GetTriangleSSBO()&#160;:&#160;<a class="el" href="structBVH.html#a41898a6e886d6e78ce464cfdc2bc5324">BVH</a></li>
+<li>GetTriangleSSBO()&#160;:&#160;<a class="el" href="classBVH.html#a41898a6e886d6e78ce464cfdc2bc5324">BVH</a></li>
 <li>GetVertexCount()&#160;:&#160;<a class="el" href="classModel.html#a97c94933b6adca3fded198160e1bf5f8">Model</a></li>
 <li>Grow()&#160;:&#160;<a class="el" href="structAABB.html#abd71af39ba536f2f5431c699e19bf224">AABB</a></li>
 </ul>
@@ -157,9 +158,36 @@ $(function(){initNavTree('functions.html','',''); });
 </ul>
 
 
+<h3 class="doxsection"><a id="index_l" name="index_l"></a>- l -</h3><ul>
+<li>leftFirst&#160;:&#160;<a class="el" href="structBVH_1_1Node.html#ae03d682e2ddffe05f4a95704fa6e02c9">BVH::Node</a></li>
+</ul>
+
+
 <h3 class="doxsection"><a id="index_m" name="index_m"></a>- m -</h3><ul>
+<li>m_dirty&#160;:&#160;<a class="el" href="classModel.html#af662327ea6cbbe9fb4b5f4925793a3e4">Model</a></li>
+<li>m_dirtyIDs&#160;:&#160;<a class="el" href="classBVH.html#a37ddb659738016cf11b1e5deb066492d">BVH</a></li>
+<li>m_dirtyNodes&#160;:&#160;<a class="el" href="classBVH.html#ae06b6bdccdeb6696d8e392e6ec79106d">BVH</a></li>
+<li>m_dirtyTris&#160;:&#160;<a class="el" href="classBVH.html#aa9195168d652566aafc8033fd43a3c08">BVH</a></li>
+<li>m_faces&#160;:&#160;<a class="el" href="classModel.html#a09b1cf1b07c8d7aaaf9b6eabde81829d">Model</a></li>
+<li>m_Forward&#160;:&#160;<a class="el" href="classCamera.html#aebe0c7545aa94c2785e3ec9698119ad6">Camera</a></li>
+<li>m_fov&#160;:&#160;<a class="el" href="classCamera.html#aa404a4e057fa16fb82ce8668d7a661b6">Camera</a></li>
+<li>m_ID&#160;:&#160;<a class="el" href="classComputeShader.html#a3d955899e8b81d3d20d8c95a8f2bdeaf">ComputeShader</a></li>
+<li>m_indexesSSBOID&#160;:&#160;<a class="el" href="classBVH.html#ad6dac13c8df2feb89982cc6cc658eebb">BVH</a></li>
+<li>m_nodes&#160;:&#160;<a class="el" href="classBVH.html#a3de35072dcdf614e21b1c52daca2a310">BVH</a></li>
+<li>m_nodeSSBOID&#160;:&#160;<a class="el" href="classBVH.html#adcfe9954d438c1f18295b496d07eb3aa">BVH</a></li>
+<li>m_Position&#160;:&#160;<a class="el" href="classCamera.html#ace34ea6757c15c2282077bda120c9f9e">Camera</a></li>
 <li>m_position&#160;:&#160;<a class="el" href="classModel.html#af1de9a151d77a2a7c9448fc796c2aee1">Model</a></li>
+<li>m_Resolution&#160;:&#160;<a class="el" href="classCamera.html#aff9fa45f7bff83defd598a5552bb385c">Camera</a></li>
+<li>m_Right&#160;:&#160;<a class="el" href="classCamera.html#a18d75a804cfadfc09b95dad52f68c106">Camera</a></li>
+<li>m_ssboId&#160;:&#160;<a class="el" href="classModel.html#aa170b853344d01ea59475c24bfc5622a">Model</a></li>
+<li>m_triangleSSBOID&#160;:&#160;<a class="el" href="classBVH.html#ac95d3e8a1d51e42986de425ed0f5ad35">BVH</a></li>
+<li>m_triIndexes&#160;:&#160;<a class="el" href="classBVH.html#a7cc6ab2183e9a5edb7041b634d9d9cd6">BVH</a></li>
+<li>m_tris&#160;:&#160;<a class="el" href="classBVH.html#a9c09824dcddcc0f68366caac397a800f">BVH</a></li>
+<li>m_Up&#160;:&#160;<a class="el" href="classCamera.html#a981eecb1c8750bb446eb6f9429f742ed">Camera</a></li>
+<li>maxBound&#160;:&#160;<a class="el" href="structBVH_1_1Node.html#ac63b8e043f032239eb56ed84f8bab28c">BVH::Node</a></li>
+<li>minBound&#160;:&#160;<a class="el" href="structBVH_1_1Node.html#a521e94e5d57acee4f39264b979e73b96">BVH::Node</a></li>
 <li>Model()&#160;:&#160;<a class="el" href="classModel.html#ae3b375de5f6df4faf74a95d64748e048">Model</a></li>
+<li>model&#160;:&#160;<a class="el" href="classModel.html#a16dff54ea522f31a93a52c8ce9732781">Model</a></li>
 <li>Move()&#160;:&#160;<a class="el" href="classCamera.html#a3ecbf0118c8d87c3f7cb73105b9839ec">Camera</a></li>
 </ul>
 
@@ -191,17 +219,22 @@ $(function(){initNavTree('functions.html','',''); });
 <li>SetUniform()&#160;:&#160;<a class="el" href="classComputeShader.html#a1819449816731728776c4d7bae50ac8e">ComputeShader</a></li>
 <li>Show()&#160;:&#160;<a class="el" href="classGCP__Framework.html#aadef4eb4f2d9c1537753b6a6541a69f7">GCP_Framework</a></li>
 <li>Shutdown()&#160;:&#160;<a class="el" href="classGCP__Framework.html#a7be50125045945316c64c60e827d3e4e">GCP_Framework</a></li>
+<li>SplitString()&#160;:&#160;<a class="el" href="classModel.html#accfc07fa186d233f249fe7590b909e9d">Model</a></li>
+<li>SplitStringWhitespace()&#160;:&#160;<a class="el" href="classModel.html#a127cf983dda6f072192ef15a3485ce95">Model</a></li>
+<li>Subdivide()&#160;:&#160;<a class="el" href="classBVH.html#a7238dbd456b45f7e055c81f626c65689">BVH</a></li>
 <li>SwapBuffer()&#160;:&#160;<a class="el" href="classGCP__Framework.html#af64c3fb8bcb2bb1c9f5dbc4cc5aa8e3d">GCP_Framework</a></li>
 </ul>
 
 
 <h3 class="doxsection"><a id="index_t" name="index_t"></a>- t -</h3><ul>
 <li>texcoord&#160;:&#160;<a class="el" href="structVertex.html#a1cf33e838986d6bbe60caf4021e37f11">Vertex</a></li>
+<li>triangleCount&#160;:&#160;<a class="el" href="structBVH_1_1Node.html#ac64408237df9edb33f245c6d39ecd3f8">BVH::Node</a></li>
 </ul>
 
 
 <h3 class="doxsection"><a id="index_u" name="index_u"></a>- u -</h3><ul>
 <li>Up()&#160;:&#160;<a class="el" href="classCamera.html#a9db60aa52d41c1274cc2457a3fdff0f8">Camera</a></li>
+<li>UpdateNodeBounds()&#160;:&#160;<a class="el" href="classBVH.html#ad971e60d86bff6104daa68c51ce5a10f">BVH</a></li>
 <li>UpdateShader()&#160;:&#160;<a class="el" href="classCamera.html#adc9c61f0186f99690c003863516a5568">Camera</a></li>
 <li>use()&#160;:&#160;<a class="el" href="classComputeShader.html#a252c0422abdc92a1492dcd0255450fa9">ComputeShader</a></li>
 </ul>
@@ -213,7 +246,7 @@ $(function(){initNavTree('functions.html','',''); });
 
 
 <h3 class="doxsection"><a id="index__7E" name="index__7E"></a>- ~ -</h3><ul>
-<li>~BVH()&#160;:&#160;<a class="el" href="structBVH.html#a6cceb8c4f73abd2a9f58bb883ca371bf">BVH</a></li>
+<li>~BVH()&#160;:&#160;<a class="el" href="classBVH.html#a6cceb8c4f73abd2a9f58bb883ca371bf">BVH</a></li>
 <li>~Camera()&#160;:&#160;<a class="el" href="classCamera.html#ad1897942d0ccf91052386388a497349f">Camera</a></li>
 <li>~ComputeShader()&#160;:&#160;<a class="el" href="classComputeShader.html#a6ed5c0cf02fdb926cd25acaf313f3bd1">ComputeShader</a></li>
 <li>~GCP_Framework()&#160;:&#160;<a class="el" href="classGCP__Framework.html#aeccf17ced45b50c710bc6842574e5b57">GCP_Framework</a></li>

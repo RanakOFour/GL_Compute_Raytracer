@@ -4,12 +4,16 @@
 #include "GLM/ext.hpp"
 #include "ComputeShader.h"
 
-/*
+/**
+ *  @brief
 *   Contains information on the scene camera.
 */
 class Camera
 {
     private:
+    /**@{
+    *  @name Properties
+    */
     glm::vec3 m_Position;
     glm::vec3 m_Forward = glm::vec3(0.0f, 0.0f, -1.0f);
     glm::vec3 m_Right = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -18,6 +22,7 @@ class Camera
     glm::vec2 m_Resolution;
 
     float m_fov;
+    /**@} */
 
     public:
     Camera(glm::vec2 _resolution) :

@@ -1,5 +1,5 @@
 \doxysection{Model.\+h}
-\hypertarget{Model_8h_source}{}\label{Model_8h_source}\index{include/Model.h@{include/Model.h}}
+\hypertarget{Model_8h_source}{}\label{Model_8h_source}\index{/home/owen/Documents/GCP\_Raytracer\_Framework\_CMAKE/include/Model.h@{/home/owen/Documents/GCP\_Raytracer\_Framework\_CMAKE/include/Model.h}}
 \mbox{\hyperlink{Model_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{00001\ \textcolor{comment}{//\ Code\ taken\ from\ previous\ work,\ then\ modified\ with\ Triangle}}
@@ -43,15 +43,15 @@
 \DoxyCodeLine{00039\ }
 \DoxyCodeLine{00040\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classModel_ae3b375de5f6df4faf74a95d64748e048}{Model}}}
 \DoxyCodeLine{00041\ \{}
-\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{classModel_ae3b375de5f6df4faf74a95d64748e048}{Model}}*\ model;}
-\DoxyCodeLine{00043\ \ \ std::vector<Face>\ m\_faces;}
-\DoxyCodeLine{00044\ \ \ GLuint\ m\_ssboId;}
-\DoxyCodeLine{00045\ \ \ \textcolor{keywordtype}{bool}\ m\_dirty;}
+\DoxyCodeLine{00042\ \ \ \mbox{\hyperlink{classModel_ae3b375de5f6df4faf74a95d64748e048}{Model}}*\ \mbox{\hyperlink{classModel_a16dff54ea522f31a93a52c8ce9732781}{model}};}
+\DoxyCodeLine{00043\ \ \ std::vector<Face>\ \mbox{\hyperlink{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}{m\_faces}};}
+\DoxyCodeLine{00044\ \ \ GLuint\ \mbox{\hyperlink{classModel_aa170b853344d01ea59475c24bfc5622a}{m\_ssboId}};}
+\DoxyCodeLine{00045\ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classModel_af662327ea6cbbe9fb4b5f4925793a3e4}{m\_dirty}};}
 \DoxyCodeLine{00046\ }
-\DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{void}\ SplitStringWhitespace(\textcolor{keyword}{const}\ std::string\&\ \_input,}
+\DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classModel_a127cf983dda6f072192ef15a3485ce95}{SplitStringWhitespace}}(\textcolor{keyword}{const}\ std::string\&\ \_input,}
 \DoxyCodeLine{00048\ \ \ \ \ std::vector<std::string>\&\ \_output);}
 \DoxyCodeLine{00049\ }
-\DoxyCodeLine{00050\ \ \ \textcolor{keywordtype}{void}\ SplitString(\textcolor{keyword}{const}\ std::string\&\ \_input,\ \textcolor{keywordtype}{char}\ \_splitter,}
+\DoxyCodeLine{00050\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classModel_accfc07fa186d233f249fe7590b909e9d}{SplitString}}(\textcolor{keyword}{const}\ std::string\&\ \_input,\ \textcolor{keywordtype}{char}\ \_splitter,}
 \DoxyCodeLine{00051\ \ \ \ \ std::vector<std::string>\&\ \_output);}
 \DoxyCodeLine{00052\ }
 \DoxyCodeLine{00053\ \ \ \textcolor{keyword}{public}:}
@@ -75,15 +75,15 @@
 \DoxyCodeLine{00071\ }
 \DoxyCodeLine{00072\ }
 \DoxyCodeLine{00073\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{classModel_ae3b375de5f6df4faf74a95d64748e048}{Model::Model}}()\ :}
-\DoxyCodeLine{00074\ \ \ \ \ m\_dirty(false)}
+\DoxyCodeLine{00074\ \ \ \ \ \mbox{\hyperlink{classModel_af662327ea6cbbe9fb4b5f4925793a3e4}{m\_dirty}}(false)}
 \DoxyCodeLine{00075\ \ \ ,\ \mbox{\hyperlink{classModel_af1de9a151d77a2a7c9448fc796c2aee1}{m\_position}}()}
-\DoxyCodeLine{00076\ \ \ ,\ m\_ssboId(0)}
+\DoxyCodeLine{00076\ \ \ ,\ \mbox{\hyperlink{classModel_aa170b853344d01ea59475c24bfc5622a}{m\_ssboId}}(0)}
 \DoxyCodeLine{00077\ \{\ \}}
 \DoxyCodeLine{00078\ }
 \DoxyCodeLine{00079\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{classModel_ae3b375de5f6df4faf74a95d64748e048}{Model::Model}}(\textcolor{keyword}{const}\ std::string\&\ \_path)\ :}
-\DoxyCodeLine{00080\ \ \ \ \ m\_dirty(false)}
+\DoxyCodeLine{00080\ \ \ \ \ \mbox{\hyperlink{classModel_af662327ea6cbbe9fb4b5f4925793a3e4}{m\_dirty}}(false)}
 \DoxyCodeLine{00081\ \ \ ,\ \mbox{\hyperlink{classModel_af1de9a151d77a2a7c9448fc796c2aee1}{m\_position}}()}
-\DoxyCodeLine{00082\ \ \ ,\ m\_ssboId(0)}
+\DoxyCodeLine{00082\ \ \ ,\ \mbox{\hyperlink{classModel_aa170b853344d01ea59475c24bfc5622a}{m\_ssboId}}(0)}
 \DoxyCodeLine{00083\ \{}
 \DoxyCodeLine{00084\ \ \ std::vector<glm::vec3>\ L\_positions;}
 \DoxyCodeLine{00085\ \ \ std::vector<glm::vec2>\ L\_tcs;}
@@ -103,7 +103,7 @@
 \DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordflow}{if}(L\_currentline.length()\ <\ 1)\ \textcolor{keywordflow}{continue};}
 \DoxyCodeLine{00100\ }
 \DoxyCodeLine{00101\ \ \ \ \ std::vector<std::string>\ L\_tokens;}
-\DoxyCodeLine{00102\ \ \ \ \ SplitStringWhitespace(L\_currentline,\ L\_tokens);}
+\DoxyCodeLine{00102\ \ \ \ \ \mbox{\hyperlink{classModel_a127cf983dda6f072192ef15a3485ce95}{SplitStringWhitespace}}(L\_currentline,\ L\_tokens);}
 \DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordflow}{if}(L\_tokens.size()\ <\ 1)\ \textcolor{keywordflow}{continue};}
 \DoxyCodeLine{00104\ }
 \DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordflow}{if}(L\_tokens.at(0)\ ==\ \textcolor{stringliteral}{"{}v"{}}\ \&\&\ L\_tokens.size()\ >=\ 4)}
@@ -133,26 +133,26 @@
 \DoxyCodeLine{00129\ \ \ \ \ \{}
 \DoxyCodeLine{00130\ \ \ \ \ \ \ \mbox{\hyperlink{structFace}{Face}}\ f;}
 \DoxyCodeLine{00131\ \ \ \ \ \ \ std::vector<std::string>\ sub;}
-\DoxyCodeLine{00132\ \ \ \ \ \ \ SplitString(L\_tokens.at(1),\ \textcolor{charliteral}{'/'},\ sub);}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \mbox{\hyperlink{classModel_accfc07fa186d233f249fe7590b909e9d}{SplitString}}(L\_tokens.at(1),\ \textcolor{charliteral}{'/'},\ sub);}
 \DoxyCodeLine{00133\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sub.size()\ >=\ 1)\ f.\mbox{\hyperlink{structFace_ae1ef4295808a31a20ddb415b2d08d238}{a}}.\mbox{\hyperlink{structVertex_a030819fdc241743bbd3e180a6b132ed3}{position}}\ =\ L\_positions.at(atoi(sub.at(0).c\_str())\ -\/\ 1);}
 \DoxyCodeLine{00134\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sub.size()\ >=\ 2)\ f.\mbox{\hyperlink{structFace_ae1ef4295808a31a20ddb415b2d08d238}{a}}.\mbox{\hyperlink{structVertex_a1cf33e838986d6bbe60caf4021e37f11}{texcoord}}\ =\ L\_tcs.at(atoi(sub.at(1).c\_str())\ -\/\ 1);}
 \DoxyCodeLine{00135\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sub.size()\ >=\ 3)\ f.\mbox{\hyperlink{structFace_ae1ef4295808a31a20ddb415b2d08d238}{a}}.\mbox{\hyperlink{structVertex_a3aa35fe84025ecf1acccb5f65f5577fd}{normal}}\ =\ L\_normals.at(atoi(sub.at(2).c\_str())\ -\/\ 1);}
 \DoxyCodeLine{00136\ }
 \DoxyCodeLine{00137\ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{size\_t}\ ti\ =\ 2;\ ti\ +\ 1\ <\ L\_tokens.size();\ ti++)}
 \DoxyCodeLine{00138\ \ \ \ \ \ \ \{}
-\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ SplitString(L\_tokens.at(ti),\ \textcolor{charliteral}{'/'},\ sub);}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classModel_accfc07fa186d233f249fe7590b909e9d}{SplitString}}(L\_tokens.at(ti),\ \textcolor{charliteral}{'/'},\ sub);}
 \DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sub.size()\ >=\ 1)\ f.\mbox{\hyperlink{structFace_a7050eb8b5ebab6d448c7d20c36615ac3}{b}}.\mbox{\hyperlink{structVertex_a030819fdc241743bbd3e180a6b132ed3}{position}}\ =\ L\_positions.at(atoi(sub.at(0).c\_str())\ -\/\ 1);}
 \DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sub.size()\ >=\ 2)\ f.\mbox{\hyperlink{structFace_a7050eb8b5ebab6d448c7d20c36615ac3}{b}}.\mbox{\hyperlink{structVertex_a1cf33e838986d6bbe60caf4021e37f11}{texcoord}}\ =\ L\_tcs.at(atoi(sub.at(1).c\_str())\ -\/\ 1);}
 \DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sub.size()\ >=\ 3)\ f.\mbox{\hyperlink{structFace_a7050eb8b5ebab6d448c7d20c36615ac3}{b}}.\mbox{\hyperlink{structVertex_a3aa35fe84025ecf1acccb5f65f5577fd}{normal}}\ =\ L\_normals.at(atoi(sub.at(2).c\_str())\ -\/\ 1);}
 \DoxyCodeLine{00143\ }
-\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ SplitString(L\_tokens.at(ti\ +\ 1),\ \textcolor{charliteral}{'/'},\ sub);}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classModel_accfc07fa186d233f249fe7590b909e9d}{SplitString}}(L\_tokens.at(ti\ +\ 1),\ \textcolor{charliteral}{'/'},\ sub);}
 \DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sub.size()\ >=\ 1)\ f.\mbox{\hyperlink{structFace_abce160414bd015d51632d3aea6a7db4f}{c}}.\mbox{\hyperlink{structVertex_a030819fdc241743bbd3e180a6b132ed3}{position}}\ =\ L\_positions.at(atoi(sub.at(0).c\_str())\ -\/\ 1);}
 \DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sub.size()\ >=\ 2)\ f.\mbox{\hyperlink{structFace_abce160414bd015d51632d3aea6a7db4f}{c}}.\mbox{\hyperlink{structVertex_a1cf33e838986d6bbe60caf4021e37f11}{texcoord}}\ =\ L\_tcs.at(atoi(sub.at(1).c\_str())\ -\/\ 1);}
 \DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sub.size()\ >=\ 3)\ f.\mbox{\hyperlink{structFace_abce160414bd015d51632d3aea6a7db4f}{c}}.\mbox{\hyperlink{structVertex_a3aa35fe84025ecf1acccb5f65f5577fd}{normal}}\ =\ L\_normals.at(atoi(sub.at(2).c\_str())\ -\/\ 1);}
 \DoxyCodeLine{00148\ }
 \DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ f.\mbox{\hyperlink{structFace_a402c5bc8d200b84b1902e2c9e0f12e74}{CalculateNormal}}();}
-\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ m\_faces.push\_back(f);}
-\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ m\_dirty\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}{m\_faces}}.push\_back(f);}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classModel_af662327ea6cbbe9fb4b5f4925793a3e4}{m\_dirty}}\ =\ \textcolor{keyword}{true};}
 \DoxyCodeLine{00152\ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00153\ \ \ \ \ \}}
 \DoxyCodeLine{00154\ \ \ \}}
@@ -160,27 +160,27 @@
 \DoxyCodeLine{00156\ }
 \DoxyCodeLine{00157\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{classModel_ad6ebd2062a0b823db841a0b88baac4c0}{Model::\string~Model}}()}
 \DoxyCodeLine{00158\ \{}
-\DoxyCodeLine{00159\ \ \ \textcolor{keywordflow}{if}(m\_ssboId)}
+\DoxyCodeLine{00159\ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{classModel_aa170b853344d01ea59475c24bfc5622a}{m\_ssboId}})}
 \DoxyCodeLine{00160\ \ \ \{}
-\DoxyCodeLine{00161\ \ \ \ \ glDeleteBuffers(1,\ \&m\_ssboId);}
+\DoxyCodeLine{00161\ \ \ \ \ glDeleteBuffers(1,\ \&\mbox{\hyperlink{classModel_aa170b853344d01ea59475c24bfc5622a}{m\_ssboId}});}
 \DoxyCodeLine{00162\ \ \ \}}
 \DoxyCodeLine{00163\ \}}
 \DoxyCodeLine{00164\ }
 \DoxyCodeLine{00165\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{classModel_ae3b375de5f6df4faf74a95d64748e048}{Model::Model}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classModel_ae3b375de5f6df4faf74a95d64748e048}{Model}}\&\ \_copy)}
-\DoxyCodeLine{00166\ \ \ :\ m\_ssboId(0)}
-\DoxyCodeLine{00167\ \ \ ,\ m\_faces(\_copy.m\_faces)}
-\DoxyCodeLine{00168\ \ \ ,\ m\_dirty(true)}
+\DoxyCodeLine{00166\ \ \ :\ \mbox{\hyperlink{classModel_aa170b853344d01ea59475c24bfc5622a}{m\_ssboId}}(0)}
+\DoxyCodeLine{00167\ \ \ ,\ \mbox{\hyperlink{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}{m\_faces}}(\_copy.\mbox{\hyperlink{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}{m\_faces}})}
+\DoxyCodeLine{00168\ \ \ ,\ \mbox{\hyperlink{classModel_af662327ea6cbbe9fb4b5f4925793a3e4}{m\_dirty}}(true)}
 \DoxyCodeLine{00169\ \{\ \}}
 \DoxyCodeLine{00170\ }
 \DoxyCodeLine{00171\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{classModel_ae3b375de5f6df4faf74a95d64748e048}{Model}}\&\ \mbox{\hyperlink{classModel_aa451798aa00e88d67a4dd94c275cd536}{Model::operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classModel_ae3b375de5f6df4faf74a95d64748e048}{Model}}\&\ \_assign)}
 \DoxyCodeLine{00172\ \{}
-\DoxyCodeLine{00173\ \ \ m\_faces\ =\ \_assign.m\_faces;}
-\DoxyCodeLine{00174\ \ \ m\_dirty\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00173\ \ \ \mbox{\hyperlink{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}{m\_faces}}\ =\ \_assign.\mbox{\hyperlink{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}{m\_faces}};}
+\DoxyCodeLine{00174\ \ \ \mbox{\hyperlink{classModel_af662327ea6cbbe9fb4b5f4925793a3e4}{m\_dirty}}\ =\ \textcolor{keyword}{true};}
 \DoxyCodeLine{00175\ }
 \DoxyCodeLine{00176\ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
 \DoxyCodeLine{00177\ \}}
 \DoxyCodeLine{00178\ }
-\DoxyCodeLine{00179\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Model::SplitStringWhitespace(\textcolor{keyword}{const}\ std::string\&\ \_input,}
+\DoxyCodeLine{00179\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classModel_a127cf983dda6f072192ef15a3485ce95}{Model::SplitStringWhitespace}}(\textcolor{keyword}{const}\ std::string\&\ \_input,}
 \DoxyCodeLine{00180\ \ \ std::vector<std::string>\&\ \_output)}
 \DoxyCodeLine{00181\ \{}
 \DoxyCodeLine{00182\ \ \ std::string\ curr;}
@@ -212,7 +212,7 @@
 \DoxyCodeLine{00208\ \ \ \}}
 \DoxyCodeLine{00209\ \}}
 \DoxyCodeLine{00210\ }
-\DoxyCodeLine{00211\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Model::SplitString(\textcolor{keyword}{const}\ std::string\&\ \_input,\ \textcolor{keywordtype}{char}\ \_splitter,}
+\DoxyCodeLine{00211\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classModel_accfc07fa186d233f249fe7590b909e9d}{Model::SplitString}}(\textcolor{keyword}{const}\ std::string\&\ \_input,\ \textcolor{keywordtype}{char}\ \_splitter,}
 \DoxyCodeLine{00212\ \ \ std::vector<std::string>\&\ \_output)}
 \DoxyCodeLine{00213\ \{}
 \DoxyCodeLine{00214\ \ \ std::string\ curr;}
@@ -240,19 +240,19 @@
 \DoxyCodeLine{00236\ }
 \DoxyCodeLine{00237\ \textcolor{keyword}{inline}\ std::vector<Face>\&\ \mbox{\hyperlink{classModel_a848030d6e59d267cb96d14a944006655}{Model::GetFaces}}()}
 \DoxyCodeLine{00238\ \{}
-\DoxyCodeLine{00239\ \ \ \textcolor{keywordflow}{return}\ m\_faces;}
+\DoxyCodeLine{00239\ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}{m\_faces}};}
 \DoxyCodeLine{00240\ \}}
 \DoxyCodeLine{00241\ }
 \DoxyCodeLine{00242\ \textcolor{keyword}{inline}\ std::vector<Triangle>\ \mbox{\hyperlink{classModel_a4f121d6d69eae8cf1f4544fcc84b2303}{Model::GetTriangles}}(glm::vec3\ \_position)}
 \DoxyCodeLine{00243\ \{}
 \DoxyCodeLine{00244\ \ \ std::vector<Triangle>\ l\_triangles;}
 \DoxyCodeLine{00245\ }
-\DoxyCodeLine{00246\ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{size\_t}\ fi\ =\ 0;\ fi\ <\ m\_faces.size();\ ++fi)}
+\DoxyCodeLine{00246\ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{size\_t}\ fi\ =\ 0;\ fi\ <\ \mbox{\hyperlink{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}{m\_faces}}.size();\ ++fi)}
 \DoxyCodeLine{00247\ \ \ \{}
 \DoxyCodeLine{00248\ \ \ \ \ \mbox{\hyperlink{structTriangle}{Triangle}}\ newTri;}
-\DoxyCodeLine{00249\ \ \ \ \ newTri.\mbox{\hyperlink{structTriangle_a75a142a237477a294d9625379a6076d7}{a}}\ =\ m\_faces[fi].a.position\ +\ \_position;}
-\DoxyCodeLine{00250\ \ \ \ \ newTri.\mbox{\hyperlink{structTriangle_a926bd99a7e345b5527ccbee07f0e6b0b}{b}}\ =\ m\_faces[fi].b.position\ +\ \_position;}
-\DoxyCodeLine{00251\ \ \ \ \ newTri.\mbox{\hyperlink{structTriangle_aaad6c6cb9cf100dd36798fc3e34b1936}{c}}\ =\ m\_faces[fi].c.position\ +\ \_position;}
+\DoxyCodeLine{00249\ \ \ \ \ newTri.\mbox{\hyperlink{structTriangle_a75a142a237477a294d9625379a6076d7}{a}}\ =\ \mbox{\hyperlink{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}{m\_faces}}[fi].a.position\ +\ \_position;}
+\DoxyCodeLine{00250\ \ \ \ \ newTri.\mbox{\hyperlink{structTriangle_a926bd99a7e345b5527ccbee07f0e6b0b}{b}}\ =\ \mbox{\hyperlink{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}{m\_faces}}[fi].b.position\ +\ \_position;}
+\DoxyCodeLine{00251\ \ \ \ \ newTri.\mbox{\hyperlink{structTriangle_aaad6c6cb9cf100dd36798fc3e34b1936}{c}}\ =\ \mbox{\hyperlink{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}{m\_faces}}[fi].c.position\ +\ \_position;}
 \DoxyCodeLine{00252\ \ \ \ \ \mbox{\hyperlink{Triangle_8h_a7309599ed6e36916cbb312a22494c00a}{CalculateNormal}}(newTri);}
 \DoxyCodeLine{00253\ \ \ \ \ l\_triangles.push\_back(newTri);}
 \DoxyCodeLine{00254\ \ \ \}}
@@ -262,7 +262,7 @@
 \DoxyCodeLine{00258\ }
 \DoxyCodeLine{00259\ \textcolor{keyword}{inline}\ GLsizei\ \mbox{\hyperlink{classModel_a97c94933b6adca3fded198160e1bf5f8}{Model::GetVertexCount}}()\textcolor{keyword}{\ const}}
 \DoxyCodeLine{00260\ \textcolor{keyword}{}\{}
-\DoxyCodeLine{00261\ \ \ \textcolor{keywordflow}{return}\ (GLsizei)m\_faces.size()\ *\ 3;}
+\DoxyCodeLine{00261\ \ \ \textcolor{keywordflow}{return}\ (GLsizei)\mbox{\hyperlink{classModel_a09b1cf1b07c8d7aaaf9b6eabde81829d}{m\_faces}}.size()\ *\ 3;}
 \DoxyCodeLine{00262\ \}}
 \DoxyCodeLine{00263\ }
 \DoxyCodeLine{00264\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{structVertex_a97488994a2482d70da74e1b91d40e169}{Vertex::Vertex}}()}

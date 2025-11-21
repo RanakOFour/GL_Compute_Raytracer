@@ -16,17 +16,17 @@ struct Node
     vec3 minBound;
     int leftFirst;
     vec3 maxBound;
-    int triCount;
+    int triangleCount;
 };
 
-layout(std430, binding = 1) readonly buffer b_triangles
+layout(std430, binding = 1) readonly buffer b_trianglesSSBO
 {
-    Triangle triangles[];
+    Triangle modelData[];
 };
 
-layout(std430, binding = 2) readonly buffer b_bvhTriIdx
+layout(std430, binding = 2) readonly buffer b_bvhTriangleIndex
 {
-    int bvhTriIdx[];
+    int bvhTriangleIndexes[];
 };
 
 layout(std430, binding = 3) readonly buffer b_bvhNodes
@@ -61,8 +61,6 @@ struct Ray
 {
     vec3 origin;
     vec3 direction;
-    vec3 recipDir;
-    float distance;
 };
 
 struct RaycastResult 
@@ -71,10 +69,10 @@ struct RaycastResult
     float distance;
     vec3 position;
     vec3 normal;
-    float triangleIndex;
+    int triangleIndex;
 };
 
-RaycastResult triangleIntersect(Ray _ray, Triangle _tri, float _index)
+RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
 {
     RaycastResult result;
     result.hit = false;
@@ -127,88 +125,88 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, float _index)
     return result;
 }
 
-//Returns distance to cube or 1e30f if miss
-float IntersectAABB(in Ray _ray, vec3 _minBound, vec3 _maxBound)
+bool IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
 {
-    float tx1 = (_minBound.x - _ray.origin.x) * _ray.recipDir.x, tx2 = (_maxBound.x - _ray.origin.x) * _ray.recipDir.x;
-    float tmin = min( tx1, tx2 ), tmax = max( tx1, tx2 );
-    float ty1 = (_minBound.y - _ray.origin.y) * _ray.recipDir.y, ty2 = (_maxBound.y - _ray.origin.y) * _ray.recipDir.y;
-    tmin = max( tmin, min( ty1, ty2 ) ), tmax = min( tmax, max( ty1, ty2 ) );
-    float tz1 = (_minBound.z - _ray.origin.z) * _ray.recipDir.z, tz2 = (_maxBound.z - _ray.origin.z) * _ray.recipDir.z;
-    tmin = max( tmin, min( tz1, tz2 ) ), tmax = min( tmax, max( tz1, tz2 ) );
-    if (tmax >= tmin && tmin < _ray.distance && tmax > 0) return tmin; else return 1e30f;
+    float tmin = 0.0f;
+    float tmax = 10000000.0f;
+
+    // Iterate over each axis (x, y, z)
+    for (int i = 0; i < 3; i++)
+    {
+        if (abs(_ray.direction[i]) < 0.0001f)
+        {
+            // If the origin is outside the slab, there's no intersection
+            if (_ray.origin[i] < _minBound[i] || _ray.origin[i] > _maxBound[i])
+                return false;
+        }
+        else
+        {
+            // Compute the intersection t-values for the near and far planes of the slab
+            float ood = 1.0f / _ray.direction[i];
+            float t1 = (_minBound[i] - _ray.origin[i]) * ood;
+            float t2 = (_maxBound[i] - _ray.origin[i]) * ood;
+
+            // Ensure t1 is the intersection with the near plane, and t2 with the far plane
+            if (t1 > t2)
+            {
+                float temp = t1; // Swap t1 and t2
+                t1 = t2;
+                t2 = temp;
+            }
+
+            // Update tmin and tmax to compute the intersection interval
+            tmin = max(tmin, t1);
+            tmax = min(tmax, t2);
+
+            // If the interval becomes invalid, there is no intersection
+            if (tmin > tmax)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }
 
 
 RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
 {
-    int l_indexStack[64];
-    int l_top = 0;
-    l_indexStack[l_top] = 0;
+    int indexStack[64];
+    int top = 0;
+    indexStack[top] = 0;
+    int hits = 0;
 
-    Node l_node = bvhNodes[l_indexStack[l_top]];
-    l_top++;
+    Node node = bvhNodes[indexStack[top]];
+    top++;
 
-    while(true)
+    do
     {
-        if(l_node.triCount > 0)
+        if(IntersectAABB(_ray, node.minBound, node.maxBound))
         {
-            for(int i = 0; i < l_node.triCount; i++)
+            if(node.triangleCount > 0)
             {
-                RaycastResult newResult = triangleIntersect(_ray, triangles[bvhTriIdx[int(l_node.leftFirst) + i]], bvhTriIdx[int(l_node.leftFirst) + i]);
-                if(newResult.hit && newResult.distance < _result.distance)
+                for(int i = 0; i < node.triangleCount; i++)
                 {
-                    _result = newResult;
+                    RaycastResult newResult = triangleIntersect(_ray, modelData[bvhTriangleIndexes[node.leftFirst + i]], bvhTriangleIndexes[node.leftFirst + i]);
+                    if(newResult.hit && newResult.distance < _result.distance)
+                    {
+                        _result = newResult;
+                    }
                 }
             }
-
-            if(l_top == 0)
+            else
             {
-                break;
+                indexStack[top] = node.leftFirst;
+                top++;
+                indexStack[top] = node.leftFirst + 1;
+                top++;
             }
-            
-            l_top--;
-            l_node = bvhNodes[l_top];
         }
 
-        Node l_child1 = bvhNodes[int(l_node.leftFirst)];
-        Node l_child2 = bvhNodes[int(l_node.leftFirst + 1)];
-
-        float l_dist1 = IntersectAABB(_ray, l_child1.minBound, l_child1.maxBound);
-        float l_dist2 = IntersectAABB(_ray, l_child2.minBound, l_child2.maxBound);
-
-        if(l_dist1 > l_dist2)
-        {
-            float tempF = l_dist1;
-            l_dist1 = l_dist2;
-            l_dist2 = tempF;
-
-            Node tempN = l_child1;
-            l_child1 = l_child2;
-            l_child2 = tempN;
-        }
-
-        if(l_dist1> 1e30f)
-        {
-            if(l_top == 0)
-            {
-                break;
-            }
-
-
-            l_top--;
-            l_node = bvhNodes[l_indexStack[l_top]];
-        }
-        else
-        {
-            if(l_dist2 != 1e30f)
-            {
-                l_top++;
-                l_indexStack[l_top] = int(l_node.leftFirst) + 1;
-            }
-            l_node = l_child1;
-        }
-    }
+        top--;
+        node = bvhNodes[indexStack[top]];
+    } while(top > -1);
 
     return _result;
 }
@@ -218,90 +216,52 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
     Ray shadowRay;
     shadowRay.origin = raycastHit.position + raycastHit.normal * 0.001;
     shadowRay.direction = normalize(lightPos - raycastHit.position);
-    shadowRay.recipDir = (1 / shadowRay.direction);
-    shadowRay.distance = 1e30f;
     
     float lightDistance = length(lightPos - raycastHit.position);
-
-
-    // The BVH needs to betraversed again, but with different end goals,
-    // so a new implementation is needed
-
-    int l_indexStack[64];
-    int l_top = 0;
-    l_indexStack[l_top] = 0;
+    
+    int indexStack[64];
+    int top = 0;
+    indexStack[top] = 0;
     int hits = 0;
 
-    Node l_node = bvhNodes[l_indexStack[l_top]];
-    l_top++;
+    Node node = bvhNodes[indexStack[top]];
+    top++;
 
-    while(true)
+    do
     {
-        if(l_node.triCount > 0)
+        if(IntersectAABB(shadowRay, node.minBound, node.maxBound))
         {
-            for(int i = 0; i < l_node.triCount; i++)
+            if(node.triangleCount > 0)
             {
-                
-                if(bvhTriIdx[int(l_node.leftFirst) + i] == raycastHit.triangleIndex)
+                for(int i = 0; i < node.triangleCount; i++)
                 {
-                    continue;
+                    // Skip the same triangle
+                    if(bvhTriangleIndexes[node.leftFirst + i] == raycastHit.triangleIndex)
+                    {
+                        continue;
+                    }
+
+                    RaycastResult shadowHit = triangleIntersect(shadowRay, modelData[bvhTriangleIndexes[node.leftFirst + i]], bvhTriangleIndexes[node.leftFirst + i]);
+                    
+                    // More than a minimum value to ignore close triangles
+                    if(shadowHit.hit && shadowHit.distance < lightDistance && shadowHit.distance > 0.01f)
+                    {
+                        return true;
+                    }
                 }
-                
-                RaycastResult newResult = triangleIntersect(shadowRay, triangles[bvhTriIdx[int(l_node.leftFirst) + i]], bvhTriIdx[int(l_node.leftFirst) + i]);
-                
-                if(newResult.hit && newResult.distance < lightDistance)
-                {
-                    return true;
-                }
             }
-
-            if(l_top == 0)
+            else
             {
-                break;
+                indexStack[top] = node.leftFirst;
+                top++;
+                indexStack[top] = node.leftFirst + 1;
+                top++;
             }
-            
-            l_top--;
-            l_node = bvhNodes[l_top];
         }
 
-        Node l_child1 = bvhNodes[int(l_node.leftFirst)];
-        Node l_child2 = bvhNodes[int(l_node.leftFirst) + 1];
-
-        float l_dist1 = IntersectAABB(shadowRay, l_child1.minBound, l_child1.maxBound);
-        float l_dist2 = IntersectAABB(shadowRay, l_child2.minBound, l_child2.maxBound);
-
-        if(l_dist1 > l_dist2)
-        {
-            float tempF = l_dist1;
-            l_dist1 = l_dist2;
-            l_dist2 = tempF;
-
-            Node tempN = l_child1;
-            l_child1 = l_child2;
-            l_child2 = tempN;
-        }
-
-        if(l_dist1> 1e30f)
-        {
-            if(l_top == 0)
-            {
-                break;
-            }
-
-
-            l_top--;
-            l_node = bvhNodes[l_indexStack[l_top]];
-        }
-        else
-        {
-            if(l_dist2 != 1e30f)
-            {
-                l_top++;
-                l_indexStack[l_top] = int(l_node.leftFirst) + 1;
-            }
-            l_node = l_child1;
-        }
-    }
+        top--;
+        node = bvhNodes[indexStack[top]];
+    } while(top > -1);
 
     return false;
 }
@@ -322,7 +282,7 @@ vec3 calculateShading(RaycastResult hit, Ray _ray)
     
     vec3 objectColor = getObjectColor(hit);
 
-    return objectColor;
+    //return objectColor;
 
     vec3 lighting = vec3(0.0);
 
@@ -380,8 +340,6 @@ void main()
     Ray _ray;
     _ray.origin = u_camera.position;
     _ray.direction = rayDir;
-    _ray.recipDir = 1 / _ray.direction;
-    _ray.distance = 1e30f;
     
     RaycastResult closestHit;
     closestHit.hit = false;
@@ -389,9 +347,9 @@ void main()
     closestHit.normal = vec3(0.0);
 
     #if 0
-    for(int i = 0; i < triangles.length(); i++)
+    for(int i = 0; i < modelData.length(); i++)
     {
-        RaycastResult newResult = triangleIntersect(_ray, triangles[i], i);
+        RaycastResult newResult = triangleIntersect(_ray, modelData[i], i);
         if(newResult.hit && newResult.distance < closestHit.distance)
         {
             closestHit = newResult;

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['position_0',['position',['../structLight.html#a89bffe071ec6431a21c5b54021fe08d6',1,'Light::position'],['../structVertex.html#a030819fdc241743bbd3e180a6b132ed3',1,'Vertex::position']]]
+  ['normal_0',['normal',['../structVertex.html#a3aa35fe84025ecf1acccb5f65f5577fd',1,'Vertex::normal'],['../structFace.html#a9384eab7c9ebb8fed6fafe11aed9bd7b',1,'Face::normal'],['../structTriangle.html#a220700d6afccbc705329732ec4304b24',1,'Triangle::normal']]]
 ];

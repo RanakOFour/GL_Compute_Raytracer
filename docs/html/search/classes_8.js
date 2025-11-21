@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['triangle_0',['Triangle',['../structTriangle.html',1,'']]]
+  ['openglerror_0',['OpenGLError',['../classOpenGLError.html',1,'']]]
 ];

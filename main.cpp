@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
     // Camera setup
     Camera camera(glm::vec2(400 * 16.0f/9.0f, 400));
 
-	ComputeShader myShader("./resources/shaders/RTComputeTriangle.txt");
+	ComputeShader myShader("./resources/shaders/RTComputeTriangle.comp");
     
     myShader.use();
 
