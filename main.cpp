@@ -14,6 +14,8 @@
 
 #include <vector>
 
+inline void HandleInput(Camera& _camera, SDL_KeyboardEvent& _keyEvent);
+
 int main(int argc, char* argv[])
 {
 	// Set window size
@@ -27,20 +29,15 @@ int main(int argc, char* argv[])
 	{
 		return -1;
 	}
-
-	// std::vector<Sphere> spheres;
-    // spheres.push_back(Sphere(glm::vec3(0, 0, 0), 0.5f, glm::vec3(1, 0, 0)));    // Red sphere
-    // spheres.push_back(Sphere(glm::vec3(1, 0, 0), 0.3f, glm::vec3(0, 1, 0)));    // Green sphere
-    // spheres.push_back(Sphere(glm::vec3(-1, 0, 0), 0.4f, glm::vec3(0, 0, 1)));   // Blue sphere
     
     // Camera setup
-    Camera camera(glm::vec2(400 * 16.0f/9.0f, 400));
+    Camera camera(glm::vec2(500, 500));
 
 	ComputeShader myShader("./resources/shaders/RTComputeTriangle.comp");
     
     myShader.use();
 
-	Model sphereModel("./resources/objects/sphere.obj");
+	Model sphereModel("./resources/objects/curuthers.obj");
     
     // Set camera uniforms
     camera.UpdateShader(myShader);
@@ -53,15 +50,13 @@ int main(int argc, char* argv[])
 	myShader.SetUniform("lights[0].position", light.position);
 	myShader.SetUniform("lights[0].color", light.colour);
 
-	myShader.SetUniform("u_triCount", (int)(sphereModel.GetVertexCount() / 3));
-
 	std::vector<Triangle> tris[] = { sphereModel.GetTriangles(glm::vec3(0.0f))
-								   , sphereModel.GetTriangles(glm::vec3(1.0f, 0.0f, 1.0f))
-								   , sphereModel.GetTriangles(glm::vec3(-1.0f, 0.0f, -1.0f)) 
+								   , sphereModel.GetTriangles(glm::vec3(3.0f, 0.0f, 3.0f))
+								   , sphereModel.GetTriangles(glm::vec3(-3.0f, 0.0f, -3.0f)) 
 	};
 
-	tris[0].insert(tris[0].end(), tris[1].begin(), tris[1].end());
-	tris[0].insert(tris[0].end(), tris[2].begin(), tris[2].end());
+	/*tris[0].insert(tris[0].end(), tris[1].begin(), tris[1].end());
+	tris[0].insert(tris[0].end(), tris[2].begin(), tris[2].end());*/
 
 	printf("%i Triangles sent to BVH\n", (int)tris[0].size());
 
@@ -84,6 +79,10 @@ int main(int argc, char* argv[])
 			{
 				case SDL_QUIT:
 					keepGoing = false;
+					break;
+
+				case SDL_KEYDOWN:
+					HandleInput(camera, e.key);
 					break;
 			}
 		}
@@ -134,4 +133,19 @@ int main(int argc, char* argv[])
 
 
     return 0;
-}
+};
+
+void HandleInput(Camera& _camera, SDL_KeyboardEvent& _keyEvent)
+{
+	int l_key = _keyEvent.keysym.sym;
+	switch (l_key)
+	{
+		case SDLK_w:
+			_camera.Move(_camera.Forward() * (1.0f / 60.0f));
+			break;
+
+		case SDLK_s:
+			_camera.Move(-_camera.Forward() * (1.0f / 60.0f));
+			break;
+	}
+};
