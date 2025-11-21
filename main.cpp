@@ -14,7 +14,8 @@
 
 #include <vector>
 
-inline void HandleInput(Camera& _camera, SDL_KeyboardEvent& _keyEvent);
+inline void HandleKBInput(Camera& _camera, SDL_KeyboardEvent& _keyEvent);
+inline void HandleMouseInput(Camera& _camera, SDL_MouseMotionEvent& _mouseEvent);
 
 int main(int argc, char* argv[])
 {
@@ -82,18 +83,40 @@ int main(int argc, char* argv[])
 					break;
 
 				case SDL_KEYDOWN:
-					HandleInput(camera, e.key);
+					if (SDL_GetRelativeMouseMode())
+					{
+						HandleKBInput(camera, e.key);
+					}
 					break;
+
+				case SDL_MOUSEMOTION:
+					if (SDL_GetRelativeMouseMode())
+					{
+						HandleMouseInput(camera, e.motion);
+					}
+					break;
+
+				case SDL_MOUSEBUTTONDOWN:
+					if (e.button.button == SDL_BUTTON_RIGHT)
+					{
+						SDL_SetRelativeMouseMode(SDL_TRUE);
+					}
 			}
 		}
 
 		float time = (float)SDL_GetTicks64() * 1000.0f;
+
+		myBVH.BuildBHV();
 		
 		myShader.use();
 
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, myBVH.GetTriangleSSBO());
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, myBVH.GetIndexSSBO());
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, myBVH.GetNodeSSBO());
+
 		myShader.SetUniform("time", time);
 		myShader.SetUniform("lights[0].position", light.position);
-		myShader.SetUniform("u_camera.position", camera.Position());
+		camera.UpdateShader(myShader);
 
 		_myFramework.SetGLTexture();
 		
@@ -104,23 +127,23 @@ int main(int argc, char* argv[])
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 
-		ImGui::Begin("Light Settings");
+		ImGui::Begin("Settings");
 
 		glm::vec3 lightPos = light.position;
 		ImGui::DragFloat3("Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
 		light.position = lightPos;
 
-		// float s3amples = sampleCount;
-		// ImGui::DragFloat("Sample Count", &s3amples, 1.0f, 0.0f, 20.0f);
-		// sampleCount = s3amples;
+		int planes = myBVH.PlaneCount();
+		ImGui::DragInt("Plane Count", &planes, 1, 1, 1000);
+		myBVH.PlaneCount(planes);
 
 		ImGui::End();
 
-		ImGui::Begin("Camera Settings");
+		ImGui::Begin("Camera Info");
 
 		glm::vec3 camPos = camera.Position();
-		ImGui::DragFloat3("Position", &(camPos[0]), 0.1f, -10.0f, 10.0f);
-		camera.Position(camPos);
+		std::string l_camPosText = "Camera Position: (" + std::to_string(camPos.x) + ", " + std::to_string(camPos.y) + ", " + std::to_string(camPos.z) + ")";
+		ImGui::Text(l_camPosText.c_str());
 
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
@@ -135,7 +158,7 @@ int main(int argc, char* argv[])
     return 0;
 };
 
-void HandleInput(Camera& _camera, SDL_KeyboardEvent& _keyEvent)
+void HandleKBInput(Camera& _camera, SDL_KeyboardEvent& _keyEvent)
 {
 	int l_key = _keyEvent.keysym.sym;
 	switch (l_key)
@@ -147,5 +170,32 @@ void HandleInput(Camera& _camera, SDL_KeyboardEvent& _keyEvent)
 		case SDLK_s:
 			_camera.Move(-_camera.Forward() * (1.0f / 15.0f));
 			break;
+
+		case SDLK_d:
+			_camera.Move(_camera.Right() * (1.0f / 15.0f));
+			break;
+
+		case SDLK_a:
+			_camera.Move(-_camera.Right() * (1.0f / 15.0f));
+			break;
+
+		case SDLK_e:
+			_camera.Move(_camera.Up() * (1.0f / 15.0f));
+			break;
+
+		case SDLK_q:
+			_camera.Move(-_camera.Up() * (1.0f / 15.0f));
+			break;
+
+		case SDLK_ESCAPE:
+			SDL_SetRelativeMouseMode(SDL_FALSE);
+			break;
+			
 	}
+};
+
+void HandleMouseInput(Camera& _camera, SDL_MouseMotionEvent& _mouseEvent)
+{
+	_camera.Rotate(glm::radians((float)-_mouseEvent.xrel * 3.0f), _camera.Up());
+	_camera.Rotate(glm::radians((float)-_mouseEvent.yrel * 5.0f), _camera.Right());
 };
