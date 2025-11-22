@@ -5,6 +5,7 @@
 #include "ComputeShader.h"
 #include "Model.h"
 #include "BVH.h"
+#include "Input.h"
 
 #include "GL/glew.h"
 
@@ -14,107 +15,127 @@
 
 #include <vector>
 
-inline void HandleKBInput(Camera& _camera, SDL_KeyboardEvent& _keyEvent);
-inline void HandleMouseInput(Camera& _camera, SDL_MouseMotionEvent& _mouseEvent);
+inline void HandleKBDownInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent);
+inline void HandleKBUpInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent);
+inline void HandleMouseInput(Input& _inputMap, SDL_MouseMotionEvent& _mouseEvent);
 
 int main(int argc, char* argv[])
 {
 	// Set window size
-	glm::ivec2 winSize(500, 500);
+	glm::ivec2 l_winSize(500, 500);
 
 	// This will handle rendering to screen
-	GCP_Framework _myFramework;
+	GCP_Framework l_myFramework;
 
 	// Initialises SDL and OpenGL and sets up a framebuffer
-	if (!_myFramework.Init(winSize))
+	if (!l_myFramework.Init(l_winSize))
 	{
 		return -1;
 	}
+
+	Input l_inputMap;
     
     // Camera setup
-    Camera camera(glm::vec2(500, 500));
+    Camera l_camera(glm::vec2(500, 500));
 
-	ComputeShader myShader("./resources/shaders/RTComputeTriangle.comp");
+	ComputeShader l_compute("./resources/shaders/RTComputeTriangle.comp");
     
-    myShader.use();
+    l_compute.use();
 
-	Model sphereModel("./resources/objects/curuthers.obj");
+	Model l_sphereModel("./resources/objects/curuthers.obj");
     
-    // Set camera uniforms
-    camera.UpdateShader(myShader);
+    // Set l_camera uniforms
+    l_camera.UpdateShader(l_compute);
 
-	Light light;
-	light.position = glm::vec3(0.0f, 0.0f, 3.0f);
-	light.colour = glm::vec3(1.0f, 1.0f, 1.0f);
+	Light l_light;
+	l_light.position = glm::vec3(0.0f, 0.0f, 3.0f);
+	l_light.colour = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	myShader.SetUniform("numLights", 1);
-	myShader.SetUniform("lights[0].position", light.position);
-	myShader.SetUniform("lights[0].color", light.colour);
+	l_compute.SetUniform("numLights", 1);
+	l_compute.SetUniform("lights[0].position", l_light.position);
+	l_compute.SetUniform("lights[0].color", l_light.colour);
 
-	std::vector<Triangle> tris[] = { sphereModel.GetTriangles(glm::vec3(0.0f))
-								   , sphereModel.GetTriangles(glm::vec3(3.0f, 0.0f, 3.0f))
-								   , sphereModel.GetTriangles(glm::vec3(-3.0f, 0.0f, -3.0f)) 
+	std::vector<Triangle> l_tris[] = { l_sphereModel.GetTriangles(glm::vec3(0.0f))
+								     , l_sphereModel.GetTriangles(glm::vec3(3.0f, 0.0f, 3.0f))
+								     , l_sphereModel.GetTriangles(glm::vec3(-3.0f, 0.0f, -3.0f)) 
 	};
 
 	/*tris[0].insert(tris[0].end(), tris[1].begin(), tris[1].end());
 	tris[0].insert(tris[0].end(), tris[2].begin(), tris[2].end());*/
 
-	printf("%i Triangles sent to BVH\n", (int)tris[0].size());
+	printf("%i Triangles sent to BVH\n", (int)l_tris[0].size());
 
-	BVH myBVH(&(tris[0]));
+	BVH l_BVH(&(l_tris[0]));
 
 
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, myBVH.GetTriangleSSBO());
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, myBVH.GetIndexSSBO());
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, myBVH.GetNodeSSBO());
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, l_BVH.GetTriangleSSBO());
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, l_BVH.GetIndexSSBO());
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, l_BVH.GetNodeSSBO());
 
-	bool keepGoing = true;
+	bool l_keepGoing = true;
+	bool l_mouseMotion = false;
 
-	SDL_Event e;
-	while(keepGoing)
+	SDL_Event l_event;
+	while(l_keepGoing)
 	{
-		while(SDL_PollEvent(&e))
+		l_mouseMotion = false;
+		while(SDL_PollEvent(&l_event))
 		{
-			ImGui_ImplSDL2_ProcessEvent(&e);
-			switch(e.type)
+			ImGui_ImplSDL2_ProcessEvent(&l_event);
+			switch(l_event.type)
 			{
 				case SDL_QUIT:
-					keepGoing = false;
+					l_keepGoing = false;
 					break;
 
 				case SDL_KEYDOWN:
 					if (SDL_GetRelativeMouseMode())
 					{
-						HandleKBInput(camera, e.key);
+						HandleKBDownInput(l_inputMap, l_event.key);
 					}
 					break;
+
+				case SDL_KEYUP:
+					if(SDL_GetRelativeMouseMode())
+					{
+						HandleKBUpInput(l_inputMap, l_event.key);
+					}
 
 				case SDL_MOUSEMOTION:
 					if (SDL_GetRelativeMouseMode())
 					{
-						HandleMouseInput(camera, e.motion);
+						l_mouseMotion = true;
+						HandleMouseInput(l_inputMap, l_event.motion);
 					}
 					break;
 
 				case SDL_MOUSEBUTTONDOWN:
-					if (e.button.button == SDL_BUTTON_RIGHT)
+					if (l_event.button.button == SDL_BUTTON_RIGHT)
 					{
 						SDL_SetRelativeMouseMode(SDL_TRUE);
 					}
 			}
 		}
 
+		if(!l_mouseMotion)
+		{
+			l_inputMap.deltaMouseX = 0.0f;
+			l_inputMap.deltaMouseY = 0.0f;
+		}
+
+		l_camera.Update(l_inputMap);
+
 		float time = (float)SDL_GetTicks64() * 1000.0f;
 		
-		myShader.use();
+		l_compute.use();
 
-		myShader.SetUniform("time", time);
-		myShader.SetUniform("lights[0].position", light.position);
-		camera.UpdateShader(myShader);
+		l_compute.SetUniform("time", time);
+		l_compute.SetUniform("lights[0].position", l_light.position);
+		l_camera.UpdateShader(l_compute);
 
-		_myFramework.SetGLTexture();
+		l_myFramework.SetGLTexture();
 		
-		glDispatchCompute((unsigned int)winSize.x, (unsigned int)winSize.y, 1);
+		glDispatchCompute((unsigned int)l_winSize.x, (unsigned int)l_winSize.y, 1);
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
 		ImGui_ImplOpenGL3_NewFrame();
@@ -123,62 +144,66 @@ int main(int argc, char* argv[])
 
 		ImGui::Begin("Settings");
 
-		glm::vec3 lightPos = light.position;
+		glm::vec3 lightPos = l_light.position;
 		ImGui::DragFloat3("Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
-		light.position = lightPos;
+		l_light.position = lightPos;
 
-		int planes = myBVH.PlaneCount();
+		int planes = l_BVH.PlaneCount();
 		ImGui::DragInt("Plane Count", &planes, 1, 1, 1000);
-		myBVH.PlaneCount(planes);
+		l_BVH.PlaneCount(planes);
 
 		ImGui::End();
 
 		ImGui::Begin("Camera Info");
 
-		glm::vec3 camPos = camera.Position();
+		glm::vec3 camPos = l_camera.Position();
 		std::string l_camPosText = "Camera Position: (" + std::to_string(camPos.x) + ", " + std::to_string(camPos.y) + ", " + std::to_string(camPos.z) + ")";
+		ImGui::Text(l_camPosText.c_str());
+
+		glm::quat camRot = l_camera.Rotation();
+		l_camPosText = "Camera Rotation: (" + std::to_string(camRot.x) + ", "+ std::to_string(camRot.y) + ", "+ std::to_string(camRot.z) + ", "+ std::to_string(camRot.w) + ")";
 		ImGui::Text(l_camPosText.c_str());
 
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
 		ImGui::End();
 
-		_myFramework.Show();
+		l_myFramework.Show();
 	}
 
-	_myFramework.Shutdown();
+	l_myFramework.Shutdown();
 
 
     return 0;
 };
 
-void HandleKBInput(Camera& _camera, SDL_KeyboardEvent& _keyEvent)
+void HandleKBDownInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent)
 {
 	int l_key = _keyEvent.keysym.sym;
 	switch (l_key)
 	{
 		case SDLK_w:
-			_camera.Move(_camera.Forward() * (1.0f / 15.0f));
+			_inputMap.forward = 1;
 			break;
 
 		case SDLK_s:
-			_camera.Move(-_camera.Forward() * (1.0f / 15.0f));
+			_inputMap.forward = -1;
 			break;
 
 		case SDLK_d:
-			_camera.Move(_camera.Right() * (1.0f / 15.0f));
+			_inputMap.right = 1;
 			break;
 
 		case SDLK_a:
-			_camera.Move(-_camera.Right() * (1.0f / 15.0f));
+			_inputMap.right = -1;
 			break;
 
 		case SDLK_e:
-			_camera.Move(_camera.Up() * (1.0f / 15.0f));
+			_inputMap.up = 1;
 			break;
 
 		case SDLK_q:
-			_camera.Move(-_camera.Up() * (1.0f / 15.0f));
+			_inputMap.up = -1;
 			break;
 
 		case SDLK_ESCAPE:
@@ -188,8 +213,45 @@ void HandleKBInput(Camera& _camera, SDL_KeyboardEvent& _keyEvent)
 	}
 };
 
-void HandleMouseInput(Camera& _camera, SDL_MouseMotionEvent& _mouseEvent)
+void HandleKBUpInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent)
 {
-	_camera.Rotate(glm::radians((float)-_mouseEvent.xrel * 3.0f), _camera.Up());
-	_camera.Rotate(glm::radians((float)-_mouseEvent.yrel * 5.0f), _camera.Right());
+	int l_key = _keyEvent.keysym.sym;
+
+	// Don't reset movement if the opposite button is also being held down
+	// if(l_key == SDLK_w && _inputMap.forward == 1)
+	// {
+	// 	_inputMap.forward = 0;
+	// }
+	switch (l_key)
+	{
+		case SDLK_w:
+			_inputMap.forward = 0;
+			break;
+
+		case SDLK_s:
+			_inputMap.forward = 0;
+			break;
+
+		case SDLK_d:
+			_inputMap.right = 0;
+			break;
+
+		case SDLK_a:
+			_inputMap.right = 0;
+			break;
+
+		case SDLK_e:
+			_inputMap.up = 0;
+			break;
+
+		case SDLK_q:
+			_inputMap.up = 0;
+			break;
+	}
+};
+
+void HandleMouseInput(Input& _inputMap, SDL_MouseMotionEvent& _mouseEvent)
+{
+	_inputMap.deltaMouseX = glm::radians((float)-_mouseEvent.xrel * 3.0f);
+	_inputMap.deltaMouseY = glm::radians((float)-_mouseEvent.yrel * 5.0f);
 };

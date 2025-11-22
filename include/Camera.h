@@ -3,6 +3,7 @@
 
 #include "GLM/ext.hpp"
 #include "ComputeShader.h"
+#include "Input.h"
 
 /**
  *  @brief
@@ -33,6 +34,23 @@ class Camera
 
     ~Camera()
     {};
+
+    /**
+     * @brief
+     * Update position and rotation using the Input struct
+     */
+    inline void Update(Input _inputMap)
+    {
+		Move(_inputMap.forward * m_Forward * (1.0f / 15.0f));
+
+		Move(_inputMap.right * m_Right * (1.0f / 15.0f));
+
+        Move(_inputMap.up * m_Up * (1.0f / 15.0f));
+
+        Rotate(_inputMap.deltaMouseX, m_Up);
+
+        Rotate(_inputMap.deltaMouseY, m_Right);
+    };
 
     /**
     *   @brief
@@ -72,6 +90,7 @@ class Camera
     glm::vec3& Forward() { return m_Forward; };
     glm::vec3& Right() { return m_Right; };
     glm::vec3& Up() { return m_Up; };
+    glm::quat Rotation() {return m_Rotation;};
     /** @} */
 };
 
