@@ -168,7 +168,7 @@ void DrawVAOTris(GLuint VAO, int numVertices, GLuint shaderProgram)
 	// Technically we can do this, but it makes no real sense because we must always have a valid shader program to draw geometry
 	glUseProgram(0);
 
-	printf("Drawn triangles\n");
+	//printf("Drawn triangles\n");
 }
 
 // Useful little function to just check for compiler errors

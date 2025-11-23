@@ -17,6 +17,8 @@
 
 inline void HandleKBDownInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent);
 inline void HandleKBUpInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent);
+
+
 inline void HandleMouseInput(Input& _inputMap, SDL_MouseMotionEvent& _mouseEvent);
 
 int main(int argc, char* argv[])
@@ -67,18 +69,17 @@ int main(int argc, char* argv[])
 
 	BVH l_BVH(&(l_tris[0]));
 
-
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, l_BVH.GetTriangleSSBO());
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, l_BVH.GetIndexSSBO());
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, l_BVH.GetNodeSSBO());
 
 	bool l_keepGoing = true;
-	bool l_mouseMotion = false;
+	bool l_mouseMovement = false;
 
 	SDL_Event l_event;
 	while(l_keepGoing)
 	{
-		l_mouseMotion = false;
+		l_mouseMovement = false;
 		while(SDL_PollEvent(&l_event))
 		{
 			ImGui_ImplSDL2_ProcessEvent(&l_event);
@@ -104,7 +105,7 @@ int main(int argc, char* argv[])
 				case SDL_MOUSEMOTION:
 					if (SDL_GetRelativeMouseMode())
 					{
-						l_mouseMotion = true;
+						l_mouseMovement = true;
 						HandleMouseInput(l_inputMap, l_event.motion);
 					}
 					break;
@@ -117,7 +118,7 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		if(!l_mouseMotion)
+		if(!l_mouseMovement)
 		{
 			l_inputMap.deltaMouseX = 0.0f;
 			l_inputMap.deltaMouseY = 0.0f;
@@ -218,40 +219,22 @@ void HandleKBUpInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent)
 	int l_key = _keyEvent.keysym.sym;
 
 	// Don't reset movement if the opposite button is also being held down
-	// if(l_key == SDLK_w && _inputMap.forward == 1)
-	// {
-	// 	_inputMap.forward = 0;
-	// }
-	switch (l_key)
+	if((l_key == SDLK_w && _inputMap.forward == 1) || (l_key == SDLK_s && _inputMap.forward == -1))
 	{
-		case SDLK_w:
-			_inputMap.forward = 0;
-			break;
-
-		case SDLK_s:
-			_inputMap.forward = 0;
-			break;
-
-		case SDLK_d:
-			_inputMap.right = 0;
-			break;
-
-		case SDLK_a:
-			_inputMap.right = 0;
-			break;
-
-		case SDLK_e:
-			_inputMap.up = 0;
-			break;
-
-		case SDLK_q:
-			_inputMap.up = 0;
-			break;
+		_inputMap.forward = 0;
+	}
+	else if((l_key == SDLK_d && _inputMap.right == 1) || (l_key == SDLK_a && _inputMap.right == -1))
+	{
+		_inputMap.right = 0;
+	}
+	else if((l_key == SDLK_e && _inputMap.up == 1) || (l_key == SDLK_q && _inputMap.up == -1))
+	{
+		_inputMap.up = 0;
 	}
 };
 
 void HandleMouseInput(Input& _inputMap, SDL_MouseMotionEvent& _mouseEvent)
 {
-	_inputMap.deltaMouseX = glm::radians((float)-_mouseEvent.xrel * 3.0f);
-	_inputMap.deltaMouseY = glm::radians((float)-_mouseEvent.yrel * 5.0f);
+	_inputMap.deltaMouseX = glm::radians((float)-_mouseEvent.xrel) * 3.0f;
+	_inputMap.deltaMouseY = glm::radians((float)-_mouseEvent.yrel) * 3.0f;
 };

@@ -41,15 +41,23 @@ class Camera
      */
     inline void Update(Input _inputMap)
     {
-		Move(_inputMap.forward * m_Forward * (1.0f / 15.0f));
+		Move(_inputMap.forward * m_Forward * (1.0f / 30.0f));
 
-		Move(_inputMap.right * m_Right * (1.0f / 15.0f));
+		Move(_inputMap.right * m_Right * (1.0f / 30.0f));
 
-        Move(_inputMap.up * m_Up * (1.0f / 15.0f));
+        Move(_inputMap.up * m_Up * (1.0f / 30.0f));
 
-        Rotate(_inputMap.deltaMouseX, m_Up);
+        if(abs(_inputMap.deltaMouseX) > 0.0f && abs(_inputMap.deltaMouseX) < 1.0f)
+        {
+            Rotate(_inputMap.deltaMouseX, m_Up);
+        }
 
-        Rotate(_inputMap.deltaMouseY, m_Right);
+        if(abs(_inputMap.deltaMouseY) > 0.0f && abs(_inputMap.deltaMouseY) < 1.0f)
+        {
+            Rotate(_inputMap.deltaMouseY, m_Right);
+        }
+
+        printf("%i, %i, %i, %f, %f\n", _inputMap.forward, _inputMap.right, _inputMap.up, _inputMap.deltaMouseX, _inputMap.deltaMouseY);
     };
 
     /**
@@ -71,7 +79,7 @@ class Camera
 
     inline void Rotate(float _angle, glm::vec3 _axis)
     {
-        glm::quat rotation = glm::angleAxis(glm::radians(_angle), glm::normalize(_axis));
+        glm::quat rotation = glm::angleAxis(_angle, glm::normalize(_axis));
 
         m_Rotation = rotation * m_Rotation;
         m_Rotation = glm::normalize(m_Rotation);
