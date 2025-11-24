@@ -189,7 +189,7 @@ RaycastResult TraverseBVH(in RaycastResult _result, inout Ray _ray)
             l_child2 = tempN;
         }
 
-        if(l_dist1> 1e30f)
+        if(l_dist1 == 1e30f)
         {
             if(l_top == 0)
             {
