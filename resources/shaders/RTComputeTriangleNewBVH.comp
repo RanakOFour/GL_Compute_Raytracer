@@ -177,9 +177,11 @@ RaycastResult TraverseBVH(in RaycastResult _result, inout Ray _ray)
 
         float l_dist1 = IntersectAABB(_result, _ray, l_child1.minBound, l_child1.maxBound);
         float l_dist2 = IntersectAABB(_result, _ray, l_child2.minBound, l_child2.maxBound);
+        bool l_swap = false;
 
         if(l_dist1 > l_dist2)
         {
+            l_swap = true;
             float tempF = l_dist1;
             l_dist1 = l_dist2;
             l_dist2 = tempF;
@@ -205,7 +207,14 @@ RaycastResult TraverseBVH(in RaycastResult _result, inout Ray _ray)
             l_node = l_child1;
             if(l_dist2 != 1e30f)
             {
-                l_indexStack[l_top] = l_node.leftFirst + 1;
+                if(l_swap)
+                {
+                    l_indexStack[l_top] = l_node.leftFirst;
+                }
+                else
+                {
+                    l_indexStack[l_top] = l_node.leftFirst + 1;
+                }
                 l_top++;
             }
         }
@@ -262,9 +271,11 @@ bool isInShadow(vec3 _lightPos, RaycastResult _raycastHit)
 
         float l_dist1 = IntersectAABB(_raycastHit, l_shadowRay, l_child1.minBound, l_child1.maxBound);
         float l_dist2 = IntersectAABB(_raycastHit, l_shadowRay, l_child2.minBound, l_child2.maxBound);
+        bool l_swap = false;
 
         if(l_dist1 > l_dist2)
         {
+            l_swap = true;
             float tempF = l_dist1;
             l_dist1 = l_dist2;
             l_dist2 = tempF;
@@ -274,7 +285,7 @@ bool isInShadow(vec3 _lightPos, RaycastResult _raycastHit)
             l_child2 = tempN;
         }
 
-        if(l_dist1 > 1e30f)
+        if(l_dist1 == 1e30f)
         {
             if(l_top == 0)
             {
@@ -287,12 +298,19 @@ bool isInShadow(vec3 _lightPos, RaycastResult _raycastHit)
         }
         else
         {
+            l_node = l_child1;
             if(l_dist2 != 1e30f)
             {
+                if(l_swap)
+                {
+                    l_indexStack[l_top] = l_node.leftFirst;
+                }
+                else
+                {
+                    l_indexStack[l_top] = l_node.leftFirst + 1;
+                }
                 l_top++;
-                l_indexStack[l_top] = l_node.leftFirst + 1;
             }
-            l_node = l_child1;
         }
     }
 

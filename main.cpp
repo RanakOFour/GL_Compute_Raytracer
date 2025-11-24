@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
     // Camera setup
     Camera l_camera(glm::vec2(500, 500));
 
-	ComputeShader l_compute("./resources/shaders/RTComputeTriangle.comp");
+	ComputeShader l_compute("./resources/shaders/RTComputeTriangleNewBVH.comp");
     
     l_compute.use();
 
