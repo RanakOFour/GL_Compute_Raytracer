@@ -272,7 +272,7 @@ vec3 getObjectColor(RaycastResult hit)
     return vec3(1.0, 0.0, 0.0);
 }
 
-vec3 calculateShading(RaycastResult hit, Ray _ray)
+vec3 CalculateShading(RaycastResult hit, Ray _ray)
 {
     if (!hit.hit)
     {
@@ -345,23 +345,12 @@ void main()
     closestHit.distance = 1e10;
     closestHit.normal = vec3(0.0);
 
-    #if 0
-    for(int i = 0; i < modelData.length(); i++)
-    {
-        RaycastResult newResult = triangleIntersect(_ray, modelData[i], i);
-        if(newResult.hit && newResult.distance < closestHit.distance)
-        {
-            closestHit = newResult;
-            //_result.normal.y += 0.05;
-        }
-    }
-    #else
+    float l_range = 1.0f;
+    vec3 l_colour = vec3(0.0f);
+    
     TraverseBVH(closestHit, _ray);
-    #endif
-
-    vec3 color = calculateShading(closestHit, _ray);
-    //color = closestHit.normal;
+    l_colour += CalculateShading(closestHit, _ray);
 
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
-    imageStore(framebufferTex, position, vec4(color, 1.0));
+    imageStore(framebufferTex, position, vec4(l_colour, 1.0));
 }
