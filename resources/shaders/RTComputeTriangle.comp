@@ -273,12 +273,13 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
 
 vec3 getObjectColor(RaycastResult _result)
 {
-    Triangle l_tri = triangles[bvhTriangleIndexes[_result.triangleIndex]];
+    return vec3(1.0, 0.0, 0.0);
+    //Triangle l_tri = triangles[bvhTriangleIndexes[_result.triangleIndex]];
     
-    vec3 colour = texture2D(modelTexture, )
+    //vec3 colour = texture2D(modelTexture, )
 }
 
-vec3 CalculateShading(RaycastResult hit, Ray _ray)
+vec3 CalculateShading(RaycastResult _result, Ray _ray)
 {
     if (!_result.hit)
     {
@@ -287,7 +288,7 @@ vec3 CalculateShading(RaycastResult hit, Ray _ray)
     
     vec3 objectColor = getObjectColor(_result);
 
-    return objectColor;
+    //return objectColor;
 
     vec3 lighting = vec3(0.0);
 
@@ -351,10 +352,10 @@ void main()
     closestHit.distance = 1e10;
     closestHit.normal = vec3(0.0);
 
-    float l_range = 1.0f;
     vec3 l_colour = vec3(0.0f);
     
     TraverseBVH(closestHit, _ray);
+
     l_colour += CalculateShading(closestHit, _ray);
 
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);

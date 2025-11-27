@@ -1,12 +1,13 @@
-#include "GLPipeline/Texture.h"
+#include "Texture.h"
 
-#include <GL/glew.h>
-#include <glm/ext.hpp>
+#include "GL/glew.h"
+#include "GLM/ext.hpp"
+
 #include <string>
 #include <vector>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+#include "stb_image.h"
 
 
 Texture::Texture(const std::string& _path) :
