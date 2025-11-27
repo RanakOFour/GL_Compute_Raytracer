@@ -249,6 +249,11 @@ inline std::vector<Triangle> Model::GetTriangles(glm::vec3 _position)
     newTri.a = m_faces[fi].a.position + _position;
     newTri.b = m_faces[fi].b.position + _position;
     newTri.c = m_faces[fi].c.position + _position;
+    
+    newTri.uvA = m_faces[fi].a.texcoord;
+    newTri.uvB = m_faces[fi].b.texcoord;
+    newTri.uvC = m_faces[fi].c.texcoord;
+
     CalculateNormal(newTri);
     l_triangles.push_back(newTri);
   }

@@ -6,6 +6,7 @@
 #include "Model.h"
 #include "BVH.h"
 #include "Input.h"
+#include "Texture.h"
 
 #include "GL/glew.h"
 
@@ -17,8 +18,6 @@
 
 inline void HandleKBDownInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent);
 inline void HandleKBUpInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent);
-
-
 inline void HandleMouseInput(Input& _inputMap, SDL_MouseMotionEvent& _mouseEvent);
 
 int main(int argc, char* argv[])
@@ -45,7 +44,9 @@ int main(int argc, char* argv[])
     l_compute.use();
 
 	Model l_sphereModel("./resources/objects/curuthers.obj");
-    
+
+	
+
     // Set l_camera uniforms
     l_camera.UpdateShader(l_compute);
 
@@ -57,17 +58,13 @@ int main(int argc, char* argv[])
 	l_compute.SetUniform("lights[0].position", l_light.position);
 	l_compute.SetUniform("lights[0].color", l_light.colour);
 
-	std::vector<Triangle> l_tris[] = { l_sphereModel.GetTriangles(glm::vec3(0.0f))
-								     , l_sphereModel.GetTriangles(glm::vec3(3.0f, 0.0f, 3.0f))
-								     , l_sphereModel.GetTriangles(glm::vec3(-3.0f, 0.0f, -3.0f)) 
-	};
+	std::vector<Triangle> l_tris = l_sphereModel.GetTriangles(glm::vec3(0.0f));
 
-	/*tris[0].insert(tris[0].end(), tris[1].begin(), tris[1].end());
-	tris[0].insert(tris[0].end(), tris[2].begin(), tris[2].end());*/
+	printf("%i Triangles sent to BVH\n", (int)l_tris.size());
 
-	printf("%i Triangles sent to BVH\n", (int)l_tris[0].size());
+	BVH l_BVH(&(l_tris));
 
-	BVH l_BVH(&(l_tris[0]));
+	Texture l_modelTexture = Texture("./resources/textures/Whiskers_diffuse.png");
 
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, l_BVH.GetTriangleSSBO());
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, l_BVH.GetIndexSSBO());

@@ -18,6 +18,10 @@ struct Triangle
     float _padding_c;
     glm::vec3 normal;
     float _padding_n;
+    glm::vec2 uvA;
+    glm::vec2 uvB;
+    glm::vec2 uvC;
+    float _passing_uv[2];
 };
 
 /**

@@ -202,7 +202,7 @@ GLuint BVH::GetTriangleSSBO()
     {
         glGenBuffers(1, &m_triangleSSBOID);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_triangleSSBOID);
-        glBufferData(GL_SHADER_STORAGE_BUFFER, (4 * sizeof(GLfloat) * 4) * m_tris.size(), &(m_tris.at(0)), GL_DYNAMIC_READ);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, (6 * sizeof(GLfloat) * 4) * m_tris.size(), &(m_tris.at(0)), GL_DYNAMIC_READ);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_triangleSSBOID);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
