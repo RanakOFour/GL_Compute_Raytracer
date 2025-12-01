@@ -38,7 +38,7 @@ layout(std430, binding = 3) readonly buffer b_bvhNodes
     Node bvhNodes[];
 };
 
-layout(binding = 4) uniform usampler2D modelTexture;
+layout(binding = 4) uniform sampler2D modelTexture;
 
 struct Camera
 {
@@ -288,11 +288,11 @@ vec3 getObjectColor(RaycastResult _result)
     float l_triArea3 = length(cross(l_f1, l_f2)) * l_invTriArea;
 
     vec2 uv = l_tri.uvA * l_triArea1 + l_tri.uvB * l_triArea2 + l_tri.uvC * l_triArea3;
-    vec2 texSize = textureSize(modelTexture, 0);
+    ivec2 texSize = textureSize(modelTexture, 0);
     ivec2 iUVs = ivec2(int(uv.x), int(uv.y));
     vec4 colour = texture(modelTexture, uv);
 
-    return vec3(uv.x / texSize.x, uv.y / texSize.y, 0.0f);
+    //return vec3(uv.x / texSize.x, uv.y / texSize.y, 0.0f);
     return vec3(colour.xyz);
 }
 
