@@ -63,7 +63,7 @@ float BVH::CalculateSAH(BVHNode& _node, int _axis, float _pos)
     for(int i = 0; i < _node.triangleCount; i++)
     {
         Triangle& tri = m_tris[m_triIndexes[_node.leftFirst + i]];
-        if(tri.centroid[_axis] < _pos)
+        if(CalculateCentroid(tri)[_axis] < _pos)
         {
             leftCount++;
             leftBox.Grow(tri.a);
@@ -144,7 +144,7 @@ void BVH::Subdivide(int _nodeIndex)
     int j = i + l_node.triangleCount - 1;
     while(i <= j)
     {
-        if(m_tris[m_triIndexes[i]].centroid[l_bestAxis] < l_bestPos)
+        if(CalculateCentroid(m_tris[m_triIndexes[i]])[l_bestAxis] < l_bestPos)
         {
             i++;
         }
@@ -202,7 +202,7 @@ GLuint BVH::GetTriangleSSBO()
     {
         glGenBuffers(1, &m_triangleSSBOID);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_triangleSSBOID);
-        glBufferData(GL_SHADER_STORAGE_BUFFER, (7 * sizeof(GLfloat) * 4) * m_tris.size(), &(m_tris.at(0)), GL_DYNAMIC_READ);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Triangle) * m_tris.size(), &(m_tris.at(0)), GL_DYNAMIC_READ);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_triangleSSBOID);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
@@ -236,7 +236,7 @@ GLuint BVH::GetNodeSSBO()
     {
         glGenBuffers(1, &m_nodeSSBOID);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_nodeSSBOID);
-        glBufferData(GL_SHADER_STORAGE_BUFFER, ((2 * sizeof(GLint)) + (3 * sizeof(GLfloat) * 2)) * m_nodes.size(), &(m_nodes.at(0)), GL_DYNAMIC_READ);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(BVHNode) * m_nodes.size(), &(m_nodes.at(0)), GL_DYNAMIC_READ);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_nodeSSBOID);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 

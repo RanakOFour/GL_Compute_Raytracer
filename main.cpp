@@ -70,7 +70,8 @@ int main(int argc, char* argv[])
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, l_BVH.GetTriangleSSBO());
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, l_BVH.GetIndexSSBO());
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, l_BVH.GetNodeSSBO());
-	glBindImageTexture(4, l_modelTexture.GetID(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+	glActiveTexture(GL_TEXTURE0 + 4);
+	glBindTexture(GL_TEXTURE_2D, l_modelTexture.GetID());
 
 	bool l_keepGoing = true;
 	bool l_mouseMovement = false;
@@ -134,8 +135,6 @@ int main(int argc, char* argv[])
 		l_camera.UpdateShader(l_compute);
 
 		l_myFramework.SetGLTexture();
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, l_modelTexture.GetID());
 
 		glDispatchCompute((unsigned int)l_winSize.x, (unsigned int)l_winSize.y, 1);
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);

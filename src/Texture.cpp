@@ -58,9 +58,14 @@ GLuint Texture::GetID()
 
 		glBindTexture(GL_TEXTURE_2D, m_id);
 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 
 		// Upload the image data to the bound texture unit in the GPU
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_data.data());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_data.data());
 
 		// Generate Mipmap so the texture can be mapped correctly
 		glGenerateMipmap(GL_TEXTURE_2D);

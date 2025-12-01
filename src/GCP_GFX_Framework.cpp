@@ -465,6 +465,7 @@ void GCP_Framework::Show()
 
 	// Binds OpenGL Texture
 	glUseProgram(_shaderProgram);
+	glActiveTexture(GL_TEXTURE0);
 	_mainBuffer->BindGLTex();
 
 	// Call our drawing function to draw that triangle!

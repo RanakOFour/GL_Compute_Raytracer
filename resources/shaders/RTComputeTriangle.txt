@@ -9,6 +9,7 @@ struct Triangle
     vec3 b;
     vec3 c;
     vec3 normal;
+    vec3 cent;
     vec2 uvA;
     vec2 uvB;
     vec2 uvC;
@@ -276,29 +277,24 @@ vec3 getObjectColor(RaycastResult _result)
     //return vec3(1.0, 0.0, 0.0);
     Triangle l_tri = triangles[bvhTriangleIndexes[_result.triangleIndex]];
     
-    vec3 v0 = l_tri.a;
-    vec3 v1 = l_tri.b;
-    vec3 v2 = l_tri.c;
-    
-    vec3 edge1 = v1 - v0;
-    vec3 edge2 = v2 - v0;
-    vec3 pvec = cross(_result.position - v0, edge1);
-    vec3 qvec = cross(_result.position - v0, edge2);
-    
-    float invTotalArea = 1.0 / length(cross(edge1, edge2));
-    float area1 = length(pvec) * invTotalArea;
-    float area2 = length(qvec) * invTotalArea;
-    float area3 = 1.0 - area1 - area2;
-    
-    // Interpolate UV coordinates using barycentric coordinates
-    vec2 uv = l_tri.uvA * area1 + l_tri.uvB * area2 + l_tri.uvC * area3;
+    vec3 l_f1 = l_tri.a - _result.position;
+    vec3 l_f2 = l_tri.b - _result.position;
+    vec3 l_f3 = l_tri.c - _result.position;
 
-    //return vec3(uv, 0.0f);
+    float l_invTriArea = 1.0f / length(cross(l_tri.a - l_tri.b, l_tri.a - l_tri.c));
 
-    // Sample texture
+    float l_triArea1 = length(cross(l_f2, l_f3)) * l_invTriArea;
+    float l_triArea2 = length(cross(l_f3, l_f1)) * l_invTriArea;
+    float l_triArea3 = length(cross(l_f1, l_f2)) * l_invTriArea;
+
+    // UV coordinates for the intersected triangle point
+    vec2 uv = l_tri.uvA * l_triArea1 + l_tri.uvB * l_triArea2 + l_tri.uvC * l_triArea3;
+    ivec2 texSize = textureSize(modelTexture, 0);
+    ivec2 iUVs = ivec2(int(uv.x), int(uv.y));
     vec4 colour = texture(modelTexture, uv);
-    
-    return vec3(colour.rgb);
+
+    //return vec3(uv.x, uv.y, 0.0f);
+    return vec3(colour.xyz);
 }
 
 vec3 CalculateShading(RaycastResult _result, Ray _ray)

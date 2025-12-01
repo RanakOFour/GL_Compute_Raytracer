@@ -18,12 +18,10 @@ struct Triangle
     float _padding_c;
     glm::vec3 normal;
     float _padding_n;
-    glm::vec3 centroid;
-    float _padding_cent;
     glm::vec2 uvA;
     glm::vec2 uvB;
     glm::vec2 uvC;
-    float _passing_uv[2];
+    float _pad3[2];
 };
 
 /**
@@ -43,9 +41,25 @@ inline void CalculateNormal(Triangle& _tri)
  * Taken outside of Triangle struct to avoid OpenGL schenanigans
  * with uploading to the GPU
 */
-inline void CalculateCentroid(Triangle& _tri)
+inline glm::vec3 CalculateCentroid(Triangle& _tri)
 {
-    _tri.centroid = (_tri.a + _tri.b + _tri.c) * 0.333f;
+    return (_tri.a + _tri.b + _tri.c) * 0.333f;
+};
+
+inline void CalculateUVonPoint(Triangle& _tri, glm::vec3 l_point)
+{
+    glm::vec3 l_f1 = _tri.a - l_point;
+    glm::vec3 l_f2 = _tri.b - l_point;
+    glm::vec3 l_f3 = _tri.c - l_point;
+
+    float l_invTriArea = 1.0f / glm::length(glm::cross(_tri.a - _tri.b, _tri.a - _tri.c));
+
+    float l_triArea1 = length(cross(l_f2, l_f3)) * l_invTriArea;
+    float l_triArea2 = length(cross(l_f3, l_f1)) * l_invTriArea;
+    float l_triArea3 = length(cross(l_f1, l_f2)) * l_invTriArea;
+
+    glm::vec2 uv = _tri.uvA * l_triArea1 + _tri.uvB * l_triArea2 + _tri.uvC * l_triArea3;
+    printf("UV for Point: (%f, %f)\n", uv.x, uv.y);
 };
 
 #endif
