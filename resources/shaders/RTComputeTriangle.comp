@@ -1,14 +1,18 @@
 #version 430 core
 
 layout(local_size_x = 4, local_size_y = 4) in;
-layout(rgba32f, binding = 0) uniform image2D framebufferTex;
+
+layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 
 struct Triangle
 {
+    // Vertex positions
     vec3 a;
     vec3 b;
     vec3 c;
     vec3 normal;
+
+    // UV Coordinates for each vertex
     vec2 uvA;
     vec2 uvB;
     vec2 uvC;
@@ -16,20 +20,25 @@ struct Triangle
 
 struct Node
 {
+    // Laid out like this for bit packing
     vec3 minBound;
+
+    // Holds index of left node (if not leaf node) or first triangle (if leaf node)
     int leftFirst;
     vec3 maxBound;
+
+    // Triangles in node (0 if not leaf node)
     int triangleCount;
 };
 
 layout(std430, binding = 1) readonly buffer b_trianglesSSBO
 {
-    Triangle triangles[];
+    Triangle sceneTris[];
 };
 
 layout(std430, binding = 2) readonly buffer b_bvhTriangleIndex
 {
-    int bvhTriangleIndexes[];
+    int bvhTriIdxs[];
 };
 
 layout(std430, binding = 3) readonly buffer b_bvhNodes
@@ -46,10 +55,9 @@ struct Camera
     vec3 right;
     vec3 up;
 };
-
 uniform Camera u_camera;
 
-uniform vec2 resolution;
+uniform vec2 u_resolution;
 
 struct Light
 {
@@ -58,8 +66,8 @@ struct Light
 };
 
 #define MAX_LIGHTS 10
-uniform Light lights[MAX_LIGHTS];
-uniform int numLights;
+uniform Light u_lights[MAX_LIGHTS];
+uniform int u_numLights;
 
 struct Ray 
 {
@@ -134,35 +142,29 @@ bool IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
     float tmin = 0.0f;
     float tmax = 10000000.0f;
 
-    // Iterate over each axis (x, y, z)
     for (int i = 0; i < 3; i++)
     {
         if (abs(_ray.direction[i]) < 0.0001f)
         {
-            // If the origin is outside the slab, there's no intersection
             if (_ray.origin[i] < _minBound[i] || _ray.origin[i] > _maxBound[i])
                 return false;
         }
         else
         {
-            // Compute the intersection t-values for the near and far planes of the slab
             float ood = 1.0f / _ray.direction[i];
             float t1 = (_minBound[i] - _ray.origin[i]) * ood;
             float t2 = (_maxBound[i] - _ray.origin[i]) * ood;
 
-            // Ensure t1 is the intersection with the near plane, and t2 with the far plane
             if (t1 > t2)
             {
-                float temp = t1; // Swap t1 and t2
+                float temp = t1;
                 t1 = t2;
                 t2 = temp;
             }
 
-            // Update tmin and tmax to compute the intersection interval
             tmin = max(tmin, t1);
             tmax = min(tmax, t2);
 
-            // If the interval becomes invalid, there is no intersection
             if (tmin > tmax)
             {
                 return false;
@@ -176,23 +178,22 @@ bool IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
 
 RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
 {
-    int indexStack[64];
-    int top = 0;
-    indexStack[top] = 0;
-    int hits = 0;
+    int l_indexStack[64];
+    int l_top = 0;
+    l_indexStack[l_top] = 0;
 
-    Node node = bvhNodes[indexStack[top]];
-    top++;
+    Node l_node = bvhNodes[l_indexStack[l_top]];
+    l_top++;
 
     do
     {
-        if(IntersectAABB(_ray, node.minBound, node.maxBound))
+        if(IntersectAABB(_ray, l_node.minBound, l_node.maxBound))
         {
-            if(node.triangleCount > 0)
+            if(l_node.triangleCount > 0)
             {
-                for(int i = 0; i < node.triangleCount; i++)
+                for(int i = 0; i < l_node.triangleCount; i++)
                 {
-                    RaycastResult newResult = triangleIntersect(_ray, triangles[bvhTriangleIndexes[node.leftFirst + i]], bvhTriangleIndexes[node.leftFirst + i]);
+                    RaycastResult newResult = triangleIntersect(_ray, sceneTris[bvhTriIdxs[l_node.leftFirst + i]], bvhTriIdxs[l_node.leftFirst + i]);
                     if(newResult.hit && newResult.distance < _result.distance)
                     {
                         _result = newResult;
@@ -201,54 +202,53 @@ RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
             }
             else
             {
-                indexStack[top] = node.leftFirst;
-                top++;
-                indexStack[top] = node.leftFirst + 1;
-                top++;
+                l_indexStack[l_top] = l_node.leftFirst;
+                l_top++;
+                l_indexStack[l_top] = l_node.leftFirst + 1;
+                l_top++;
             }
         }
 
-        top--;
-        node = bvhNodes[indexStack[top]];
-    } while(top > -1);
+        l_top--;
+        l_node = bvhNodes[l_indexStack[l_top]];
+    } while(l_top > -1);
 
     return _result;
 }
 
-bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
+bool isInShadow(vec3 _lightPos, RaycastResult _raycastHit)
 {
-    Ray shadowRay;
-    shadowRay.origin = raycastHit.position + raycastHit.normal * 0.001;
-    shadowRay.direction = normalize(lightPos - raycastHit.position);
+    Ray l_shadowRay;
+    l_shadowRay.origin = _raycastHit.position + _raycastHit.normal * 0.001;
+    l_shadowRay.direction = normalize(_lightPos - _raycastHit.position);
     
-    float lightDistance = length(lightPos - raycastHit.position);
+    float l_lightDistance = length(_lightPos - _raycastHit.position);
     
-    int indexStack[64];
-    int top = 0;
-    indexStack[top] = 0;
-    int hits = 0;
+    int l_indexStack[64];
+    int l_top = 0;
+    l_indexStack[l_top] = 0;
 
-    Node node = bvhNodes[indexStack[top]];
-    top++;
+    Node l_node = bvhNodes[l_indexStack[l_top]];
+    l_top++;
 
     do
     {
-        if(IntersectAABB(shadowRay, node.minBound, node.maxBound))
+        if(IntersectAABB(l_shadowRay, l_node.minBound, l_node.maxBound))
         {
-            if(node.triangleCount > 0)
+            if(l_node.triangleCount > 0)
             {
-                for(int i = 0; i < node.triangleCount; i++)
+                for(int i = 0; i < l_node.triangleCount; i++)
                 {
                     // Skip the same triangle
-                    if(bvhTriangleIndexes[node.leftFirst + i] == raycastHit.triangleIndex)
+                    if(bvhTriIdxs[l_node.leftFirst + i] == _raycastHit.triangleIndex)
                     {
                         continue;
                     }
 
-                    RaycastResult shadowHit = triangleIntersect(shadowRay, triangles[bvhTriangleIndexes[node.leftFirst + i]], bvhTriangleIndexes[node.leftFirst + i]);
+                    RaycastResult l_shadowHit = triangleIntersect(l_shadowRay, sceneTris[bvhTriIdxs[l_node.leftFirst + i]], bvhTriIdxs[l_node.leftFirst + i]);
                     
-                    // More than a minimum value to ignore close triangles
-                    if(shadowHit.hit && shadowHit.distance < lightDistance && shadowHit.distance > 0.01f)
+                    // More than a minimum value to ignore close sceneTris
+                    if(l_shadowHit.hit && l_shadowHit.distance < l_lightDistance && l_shadowHit.distance > 0.01f)
                     {
                         return true;
                     }
@@ -256,16 +256,16 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
             }
             else
             {
-                indexStack[top] = node.leftFirst;
-                top++;
-                indexStack[top] = node.leftFirst + 1;
-                top++;
+                l_indexStack[l_top] = l_node.leftFirst;
+                l_top++;
+                l_indexStack[l_top] = l_node.leftFirst + 1;
+                l_top++;
             }
         }
 
-        top--;
-        node = bvhNodes[indexStack[top]];
-    } while(top > -1);
+        l_top--;
+        l_node = bvhNodes[l_indexStack[l_top]];
+    } while(l_top > -1);
 
     return false;
 }
@@ -273,7 +273,7 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
 
 vec3 getObjectColor(RaycastResult _result)
 {
-    Triangle l_tri = triangles[_result.triangleIndex];
+    Triangle l_tri = sceneTris[_result.triangleIndex];
     
     // Calculate barycentric coordinates (Converts point on triangle to uv coordinate for texture)
     vec3 l_edgeAB = l_tri.b - l_tri.a;
@@ -285,11 +285,11 @@ vec3 getObjectColor(RaycastResult _result)
     vec3 l_PcrossAC = cross(l_edgeAP, l_edgeAC);
     
     // Total triangle area is twice the actual area, because the triangle is 3D and has 2 sides
-    float l_totalTriangleArea = length(cross(l_edgeAB, l_edgeAC));
+    float l_invTotalTriangleArea = 1.0f /  length(cross(l_edgeAB, l_edgeAC));
     
-    // Calculate area of 3 triangles inside ABC, each made of 2 vertices and the intersection point
-    float l_areaPCA = length(l_PcrossAC) / l_totalTriangleArea;
-    float l_areaPAB = length(l_PcrossAB) / l_totalTriangleArea;
+    // Calculate area of 3 sceneTris inside ABC, each made of 2 vertices and the intersection point
+    float l_areaPCA = length(l_PcrossAC) * l_invTotalTriangleArea;
+    float l_areaPAB = length(l_PcrossAB) * l_invTotalTriangleArea;
 
     // Total area of the system = 1, so we can cheat the last one
     float l_areaPBC = 1.0 - l_areaPCA - l_areaPAB;
@@ -309,81 +309,87 @@ vec3 CalculateShading(RaycastResult _result, Ray _ray)
 {
     if (!_result.hit)
     {
-        return vec3(0.1, 0.1, 0.3); // Background color
+        return vec3(0.1, 0.1, 0.3);
     }
     
-    vec3 objectColor = getObjectColor(_result);
+    vec3 l_objectColor = getObjectColor(_result);
 
-    return objectColor;
+    vec3 l_lighting = vec3(0.0);
 
-    vec3 lighting = vec3(0.0);
-
+    // For some reason the normal is 99% of the time ALWAYS FUCKING BACKWARDS
     // Flip normal if it's facing away from the ray (backface)
-    vec3 normal = _result.normal;
-    if(dot(normal, _ray.direction) > 0.0)
+    vec3 l_normal = _result.normal;
+    if(dot(l_normal, _ray.direction) > 0.0)
     {
-        normal = -normal;
+        l_normal = -l_normal;
     }
 
-    for(int i = 0; i < numLights; i++)
+    for(int i = 0; i < u_numLights; i++)
     {
-        // Check if point is in shadow for this light
-        if (isInShadow(lights[i].position, _result))
+        // Skip points occluded by other objects
+        if (isInShadow(u_lights[i].position, _result))
         {
             continue;
         }
         
-        // Calculate direction from hit point to light
-        vec3 lightDir = normalize(lights[i].position - _result.position);
+        vec3 l_lightDir = normalize(u_lights[i].position - _result.position);
 
-        // Diffuse component
-        float diffuse = max(dot(normal, lightDir), 0.0);
-        vec3 diffuseColor = lights[i].color * objectColor * diffuse;
+        float l_diffuse = max(dot(l_normal, l_lightDir), 0.0);
+        vec3 l_diffuseColor = u_lights[i].color * l_objectColor * l_diffuse;
 
-        // Specular component
-        vec3 viewDir = normalize(u_camera.position - _result.position);
-        vec3 reflectDir = reflect(-lightDir, normal);
-        float specular = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
-        vec3 specularColor = lights[i].color * specular;
+        vec3 l_viewDir = normalize(u_camera.position - _result.position);
+        vec3 l_reflectDir = reflect(-l_lightDir, l_normal);
+
+        float l_specular = pow(max(dot(l_viewDir, l_reflectDir), 0.0), 32.0);
+        vec3 l_specularColor = u_lights[i].color * l_specular;
 
         // Add attenuation based on distance
-        float distance = length(lights[i].position - _result.position);
-        float attenuation = 1.0 / (1.0 + 0.1 * distance + 0.01 * distance * distance);
+        float l_distance = length(u_lights[i].position - _result.position);
+
+        // Scales light amount by inverse of distance
+        float l_attenuation = 1.0 / (1.0 + 0.1 * l_distance + 0.01 * l_distance * l_distance);
         
-        lighting += (diffuseColor + specularColor) * attenuation;
+        l_lighting += (l_diffuseColor + l_specularColor) * l_attenuation;
     };
     
     // Add ambient lighting (always present, even in shadows)
-    vec3 ambient = objectColor * 0.1;
+    vec3 l_ambient = l_objectColor * 0.1;
     
-    return ambient + lighting;
+    return l_ambient + l_lighting;
 }
 
 void main() 
 {
-    vec2 uv = vec2(((float(gl_GlobalInvocationID.x) / gl_NumWorkGroups.x) - 0.5) * 2.0,
-                   ((float(gl_GlobalInvocationID.y) / gl_NumWorkGroups.y) - 0.5) * 2.0);
+    // Get screen coords in domain [-1, 1]
+    vec2 l_normalizedScreenCoords = vec2(((float(gl_GlobalInvocationID.x) / gl_NumWorkGroups.x) - 0.5) * 2.0,
+                                         ((float(gl_GlobalInvocationID.y) / gl_NumWorkGroups.y) - 0.5) * 2.0);
 
+    // Calculate aspect ratio (NOTE: Come up with new method, pass in from client pls)
     float aspect = float(gl_NumWorkGroups.x) / float(gl_NumWorkGroups.y);
-    vec3 rayDir = normalize(u_camera.forward + 
-                           uv.x * u_camera.right * aspect + 
-                           uv.y * u_camera.up);
-    
-    Ray _ray;
-    _ray.origin = u_camera.position;
-    _ray.direction = rayDir;
-    
-    RaycastResult closestHit;
-    closestHit.hit = false;
-    closestHit.distance = 1e10;
-    closestHit.normal = vec3(0.0);
 
+
+    vec3 l_rayDir = normalize(u_camera.forward + 
+                           l_normalizedScreenCoords.x * u_camera.right * aspect + 
+                           l_normalizedScreenCoords.y * u_camera.up);
+    
+    Ray l_ray;
+    l_ray.origin = u_camera.position;
+    l_ray.direction = l_rayDir;
+
+    // Return structure with hit information (if hit)
+    RaycastResult l_closestHit;
+    l_closestHit.hit = false;
+    l_closestHit.distance = 1e10;
+    l_closestHit.normal = vec3(0.0);
+
+    // NOTE: Do anti aliasing here
     vec3 l_colour = vec3(0.0f);
     
-    TraverseBVH(closestHit, _ray);
+    TraverseBVH(l_closestHit, l_ray);
 
-    l_colour += CalculateShading(closestHit, _ray);
+    l_colour += CalculateShading(l_closestHit, l_ray);
 
-    ivec2 position = ivec2(gl_GlobalInvocationID.xy);
-    imageStore(framebufferTex, position, vec4(l_colour, 1.0));
+    // Shove colour into the output buffer
+    ivec2 l_position = ivec2(gl_GlobalInvocationID.xy);
+    imageStore(o_framebufferTex, l_position, vec4(l_colour, 1.0));
 }

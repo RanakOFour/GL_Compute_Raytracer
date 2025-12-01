@@ -54,9 +54,9 @@ int main(int argc, char* argv[])
 	l_light.position = glm::vec3(0.0f, 0.0f, 3.0f);
 	l_light.colour = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	l_compute.SetUniform("numLights", 1);
-	l_compute.SetUniform("lights[0].position", l_light.position);
-	l_compute.SetUniform("lights[0].color", l_light.colour);
+	l_compute.SetUniform("u_numLights", 1);
+	l_compute.SetUniform("u_lights[0].position", l_light.position);
+	l_compute.SetUniform("u_lights[0].color", l_light.colour);
 
 	std::vector<Triangle> l_tris = l_sphereModel.GetTriangles(glm::vec3(0.0f));
 
@@ -130,8 +130,7 @@ int main(int argc, char* argv[])
 		
 		l_compute.use();
 
-		l_compute.SetUniform("time", time);
-		l_compute.SetUniform("lights[0].position", l_light.position);
+		l_compute.SetUniform("u_lights[0].position", l_light.position);
 		l_camera.UpdateShader(l_compute);
 
 		l_myFramework.SetGLTexture();
