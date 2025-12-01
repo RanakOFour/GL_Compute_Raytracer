@@ -255,6 +255,7 @@ inline std::vector<Triangle> Model::GetTriangles(glm::vec3 _position)
     newTri.uvC = m_faces[fi].c.texcoord;
 
     CalculateNormal(newTri);
+    CalculateCentroid(newTri);
     l_triangles.push_back(newTri);
   }
 

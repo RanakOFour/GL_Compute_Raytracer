@@ -18,6 +18,8 @@ struct Triangle
     float _padding_c;
     glm::vec3 normal;
     float _padding_n;
+    glm::vec3 centroid;
+    float _padding_cent;
     glm::vec2 uvA;
     glm::vec2 uvB;
     glm::vec2 uvC;
@@ -41,9 +43,9 @@ inline void CalculateNormal(Triangle& _tri)
  * Taken outside of Triangle struct to avoid OpenGL schenanigans
  * with uploading to the GPU
 */
-inline glm::vec3 CalculateCentroid(Triangle& _tri)
+inline void CalculateCentroid(Triangle& _tri)
 {
-    return (_tri.a + _tri.b + _tri.c) * 0.333f;
+    _tri.centroid = (_tri.a + _tri.b + _tri.c) * 0.333f;
 };
 
 #endif

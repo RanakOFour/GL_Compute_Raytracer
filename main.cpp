@@ -23,7 +23,7 @@ inline void HandleMouseInput(Input& _inputMap, SDL_MouseMotionEvent& _mouseEvent
 int main(int argc, char* argv[])
 {
 	// Set window size
-	glm::ivec2 l_winSize(500, 500);
+	glm::ivec2 l_winSize(1000, 800);
 
 	// This will handle rendering to screen
 	GCP_Framework l_myFramework;
@@ -65,10 +65,13 @@ int main(int argc, char* argv[])
 	BVH l_BVH(&(l_tris));
 
 	Texture l_modelTexture = Texture("./resources/textures/Whiskers_diffuse.png");
-
+	// Bind all the required stuff to the raytracer shader
+	l_myFramework.SetGLTexture();
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, l_BVH.GetTriangleSSBO());
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, l_BVH.GetIndexSSBO());
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, l_BVH.GetNodeSSBO());
+	glBindSampler(4, l_modelTexture.GetID());
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	bool l_keepGoing = true;
 	bool l_mouseMovement = false;
@@ -131,8 +134,9 @@ int main(int argc, char* argv[])
 		l_compute.SetUniform("lights[0].position", l_light.position);
 		l_camera.UpdateShader(l_compute);
 
+
 		l_myFramework.SetGLTexture();
-		
+
 		glDispatchCompute((unsigned int)l_winSize.x, (unsigned int)l_winSize.y, 1);
 		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 

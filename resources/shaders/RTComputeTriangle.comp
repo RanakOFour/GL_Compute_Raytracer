@@ -9,6 +9,7 @@ struct Triangle
     vec3 b;
     vec3 c;
     vec3 normal;
+    vec3 cent;
     vec2 uvA;
     vec2 uvB;
     vec2 uvC;
@@ -24,7 +25,7 @@ struct Node
 
 layout(std430, binding = 1) readonly buffer b_trianglesSSBO
 {
-    Triangle modelData[];
+    Triangle triangles[];
 };
 
 layout(std430, binding = 2) readonly buffer b_bvhTriangleIndex
@@ -37,7 +38,7 @@ layout(std430, binding = 3) readonly buffer b_bvhNodes
     Node bvhNodes[];
 };
 
-layout(rgba32f, binding = 4) uniform image2D modelTexture;
+layout(binding = 4) uniform usampler2D modelTexture;
 
 struct Camera
 {
@@ -192,7 +193,7 @@ RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
             {
                 for(int i = 0; i < node.triangleCount; i++)
                 {
-                    RaycastResult newResult = triangleIntersect(_ray, modelData[bvhTriangleIndexes[node.leftFirst + i]], bvhTriangleIndexes[node.leftFirst + i]);
+                    RaycastResult newResult = triangleIntersect(_ray, triangles[bvhTriangleIndexes[node.leftFirst + i]], bvhTriangleIndexes[node.leftFirst + i]);
                     if(newResult.hit && newResult.distance < _result.distance)
                     {
                         _result = newResult;
@@ -245,7 +246,7 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
                         continue;
                     }
 
-                    RaycastResult shadowHit = triangleIntersect(shadowRay, modelData[bvhTriangleIndexes[node.leftFirst + i]], bvhTriangleIndexes[node.leftFirst + i]);
+                    RaycastResult shadowHit = triangleIntersect(shadowRay, triangles[bvhTriangleIndexes[node.leftFirst + i]], bvhTriangleIndexes[node.leftFirst + i]);
                     
                     // More than a minimum value to ignore close triangles
                     if(shadowHit.hit && shadowHit.distance < lightDistance && shadowHit.distance > 0.01f)
@@ -273,10 +274,26 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
 
 vec3 getObjectColor(RaycastResult _result)
 {
-    return vec3(1.0, 0.0, 0.0);
-    //Triangle l_tri = triangles[bvhTriangleIndexes[_result.triangleIndex]];
+    //return vec3(1.0, 0.0, 0.0);
+    Triangle l_tri = triangles[bvhTriangleIndexes[_result.triangleIndex]];
     
-    //vec3 colour = texture2D(modelTexture, )
+    vec3 l_f1 = l_tri.a - _result.position;
+    vec3 l_f2 = l_tri.b - _result.position;
+    vec3 l_f3 = l_tri.c - _result.position;
+
+    float l_invTriArea = 1.0f / length(cross(l_tri.a - l_tri.b, l_tri.a - l_tri.c));
+
+    float l_triArea1 = length(cross(l_f2, l_f3)) * l_invTriArea;
+    float l_triArea2 = length(cross(l_f3, l_f1)) * l_invTriArea;
+    float l_triArea3 = length(cross(l_f1, l_f2)) * l_invTriArea;
+
+    vec2 uv = l_tri.uvA * l_triArea1 + l_tri.uvB * l_triArea2 + l_tri.uvC * l_triArea3;
+    vec2 texSize = textureSize(modelTexture, 0);
+    ivec2 iUVs = ivec2(int(uv.x), int(uv.y));
+    vec4 colour = texture(modelTexture, uv);
+
+    return vec3(uv.x / texSize.x, uv.y / texSize.y, 0.0f);
+    return vec3(colour.xyz);
 }
 
 vec3 CalculateShading(RaycastResult _result, Ray _ray)
@@ -288,7 +305,7 @@ vec3 CalculateShading(RaycastResult _result, Ray _ray)
     
     vec3 objectColor = getObjectColor(_result);
 
-    //return objectColor;
+    return objectColor;
 
     vec3 lighting = vec3(0.0);
 

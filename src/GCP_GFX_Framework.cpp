@@ -463,9 +463,6 @@ void GCP_Framework::Show()
 	// This writes the above colour to the colour part of the framebuffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Send offline framebuffer to the OpenGL texture
-	//_mainBuffer->UpdateGL();
-
 	// Binds OpenGL Texture
 	glUseProgram(_shaderProgram);
 	_mainBuffer->BindGLTex();

@@ -16,7 +16,7 @@ Texture::Texture(const std::string& _path) :
 	m_size(0, 0),
 	m_id(0)
 {
-	//stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(true);
 
 	unsigned char* data = stbi_load(_path.c_str(), &m_size.x, &m_size.y, NULL, 4);
 
@@ -58,8 +58,9 @@ GLuint Texture::GetID()
 
 		glBindTexture(GL_TEXTURE_2D, m_id);
 
+
 		// Upload the image data to the bound texture unit in the GPU
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_data.data());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_size.x, m_size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_data.data());
 
 		// Generate Mipmap so the texture can be mapped correctly
 		glGenerateMipmap(GL_TEXTURE_2D);
