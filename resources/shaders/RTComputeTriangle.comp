@@ -84,12 +84,12 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
 
     float l_ep = 0.0001;
 
-    vec3 v0 = _tri.a;
-    vec3 v1 = _tri.b; 
-    vec3 v2 = _tri.c;
+    vec3 l_edgeAB = _tri.a;
+    vec3 l_edgeAC = _tri.b; 
+    vec3 l_edgeAP = _tri.c;
 
-    vec3 edge1 = v1 - v0;
-    vec3 edge2 = v2 - v0;
+    vec3 edge1 = l_edgeAC - l_edgeAB;
+    vec3 edge2 = l_edgeAP - l_edgeAB;
     vec3 ray_cross_edge2 = cross(_ray.direction, edge2);
     float det = dot(edge1, ray_cross_edge2);
 
@@ -99,7 +99,7 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
     }
 
     float inv_det = 1.0 / det;
-    vec3 s = _ray.origin - v0;
+    vec3 s = _ray.origin - l_edgeAB;
     float u = inv_det * dot(s, ray_cross_edge2);
 
     if(u < 0.0 || u > 1.0)
@@ -273,32 +273,36 @@ bool isInShadow(vec3 lightPos, RaycastResult raycastHit)
 
 vec3 getObjectColor(RaycastResult _result)
 {
-    //return vec3(1.0, 0.0, 0.0);
-    Triangle l_tri = triangles[bvhTriangleIndexes[_result.triangleIndex]];
+    Triangle l_tri = triangles[_result.triangleIndex];
     
-    vec3 v0 = l_tri.a;
-    vec3 v1 = l_tri.b;
-    vec3 v2 = l_tri.c;
-    
-    vec3 edge1 = v1 - v0;
-    vec3 edge2 = v2 - v0;
-    vec3 pvec = cross(_result.position - v0, edge1);
-    vec3 qvec = cross(_result.position - v0, edge2);
-    
-    float invTotalArea = 1.0 / length(cross(edge1, edge2));
-    float area1 = length(pvec) * invTotalArea;
-    float area2 = length(qvec) * invTotalArea;
-    float area3 = 1.0 - area1 - area2;
-    
-    // Interpolate UV coordinates using barycentric coordinates
-    vec2 uv = l_tri.uvA * area1 + l_tri.uvB * area2 + l_tri.uvC * area3;
+    // Calculate barycentric coordinates (Converts point on triangle to uv coordinate for texture)
+    vec3 l_edgeAB = l_tri.b - l_tri.a;
+    vec3 l_edgeAC = l_tri.c - l_tri.a;
+    vec3 l_edgeAP = _result.position - l_tri.a;
 
-    //return vec3(uv, 0.0f);
-
-    // Sample texture
-    vec4 colour = texture(modelTexture, uv);
+    // Calculate cross products for barycentric coordinates
+    vec3 l_PcrossAB = cross(l_edgeAP, l_edgeAB);
+    vec3 l_PcrossAC = cross(l_edgeAP, l_edgeAC);
     
-    return vec3(colour.rgb);
+    // Total triangle area is twice the actual area, because the triangle is 3D and has 2 sides
+    float l_totalTriangleArea = length(cross(l_edgeAB, l_edgeAC));
+    
+    // Calculate area of 3 triangles inside ABC, each made of 2 vertices and the intersection point
+    float l_areaPCA = length(l_PcrossAC) / l_totalTriangleArea;
+    float l_areaPAB = length(l_PcrossAB) / l_totalTriangleArea;
+
+    // Total area of the system = 1, so we can cheat the last one
+    float l_areaPBC = 1.0 - l_areaPCA - l_areaPAB;
+    
+    // The UV coordinate at P is the sum of the uv coordinates at each vertex,
+    // each weighted by an area of a triangle consisting of the other 3 points.
+    // The system has the Triangle edges (A, B, C) and the point of interest (P)
+    vec2 interpolatedUV = l_tri.uvA * l_areaPBC + 
+                          l_tri.uvB * l_areaPCA + 
+                          l_tri.uvC * l_areaPAB;
+    
+    vec4 colour = texture(modelTexture, interpolatedUV);
+    return vec3(colour.xyz);
 }
 
 vec3 CalculateShading(RaycastResult _result, Ray _ray)

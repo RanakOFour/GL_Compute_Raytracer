@@ -113,7 +113,7 @@ inline Model::Model(const std::string& _path) :
     else if(L_tokens.at(0) == "vt" && L_tokens.size() >= 3)
     {
       glm::vec2 tc(atof(L_tokens.at(1).c_str()),
-        1.0f - atof(L_tokens.at(2).c_str()));
+        atof(L_tokens.at(2).c_str()));
 
       L_tcs.push_back(tc);
     }
