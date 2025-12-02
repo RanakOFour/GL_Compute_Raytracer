@@ -11,7 +11,6 @@ struct Material
     float metallic;
     float roughness;
     float ambientOcclusion;
-    float _padding_b;
 };
 
 #endif

@@ -57,7 +57,7 @@ class Camera
             Rotate(_inputMap.deltaMouseY, m_Right);
         }
 
-        printf("%i, %i, %i, %f, %f\n", _inputMap.forward, _inputMap.right, _inputMap.up, _inputMap.deltaMouseX, _inputMap.deltaMouseY);
+        //printf("%i, %i, %i, %f, %f\n", _inputMap.forward, _inputMap.right, _inputMap.up, _inputMap.deltaMouseX, _inputMap.deltaMouseY);
     };
 
     /**

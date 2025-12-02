@@ -36,6 +36,7 @@ int main(int argc, char* argv[])
 	
 	l_raytracer.AddLight(l_light);
 
+	printf("Creating vectors\n");
 	std::vector<Triangle> l_tris = l_sphereModel.GetTriangles(glm::vec3(0.0f));
 	std::vector<Texture> l_textures;
 	std::vector<Material> l_materials;
@@ -45,8 +46,8 @@ int main(int argc, char* argv[])
 	Material l_material;
 	l_material.albedo = glm::vec3(1.0f);
 	l_material.metallic = 1.0f;
-	l_material.roughness = 1.0f;
-	l_material.ambientOcclusion = 0.0f;
+	l_material.roughness = 0.0f;
+	l_material.ambientOcclusion = 1.0f;
 
 	for(int i = 0; i < l_tris.size(); i++)
 	{
@@ -57,8 +58,12 @@ int main(int argc, char* argv[])
 	l_materials.push_back(l_material);
 	l_textures.push_back(l_modelTexture);
 
+	
+	printf("Setting materials\n");
 	l_raytracer.SetMaterials(&l_materials);
+	printf("Setting textures\n");
 	l_raytracer.SetTextures(&l_textures);
+	printf("Setting tris\n");
 	l_raytracer.SetTris(&l_tris);
 
 	Light* l_light0 = l_raytracer.GetLight(0);
@@ -142,6 +147,22 @@ int main(int argc, char* argv[])
 		ImGui::Text(l_camPosText.c_str());
 
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+		ImGui::End();
+
+		ImGui::Begin("Material settings");
+
+		float met = l_material.metallic;
+		ImGui::SliderFloat("Metallic", &met, 0, 1);
+		l_material.metallic = met;
+
+		float rog = l_material.roughness;
+		ImGui::SliderFloat("Roughness", &rog, 0, 1);
+		l_material.roughness = rog;
+		
+		float ao = l_material.ambientOcclusion;
+		ImGui::SliderFloat("AO", &ao, 0, 1);
+		l_material.ambientOcclusion = ao;
 
 		ImGui::End();
 

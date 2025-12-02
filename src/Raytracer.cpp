@@ -46,14 +46,10 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
     printf("Shadow buffer\n");
     glBindTexture(GL_TEXTURE_2D, m_shadowB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, m_screenSize.x, m_screenSize.y, 0, GL_RGBA, GL_FLOAT, 0);
-    glBindImageTexture(9, m_shadowB, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+    glBindImageTexture(6, m_shadowB, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
     
 
     // Everything is bound here once as the bindings do not change
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, m_triangleSSBO);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 6, m_BVH.GetNodeSSBO());
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 7, m_BVH.GetIndexSSBO());
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 8, m_materialSSBO);
 
     m_ShadowComp.use();
     m_ShadowComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
@@ -68,11 +64,17 @@ Raytracer::~Raytracer()
 
 void Raytracer::Trace()
 {
+    if(!m_setup)
+    {
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 7, m_triangleSSBO);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 8, m_BVH.GetNodeSSBO());
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 9, m_BVH.GetIndexSSBO());
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 10, m_materialSSBO);
+        m_setup = true;
+    }
+
     m_IntersectionComp.use();
     m_camera.UpdateShader(m_IntersectionComp);
-
-    // We rebind the 0 buffer as it gets reassigned in the shading comp
-    glBindImageTexture(0, m_positionB, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 
     // Cap light count at 10
     int lightCount = m_lights.size() > 10 ? 10 : m_lights.size();
@@ -83,26 +85,26 @@ void Raytracer::Trace()
     }
 
     
-	glDispatchCompute(m_screenSize.x / 4, m_screenSize.y / 4, 1);
+	glDispatchCompute(m_screenSize.x, m_screenSize.y, 1);
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_SHADER_STORAGE_BARRIER_BIT);
 
-    m_ShadowComp.use();
-    m_ShadowComp.SetUniform("u_cameraPosition", m_camera.Position());
+    // m_ShadowComp.use();
+    // m_ShadowComp.SetUniform("u_cameraPosition", m_camera.Position());
 
-    glDispatchCompute(m_screenSize.x / 4, m_screenSize.y / 4, 1);
-	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+    // glDispatchCompute(m_screenSize.x, m_screenSize.y, 1);
+	// glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
-    m_ShadingComp.use();
+    // m_ShadingComp.use();
 
-    m_ShadingComp.SetUniform("u_cameraPosition", m_camera.Position());
-    for(int i = 0; i < lightCount; i++)
-    {
-        m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
-	    m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].color", m_lights[i].colour);
-    }
+    // m_ShadingComp.SetUniform("u_cameraPosition", m_camera.Position());
+    // for(int i = 0; i < lightCount; i++)
+    // {
+    //     m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
+	//     m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].color", m_lights[i].colour);
+    // }
 
-    glDispatchCompute(m_screenSize.x / 4, m_screenSize.y / 4, 1);
-	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+    // glDispatchCompute(m_screenSize.x, m_screenSize.y, 1);
+	// glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 }
 
 void Raytracer::SetTris(std::vector<Triangle>* _tris)
@@ -131,6 +133,7 @@ void Raytracer::SetMaterials(std::vector<Material>* _mat)
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_materialSSBO);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Material) * m_mats->size(), &(m_mats->at(0)), GL_DYNAMIC_READ);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 10, m_materialSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 

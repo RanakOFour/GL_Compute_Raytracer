@@ -2,20 +2,21 @@
 
 void BVH::BuildBHV(std::vector<Triangle>* _tris)
 {
+    m_tris = _tris;
     m_nodes = std::vector<BVHNode>();
     m_triIndexes = std::vector<int>();
 
-    printf("Building BVH with %i triangles\n", (int)m_tris->size());
+    printf("Building BVH with %i triangles\n", (int)_tris->size());
     int rootNodeId = 0;
-    for(int i = 0; i < m_tris->size(); i++)
+    for(int i = 0; i < _tris->size(); i++)
     {
-        CalculateCentroid(m_tris->at(i));
+        CalculateCentroid(_tris->at(i));
         m_triIndexes.push_back(i);
     }
 
     BVHNode l_root;
     l_root.leftFirst = 0;
-    l_root.triangleCount = m_tris->size();
+    l_root.triangleCount = _tris->size();
     m_nodes.push_back(l_root);
 
     UpdateNodeBounds(0);
