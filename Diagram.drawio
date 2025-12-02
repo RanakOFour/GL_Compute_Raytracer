@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="OE9D3wA5DGOfEw1pnoTS" name="Page-1">
-        <mxGraphModel dx="2763" dy="1109" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="2300" dy="1192" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -122,11 +122,208 @@
                 <mxCell id="59" value="1. Create CPU based BHV (for debugging) and implement it&#39;s usage within the compute shader&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;2. Import BHV construction to the GPU&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="58" vertex="1">
                     <mxGeometry y="24" width="199" height="63" as="geometry"/>
                 </mxCell>
-                <mxCell id="60" value="Diagnostic Categories / Metric for QA" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="60" value="Diagnostic Categories / Metric for QA" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="867" y="12" width="427" height="200" as="geometry"/>
                 </mxCell>
-                <mxCell id="61" value="Text" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="60">
+                <mxCell id="61" value="Text" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="60" vertex="1">
                     <mxGeometry y="22" width="424" height="71" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="Break shader into passes" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-1164" y="494" width="2932" height="1905" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" style="edgeStyle=none;html=1;" edge="1" parent="62" source="63" target="64">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="Start" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="62">
+                    <mxGeometry x="22" y="42" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" style="edgeStyle=none;html=1;" edge="1" parent="62" source="64" target="66">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="Pass1: Intersections" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" vertex="1" parent="62">
+                    <mxGeometry x="215" y="42" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" style="edgeStyle=none;html=1;" edge="1" parent="62" source="66" target="68">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="Pass2:&amp;nbsp;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Shadows&lt;/font&gt;&lt;/div&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" vertex="1" parent="62">
+                    <mxGeometry x="408" y="42" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="62" source="68" target="71">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="780.09375" y="72" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="68" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Pass3:&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;PBR Shading&lt;/font&gt;&lt;/div&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" vertex="1" parent="62">
+                    <mxGeometry x="601" y="42" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" style="edgeStyle=none;html=1;" edge="1" parent="62" source="71" target="73">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" value="..." style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="62">
+                    <mxGeometry x="794" y="57" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" style="edgeStyle=none;html=1;" edge="1" parent="62" source="73" target="75">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;PassX:&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Post-Processing Effect X&lt;/font&gt;&lt;/div&gt;" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" vertex="1" parent="62">
+                    <mxGeometry x="927" y="42" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" value="End" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="62">
+                    <mxGeometry x="1120" y="42" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" value="Benefits:&lt;div&gt;- Better modularity/flexibility in including features&lt;/div&gt;&lt;div&gt;- Nicer on my head when thinking about how to incorporate new features&lt;/div&gt;&lt;div&gt;- &#39;Feels better&#39; than one large ~700 line .comp file&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- Can get more precise measurements on timings for passes (more video content)&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="62">
+                    <mxGeometry x="43" y="155" width="219" height="281" as="geometry"/>
+                </mxCell>
+                <mxCell id="78" value="Not Benefits:&lt;div&gt;- Thinning the swap, this will be big&lt;/div&gt;&lt;div&gt;- Debugging could become harder - more to look through&lt;/div&gt;&lt;div&gt;- Potential performance hits?&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="62">
+                    <mxGeometry x="314" y="155" width="219" height="102" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="" style="endArrow=classic;html=1;entryX=0.041;entryY=0.725;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="62" target="78">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="254" y="297" as="sourcePoint"/>
+                        <mxPoint x="312" y="254" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="125" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;rounded=0;curved=0;" edge="1" parent="62" source="80" target="124">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="558" y="223"/>
+                            <mxPoint x="558" y="338"/>
+                            <mxPoint x="16" y="336"/>
+                            <mxPoint x="20" y="919"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="80" value="How will I pass data between shaders?&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Could bind textures, able to send a vec4 per pixel per texture to each new pass&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;What kind of data needed to pass?&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Raycast results (Position, Normal, TriInx, MatIdx)&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Triangle information&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Material information&lt;/font&gt;&lt;/div&gt;&lt;div&gt;Pass &lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(102, 255, 102));&quot;&gt;information&lt;/font&gt; or &lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 51, 51));&quot;&gt;idx&lt;/font&gt;?&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 102));&quot;&gt;- Have to pass materials into intersection ; &#39;feels wrong&#39;, intersection is for intersection, not calculating uv coordinates&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(102, 255, 102));&quot;&gt;- Other passes have a nicer time ; will be handling raw data&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(102, 255, 102));&quot;&gt;- Limits passing structs around (And copying definitions...)&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(102, 255, 102));&quot;&gt;- Probably faster working in images&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- Final image (Post-processing)&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="62">
+                    <mxGeometry x="580" y="111" width="680" height="224" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="Data flow diagram" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="62">
+                    <mxGeometry x="34" y="351" width="2482" height="865" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" style="edgeStyle=none;html=1;" edge="1" parent="81" source="82" target="98">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="Intersection Test" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="237" y="208" width="219" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="91" value="Functions:&lt;div&gt;RaycastResult TraverseBVH(Ray)&lt;/div&gt;&lt;div&gt;RaycastResult TriIntersect(Ray, Tri, int)&lt;/div&gt;&lt;div&gt;bool AABBIntersect(Ray, vec3, vec3)&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="82">
+                    <mxGeometry y="25" width="218" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="90" style="edgeStyle=none;html=1;" edge="1" parent="81" source="86" target="82">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="86" value="In Pass1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="18" y="247" width="187" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="88" value="BVH Data (Nodes, IdxMap)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="86">
+                    <mxGeometry y="30" width="187" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="103" value="&amp;nbsp;Camera Data" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="86">
+                    <mxGeometry y="60" width="187" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="104" value="&amp;nbsp;Triangle Data" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="86">
+                    <mxGeometry y="90" width="187" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="116" style="edgeStyle=none;html=1;" edge="1" parent="81" source="92" target="114">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="92" value="Shadow Pass" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="817" y="207" width="200" height="201" as="geometry"/>
+                </mxCell>
+                <mxCell id="93" value="Functions:&lt;div&gt;TraceRay(vec3, vec3, float)&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="92">
+                    <mxGeometry x="-1" y="25" width="200" height="176" as="geometry"/>
+                </mxCell>
+                <mxCell id="94" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;align=center;rounded=0;curved=0;" edge="1" parent="81" source="95" target="92">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="790" y="158" as="sourcePoint"/>
+                        <mxPoint x="797" y="279" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="786" y="191"/>
+                            <mxPoint x="787" y="307"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="95" value="In Pass2" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="569" y="131" width="187" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="105" value="Light Data" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="95">
+                    <mxGeometry y="30" width="187" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="97" value="BVH Data (Nodes, Tris, IdxMap)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="95">
+                    <mxGeometry y="60" width="187" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="96" value="&amp;nbsp;Triangle Data" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="95">
+                    <mxGeometry y="90" width="187" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="102" style="edgeStyle=none;html=1;" edge="1" parent="81" source="98" target="92">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="98" value="Out Pass1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="569" y="277" width="187" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="99" value="RaycastResults" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="98">
+                    <mxGeometry y="30" width="187" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="106" value="Shading Pass" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="1312" y="206" width="200" height="201" as="geometry"/>
+                </mxCell>
+                <mxCell id="107" value="Functions:&lt;div&gt;CalculateShading()&lt;/div&gt;&lt;div&gt;Other PBR functions&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="106">
+                    <mxGeometry x="-1" y="25" width="200" height="176" as="geometry"/>
+                </mxCell>
+                <mxCell id="108" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;align=center;rounded=0;curved=0;" edge="1" parent="81" source="109" target="106">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1285" y="157" as="sourcePoint"/>
+                        <mxPoint x="1292" y="278" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="1282" y="165"/>
+                            <mxPoint x="1282" y="306"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="109" value="In Pass3" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="1064" y="75" width="187" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="110" value="Light Data" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="109">
+                    <mxGeometry y="30" width="187" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="111" value="BVH Data (Nodes, Tris, IdxMap)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="109">
+                    <mxGeometry y="60" width="187" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="112" value="Triangle Data" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="109">
+                    <mxGeometry y="90" width="187" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="118" value="&amp;nbsp;Raycast Results" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="109">
+                    <mxGeometry y="120" width="187" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="119" value="&amp;nbsp;Material data" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="109">
+                    <mxGeometry y="150" width="187" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="113" style="edgeStyle=none;html=1;" edge="1" parent="81" source="114" target="106">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="114" value="Out Pass2" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="1064" y="276" width="187" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="115" value="Shadow Cast results" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="114">
+                    <mxGeometry y="30" width="187" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="124" value="&quot;RaycastResults&quot; information" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="37" y="468" width="406" height="201" as="geometry"/>
+                </mxCell>
+                <mxCell id="126" value="- Intersection position&lt;div&gt;- Triangle normal&lt;/div&gt;&lt;div&gt;- UV coordinates of intersection point&lt;/div&gt;&lt;div&gt;- Triangle material Albedo&lt;/div&gt;&lt;div&gt;- Material properties (AO, Metallic, Roughness, Id as RGBA channel vals)&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="124">
+                    <mxGeometry y="23" width="406" height="178" as="geometry"/>
+                </mxCell>
+                <mxCell id="120" value="Raytracer" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="62">
+                    <mxGeometry x="1324" y="89" width="194" height="194" as="geometry"/>
+                </mxCell>
+                <mxCell id="121" value="- m_bvh : BVH&lt;div&gt;- data buffers : structs&lt;/div&gt;&lt;div&gt;- pass options&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="120">
+                    <mxGeometry y="26" width="194" height="49" as="geometry"/>
+                </mxCell>
+                <mxCell id="122" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="120">
+                    <mxGeometry y="75" width="194" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="123" value="+ Raytracer(pass options)&lt;div&gt;+ ~Raytracer()&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ Update(std::vector&amp;lt;Triangle&amp;gt;*)&lt;/div&gt;&lt;div&gt;+ Execute()&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ Setters for pass options&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="120">
+                    <mxGeometry y="83" width="194" height="111" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

@@ -1,0 +1,231 @@
+#version 430 core
+
+layout(local_size_x = 4, local_size_y = 4) in;
+
+
+
+struct Triangle
+{
+    // Vertex positions
+    vec3 a;
+    vec3 b;
+    vec3 c;
+    vec3 normal;
+
+    // UV Coordinates for each vertex
+    vec2 uvA;
+    vec2 uvB;
+    vec2 uvC;
+};
+
+struct Node
+{
+    // Laid out like this for bit packing
+    vec3 minBound;
+
+    // Holds index of left node (if not leaf node) or first triangle (if leaf node)
+    int leftFirst;
+    vec3 maxBound;
+
+    // Triangles in node (0 if not leaf node)
+    int triangleCount;
+};
+
+layout(std430, binding = 0) readonly buffer b_trianglesSSBO
+{
+    Triangle sceneTris[];
+};
+
+layout(std430, binding = 1) readonly buffer b_bvhTriangleIndex
+{
+    int bvhTriIdxs[];
+};
+
+layout(std430, binding = 2) readonly buffer b_bvhNodes
+{
+    Node bvhNodes[];
+};
+
+struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
+uniform Camera u_camera;
+
+struct Light{ vec3 color; vec3 position; };
+#define MAX_LIGHTS 10
+uniform Light u_lights[MAX_LIGHTS];
+uniform int u_numLights;
+
+struct Ray  { vec3 origin; vec3 direction; };
+
+struct RaycastResult {
+    bool hit;
+    float distance;
+    vec3 position;
+    vec3 normal;
+    int triangleIndex;
+    int materialIndex;
+};
+
+RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
+{
+    RaycastResult result;
+    result.hit = false;
+    result.triangleIndex = _index;
+
+    float l_ep = 0.0001;
+
+    vec3 l_edgeAB = _tri.a;
+    vec3 l_edgeAC = _tri.b; 
+    vec3 l_edgeAP = _tri.c;
+
+    vec3 edge1 = l_edgeAC - l_edgeAB;
+    vec3 edge2 = l_edgeAP - l_edgeAB;
+    vec3 ray_cross_edge2 = cross(_ray.direction, edge2);
+    float det = dot(edge1, ray_cross_edge2);
+
+    if(det > -l_ep && det < l_ep)
+    {
+        return result;
+    }
+
+    float inv_det = 1.0 / det;
+    vec3 s = _ray.origin - l_edgeAB;
+    float u = inv_det * dot(s, ray_cross_edge2);
+
+    if(u < 0.0 || u > 1.0)
+    {
+        return result;
+    }
+
+    vec3 s_cross_e1 = cross(s, edge1);
+    float v = inv_det * dot(_ray.direction, s_cross_e1);
+
+    if(v < 0.0 || u + v > 1.0)
+    {
+        return result;
+    }
+
+    float t = inv_det * dot(edge2, s_cross_e1);
+
+    if(t > l_ep)
+    {
+        result.hit = true;
+        result.position = _ray.origin + _ray.direction * t;
+        result.distance = t;
+        result.normal = _tri.normal;
+        return result;
+    }
+
+    return result;
+}
+
+bool IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
+{
+    float tmin = 0.0f;
+    float tmax = 10000000.0f;
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (abs(_ray.direction[i]) < 0.0001f)
+        {
+            if (_ray.origin[i] < _minBound[i] || _ray.origin[i] > _maxBound[i])
+                return false;
+        }
+        else
+        {
+            float ood = 1.0f / _ray.direction[i];
+            float t1 = (_minBound[i] - _ray.origin[i]) * ood;
+            float t2 = (_maxBound[i] - _ray.origin[i]) * ood;
+
+            if (t1 > t2)
+            {
+                float temp = t1;
+                t1 = t2;
+                t2 = temp;
+            }
+
+            tmin = max(tmin, t1);
+            tmax = min(tmax, t2);
+
+            if (tmin > tmax)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+
+RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
+{
+    int l_indexStack[64];
+    int l_top = 0;
+    l_indexStack[l_top] = 0;
+
+    Node l_node = bvhNodes[l_indexStack[l_top]];
+    l_top++;
+
+    do
+    {
+        if(IntersectAABB(_ray, l_node.minBound, l_node.maxBound))
+        {
+            if(l_node.triangleCount > 0)
+            {
+                for(int i = 0; i < l_node.triangleCount; i++)
+                {
+                    RaycastResult newResult = triangleIntersect(_ray, sceneTris[bvhTriIdxs[l_node.leftFirst + i]], bvhTriIdxs[l_node.leftFirst + i]);
+                    if(newResult.hit && newResult.distance < _result.distance)
+                    {
+                        _result = newResult;
+                    }
+                }
+            }
+            else
+            {
+                l_indexStack[l_top] = l_node.leftFirst;
+                l_top++;
+                l_indexStack[l_top] = l_node.leftFirst + 1;
+                l_top++;
+            }
+        }
+
+        l_top--;
+        l_node = bvhNodes[l_indexStack[l_top]];
+    } while(l_top > -1);
+
+    return _result;
+}
+
+void main()
+{
+    // Get screen coords in domain [-1, 1]
+    vec2 l_normalizedScreenCoords = vec2(((float(gl_GlobalInvocationID.x) / gl_NumWorkGroups.x) - 0.5) * 2.0,
+                                         ((float(gl_GlobalInvocationID.y) / gl_NumWorkGroups.y) - 0.5) * 2.0);
+
+    // Calculate aspect ratio (NOTE: Come up with new method, pass in from client pls)
+    float aspect = float(gl_NumWorkGroups.x) / float(gl_NumWorkGroups.y);
+
+
+    vec3 l_rayDir = normalize(u_camera.forward + 
+                           l_normalizedScreenCoords.x * u_camera.right * aspect + 
+                           l_normalizedScreenCoords.y * u_camera.up);
+    
+    Ray l_ray;
+    l_ray.origin = u_camera.position;
+    l_ray.direction = l_rayDir;
+
+    // Return structure with hit information (if hit)
+    RaycastResult l_closestHit;
+    l_closestHit.hit = false;
+    l_closestHit.distance = 1e10;
+    l_closestHit.normal = vec3(0.0);
+    l_closestHit.materialIndex = -1;
+    
+    TraverseBVH(l_closestHit, l_ray);
+
+    if(l_closestHit.hit)
+    {
+
+    }
+}

@@ -5,17 +5,17 @@ void BVH::BuildBHV()
     m_nodes = std::vector<BVHNode>();
     m_triIndexes = std::vector<int>();
 
-    printf("Building BVH with %i triangles\n", (int)m_tris.size());
+    printf("Building BVH with %i triangles\n", (int)m_tris->size());
     int rootNodeId = 0;
-    for(int i = 0; i < m_tris.size(); i++)
+    for(int i = 0; i < m_tris->size(); i++)
     {
-        CalculateCentroid(m_tris.at(i));
+        CalculateCentroid(m_tris->at(i));
         m_triIndexes.push_back(i);
     }
 
     BVHNode l_root;
     l_root.leftFirst = 0;
-    l_root.triangleCount = m_tris.size();
+    l_root.triangleCount = m_tris->size();
     m_nodes.push_back(l_root);
 
     UpdateNodeBounds(0);
@@ -45,7 +45,7 @@ void BVH::UpdateNodeBounds(int _nodeIndex)
     for(int i = 0; i < l_nodeToUpdate.triangleCount; i++)
     {
         int l_leafIndex = m_triIndexes[l_nodeToUpdate.leftFirst + i];
-        Triangle& leaf = m_tris[l_leafIndex];
+        Triangle& leaf = m_tris->at(l_leafIndex);
         l_nodeToUpdate.minBound = glm::min(l_nodeToUpdate.minBound, leaf.a);
         l_nodeToUpdate.minBound = glm::min(l_nodeToUpdate.minBound, leaf.b);
         l_nodeToUpdate.minBound = glm::min(l_nodeToUpdate.minBound, leaf.c);
@@ -62,7 +62,7 @@ float BVH::CalculateSAH(BVHNode& _node, int _axis, float _pos)
     int leftCount = 0, rightCount = 0;
     for(int i = 0; i < _node.triangleCount; i++)
     {
-        Triangle& tri = m_tris[m_triIndexes[_node.leftFirst + i]];
+        Triangle& tri = m_tris->at(m_triIndexes[_node.leftFirst + i]);
         if(CalculateCentroid(tri)[_axis] < _pos)
         {
             leftCount++;
@@ -144,7 +144,7 @@ void BVH::Subdivide(int _nodeIndex)
     int j = i + l_node.triangleCount - 1;
     while(i <= j)
     {
-        if(CalculateCentroid(m_tris[m_triIndexes[i]])[l_bestAxis] < l_bestPos)
+        if(CalculateCentroid(m_tris->at(m_triIndexes[i]))[l_bestAxis] < l_bestPos)
         {
             i++;
         }
@@ -194,23 +194,6 @@ void BVH::Subdivide(int _nodeIndex)
 
     Subdivide(l_leftChildIndex);
     Subdivide(l_rightChildIndex);
-};
-
-GLuint BVH::GetTriangleSSBO()
-{
-    if (m_dirtyTris)
-    {
-        glGenBuffers(1, &m_triangleSSBOID);
-        glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_triangleSSBOID);
-        glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Triangle) * m_tris.size(), &(m_tris.at(0)), GL_DYNAMIC_READ);
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_triangleSSBOID);
-        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-        printf("BVH triangles uploaded\n");
-        m_dirtyTris = false;
-    }
-
-    return m_triangleSSBOID;
 };
 
 GLuint BVH::GetIndexSSBO()

@@ -20,7 +20,6 @@ class BVH
     private:
     GLuint m_nodeSSBOID;
     GLuint m_indexesSSBOID;
-    GLuint m_triangleSSBOID;
 
     /**@{ 
      * @name Dirty flags
@@ -43,9 +42,11 @@ class BVH
 
     /**
      * @brief
-     * The list of raw triangles that the BVH will sort into a tree
+     * A temporary reference to the list of triangles
+     * used to build the BVH.
+     * Only here to not have to plug "std::vector<Triangle>*" into every function
      */
-    std::vector<Triangle> m_tris;
+    std::vector<Triangle>* m_tris;
 
     /**
      * @brief
@@ -72,9 +73,8 @@ class BVH
     BVH(std::vector<Triangle>* _tris)
     : m_nodeSSBOID(0)
     , m_indexesSSBOID(0)
-    , m_triangleSSBOID(0)
     , m_nodes()
-    , m_tris(*_tris)
+    , m_tris(_tris)
     , m_triIndexes()
     , m_dirtyNodes(true)
     , m_dirtyIdxs(true)
@@ -95,19 +95,12 @@ class BVH
         {
             glDeleteBuffers(1, &m_nodeSSBOID);
         }
-
-        if (m_triangleSSBOID)
-        {
-            glDeleteBuffers(1, &m_triangleSSBOID);
-        }
     };
 
     void PlaneCount(int _planes) { m_planeCount = _planes; };
     int PlaneCount() { return m_planeCount; };
 
     void BuildBHV();
-
-    GLuint GetTriangleSSBO();
 
     GLuint GetIndexSSBO();
 

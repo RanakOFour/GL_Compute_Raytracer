@@ -64,10 +64,17 @@ int main(int argc, char* argv[])
 
 	BVH l_BVH(&(l_tris));
 
+	GLuint l_triangleBuffer;
+	glGenBuffers(1, &l_triangleBuffer);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, l_triangleBuffer);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Triangle) * l_tris.size(), &(l_tris.at(0)), GL_DYNAMIC_READ);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, l_triangleBuffer);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
 	Texture l_modelTexture = Texture("./resources/textures/Whiskers_diffuse.png");
 	// Bind all the required stuff to the raytracer shader
 	l_myFramework.SetGLTexture();
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, l_BVH.GetTriangleSSBO());
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, l_triangleBuffer);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, l_BVH.GetIndexSSBO());
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, l_BVH.GetNodeSSBO());
 	glActiveTexture(GL_TEXTURE0 + 4);
