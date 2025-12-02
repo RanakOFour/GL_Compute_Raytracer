@@ -2,7 +2,12 @@
 
 layout(local_size_x = 4, local_size_y = 4) in;
 
-
+// Data we write to that is used in later passes
+layout(rgba32f, binding = 1) uniform image2D intersectPositions;
+layout(rgba32f, binding = 2) uniform image2D triangleNormals;
+layout(rgba32f, binding = 3) uniform image2D uvCoordinatesAndTexIdx;
+layout(rgba32f, binding = 4) uniform image2D matAlbedo;
+layout(rgba32f, binding = 5) uniform image2D matProperties;
 
 struct Triangle
 {
@@ -16,7 +21,16 @@ struct Triangle
     vec2 uvA;
     vec2 uvB;
     vec2 uvC;
+
+    int textureIndex;
+    int materialIndex;
 };
+
+layout(std430, binding = 5) readonly buffer b_trianglesSSBO
+{
+    Triangle sceneTris[];
+};
+
 
 struct Node
 {
@@ -31,26 +45,35 @@ struct Node
     int triangleCount;
 };
 
-layout(std430, binding = 0) readonly buffer b_trianglesSSBO
+layout(std430, binding = 6) readonly buffer b_bvhNodes
 {
-    Triangle sceneTris[];
+    Node bvhNodes[];
 };
 
-layout(std430, binding = 1) readonly buffer b_bvhTriangleIndex
+// Maps bvhNode.leftFirst indexes to indexes in sceneTris
+layout(std430, binding = 7) readonly buffer b_bvhTriangleIndex
 {
     int bvhTriIdxs[];
 };
 
-layout(std430, binding = 2) readonly buffer b_bvhNodes
+struct Material
 {
-    Node bvhNodes[];
+    vec3 albedo;
+    float metallic;
+    float roughness;
+    float ambientOcclusion;
+};
+
+layout(std430, binding = 8) readonly buffer b_Materials
+{
+    Material materials[];
 };
 
 struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
 uniform Camera u_camera;
 
-struct Light{ vec3 color; vec3 position; };
 #define MAX_LIGHTS 10
+struct Light{ vec3 color; vec3 position; };
 uniform Light u_lights[MAX_LIGHTS];
 uniform int u_numLights;
 
@@ -62,8 +85,38 @@ struct RaycastResult {
     vec3 position;
     vec3 normal;
     int triangleIndex;
-    int materialIndex;
 };
+
+vec2 CalculateTexUVs(RaycastResult _result, Triangle _tri)
+{
+    // Calculate barycentric coordinates (Converts point on triangle to uv coordinate for texture)
+    vec3 l_edgeAB = _tri.b - _tri.a;
+    vec3 l_edgeAC = _tri.c - _tri.a;
+    vec3 l_edgeAP = _result.position - _tri.a;
+
+    // Calculate cross products for barycentric coordinates
+    vec3 l_PcrossAB = cross(l_edgeAP, l_edgeAB);
+    vec3 l_PcrossAC = cross(l_edgeAP, l_edgeAC);
+    
+    // Total triangle area is twice the actual area, because the triangle is 3D and has 2 sides
+    float l_invTotalTriangleArea = 1.0f /  length(cross(l_edgeAB, l_edgeAC));
+    
+    // Calculate area of 3 sceneTris inside ABC, each made of 2 vertices and the intersection point
+    float l_areaPCA = length(l_PcrossAC) * l_invTotalTriangleArea;
+    float l_areaPAB = length(l_PcrossAB) * l_invTotalTriangleArea;
+
+    // Total area of the system = 1, so we can cheat the last one
+    float l_areaPBC = 1.0 - l_areaPCA - l_areaPAB;
+    
+    // The UV coordinate at P is the sum of the uv coordinates at each vertex,
+    // each weighted by an area of a triangle consisting of the other 3 points.
+    // The system has the Triangle edges (A, B, C) and the point of interest (P)
+    vec2 interpolatedUV = _tri.uvA * l_areaPBC + 
+                          _tri.uvB * l_areaPCA + 
+                          _tri.uvC * l_areaPAB;
+    
+    return interpolatedUV;
+}
 
 RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
 {
@@ -199,6 +252,7 @@ RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
 
 void main()
 {
+    ivec2 uv = ivec2(gl_GlobalInvocationID.x, gl_GlobalInvocationID.y);
     // Get screen coords in domain [-1, 1]
     vec2 l_normalizedScreenCoords = vec2(((float(gl_GlobalInvocationID.x) / gl_NumWorkGroups.x) - 0.5) * 2.0,
                                          ((float(gl_GlobalInvocationID.y) / gl_NumWorkGroups.y) - 0.5) * 2.0);
@@ -220,12 +274,45 @@ void main()
     l_closestHit.hit = false;
     l_closestHit.distance = 1e10;
     l_closestHit.normal = vec3(0.0);
-    l_closestHit.materialIndex = -1;
     
     TraverseBVH(l_closestHit, l_ray);
 
     if(l_closestHit.hit)
     {
+        Triangle l_tri = sceneTris[l_closestHit.triangleIndex];
 
+        if(dot(l_closestHit.normal, l_ray.direction) > 0.0)
+        {
+            l_closestHit.normal = -l_closestHit.normal;
+        }
+
+        imageStore(intersectPositions, uv, vec4(l_closestHit.position, l_closestHit.distance));
+        imageStore(triangleNormals, uv, vec4(l_closestHit.normal, l_closestHit.triangleIndex));
+        
+        vec2 texUVs = CalculateTexUVs(l_closestHit, l_tri);
+        imageStore(uvCoordinatesAndTexIdx, uv, vec4(texUVs, l_tri.textureIndex, 0.0f));
+        
+        if(l_tri.materialIndex > -1)
+        {
+            Material l_mat = materials[l_tri.materialIndex];
+            imageStore(matAlbedo, uv, vec4(l_mat.albedo, 0.0f));
+            imageStore(matProperties, uv, vec4(l_mat.metallic,
+                                               l_mat.roughness,
+                                               l_mat.ambientOcclusion,
+                                               l_tri.materialIndex));
+        }
+        else
+        {
+            imageStore(matAlbedo, uv, vec4(0.0f));
+            imageStore(matProperties, uv, vec4(0.0f));
+        }
+    }
+    else
+    {
+        imageStore(intersectPositions, uv, vec4(0.0f));
+        imageStore(triangleNormals, uv, vec4(0.0f));
+        imageStore(uvCoordinatesAndTexIdx, uv, vec4(0.0f));
+        imageStore(matAlbedo, uv, vec4(0.0f));
+        imageStore(matProperties, uv, vec4(0.0f));
     }
 }

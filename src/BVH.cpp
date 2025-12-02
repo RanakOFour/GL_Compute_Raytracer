@@ -1,6 +1,6 @@
 #include "BVH.h"
 
-void BVH::BuildBHV()
+void BVH::BuildBHV(std::vector<Triangle>* _tris)
 {
     m_nodes = std::vector<BVHNode>();
     m_triIndexes = std::vector<int>();

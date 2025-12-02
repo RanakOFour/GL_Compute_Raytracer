@@ -1,4 +1,4 @@
-#include "Texture.h"
+#include "Datastructs/Texture.h"
 
 #include "GL/glew.h"
 #include "GLM/ext.hpp"

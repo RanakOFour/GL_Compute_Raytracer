@@ -1,4 +1,5 @@
 #include "GCP_GFX_Framework.h"
+#include "Framebuffer.h"
 
 #include "GL/glew.h"
 
@@ -17,50 +18,10 @@
 #include <error.h>
 #endif
 
-// Handles local (CPU side) and OpenGL framebuffer functionality
-class Framebuffer
+GCP_Framework::GCP_Framework(glm::ivec2 _screenSize)
 {
-	public:
-	Framebuffer(unsigned int w, unsigned int h)
-	{
-		_width = w; _height = h;
-
-		GenLocalFramebuffer();
-		GenGLFramebuffer();
-	};
-
-	~Framebuffer()
-	{
-		glDeleteTextures(1, &_glTexName);
-		delete[] _localBuffer;
-	};
-
-	// Requires colours between 0 and 1 per RGB channel
-	void DrawPixel(glm::ivec2 position, glm::vec3 colour);
-
-	void SetAllPixels(glm::vec3 colour);
-
-	// Sends local framebuffer copy to OpenGL texture
-	void UpdateGL();
-
-	// Binds the OpenGL texture for use with rendering it to screen
-	void BindGLTex();
-
-	void BindGLImage();
-	
-	protected:
-	unsigned int _glTexName = 0;
-
-	unsigned int _width = 0;
-	unsigned int _height = 0;
-
-	// The CPU side framebuffer
-	glm::vec3* _localBuffer = nullptr;
-
-	void GenLocalFramebuffer();
-
-	void GenGLFramebuffer();
-};
+	Init(_screenSize);
+}
 
 // An initialisation function, mainly for GLEW
 // This will also print to console the version of OpenGL we are using
@@ -78,6 +39,8 @@ bool InitGL()
 		std::cerr << "Error: GLEW failed to initialise with message: " << glewGetErrorString(err) << std::endl << "Err num: " << err << std::endl;
 		return false;
 	}
+
+	printf("glewInit() res: %i\n", (int)err);
 
 	std::cout << "INFO: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
 
@@ -158,17 +121,10 @@ void DrawVAOTris(GLuint VAO, int numVertices, GLuint shaderProgram)
 
 	// Activate the shader program
 	glUseProgram(shaderProgram);
-		// Activate the VAO
 		glBindVertexArray(VAO);
-			// Tell OpenGL to draw it
-			// Must specify the type of geometry to draw and the number of vertices
 			glDrawArrays(GL_TRIANGLES, 0, numVertices);
-		// Unbind VAO
 		glBindVertexArray(0);
-	// Technically we can do this, but it makes no real sense because we must always have a valid shader program to draw geometry
 	glUseProgram(0);
-
-	//printf("Drawn triangles\n");
 }
 
 // Useful little function to just check for compiler errors
@@ -196,9 +152,6 @@ bool CheckShaderCompiled(GLint shader)
 // Loads shaders from file and returns shader program
 GLuint LoadShaders(std::string vertFilename, std::string fragFilename)
 {
-	// OpenGL doesn't provide any functions for loading shaders from file
-
-
 	std::ifstream vertFile(vertFilename);
 	char* vShaderText = NULL;
 
@@ -214,6 +167,8 @@ GLuint LoadShaders(std::string vertFilename, std::string fragFilename)
 
 		// Transfer data from file to buffer
 		vertFile.read(vShaderText, length);
+
+		// Owen: On my machine this check always returns true no matter what
 
 		// Check it reached the end of the file
 		// if (!vertFile.eof())
@@ -254,6 +209,8 @@ GLuint LoadShaders(std::string vertFilename, std::string fragFilename)
 		// Transfer data from file to buffer
 		fragFile.read(fShaderText, length);
 
+		// Owen: On my machine this check always returns true no matter what
+
 		// Check it reached the end of the file
 		// if (!fragFile.eof())
 		// {
@@ -279,7 +236,7 @@ GLuint LoadShaders(std::string vertFilename, std::string fragFilename)
 
 
 	// The 'program' stores the shaders
-	GLuint _shaderProgram = glCreateProgram();
+	GLuint m_screenShader = glCreateProgram();
 
 	// Create the vertex shader
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
@@ -296,7 +253,7 @@ GLuint LoadShaders(std::string vertFilename, std::string fragFilename)
 		return 0;
 	}
 	// This links the shader to the program
-	glAttachShader(_shaderProgram, vShader);
+	glAttachShader(m_screenShader, vShader);
 
 	// Same for the fragment shader
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -309,20 +266,20 @@ GLuint LoadShaders(std::string vertFilename, std::string fragFilename)
 		std::cerr << "ERROR: failed to compile fragment shader" << std::endl;
 		return 0;
 	}
-	glAttachShader(_shaderProgram, fShader);
+	glAttachShader(m_screenShader, fShader);
 
 	// This makes sure the vertex and fragment shaders connect together
-	glLinkProgram(_shaderProgram);
+	glLinkProgram(m_screenShader);
 	// Check this worked
 	GLint linked;
-	glGetProgramiv(_shaderProgram, GL_LINK_STATUS, &linked);
+	glGetProgramiv(m_screenShader, GL_LINK_STATUS, &linked);
 	if (!linked)
 	{
 		GLsizei len;
-		glGetProgramiv(_shaderProgram, GL_INFO_LOG_LENGTH, &len);
+		glGetProgramiv(m_screenShader, GL_INFO_LOG_LENGTH, &len);
 
 		GLchar* log = new GLchar[len + 1];
-		glGetProgramInfoLog(_shaderProgram, len, &len, log);
+		glGetProgramInfoLog(m_screenShader, len, &len, log);
 		std::cerr << "ERROR: Shader linking failed: " << log << std::endl;
 		delete[] log;
 
@@ -331,13 +288,13 @@ GLuint LoadShaders(std::string vertFilename, std::string fragFilename)
 
 	printf("Shader compiled\n");
 
-	return _shaderProgram;
+	return m_screenShader;
 }
 
 // Sets up SDL, OpenGL, framebuffer
 bool GCP_Framework::Init( glm::ivec2 screenSize )
 {
-	_screenSize = screenSize;
+	m_screenSize = screenSize;
 
 	// SDL_Init is the main initialisation function for SDL
 	// It takes a 'flag' parameter which we use to tell SDL what systems we're going to use
@@ -345,6 +302,7 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	// Incidentally, this also initialises the input event system
 	// This function also returns an error value if something goes wrong
 	// So we can put this straight in an 'if' statement to check and exit if need be
+	printf("Initialising SDL\n");
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		// Something went very wrong in initialisation, all we can do is exit
@@ -370,11 +328,12 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	// Now we have got SDL initialised, we are ready to create a window!
 	// These are some variables to help show you what the parameters are for this function
 	// You can experiment with the numbers to see what they do
+	printf("Creating window\n");
 	int winPosX = 100;
 	int winPosY = 100;
-	int winWidth = _screenSize.x;
-	int winHeight = _screenSize.y;
-	_SDLwindow = SDL_CreateWindow("My Window!!!",  // The first parameter is the window title
+	int winWidth = m_screenSize.x;
+	int winHeight = m_screenSize.y;
+	m_SDLwindow = SDL_CreateWindow("My Window!!!",  // The first parameter is the window title
 		winPosX, winPosY,
 		winWidth, winHeight,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
@@ -394,21 +353,27 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	// When we create it we tell it which SDL_Window we want it to render to
 	// That renderer can only be used for this window
 	// (yes, we can have multiple windows - feel free to have a play sometime)
-	SDL_Renderer* renderer = SDL_CreateRenderer(_SDLwindow, -1, 0);
+	printf("Creating renderer\n");
+	SDL_Renderer* renderer = SDL_CreateRenderer(m_SDLwindow, -1, 0);
 
 
 	// Now that the SDL renderer is created for the window, we can create an OpenGL context for it!
 	// This will allow us to actually use OpenGL to draw to the window
-	_SDLglcontext = SDL_GL_CreateContext(_SDLwindow);
+	printf("Creating GL context\n");
+	m_SDLglcontext = SDL_GL_CreateContext(m_SDLwindow);
 
 	// Call our initialisation function to set up GLEW and print out some GL info to console
+	printf("Creating initing GL\n");
 	if (!InitGL())
 	{
+		printf("Failed to init GL\n");
 		return false;
 	}
 
+	printf("Starting OpenGLError\n");
 	OpenGLError::Init();
 
+	printf("Setting up imgui\n");
 	// Setting up the GUI system
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -417,45 +382,26 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	ImGui::StyleColorsDark();
 
 	const char* glslVersion = "#version 130";
-	ImGui_ImplSDL2_InitForOpenGL(_SDLwindow, _SDLglcontext);
+	ImGui_ImplSDL2_InitForOpenGL(m_SDLwindow, m_SDLglcontext);
 	ImGui_ImplOpenGL3_Init(glslVersion);
 
 	// Create the vertex array object for our triangle
-	_triangleVAO = CreateTriangleVAO();
+	m_screenTrianglesVAO = CreateTriangleVAO();
 
 	// Create the shaders and link them together into the shader program
-	_shaderProgram = LoadShaders("./resources/shaders/ScreenVertex.txt", "./resources/shaders/ScreenFragment.txt");
+	m_screenShader = LoadShaders("./resources/shaders/ScreenVertex.txt", "./resources/shaders/ScreenFragment.txt");
 
-	_mainBuffer = new Framebuffer(winWidth, winHeight);
-
-	_mainBuffer->SetAllPixels(glm::vec3(0, 0, 0));
+	m_mainBuffer = new Framebuffer(winWidth, winHeight);
 
 	glEnable(GL_DEPTH_TEST);
 
 	return true;
 }
 
-
-void GCP_Framework::SetAllPixels(glm::vec3 pixelColour)
-{
-	// sanity check that Init() has been called
-	assert(_mainBuffer != nullptr);
-
-	_mainBuffer->SetAllPixels(pixelColour);
-}
-
-void GCP_Framework::DrawPixel(glm::ivec2 pixelPosition, glm::vec3 pixelColour)
-{
-	// sanity check that Init() has been called
-	assert(_mainBuffer != nullptr);
-
-	_mainBuffer->DrawPixel(pixelPosition, pixelColour);
-}
-
 void GCP_Framework::Show()
 {
 	// sanity check that Init() has been called
-	assert(_mainBuffer != nullptr);
+	assert(m_mainBuffer != nullptr);
 	// Show
 
 	// Specify the colour to clear the framebuffer to
@@ -464,107 +410,48 @@ void GCP_Framework::Show()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Binds OpenGL Texture
-	glUseProgram(_shaderProgram);
+	glUseProgram(m_screenShader);
 	glActiveTexture(GL_TEXTURE0);
-	_mainBuffer->BindGLTex();
+	m_mainBuffer->BindGLTex();
 
 	// Call our drawing function to draw that triangle!
-	DrawVAOTris(_triangleVAO, 6, _shaderProgram);
+	DrawVAOTris(m_screenTrianglesVAO, 6, m_screenShader);
 
 	// Render GUI to screen
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	// This tells the renderer to actually show its contents to the screen
-	SDL_GL_SwapWindow(_SDLwindow);
-}
-
-void GCP_Framework::SetGLTexture()
-{
-	_mainBuffer->BindGLImage();
+	SDL_GL_SwapWindow(m_SDLwindow);
 }
 
 GCP_Framework::~GCP_Framework()
 {
-	delete _mainBuffer;
+	delete m_mainBuffer;
 
-	if(_SDLglcontext)
+	if(m_SDLglcontext)
 	{
-		SDL_GL_DeleteContext(_SDLglcontext);
+		SDL_GL_DeleteContext(m_SDLglcontext);
 	}
 
-	if(_SDLwindow)
+	if(m_SDLwindow)
 	{
-		SDL_DestroyWindow(_SDLwindow);
+		SDL_DestroyWindow(m_SDLwindow);
 	}
 	
 	SDL_Quit();
 
 
 	// TODO: currently doesn't clean up VAO or VBO
+	if(m_screenTrianglesVAO)
+	{
+		glDeleteVertexArrays(1, &m_screenTrianglesVAO);
+	}
 }
 
 void GCP_Framework::Shutdown()
 {
-	SDL_GL_DeleteContext(_SDLglcontext);
-	SDL_DestroyWindow(_SDLwindow);
+	SDL_GL_DeleteContext(m_SDLglcontext);
+	SDL_DestroyWindow(m_SDLwindow);
 	SDL_Quit();
-}
-
-
-void Framebuffer::DrawPixel(glm::ivec2 position, glm::vec3 colour)
-{
-	position = glm::clamp(position, glm::ivec2(0), glm::ivec2(_width, _height));
-	colour = glm::clamp(colour, 0.0f, 1.0f);
-
-	// Store in local memory only, only send to OpenGL when we've got all pixel draw calls finished
-	_localBuffer[position.y * _width + position.x] = colour;
-}
-
-void Framebuffer::SetAllPixels(glm::vec3 colour)
-{
-	colour = glm::clamp(colour, 0.0f, 1.0f);
-
-	for (unsigned int i = 0; i < _width * _height; ++i)
-	{
-		_localBuffer[i] = colour;
-	}
-}
-
-void Framebuffer::UpdateGL()
-{
-	// Send offline framebuffer to the OpenGL texture
-	glBindTexture(GL_TEXTURE_2D, _glTexName);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, _width, _height, 0, GL_RGBA, GL_FLOAT, _localBuffer);
-
-}
-
-void Framebuffer::BindGLTex()
-{
-	glBindTexture(GL_TEXTURE_2D, _glTexName);
-}
-
-void Framebuffer::BindGLImage()
-{
-	glBindImageTexture(0, _glTexName, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
-}
-
-void Framebuffer::GenLocalFramebuffer()
-{
-	_localBuffer = new glm::vec3[_width * _height];
-}
-
-void Framebuffer::GenGLFramebuffer()
-{
-	// Create OpenGL texture
-	glGenTextures(1, &_glTexName);
-
-	glBindTexture(GL_TEXTURE_2D, _glTexName);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, _width, _height, 0, GL_RGBA, GL_FLOAT, 0);
 }

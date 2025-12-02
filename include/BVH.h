@@ -7,7 +7,7 @@
 #include "GL/glew.h"
 #include "GLM/glm.hpp"
 
-#include "Triangle.h"
+#include "Datastructs/Triangle.h"
 #include "AABB.h"
 
 /**
@@ -70,6 +70,20 @@ class BVH
     void Subdivide(int _nodeIndex);
 
     public:
+    BVH()
+    : m_nodeSSBOID(0)
+    , m_indexesSSBOID(0)
+    , m_nodes()
+    , m_tris()
+    , m_triIndexes()
+    , m_dirtyNodes(true)
+    , m_dirtyIdxs(true)
+    , m_dirtyTris(true)
+    , m_planeCount(100)
+    {
+
+    };
+
     BVH(std::vector<Triangle>* _tris)
     : m_nodeSSBOID(0)
     , m_indexesSSBOID(0)
@@ -78,10 +92,9 @@ class BVH
     , m_triIndexes()
     , m_dirtyNodes(true)
     , m_dirtyIdxs(true)
-    , m_dirtyTris(true)
     , m_planeCount(100)
     {
-        BuildBHV();
+        BuildBHV(_tris);
     };
 
     ~BVH()
@@ -100,7 +113,7 @@ class BVH
     void PlaneCount(int _planes) { m_planeCount = _planes; };
     int PlaneCount() { return m_planeCount; };
 
-    void BuildBHV();
+    void BuildBHV(std::vector<Triangle>* _tris);
 
     GLuint GetIndexSSBO();
 

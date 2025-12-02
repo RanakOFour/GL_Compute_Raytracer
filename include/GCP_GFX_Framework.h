@@ -15,47 +15,36 @@ class Framebuffer;
 class GCP_Framework
 {
 public:
+	GCP_Framework(glm::ivec2 _screenSize);
 	~GCP_Framework();
 
 	// Must call Init after creation
 	// Sets up SDL, OpenGL and the internal framebuffer
 	bool Init( glm::ivec2 screenSize );
 
-	// Set all pixels to the same colour
-	// Colour is RGB, each must range from 0 to 1
-	void SetAllPixels( glm::vec3 pixelColour );
-
-	// Set a single pixel to the specified colour
-	// Colour is RGB, each must range from 0 to 1
-	void DrawPixel(glm::ivec2 pixelPosition, glm::vec3 pixelColour);
-
 	// Draws the buffer on OpenGL
 	void Show();
-
-	// Sets Texture as Image;
-	void SetGLTexture();
 
 	void Shutdown();
 
 	void SwapBuffer()
 	{
-		SDL_GL_SwapWindow(_SDLwindow);
+		SDL_GL_SwapWindow(m_SDLwindow);
 	}
 
 protected:
 
 	// Internal variables
-		Framebuffer* _mainBuffer = nullptr;
-		glm::ivec2 _screenSize;
+		Framebuffer* m_mainBuffer = nullptr;
+		glm::ivec2 m_screenSize;
 
 	// SDL variables
-		SDL_Window* _SDLwindow = nullptr;
-		SDL_GLContext _SDLglcontext;
+		SDL_Window* m_SDLwindow = nullptr;
+		SDL_GLContext m_SDLglcontext;
 
 	// OpenGL drawing variables
-		unsigned int _triangleVAO = 0;
-		unsigned int _shaderProgram = 0;
-
+		GLuint m_screenTrianglesVAO = 0;
+		GLuint m_screenShader = 0;
 };
 
 

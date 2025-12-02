@@ -18,8 +18,6 @@ protected:
 public:
 	Texture(const std::string& _path);
 	Texture(glm::ivec2 _size);
-	Texture(const Texture& _copy);
-	Texture& operator=(const Texture& _assign);
 	~Texture();
 
 	void Size(glm::ivec2 _size);

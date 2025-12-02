@@ -1,12 +1,9 @@
 
-#include "GCP_GFX_Framework.h"
-#include "Camera.h"
-#include "Light.h"
-#include "ComputeShader.h"
-#include "Model.h"
-#include "BVH.h"
+#include "Raytracer.h"
 #include "Input.h"
-#include "Texture.h"
+#include "Datastructs/Texture.h"
+#include "Datastructs/Model.h"
+#include "Datastructs/Light.h"
 
 #include "GL/glew.h"
 
@@ -25,60 +22,47 @@ int main(int argc, char* argv[])
 	// Set window size
 	glm::ivec2 l_winSize(1000, 800);
 
+	printf("Initialising RT\n");
 	// This will handle rendering to screen
-	GCP_Framework l_myFramework;
-
-	// Initialises SDL and OpenGL and sets up a framebuffer
-	if (!l_myFramework.Init(l_winSize))
-	{
-		return -1;
-	}
+	Raytracer l_raytracer(l_winSize);
 
 	Input l_inputMap;
-    
-    // Camera setup
-    Camera l_camera(glm::vec2(500, 500));
-
-	ComputeShader l_compute("./resources/shaders/RTComputeTriangle.comp");
-    
-    l_compute.use();
 
 	Model l_sphereModel("./resources/objects/curuthers.obj");
-
-	
-
-    // Set l_camera uniforms
-    l_camera.UpdateShader(l_compute);
 
 	Light l_light;
 	l_light.position = glm::vec3(0.0f, 0.0f, 3.0f);
 	l_light.colour = glm::vec3(1.0f, 1.0f, 1.0f);
-
-	l_compute.SetUniform("u_numLights", 1);
-	l_compute.SetUniform("u_lights[0].position", l_light.position);
-	l_compute.SetUniform("u_lights[0].color", l_light.colour);
+	
+	l_raytracer.AddLight(l_light);
 
 	std::vector<Triangle> l_tris = l_sphereModel.GetTriangles(glm::vec3(0.0f));
-
-	printf("%i Triangles sent to BVH\n", (int)l_tris.size());
-
-	BVH l_BVH(&(l_tris));
-
-	GLuint l_triangleBuffer;
-	glGenBuffers(1, &l_triangleBuffer);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, l_triangleBuffer);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Triangle) * l_tris.size(), &(l_tris.at(0)), GL_DYNAMIC_READ);
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, l_triangleBuffer);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+	std::vector<Texture> l_textures;
+	std::vector<Material> l_materials;
 
 	Texture l_modelTexture = Texture("./resources/textures/Whiskers_diffuse.png");
-	// Bind all the required stuff to the raytracer shader
-	l_myFramework.SetGLTexture();
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, l_triangleBuffer);
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, l_BVH.GetIndexSSBO());
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, l_BVH.GetNodeSSBO());
-	glActiveTexture(GL_TEXTURE0 + 4);
-	glBindTexture(GL_TEXTURE_2D, l_modelTexture.GetID());
+	
+	Material l_material;
+	l_material.albedo = glm::vec3(1.0f);
+	l_material.metallic = 1.0f;
+	l_material.roughness = 1.0f;
+	l_material.ambientOcclusion = 0.0f;
+
+	for(int i = 0; i < l_tris.size(); i++)
+	{
+		l_tris[i].textureId = 0;
+		l_tris[i].materialId = 0;
+	}
+
+	l_materials.push_back(l_material);
+	l_textures.push_back(l_modelTexture);
+
+	l_raytracer.SetMaterials(&l_materials);
+	l_raytracer.SetTextures(&l_textures);
+	l_raytracer.SetTris(&l_tris);
+
+	Light* l_light0 = l_raytracer.GetLight(0);
+	Camera* l_rtCam = l_raytracer.GetCamera();
 
 	bool l_keepGoing = true;
 	bool l_mouseMovement = false;
@@ -131,19 +115,9 @@ int main(int argc, char* argv[])
 			l_inputMap.deltaMouseY = 0.0f;
 		}
 
-		l_camera.Update(l_inputMap);
+		l_rtCam->Update(l_inputMap);
 
-		float time = (float)SDL_GetTicks64() * 1000.0f;
-		
-		l_compute.use();
-
-		l_compute.SetUniform("u_lights[0].position", l_light.position);
-		l_camera.UpdateShader(l_compute);
-
-		l_myFramework.SetGLTexture();
-
-		glDispatchCompute((unsigned int)l_winSize.x, (unsigned int)l_winSize.y, 1);
-		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+		l_raytracer.Trace();
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame();
@@ -155,19 +129,15 @@ int main(int argc, char* argv[])
 		ImGui::DragFloat3("Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
 		l_light.position = lightPos;
 
-		int planes = l_BVH.PlaneCount();
-		ImGui::DragInt("Plane Count", &planes, 1, 1, 1000);
-		l_BVH.PlaneCount(planes);
-
 		ImGui::End();
 
 		ImGui::Begin("Camera Info");
 
-		glm::vec3 camPos = l_camera.Position();
+		glm::vec3 camPos = l_rtCam->Position();
 		std::string l_camPosText = "Camera Position: (" + std::to_string(camPos.x) + ", " + std::to_string(camPos.y) + ", " + std::to_string(camPos.z) + ")";
 		ImGui::Text(l_camPosText.c_str());
 
-		glm::quat camRot = l_camera.Rotation();
+		glm::quat camRot = l_rtCam->Rotation();
 		l_camPosText = "Camera Rotation: (" + std::to_string(camRot.x) + ", "+ std::to_string(camRot.y) + ", "+ std::to_string(camRot.z) + ", "+ std::to_string(camRot.w) + ")";
 		ImGui::Text(l_camPosText.c_str());
 
@@ -175,11 +145,10 @@ int main(int argc, char* argv[])
 
 		ImGui::End();
 
-		l_myFramework.Show();
+		l_raytracer.Show();
 	}
 
-	l_myFramework.Shutdown();
-
+	l_raytracer.Shutdown();
 
     return 0;
 };

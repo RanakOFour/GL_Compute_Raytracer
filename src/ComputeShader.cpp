@@ -8,6 +8,7 @@
 
 ComputeShader::ComputeShader(std::string _path)
 {
+    printf("Compiling shader at %s\n", _path.c_str());
     std::ifstream shaderFile;
     shaderFile.open(_path);
 
