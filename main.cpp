@@ -130,9 +130,17 @@ int main(int argc, char* argv[])
 
 		ImGui::Begin("Settings");
 
-		glm::vec3 lightPos = l_light.position;
+		glm::vec3 lightPos = l_light0->position;
 		ImGui::DragFloat3("Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
-		l_light.position = lightPos;
+		l_light0->position = lightPos;
+
+		bool l_shadow = l_raytracer.Shadows();
+		ImGui::Checkbox("Shadows", &l_shadow);
+		l_raytracer.Shadows(l_shadow);
+
+		bool l_shade = l_raytracer.Shading();
+		ImGui::Checkbox("Shading", &l_shade);
+		l_raytracer.Shading(l_shade);
 
 		ImGui::End();
 

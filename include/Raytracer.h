@@ -32,18 +32,16 @@ class Raytracer : public GCP_Framework
     ComputeShader m_ShadowComp;
     ComputeShader m_ShadingComp;
 
-    GLuint m_positionB;
-    GLuint m_normalsB;
-    GLuint m_textureInfoB;
-    GLuint m_matAlbedoB;
-    GLuint m_matPropsB;
-    GLuint m_shadowB;
+    GLuint m_gBuffers[6];
 
     GLuint m_triangleSSBO;
     GLuint m_textureSSBO;
     GLuint m_materialSSBO;
 
     bool m_setup;
+
+    bool m_shadows;
+    bool m_shading;
 
     public:
     Raytracer(glm::ivec2 _screenSize);
@@ -59,6 +57,12 @@ class Raytracer : public GCP_Framework
     Light* GetLight(int index);
 
     Camera* GetCamera(); 
+
+    bool Shading() {return m_shading;};
+    void Shading(bool _s) { m_shading = _s;};
+
+    bool Shadows() { return m_shadows; };
+    void Shadows(bool _s) { m_shadows = _s; };
 };
 
 #endif

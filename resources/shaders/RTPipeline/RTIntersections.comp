@@ -1,6 +1,6 @@
 #version 430 core
 
-layout(local_size_x = 4, local_size_y = 4) in;
+layout(local_size_x = 8, local_size_y = 4) in;
 
 layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 
@@ -10,6 +10,7 @@ layout(rgba32f, binding = 2) uniform image2D triangleNormals;
 layout(rgba32f, binding = 3) uniform image2D uvCoordinatesAndTexIdx;
 layout(rgba32f, binding = 4) uniform image2D matAlbedo;
 layout(rgba32f, binding = 5) uniform image2D matProperties;
+layout(r32f, binding = 6) uniform image2D shadowBuffer;
 
 struct Triangle
 {
@@ -79,6 +80,8 @@ struct Light{ vec3 color; vec3 position; };
 uniform Light u_lights[MAX_LIGHTS];
 uniform int u_numLights;
 
+uniform vec2 u_resolution;
+
 struct Ray  { vec3 origin; vec3 direction; };
 
 struct RaycastResult {
@@ -128,12 +131,10 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
 
     float l_ep = 0.0001;
 
-    vec3 l_edgeAB = _tri.a;
-    vec3 l_edgeAC = _tri.b; 
-    vec3 l_edgeAP = _tri.c;
-
-    vec3 edge1 = l_edgeAC - l_edgeAB;
-    vec3 edge2 = l_edgeAP - l_edgeAB;
+    vec3 edge1 = _tri.b - _tri.a;
+    vec3 edge2 = _tri.c - _tri.a;
+    vec3 s = _ray.origin - _tri.a;
+    
     vec3 ray_cross_edge2 = cross(_ray.direction, edge2);
     float det = dot(edge1, ray_cross_edge2);
 
@@ -143,7 +144,6 @@ RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
     }
 
     float inv_det = 1.0 / det;
-    vec3 s = _ray.origin - l_edgeAB;
     float u = inv_det * dot(s, ray_cross_edge2);
 
     if(u < 0.0 || u > 1.0)
@@ -254,14 +254,13 @@ RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
 
 void main()
 {
-    ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.x, gl_GlobalInvocationID.y);
-    // Get screen coords in domain [-1, 1]
-    vec2 l_normalizedScreenCoords = vec2(((float(gl_GlobalInvocationID.x) / gl_NumWorkGroups.x) - 0.5) * 2.0,
-                                         ((float(gl_GlobalInvocationID.y) / gl_NumWorkGroups.y) - 0.5) * 2.0);
+    ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
 
-    // Calculate aspect ratio (NOTE: Come up with new method, pass in from client pls)
-    float aspect = float(gl_NumWorkGroups.x) / float(gl_NumWorkGroups.y);
+    vec2 l_normalizedScreenCoords = vec2(((float(l_pixelCoords.x) / u_resolution.x) - 0.5) * 2.0,
+                                         ((float(l_pixelCoords.y) / u_resolution.y) - 0.5) * 2.0);
 
+    // Calculate aspect ratio
+    float aspect = u_resolution.x / u_resolution.y;
 
     vec3 l_rayDir = normalize(u_camera.forward + 
                            l_normalizedScreenCoords.x * u_camera.right * aspect + 
@@ -280,9 +279,12 @@ void main()
     
     TraverseBVH(l_closestHit, l_ray);
 
+    imageStore(shadowBuffer, l_pixelCoords, vec4(1.0f));
+
     if(l_closestHit.hit)
     {
         Triangle l_tri = sceneTris[l_closestHit.triangleIndex];
+
         if(dot(l_closestHit.normal, l_ray.direction) > 0.0)
         {
             l_closestHit.normal = -l_closestHit.normal;
@@ -292,7 +294,7 @@ void main()
         imageStore(triangleNormals, l_pixelCoords, vec4(l_closestHit.normal, l_closestHit.triangleIndex));
         
         vec2 l_texUVs = CalculateTexUVs(l_closestHit, l_tri);
-        imageStore(uvCoordinatesAndTexIdx, l_pixelCoords, vec4(l_texUVs, l_tri.textureIndex, 0.0f));
+        imageStore(uvCoordinatesAndTexIdx, l_pixelCoords, vec4(l_texUVs, float(l_tri.textureIndex), 0.0f));
         
         if(l_tri.materialIndex > -1)
         {
@@ -316,7 +318,7 @@ void main()
         }
 
         // DEBUG: output greyscale to framebuffer
-        imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3((300.0f - (l_closestHit.distance *20)) * 0x10101), 1.0f));
+        //imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3((300.0f - (l_closestHit.distance *20)) * 0x10101), 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(normalize(l_closestHit.position), 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texUVs, 0.0f, 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(u_lights[0].color, 1.0f));
@@ -330,6 +332,6 @@ void main()
         imageStore(matProperties, l_pixelCoords, vec4(0.0f));
 
 
-        imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f), 1.0f));
+        //imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f), 1.0f));
     }
 }
