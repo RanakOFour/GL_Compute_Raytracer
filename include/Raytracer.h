@@ -56,6 +56,8 @@ class Raytracer : public GCP_Framework
     void AddLight(Light _light);
     Light* GetLight(int index);
 
+    Material* GetMaterial(int _index);
+
     Camera* GetCamera(); 
 
     bool Shading() {return m_shading;};

@@ -33,11 +33,13 @@ class ComputeShader
     void SetUniform(std::string _name, glm::vec3 _value);
     ///@}
 
+    GLuint GetID() { return m_ID; };
+
     private:
     /*
     *   ShaderID of the compiled program on the GPU
     */
-    GLint m_ID;
+    GLuint m_ID;
 };
 
 #endif
