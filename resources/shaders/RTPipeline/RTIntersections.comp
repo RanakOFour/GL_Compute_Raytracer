@@ -5,12 +5,11 @@ layout(local_size_x = 8, local_size_y = 4) in;
 layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 
 // Data we write to that is used in later passes
-layout(rgba32f, binding = 1) uniform image2D intersectPositions;
+layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
-layout(rgba32f, binding = 3) uniform image2D uvCoordinatesAndTexIdx;
-layout(rgba32f, binding = 4) uniform image2D matAlbedo;
-layout(rgba32f, binding = 5) uniform image2D matProperties;
-layout(r32f, binding = 6) uniform image2D shadowBuffer;
+layout(rgba32f, binding = 3) uniform image2D texMatInfo;
+
+layout(r32f, binding = 4) uniform image2D shadowBuffer;
 
 struct Triangle
 {
@@ -29,11 +28,10 @@ struct Triangle
     int materialIndex;
 };
 
-layout(std430, binding = 7) readonly buffer b_trianglesSSBO
+layout(std430, binding = 5) readonly buffer b_trianglesSSBO
 {
     Triangle sceneTris[];
 };
-
 
 struct Node
 {
@@ -48,28 +46,15 @@ struct Node
     int triangleCount;
 };
 
-layout(std430, binding = 8) readonly buffer b_bvhNodes
+layout(std430, binding = 6) readonly buffer b_bvhNodes
 {
     Node bvhNodes[];
 };
 
 // Maps bvhNode.leftFirst indexes to indexes in sceneTris
-layout(std430, binding = 9) readonly buffer b_bvhTriangleIndex
+layout(std430, binding = 7) readonly buffer b_bvhTriangleIndex
 {
     int bvhTriIdxs[];
-};
-
-struct Material
-{
-    vec3 albedo;
-    float metallic;
-    float roughness;
-    float ambientOcclusion;
-};
-
-layout(std430, binding = 10) readonly buffer b_Materials
-{
-    Material materials[];
 };
 
 struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
@@ -290,55 +275,23 @@ void main()
             l_closestHit.normal = -l_closestHit.normal;
         }
 
-        imageStore(intersectPositions, l_pixelCoords, vec4(l_closestHit.position, l_closestHit.distance));
+        imageStore(hitLocations, l_pixelCoords, vec4(l_closestHit.position, l_closestHit.distance));
         imageStore(triangleNormals, l_pixelCoords, vec4(l_closestHit.normal, l_closestHit.triangleIndex));
         
         vec2 l_texUVs = CalculateTexUVs(l_closestHit, l_tri);
-        imageStore(uvCoordinatesAndTexIdx, l_pixelCoords, vec4(l_texUVs, float(l_tri.textureIndex), 0.0f));
-        
-        if(l_tri.materialIndex > -1)
-        {
-            Material l_mat = materials[l_tri.materialIndex];
-            imageStore(matAlbedo, l_pixelCoords, vec4(l_mat.albedo, 0.0f));
-            imageStore(matProperties, l_pixelCoords, vec4(l_mat.metallic,
-                                                          l_mat.roughness,
-                                                          l_mat.ambientOcclusion,
-                                                          l_tri.materialIndex));
-
-            // WHY DOES IT READ LIKE THIS???
-            imageStore(o_framebufferTex, l_pixelCoords, vec4(l_mat.roughness, 
-                                                            l_mat.ambientOcclusion, 
-                                                            1.0,
-                                                            l_mat.metallic));
-    
-
-            
-            //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_mat.albedo, 1.0f));
-            // imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(l_mat.metallic,
-            //                                                       l_mat.roughness,
-            //                                                       l_mat.ambientOcclusion), 1.0f));
-        }
-        else
-        {
-            imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.normal,
-                                                            1.0));
-            imageStore(matAlbedo, l_pixelCoords, vec4(0.0f));
-            imageStore(matProperties, l_pixelCoords, vec4(0.0f));
-        }
+        imageStore(texMatInfo, l_pixelCoords, vec4(l_texUVs, float(l_tri.textureIndex), float(l_tri.materialIndex)));
 
         // DEBUG: output greyscale to framebuffer
-        //imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3((300.0f - (l_closestHit.distance *20)) * 0x10101), 1.0f));
+        imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(200.0f - (l_closestHit.distance * 20)), 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(normalize(l_closestHit.position), 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texUVs, 0.0f, 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(u_lights[0].color, 1.0f));
     }
     else
     {
-        imageStore(intersectPositions, l_pixelCoords, vec4(0.0f));
+        imageStore(hitLocations, l_pixelCoords, vec4(0.0f));
         imageStore(triangleNormals, l_pixelCoords, vec4(0.0f));
-        imageStore(uvCoordinatesAndTexIdx, l_pixelCoords, vec4(0.0f));
-        imageStore(matAlbedo, l_pixelCoords, vec4(0.0f));
-        imageStore(matProperties, l_pixelCoords, vec4(0.0f));
+        imageStore(texMatInfo, l_pixelCoords, vec4(0.0f));
 
 
         imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f), 1.0f));

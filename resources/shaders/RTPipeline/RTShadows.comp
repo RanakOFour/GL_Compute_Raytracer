@@ -3,9 +3,9 @@
 layout(local_size_x = 8, local_size_y = 4) in;
 layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 
-layout(rgba32f, binding = 1) uniform image2D intersectPositions;
+layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
-layout(r32f, binding = 6) uniform image2D shadowBuffer;
+layout(r32f, binding = 4) uniform image2D shadowBuffer;
 
 
 struct Triangle
