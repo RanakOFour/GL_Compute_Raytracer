@@ -18,8 +18,7 @@ struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
 uniform Camera u_camera;
 
 struct Light{ vec3 color; vec3 position; };
-#define MAX_LIGHTS 10
-uniform Light u_lights[MAX_LIGHTS];
+uniform Light u_light;
 uniform int u_numLights;
 
 uniform vec2 u_resolution;
@@ -80,59 +79,71 @@ void main()
     }
 
     // Skip rendering for in shadow points
-    // if(imageLoad(shadowBuffer, l_pixelCoords).r == 0)
-    // {
-    //     imageStore(o_framebufferTex, l_pixelCoords, vec4(0.0));
-    //     return;
-    // }
+    if(imageLoad(shadowBuffer, l_pixelCoords).r == 0)
+    {
+        imageStore(o_framebufferTex, l_pixelCoords, vec4(0.0));
+        return;
+    }
 
     vec2 l_texUVs = imageLoad(uvCoordinatesAndTexIdx, l_pixelCoords).rg;
     int l_texId = int(imageLoad(uvCoordinatesAndTexIdx, l_pixelCoords).b);
-    vec3 l_objectColor = texture(u_materialTextures[l_texId], l_texUVs).rgb
-                         * imageLoad(matAlbedo, l_pixelCoords).rgb;
-                         
+
+    vec3 l_objectColor = texture(u_materialTextures[l_texId], l_texUVs).rgb;
+    vec3 l_albedo = imageLoad(matAlbedo, l_pixelCoords).rgb;
+
+    l_objectColor = l_objectColor * l_albedo; // Simplified multiplication
+
     // Metallic, roughness and ao
     vec3 l_materialProps = imageLoad(matProperties, l_pixelCoords).rgb;
     
-    // Flip normal if it's facing away from the ray (backface)
-    vec3 l_normal = imageLoad(triangleNormals, l_pixelCoords).rgb;
+    // Load and normalize normal
+    vec3 l_normal = normalize(imageLoad(triangleNormals, l_pixelCoords).rgb);
     vec3 l_camPointVector = normalize(u_camera.position - l_position);
 
-    vec3 F0 = mix(vec3(0.04), l_objectColor, l_materialProps[0]);
+    // Ensure normal faces the camera (fix backface normals)
+    if(dot(l_normal, l_camPointVector) < 0.0)
+    {
+        l_normal = -l_normal;
+    }
+
+    if(imageLoad(shadowBuffer, l_pixelCoords).r == 0)
+    {
+        imageStore(o_framebufferTex, l_pixelCoords, vec4(0.0));
+    }
+
+    vec3 F0 = mix(vec3(0.04), l_albedo, l_materialProps[0]);
 
     // reflectance equation
     vec3 Lo = vec3(0.0);
 
-    for(int i = 0; i < u_numLights; i++)
-    {   
-        vec3 L = normalize(u_lights[i].position - l_position);
-        vec3 H = normalize(l_camPointVector + L);
-        float distance    = length(u_lights[i].position - l_position);
-        float attenuation = 1.0 / (distance * distance);
-        vec3 radiance     = u_lights[i].color * attenuation;        
-        
-        // cook-torrance brdf
-        float NDF = DistributionGGX(l_normal, H, l_materialProps[1]);        
-        float G   = GeometrySmith(l_normal, l_camPointVector, L, l_materialProps[1]);      
-        vec3 F    = fresnelSchlick(clamp(dot(H, l_camPointVector), 0.0, 1.0), F0);
+    vec3 L = normalize(u_light.position - l_position);
+    vec3 H = normalize(l_camPointVector + L);
+    float distance    = length(u_light.position - l_position);
+    //float attenuation = 1.0 / (distance * distance);
+    vec3 radiance     = u_light.color;     
+    
+    // cook-torrance brdf
+    float NDF = DistributionGGX(l_normal, H, l_materialProps[1]);        
+    float G   = GeometrySmith(l_normal, l_camPointVector, L, l_materialProps[1]);      
+    vec3 F    = fresnelSchlick(clamp(dot(H, l_camPointVector), 0.0, 1.0), F0);
 
-        vec3 numerator    = NDF * G * F;
-        float denominator = 4.0 * max(dot(l_normal, l_camPointVector), 0.0) * max(dot(l_normal, L), 0.0) + 0.01; // + 0.0001 to prevent divide by zero
-        vec3 specular = numerator / denominator;
+    vec3 numerator    = NDF * G * F;
+    float denominator = 4.0 * max(dot(l_normal, l_camPointVector), 0.0) * max(dot(l_normal, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+    vec3 specular = numerator / denominator;
+    
+    vec3 kS = F;
+    vec3 kD = vec3(1.0) - kS;
+    kD *= 1.0 - l_materialProps[0];
         
-        vec3 kS = F;
-        vec3 kD = vec3(1.0) - kS;
-        kD *= 1.0 - l_materialProps[0];
-            
-        // add to outgoing radiance Lo
-        float NdotL = max(dot(l_normal, L), 0.0);                
-        Lo += (kD * l_objectColor / PI + specular) * radiance * NdotL;
-    };
+    // add to outgoing radiance Lo
+    float NdotL = max(dot(l_normal, L), 0.0);                
+    Lo += (kD * l_albedo / PI + specular) * radiance * NdotL;
     
     // Add ambient lighting (always present, even in shadows)
     vec3 l_ambient = vec3(0.03) * l_objectColor * l_materialProps[2];
     
     vec3 colour = (l_ambient + Lo);
+    colour = pow(colour, vec3(1.0/2.2));
 
     imageStore(o_framebufferTex, l_pixelCoords, vec4(colour, 1.0f));
 }

@@ -275,7 +275,6 @@ void main()
     l_closestHit.hit = false;
     l_closestHit.distance = 1e10;
     l_closestHit.normal = vec3(0.0);
-
     
     TraverseBVH(l_closestHit, l_ray);
 
@@ -285,12 +284,13 @@ void main()
     {
         Triangle l_tri = sceneTris[l_closestHit.triangleIndex];
 
+        imageStore(intersectPositions, l_pixelCoords, vec4(l_closestHit.position, l_closestHit.distance));
+
         if(dot(l_closestHit.normal, l_ray.direction) > 0.0)
         {
             l_closestHit.normal = -l_closestHit.normal;
         }
-
-        imageStore(intersectPositions, l_pixelCoords, vec4(l_closestHit.position, l_closestHit.distance));
+        
         imageStore(triangleNormals, l_pixelCoords, vec4(l_closestHit.normal, l_closestHit.triangleIndex));
         
         vec2 l_texUVs = CalculateTexUVs(l_closestHit, l_tri);

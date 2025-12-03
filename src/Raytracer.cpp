@@ -75,9 +75,9 @@ void Raytracer::Trace()
         m_setup = true;
     }
 
-    // glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_materialSSBO);
-    // glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Material) * m_mats->size(), &(m_mats->at(0)), GL_DYNAMIC_READ);
-    // glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_materialSSBO);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(Material) * m_mats->size(), &(m_mats->at(0)));
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
     glm::vec2 l_workGroups(ceil(m_screenSize.x / 8), ceil(m_screenSize.y / 4));
 
@@ -86,9 +86,9 @@ void Raytracer::Trace()
     m_IntersectionComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
 
     // Cap light count at 10
-    int lightCount = m_lights.size() > 10 ? 10 : m_lights.size();
-    m_IntersectionComp.SetUniform("u_numLights", lightCount);
-    for(int i = 0; i < lightCount; i++)
+    int l_lightCount = m_lights.size() > 10 ? 10 : m_lights.size();
+    m_IntersectionComp.SetUniform("u_numLights", l_lightCount);
+    for(int i = 0; i < l_lightCount; i++)
     {
         m_IntersectionComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
 	    m_IntersectionComp.SetUniform("u_lights[" + std::to_string(i) + "].color", m_lights[i].colour);
@@ -106,9 +106,9 @@ void Raytracer::Trace()
         m_ShadowComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
 
         // Cap light count at 10
-        int lightCount = m_lights.size() > 10 ? 10 : m_lights.size();
-        m_ShadowComp.SetUniform("u_numLights", lightCount);
-        for(int i = 0; i < lightCount; i++)
+        int l_lightCount = m_lights.size() > 10 ? 10 : m_lights.size();
+        m_ShadowComp.SetUniform("u_numLights", l_lightCount);
+        for(int i = 0; i < l_lightCount; i++)
         {
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].color", m_lights[i].colour);
@@ -124,9 +124,7 @@ void Raytracer::Trace()
         m_camera.UpdateShader(m_ShadingComp);
         m_ShadingComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
 
-        m_ShadingComp.SetUniform("u_numLights", lightCount);
-        m_ShadingComp.SetUniform("u_camera.position", m_camera.Position());
-        for(int i = 0; i < lightCount; i++)
+        for(int i = 0; i < l_lightCount; i++)
         {
             m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
             m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].color", m_lights[i].colour);
@@ -167,7 +165,7 @@ void Raytracer::SetMaterials(std::vector<Material>* _mat)
     }
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_materialSSBO);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Material) * m_mats->size(), &(m_mats->at(0)), GL_DYNAMIC_READ);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Material) * m_mats->size(), &(m_mats->at(0)), GL_DYNAMIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 10, m_materialSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
@@ -191,6 +189,11 @@ void Raytracer::AddLight(Light _light)
 Light* Raytracer::GetLight(int _index)
 {
     return &(m_lights[_index]);
+}
+
+Material* Raytracer::GetMaterial(int _index)
+{
+    return &(m_mats->at(_index));
 }
 
 Camera* Raytracer::GetCamera()

@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 
 	Input l_inputMap;
 
-	Model l_sphereModel("./resources/objects/curuthers.obj");
+	Model l_curuthersModel("./resources/objects/curuthers.obj");
 
 	Light l_light;
 	l_light.position = glm::vec3(0.0f, 0.0f, 3.0f);
@@ -36,8 +36,12 @@ int main(int argc, char* argv[])
 	
 	l_raytracer.AddLight(l_light);
 
+	l_light.position = glm::vec3(0.0f, 3.0f, 0.0f);
+
+	//l_raytracer.AddLight(l_light);
+
 	printf("Creating vectors\n");
-	std::vector<Triangle> l_tris = l_sphereModel.GetTriangles(glm::vec3(0.0f));
+	std::vector<Triangle> l_tris = l_curuthersModel.GetTriangles(glm::vec3(0.0f));
 	std::vector<Texture> l_textures;
 	std::vector<Material> l_materials;
 
@@ -68,6 +72,7 @@ int main(int argc, char* argv[])
 
 	Light* l_light0 = l_raytracer.GetLight(0);
 	Camera* l_rtCam = l_raytracer.GetCamera();
+	Material* l_material0 = l_raytracer.GetMaterial(0);
 
 	bool l_keepGoing = true;
 	bool l_mouseMovement = false;
@@ -131,8 +136,12 @@ int main(int argc, char* argv[])
 		ImGui::Begin("Settings");
 
 		glm::vec3 lightPos = l_light0->position;
-		ImGui::DragFloat3("Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
+		ImGui::DragFloat3("Light Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
 		l_light0->position = lightPos;
+
+		glm::vec3 lightCol = l_light0->colour;
+		ImGui::ColorEdit3("Light Colour", &(lightCol[0]));
+		l_light0->colour = lightCol;
 
 		bool l_shadow = l_raytracer.Shadows();
 		ImGui::Checkbox("Shadows", &l_shadow);
@@ -160,21 +169,21 @@ int main(int argc, char* argv[])
 
 		ImGui::Begin("Material settings");
 
-		glm::vec3 l_alb = l_materials[0].albedo;
+		glm::vec3 l_alb = l_material0->albedo;
 		ImGui::ColorEdit3("Albedo", &l_alb[0]);
-		l_materials[0].albedo = l_alb;
+		l_material0->albedo = l_alb;
 
-		float met = l_materials[0].metallic;
+		float met = l_material0->metallic;
 		ImGui::SliderFloat("Metallic", &met, 0, 1);
-		l_materials[0].metallic = met;
+		l_material0->metallic = met;
 
-		float rog = l_materials[0].roughness;
+		float rog = l_material0->roughness;
 		ImGui::SliderFloat("Roughness", &rog, 0, 1);
-		l_materials[0].roughness = rog;
+		l_material0->roughness = rog;
 		
-		float ao = l_materials[0].ambientOcclusion;
+		float ao = l_material0->ambientOcclusion;
 		ImGui::SliderFloat("AO", &ao, 0, 1);
-		l_materials[0].ambientOcclusion = ao;
+		l_material0->ambientOcclusion = ao;
 
 		ImGui::End();
 
