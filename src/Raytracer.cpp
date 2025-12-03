@@ -75,6 +75,10 @@ void Raytracer::Trace()
         m_setup = true;
     }
 
+    // glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_materialSSBO);
+    // glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Material) * m_mats->size(), &(m_mats->at(0)), GL_DYNAMIC_READ);
+    // glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
     glm::vec2 l_workGroups(ceil(m_screenSize.x / 8), ceil(m_screenSize.y / 4));
 
     m_IntersectionComp.use();

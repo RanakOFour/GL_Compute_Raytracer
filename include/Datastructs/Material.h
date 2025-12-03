@@ -6,8 +6,6 @@
 struct Material
 {
     glm::vec3 albedo;
-    float _padding_a;
-
     float metallic;
     float roughness;
     float ambientOcclusion;

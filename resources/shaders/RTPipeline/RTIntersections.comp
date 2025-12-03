@@ -299,14 +299,15 @@ void main()
         if(l_tri.materialIndex > -1)
         {
             Material l_mat = materials[l_tri.materialIndex];
-            imageStore(matAlbedo, l_pixelCoords, vec4(l_mat.albedo, 0.0f));
+            imageStore(matAlbedo, l_pixelCoords, vec4(l_mat.albedo, 1.0f));
+            imageStore(o_framebufferTex, l_pixelCoords, vec4(l_mat.albedo, 1.0f));
             imageStore(matProperties, l_pixelCoords, vec4(l_mat.metallic,
                                                l_mat.roughness,
                                                l_mat.ambientOcclusion,
                                                l_tri.materialIndex));
 
             
-            //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_mat.albedo, 1.0f));
+            // imageStore(o_framebufferTex, l_pixelCoords, vec4(l_mat.albedo, 1.0f));
             // imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(l_mat.metallic,
             //                                                       l_mat.roughness,
             //                                                       l_mat.ambientOcclusion), 1.0f));
@@ -315,10 +316,10 @@ void main()
         {
             imageStore(matAlbedo, l_pixelCoords, vec4(0.0f));
             imageStore(matProperties, l_pixelCoords, vec4(0.0f));
+            imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3((300.0f - (l_closestHit.distance *20)) * 0x10101), 1.0f));
         }
 
         // DEBUG: output greyscale to framebuffer
-        //imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3((300.0f - (l_closestHit.distance *20)) * 0x10101), 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(normalize(l_closestHit.position), 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texUVs, 0.0f, 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(u_lights[0].color, 1.0f));
@@ -332,6 +333,6 @@ void main()
         imageStore(matProperties, l_pixelCoords, vec4(0.0f));
 
 
-        //imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f), 1.0f));
+        imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f), 1.0f));
     }
 }

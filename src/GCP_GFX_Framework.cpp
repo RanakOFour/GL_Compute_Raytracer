@@ -389,7 +389,7 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	m_screenTrianglesVAO = CreateTriangleVAO();
 
 	// Create the shaders and link them together into the shader program
-	m_screenShader = LoadShaders("./resources/shaders/ScreenVertex.txt", "./resources/shaders/ScreenFragment.txt");
+	m_screenShader = LoadShaders("./resources/shaders/Framebuffer/ScreenVertex.txt", "./resources/shaders/Framebuffer/ScreenFragment.txt");
 
 	m_mainBuffer = new Framebuffer(winWidth, winHeight);
 

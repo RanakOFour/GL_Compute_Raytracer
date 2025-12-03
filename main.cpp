@@ -160,17 +160,21 @@ int main(int argc, char* argv[])
 
 		ImGui::Begin("Material settings");
 
-		float met = l_material.metallic;
-		ImGui::SliderFloat("Metallic", &met, 0, 1);
-		l_material.metallic = met;
+		glm::vec3 l_alb = l_materials[0].albedo;
+		ImGui::ColorEdit3("Albedo", &l_alb[0]);
+		l_materials[0].albedo = l_alb;
 
-		float rog = l_material.roughness;
+		float met = l_materials[0].metallic;
+		ImGui::SliderFloat("Metallic", &met, 0, 1);
+		l_materials[0].metallic = met;
+
+		float rog = l_materials[0].roughness;
 		ImGui::SliderFloat("Roughness", &rog, 0, 1);
-		l_material.roughness = rog;
+		l_materials[0].roughness = rog;
 		
-		float ao = l_material.ambientOcclusion;
+		float ao = l_materials[0].ambientOcclusion;
 		ImGui::SliderFloat("AO", &ao, 0, 1);
-		l_material.ambientOcclusion = ao;
+		l_materials[0].ambientOcclusion = ao;
 
 		ImGui::End();
 
