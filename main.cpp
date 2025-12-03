@@ -36,10 +36,6 @@ int main(int argc, char* argv[])
 	
 	l_raytracer.AddLight(l_light);
 
-	l_light.position = glm::vec3(0.0f, 3.0f, 0.0f);
-
-	//l_raytracer.AddLight(l_light);
-
 	printf("Creating vectors\n");
 	std::vector<Triangle> l_tris = l_curuthersModel.GetTriangles(glm::vec3(0.0f));
 	std::vector<Texture> l_textures;

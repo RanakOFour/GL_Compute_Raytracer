@@ -124,6 +124,8 @@ void Raytracer::Trace()
         m_camera.UpdateShader(m_ShadingComp);
         m_ShadingComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
 
+
+        m_ShadingComp.SetUniform("u_numLights", l_lightCount);
         for(int i = 0; i < l_lightCount; i++)
         {
             m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
