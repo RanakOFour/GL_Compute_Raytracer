@@ -304,6 +304,7 @@ void main()
                                                           l_mat.roughness,
                                                           l_mat.ambientOcclusion,
                                                           l_tri.materialIndex));
+    
 
             imageStore(o_framebufferTex, l_pixelCoords, vec4(l_mat.metallic,
                                                              l_mat.roughness,
@@ -312,6 +313,8 @@ void main()
         }
         else
         {
+            imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.normal,
+                                                            1.0));
             imageStore(matAlbedo, l_pixelCoords, vec4(0.0f));
             imageStore(matProperties, l_pixelCoords, vec4(0.0f));
             imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3((300.0f - (l_closestHit.distance *20)) * 0x10101), 1.0f));
