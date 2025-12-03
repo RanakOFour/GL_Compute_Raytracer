@@ -21,7 +21,6 @@ struct Light{ vec3 color; vec3 position; };
 #define MAX_LIGHTS 10
 uniform Light u_lights[MAX_LIGHTS];
 uniform int u_numLights;
-
 uniform vec2 u_resolution;
 
 void main()
@@ -44,11 +43,11 @@ void main()
 
     int l_texId = int(imageLoad(uvCoordinatesAndTexIdx, l_pixelCoords).b);
     
-    vec3 l_objectColor = texture(u_materialTextures[l_texId], l_texUVs).rgb;
+    vec3 l_objectColor = texture(u_materialTextures[l_texId], l_texUVs).xyz;
 
     vec3 l_lighting = vec3(0.0);
 
-    vec3 l_normal = imageLoad(triangleNormals, l_pixelCoords).rgb;
+    vec3 l_normal = imageLoad(triangleNormals, l_pixelCoords).xyz;
 
     for(int i = 0; i < u_numLights; i++)
     {   
@@ -69,7 +68,7 @@ void main()
         // Scales light amount by inverse of distance
         float l_attenuation = 1.0 / (1.0 + 0.1 * l_distance + 0.01 * l_distance * l_distance);
         
-        l_lighting += (l_diffuseColor + l_specularColor) * l_attenuation;
+        l_lighting += (l_diffuseColor + l_specularColor);
     };
     
     // Add ambient lighting (always present, even in shadows)
