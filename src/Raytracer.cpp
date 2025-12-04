@@ -103,7 +103,6 @@ void Raytracer::Trace()
         m_ShadowComp.use();
 
         m_camera.UpdateShader(m_ShadowComp);
-        m_ShadowComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
 
         // Cap light count at 10
         int l_lightCount = m_lights.size() > 10 ? 10 : m_lights.size();

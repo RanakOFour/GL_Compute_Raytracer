@@ -136,6 +136,9 @@ void main()
     vec3 l_ambient = vec3(0.03) * l_objectColor * l_mat.albedo * l_mat.ambientOcclusion;
     
     vec3 colour = l_ambient + Lo;
+
+    // Gamma correction
+    colour = pow(colour, vec3(1.0/2.2)) * imageLoad(shadowBuffer, l_pixelCoords).r;
     
     imageStore(o_framebufferTex, l_pixelCoords, vec4(colour, 1.0f));
 }
