@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="OE9D3wA5DGOfEw1pnoTS" name="Page-1">
-        <mxGraphModel dx="2312" dy="1113" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="2128" dy="966" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -190,7 +190,7 @@
                             <mxPoint x="558" y="223"/>
                             <mxPoint x="558" y="338"/>
                             <mxPoint x="16" y="336"/>
-                            <mxPoint x="20" y="919"/>
+                            <mxPoint x="20" y="841"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -198,7 +198,7 @@
                     <mxGeometry x="580" y="111" width="680" height="224" as="geometry"/>
                 </mxCell>
                 <mxCell id="81" value="Data flow diagram" style="swimlane;whiteSpace=wrap;html=1;" parent="62" vertex="1">
-                    <mxGeometry x="34" y="351" width="2482" height="865" as="geometry"/>
+                    <mxGeometry x="34" y="351" width="2482" height="1528" as="geometry"/>
                 </mxCell>
                 <mxCell id="101" style="edgeStyle=none;html=1;" parent="81" source="82" target="98" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -324,10 +324,13 @@
                     <mxGeometry y="30" width="187" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="124" value="&quot;RaycastResults&quot; information" style="swimlane;whiteSpace=wrap;html=1;" parent="81" vertex="1">
-                    <mxGeometry x="25" y="511" width="406" height="107" as="geometry"/>
+                    <mxGeometry x="26" y="445" width="406" height="76" as="geometry"/>
                 </mxCell>
-                <mxCell id="126" value="- Intersection position&lt;div&gt;- Triangle normal&lt;/div&gt;&lt;div&gt;- UV coordinates of intersection point&lt;/div&gt;&lt;div&gt;- Triangle material Albedo&lt;/div&gt;&lt;div&gt;- Material properties (AO, Metallic, Roughness, Id as RGBA channel vals)&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="124" vertex="1">
+                <mxCell id="126" value="- Intersection position&lt;div&gt;- Triangle normal&lt;/div&gt;&lt;div&gt;- UV coordinates of intersection point, texId &amp;amp; matId&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="124" vertex="1">
                     <mxGeometry y="23" width="406" height="89" as="geometry"/>
+                </mxCell>
+                <mxCell id="130" value="The material Id could absolutely just be crammed into another buffer and save on having the extra 2" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="81">
+                    <mxGeometry x="450" y="449.5" width="161" height="67" as="geometry"/>
                 </mxCell>
                 <mxCell id="120" value="Raytracer" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="62" vertex="1">
                     <mxGeometry x="1324" y="89" width="194" height="194" as="geometry"/>

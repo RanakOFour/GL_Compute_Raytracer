@@ -3,9 +3,9 @@
 layout(local_size_x = 8, local_size_y = 4) in;
 layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 
-layout(rgba32f, binding = 1) uniform image2D intersectPositions;
+layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
-layout(r32f, binding = 6) uniform image2D shadowBuffer;
+layout(r32f, binding = 4) uniform image2D shadowBuffer;
 
 
 struct Triangle
@@ -25,7 +25,7 @@ struct Triangle
     int materialIndex;
 };
 
-layout(std430, binding = 7) readonly buffer b_trianglesSSBO
+layout(std430, binding = 5) readonly buffer b_trianglesSSBO
 {
     Triangle sceneTris[];
 };
@@ -44,13 +44,13 @@ struct Node
     int triangleCount;
 };
 
-layout(std430, binding = 8) readonly buffer b_bvhNodes
+layout(std430, binding = 6) readonly buffer b_bvhNodes
 {
     Node bvhNodes[];
 };
 
 // Maps bvhNode.leftFirst indexes to indexes in sceneTris
-layout(std430, binding = 9) readonly buffer b_bvhTriangleIndex
+layout(std430, binding = 7) readonly buffer b_bvhTriangleIndex
 {
     int bvhTriIdxs[];
 };
@@ -59,7 +59,6 @@ struct Light { vec3 position; vec3 color; };
 #define MAX_LIGHTS 10
 uniform Light u_lights[MAX_LIGHTS];
 uniform int u_numLights;
-uniform vec2 u_resolution;
 
 struct Ray  { vec3 origin; vec3 direction; };
 
@@ -220,9 +219,8 @@ bool isInShadow(vec3 _lightPos, vec3 _position, vec3 _normal, int _idx)
 void main() 
 {
     ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
-    vec2 l_texCoord = vec2(l_pixelCoords) / u_resolution;
     
-    vec3 l_position = imageLoad(intersectPositions, l_pixelCoords).rgb;
+    vec3 l_position = imageLoad(hitLocations, l_pixelCoords).rgb;
     vec4 l_normalBVal = imageLoad(triangleNormals, l_pixelCoords);
     vec3 l_normal = l_normalBVal.rgb;
     int l_triIndex = int(l_normalBVal.a);
@@ -241,9 +239,9 @@ void main()
         vec3 shadowRayOrigin = l_position + l_normal * 0.001;
         
         if (isInShadow(u_lights[i].position, l_position, l_normal, l_triIndex)) {
-            imageStore(shadowBuffer, l_pixelCoords, vec4(0.0));
+            shadowFactor *= 0.5f;
         }
     }
     
-    //imageStore(shadowBuffer, l_pixelCoords, vec4(shadowFactor, 0.0, 0.0, 0.0));
+    imageStore(shadowBuffer, l_pixelCoords, vec4(shadowFactor));
 }
