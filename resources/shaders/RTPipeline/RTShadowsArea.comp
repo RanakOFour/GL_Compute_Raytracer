@@ -5,6 +5,7 @@ layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 
 layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
+
 layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
 
 
@@ -285,7 +286,7 @@ void main()
 
             // Translate point to surface of sphere
             l_randomPoint *= u_lights[i].radius;
-            l_randomPoint += u_lights[i].position;
+            l_randomPoint += u_lights[i].points[0];
             
             vec3 lightDir = normalize(l_randomPoint - l_position);
             float lightDistance = length(l_randomPoint - l_position);

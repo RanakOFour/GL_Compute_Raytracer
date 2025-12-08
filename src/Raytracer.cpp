@@ -17,8 +17,8 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 , m_textureSSBO(-1)
 , m_materialSSBO(-1)
 , m_setup(false)
-, m_shadows(true)
-, m_shading(true)
+, m_shadows(false)
+, m_shading(false)
 , m_frameCount(0.0f)
 {
     printf("Binding bufferTex\n");
@@ -30,7 +30,7 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 
     for(int i = 0; i < 4; i++)
     {       
-        printf("Filling in buffer %i\n", i);
+        printf("Filling in buffer %i\n", i + 1);
         glBindTexture(GL_TEXTURE_2D, m_gBuffers[i]);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_screenSize.x, m_screenSize.y, 0, GL_RGBA, GL_FLOAT, 0);
 
@@ -47,7 +47,7 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 
 Raytracer::~Raytracer()
 {
-    glDeleteTextures(6, &m_gBuffers[0]);
+    glDeleteTextures(4, &m_gBuffers[0]);
     glDeleteBuffers(1, &m_triangleSSBO);
     glDeleteBuffers(1, &m_materialSSBO);
 }
@@ -88,7 +88,7 @@ void Raytracer::Trace(float _deltaTime)
         m_ShadowComp.SetUniform("u_time", _deltaTime);
         for(int i = 0; i < l_lightCount; i++)
         {
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
+            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].points[0]", m_lights[i].position);
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
@@ -108,7 +108,7 @@ void Raytracer::Trace(float _deltaTime)
         m_ShadingComp.SetUniform("u_numLights", l_lightCount);
         for(int i = 0; i < l_lightCount; i++)
         {
-            m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
+            m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].points[0]", m_lights[i].position);
             m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
             m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
         }
