@@ -275,7 +275,7 @@ void main()
             l_closestHit.normal = -l_closestHit.normal;
         }
 
-        imageStore(hitLocations, l_pixelCoords, vec4(l_closestHit.error, l_closestHit.distance));
+        imageStore(hitLocations, l_pixelCoords, vec4(l_closestHit.position, l_closestHit.distance));
         imageStore(triangleNormals, l_pixelCoords, vec4(l_closestHit.normal, l_closestHit.triangleId));
         
         vec2 l_texUVs = CalculateTexUVs(l_closestHit, l_tri);
@@ -299,5 +299,5 @@ void main()
 
     //l_closestHit.error = vec3(sceneTris[0].a.x, sceneTris[0].a.y, -sceneTris[0].a.z);
     imageStore(shadowBuffer, l_pixelCoords, vec4(1.0f));
-    //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.error, 1.0f));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.error, 1.0f));
 }
