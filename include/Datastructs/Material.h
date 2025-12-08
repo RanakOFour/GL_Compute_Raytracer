@@ -11,6 +11,7 @@ struct Material
     float metallic;
     float roughness;
     float ambientOcclusion;
+    float _last_Pad;
 };
 
 #endif

@@ -7,7 +7,6 @@ layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
 layout(rgba32f, binding = 3) uniform image2D texMatInfo;
-
 layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
 
 struct Material
@@ -30,7 +29,7 @@ struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
 uniform Camera u_camera;
 struct Light
 {
-    vec3 position;
+    vec3 points[4];
     vec3 colour;
     float intensity;
     float radius;
@@ -39,8 +38,6 @@ struct Light
 #define MAX_LIGHTS 10
 uniform Light u_lights[MAX_LIGHTS];
 uniform int u_numLights;
-
-uniform vec2 u_resolution;
 
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------
@@ -88,14 +85,19 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 void main()
 {
     ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+
     vec3 l_position = imageLoad(hitLocations, l_pixelCoords).xyz;
+    float l_distance = imageLoad(hitLocations, l_pixelCoords).w;
     vec2 l_texUVs = imageLoad(texMatInfo, l_pixelCoords).rg;
 
-    if(length(l_position) == 0.0f)
+    if(l_distance < 0.01f)
     {
         imageStore(o_framebufferTex, l_pixelCoords, vec4(0.0, 0.1, 0.3, 1.0f));
         return;
     }
+
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(1.0, 0.0, 0.0, 1.0f));
+    return;
 
     int l_texId = int(imageLoad(texMatInfo, l_pixelCoords).b);
     int l_matId = int(imageLoad(texMatInfo, l_pixelCoords).a);
@@ -112,9 +114,9 @@ void main()
     vec3 Lo = vec3(0.0f);
     for(int i = 0; i < u_numLights; i++)
     {   
-        vec3 l_lightDir = normalize(u_lights[i].position - l_position);
+        vec3 l_lightDir = normalize(u_lights[i].points[0] - l_position);
         vec3 l_halfLength = normalize(V + l_lightDir);
-        float l_distance = length(u_lights[i].position - l_position);
+        float l_distance = length(u_lights[i].points[0] - l_position);
         float l_attenuation = 1.0 / (l_distance * l_distance);
         vec3 l_radiance = u_lights[i].colour * u_lights[i].intensity * l_attenuation;
 

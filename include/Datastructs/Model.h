@@ -255,8 +255,7 @@ inline std::vector<Triangle> Model::GetTriangles(glm::vec3 _position = glm::vec3
     newTri.uvB = m_faces[fi].b.texcoord;
     newTri.uvC = m_faces[fi].c.texcoord;
 
-    printf("Triangle Locs:\n A: (%f, %f, %f)\n B: (%f, %f, %f)\n C:(%f, %f, %f)\n",
-           newTri.a.x, newTri.a.y, newTri.a.z, newTri.b.x, newTri.b.y, newTri.b.z, newTri.c.x, newTri.c.y, newTri.c.z);
+    //printf("Triangle Locs:\n A: (%f, %f, %f)\n B: (%f, %f, %f)\n C: (%f, %f, %f)\n",  newTri.a.x, newTri.a.y, newTri.a.z, newTri.b.x, newTri.b.y, newTri.b.z, newTri.c.x, newTri.c.y, newTri.c.z);
 
     CalculateNormal(newTri);
     l_triangles.push_back(newTri);

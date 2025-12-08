@@ -32,10 +32,9 @@ class Raytracer : public GCP_Framework
     ComputeShader m_ShadowComp;
     ComputeShader m_ShadingComp;
 
-    GLuint m_gBuffers[6];
+    GLuint m_gBuffers[4];
 
     GLuint m_triangleSSBO;
-    GLuint m_textureSSBO;
     GLuint m_materialSSBO;
 
     bool m_setup;

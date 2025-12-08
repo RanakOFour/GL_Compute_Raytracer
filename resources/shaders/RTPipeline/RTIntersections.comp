@@ -23,8 +23,8 @@ struct Triangle
     vec2 uvB;
     vec2 uvC;
 
-    int textureIndex;
-    int materialIndex;
+    int textureId;
+    int materialId;
 };
 
 layout(std430, binding = 5) readonly buffer b_trianglesSSBO
@@ -51,7 +51,7 @@ layout(std430, binding = 6) readonly buffer b_bvhNodes
 };
 
 // Maps bvhNode.leftFirst indexes to indexes in sceneTris
-layout(std430, binding = 7) readonly buffer b_bvhTriangleIndex
+layout(std430, binding = 7) readonly buffer b_bvhTriangleId
 {
     int bvhTriIdxs[];
 };
@@ -69,7 +69,7 @@ struct RaycastResult {
     vec3 position;
     vec3 normal;
     vec3 error;
-    int triangleIndex;
+    int triangleId;
 };
 
 vec2 CalculateTexUVs(RaycastResult _result, Triangle _tri)
@@ -107,48 +107,48 @@ RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
 {
     RaycastResult result;
     result.hit = false;
-    result.triangleIndex = _index;
-
-    float l_ep = 0.0001;
-
+    result.triangleId = _index;
+    
+    const float EPSILON = 0.000001;
+    
     vec3 edge1 = _tri.b - _tri.a;
     vec3 edge2 = _tri.c - _tri.a;
-    vec3 s = _ray.origin - _tri.a;
     
-    vec3 ray_cross_edge2 = cross(_ray.direction, edge2);
-    float det = dot(edge1, ray_cross_edge2);
-
-    if(det > -l_ep && det < l_ep)
-    {
+    vec3 h = cross(_ray.direction, edge2);
+    float det = dot(edge1, h);
+    
+    // If determinant is near zero, ray lies in plane of triangle
+    if (det > -EPSILON && det < EPSILON)
         return result;
-    }
-
-    float inv_det = 1.0 / det;
-    float u = inv_det * dot(s, ray_cross_edge2);
-
-    if(u < 0.0 || u > 1.0)
-    {
+    
+    float invDet = 1.0 / det;
+    vec3 s = _ray.origin - _tri.a;
+    float u = invDet * dot(s, h);
+    
+    if (u < 0.0 || u > 1.0)
         return result;
-    }
-
-    vec3 s_cross_e1 = cross(s, edge1);
-    float v = inv_det * dot(_ray.direction, s_cross_e1);
-
-    if(v < 0.0 || u + v > 1.0)
-    {
-       // return result;
-    }
-
-    float t = inv_det * dot(edge2, s_cross_e1);
-
-    if(t > l_ep)
+    
+    vec3 q = cross(s, edge1);
+    float v = invDet * dot(_ray.direction, q);
+    
+    if (v < 0.0 || u + v > 1.0)
+        return result;
+    
+    // At this stage we can compute t to find out where
+    // the intersection point is on the line
+    float t = invDet * dot(edge2, q);
+    
+    if (t > EPSILON) // Ray intersection
     {
         result.hit = true;
         result.position = _ray.origin + _ray.direction * t;
         result.distance = t;
-        result.normal = _tri.normal;
+        result.normal = normalize(cross(edge1, edge2));
+        result.triangleId = _index;
+        return result;
     }
-
+    
+    // This means that there is a line intersection but not a ray intersection
     return result;
 }
 
@@ -210,10 +210,11 @@ RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
                 for(int i = 0; i < l_node.triangleCount; i++)
                 {
                     _result.error += vec3(0.0, 0.0, 0.01);
-                    RaycastResult newResult = TriangleIntersect(_ray, sceneTris[l_node.leftFirst + i], l_node.leftFirst + i);
+                    int triIdx = bvhTriIdxs[l_node.leftFirst + i];
+                    RaycastResult newResult = TriangleIntersect(_ray, sceneTris[triIdx], triIdx);
                     if(newResult.hit && newResult.distance < _result.distance)
                     {
-                        _result.error += vec3(0.00, 1, 0.0);
+                        _result.error += vec3(0.0, 0.5, 0.0);
                         newResult.error = _result.error;
                         _result = newResult;
                     }
@@ -266,23 +267,23 @@ void main()
 
     if(l_closestHit.hit)
     {
-        Triangle l_tri = sceneTris[l_closestHit.triangleIndex];
+        Triangle l_tri = sceneTris[l_closestHit.triangleId];
 
         if(dot(l_closestHit.normal, l_ray.direction) > 0.0)
         {
             l_closestHit.normal = -l_closestHit.normal;
         }
 
-        imageStore(hitLocations, l_pixelCoords, vec4(l_closestHit.position, l_closestHit.distance));
-        imageStore(triangleNormals, l_pixelCoords, vec4(l_closestHit.normal, l_closestHit.triangleIndex));
+        imageStore(hitLocations, l_pixelCoords, vec4(l_closestHit.error, l_closestHit.distance));
+        imageStore(triangleNormals, l_pixelCoords, vec4(l_closestHit.normal, l_closestHit.triangleId));
         
         vec2 l_texUVs = CalculateTexUVs(l_closestHit, l_tri);
-        imageStore(texMatInfo, l_pixelCoords, vec4(l_texUVs, float(l_tri.textureIndex), float(l_tri.materialIndex)));
+        imageStore(texMatInfo, l_pixelCoords, vec4(l_texUVs, float(l_tri.textureId), float(l_tri.materialId)));
 
         // DEBUG: output greyscale to framebuffer
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(200.0f - (l_closestHit.distance * 20)), 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(normalize(l_closestHit.position), 1.0f));
-        // imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texUVs, 0.0f, 1.0f));
+        imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texUVs, 0.0f, 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f, 1.0f, 0.0f), 1.0f));
     }
     else
@@ -292,8 +293,10 @@ void main()
         imageStore(texMatInfo, l_pixelCoords, vec4(0.0f));
 
         
-       // imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(1.0f, 0.0f, 0.0f), 1.0f));
+       imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f, 0.0f, 0.0f), 1.0f));
     }
 
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.error, 1.0f));
+    //l_closestHit.error = vec3(sceneTris[0].a.x, sceneTris[0].a.y, -sceneTris[0].a.z);
+    //imageStore(shadowBuffer, l_pixelCoords, vec4(1.0f));
+    //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.error, 1.0f));
 }

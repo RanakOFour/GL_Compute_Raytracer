@@ -12,13 +12,12 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 , m_IntersectionComp("./resources/shaders/RTPipeline/RTIntersections.comp")
 , m_ShadowComp("./resources/shaders/RTPipeline/RTShadowsArea.comp")
 , m_ShadingComp("./resources/shaders/RTPipeline/RTShading.comp")
-, m_gBuffers{0, 0, 0, 0, 0, 0}
+, m_gBuffers{0, 0, 0, 0}
 , m_triangleSSBO(-1)
-, m_textureSSBO(-1)
 , m_materialSSBO(-1)
 , m_setup(false)
 , m_shadows(false)
-, m_shading(false)
+, m_shading(true)
 , m_frameCount(0.0f)
 {
     printf("Binding bufferTex\n");
@@ -74,8 +73,12 @@ void Raytracer::Trace(float _deltaTime)
     m_camera.UpdateShader(m_IntersectionComp);
     m_IntersectionComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
 
-	glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
-	glMemoryBarrier(GL_ALL_BARRIER_BITS);
+    for (int i = 0; i < 4; i++) {
+        glBindImageTexture(i + 1, m_gBuffers[i], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+    }
+
+    glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
     float l_lightCount = m_lights.size() > 10 ? 10 : m_lights.size();
     if(m_shadows)
@@ -103,8 +106,6 @@ void Raytracer::Trace(float _deltaTime)
     {
         m_ShadingComp.use();
         m_camera.UpdateShader(m_ShadingComp);
-        m_ShadingComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
-
 
         m_ShadingComp.SetUniform("u_numLights", l_lightCount);
         for(int i = 0; i < l_lightCount; i++)
@@ -119,8 +120,12 @@ void Raytracer::Trace(float _deltaTime)
             m_ShadingComp.SetUniform("u_materialTextures[" + std::to_string(i) + "]", 9 + i);
         }
 
-	    glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
-        glMemoryBarrier(GL_ALL_BARRIER_BITS);
+        for (int i = 0; i < 4; i++) {
+            glBindImageTexture(i + 1, m_gBuffers[i], 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA32F);
+        }
+
+        glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
+        glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
     }
 
     m_frameCount++;
@@ -129,9 +134,17 @@ void Raytracer::Trace(float _deltaTime)
 void Raytracer::SetTris(std::vector<Triangle>* _tris)
 {
     m_tris = _tris;
+    Triangle t = m_tris->at(0);
+
+    printf("First triangle uploaded to GPU:\n");
+    printf("  A: (%.2f, %.2f, %.2f)\n", t.a.x, t.a.y, t.a.z);
+    printf("  B: (%.2f, %.2f, %.2f)\n", t.b.x, t.b.y, t.b.z);
+    printf("  C: (%.2f, %.2f, %.2f)\n", t.c.x, t.c.y, t.c.z);
+    printf("  Normal: (%.2f, %.2f, %.2f)\n", t.normal.x, t.normal.y, t.normal.z);
+
     m_BVH.BuildBHV(_tris);
 
-    if(!m_triangleSSBO)
+    if (m_triangleSSBO == -1)
     {
         glGenBuffers(1, &m_triangleSSBO);
     }
@@ -139,19 +152,20 @@ void Raytracer::SetTris(std::vector<Triangle>* _tris)
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_triangleSSBO);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Triangle) * m_tris->size(), &(m_tris->at(0)), GL_DYNAMIC_READ);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
 }
 
 void Raytracer::SetMaterials(std::vector<Material>* _mat)
 {
     m_mats = _mat;
 
-    if(!m_materialSSBO)
+    if(m_materialSSBO == -1)
     {
         glGenBuffers(1, &m_materialSSBO);
     }
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_materialSSBO);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Material) * m_mats->size(), &(m_mats->at(0)), GL_DYNAMIC_DRAW);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Material) * m_mats->size(), &(m_mats->at(0)), GL_DYNAMIC_READ);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 

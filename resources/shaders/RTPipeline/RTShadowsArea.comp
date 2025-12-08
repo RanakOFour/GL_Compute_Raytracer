@@ -22,8 +22,8 @@ struct Triangle
     vec2 uvB;
     vec2 uvC;
 
-    int textureIndex;
-    int materialIndex;
+    int textureId;
+    int materialId;
 };
 
 layout(std430, binding = 5) readonly buffer b_trianglesSSBO
@@ -51,7 +51,7 @@ layout(std430, binding = 6) readonly buffer b_bvhNodes
 };
 
 // Maps bvhNode.leftFirst indexes to indexes in sceneTris
-layout(std430, binding = 7) readonly buffer b_bvhTriangleIndex
+layout(std430, binding = 7) readonly buffer b_bvhTriangleId
 {
     int bvhTriIdxs[];
 };
@@ -80,7 +80,7 @@ struct RaycastResult {
     float distance;
     vec3 position;
     vec3 normal;
-    int triangleIndex;
+    int triangleId;
 };
 
 const float PI = 3.14159265359;
@@ -116,7 +116,7 @@ RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
 {
     RaycastResult result;
     result.hit = false;
-    result.triangleIndex = _index;
+    result.triangleId = _index;
 
     float l_ep = 0.0001;
 
@@ -265,7 +265,7 @@ void main()
     vec3 l_position = imageLoad(hitLocations, l_pixelCoords).rgb;
     vec4 l_normalBVal = imageLoad(triangleNormals, l_pixelCoords);
     vec3 l_normal = l_normalBVal.rgb;
-    int l_triIndex = int(l_normalBVal.a);
+    int l_triId = int(l_normalBVal.a);
     
     if (length(l_position) < 0.001) {
         imageStore(shadowBuffer, l_pixelCoords, vec4(1.0)); // No shadow for background
@@ -302,7 +302,7 @@ void main()
 
 
             // Point is behind the light source or occluded
-            if (l_cosTheta <= 0 || IsInShadow(l_randomPoint, l_position, l_normal, l_triIndex))
+            if (l_cosTheta <= 0 || IsInShadow(l_randomPoint, l_position, l_normal, l_triId))
             {
                 continue;
             }
