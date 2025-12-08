@@ -60,25 +60,63 @@ void ComputeShader::use()
 
 void ComputeShader::SetUniform(std::string _name, bool _value)
 {
-    glUniform1i(glGetUniformLocation(m_ID, _name.c_str()), _value);
+    GLint l_location = glGetUniformLocation(m_ID, _name.c_str());
+    
+    if(l_location == -1)
+    {
+        printf("%s location: %i\n", _name.c_str(), l_location);
+    }
+
+    
+    glUniform1i(l_location, _value);
 }
 
 void ComputeShader::SetUniform(std::string _name, int _value)
 {
-    glUniform1i(glGetUniformLocation(m_ID, _name.c_str()), _value);
+    GLint l_location = glGetUniformLocation(m_ID, _name.c_str());
+    
+    if(l_location == -1)
+    {
+        printf("%s location: %i\n", _name.c_str(), l_location);
+    }
+
+    
+    glUniform1f(l_location, _value);
 }
 
 void ComputeShader::SetUniform(std::string _name, float _value)
 {
-    glUniform1f(glGetUniformLocation(m_ID, _name.c_str()), _value);
+    GLint l_location = glGetUniformLocation(m_ID, _name.c_str());
+    
+    if(l_location == -1)
+    {
+        printf("%s location: %i\n", _name.c_str(), l_location);
+    }
+
+    
+    glUniform1f(l_location, _value);
 }
 
 void ComputeShader::SetUniform(std::string _name, glm::vec2 _value)
 {
+    GLint l_location = glGetUniformLocation(m_ID, _name.c_str());
+    
+    if(l_location == -1)
+    {
+        printf("%s location: %i\n", _name.c_str(), l_location);
+    }
+
     glUniform2fv(glGetUniformLocation(m_ID, _name.c_str()), 1, glm::value_ptr(_value));
 }
 
 void ComputeShader::SetUniform(std::string _name, glm::vec3 _value)
 {
+    GLint l_location = glGetUniformLocation(m_ID, _name.c_str());
+
+    if(l_location == -1)
+    {
+        printf("%s location: %i\n", _name.c_str(), l_location);
+    }
+
     glUniform3fv(glGetUniformLocation(m_ID, _name.c_str()), 1, glm::value_ptr(_value));
 }

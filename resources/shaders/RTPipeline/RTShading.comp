@@ -25,19 +25,17 @@ layout(std430, binding = 8) readonly buffer b_Materials
 #define MAX_TEXTURES 10
 layout(binding = 9) uniform sampler2D u_materialTextures[MAX_TEXTURES];
 
-struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
-uniform Camera u_camera;
+uniform vec3 u_cameraPos;
 struct Light
 {
     vec3 points[4];
     vec3 colour;
     float intensity;
     float radius;
-    bool twoSided;
 };
 #define MAX_LIGHTS 10
 uniform Light u_lights[MAX_LIGHTS];
-uniform int u_numLights;
+uniform float u_lightCount;
 
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------
@@ -87,17 +85,14 @@ void main()
     ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
 
     vec3 l_position = imageLoad(hitLocations, l_pixelCoords).xyz;
-    float l_distance = imageLoad(hitLocations, l_pixelCoords).w;
+    float l_posDistance = imageLoad(hitLocations, l_pixelCoords).w;
     vec2 l_texUVs = imageLoad(texMatInfo, l_pixelCoords).rg;
 
-    if(l_distance < 0.01f)
+    if(l_posDistance < 0.01f)
     {
         imageStore(o_framebufferTex, l_pixelCoords, vec4(0.0, 0.1, 0.3, 1.0f));
         return;
     }
-
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(1.0, 0.0, 0.0, 1.0f));
-    return;
 
     int l_texId = int(imageLoad(texMatInfo, l_pixelCoords).b);
     int l_matId = int(imageLoad(texMatInfo, l_pixelCoords).a);
@@ -106,14 +101,18 @@ void main()
 
     Material l_mat = materials[l_matId];
 
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_mat.metallic, l_mat.roughness, l_mat.ambientOcclusion, 1.0f));
+    //return;
+
     // Flip normal if it's facing away from the ray (backface)
     vec3 l_normal = normalize(imageLoad(triangleNormals, l_pixelCoords).rgb);
-    vec3 V = normalize(u_camera.position - l_position);
+    vec3 V = normalize(u_cameraPos - l_position);
 
     vec3 F0 = mix(vec3(0.04), l_mat.albedo, l_mat.metallic);
     vec3 Lo = vec3(0.0f);
-    for(int i = 0; i < u_numLights; i++)
-    {   
+
+    for(int i = 0; i < u_lightCount; i++)
+    {
         vec3 l_lightDir = normalize(u_lights[i].points[0] - l_position);
         vec3 l_halfLength = normalize(V + l_lightDir);
         float l_distance = length(u_lights[i].points[0] - l_position);
@@ -127,7 +126,7 @@ void main()
 
         vec3 l_numerator = NDF * G * F;
 
-        float NdotL = max(dot(l_normal, l_lightDir), 0.0);
+        float NdotL = max(dot(l_normal, l_lightDir), 0.0f);
         float l_denom = 4.0 * max(dot(l_normal, V), 0.0) * NdotL + 0.001;
         vec3 l_specular = l_numerator / l_denom;
 
@@ -138,15 +137,17 @@ void main()
         kD *= 1.0 - l_mat.metallic;
 
         Lo += ((kD * l_mat.albedo * l_objectcolour) / PI + l_specular) * l_radiance * NdotL;
-    };
+    }
     
     // Add ambient lighting (always present, even in shadows)
     vec3 l_ambient = vec3(0.03) * l_objectcolour * l_mat.albedo * l_mat.ambientOcclusion;
     
     vec3 colour = l_ambient + Lo;
+    vec3 l_shadow = imageLoad(shadowBuffer, l_pixelCoords).xyz;
 
     // Gamma correction
-    colour = pow(colour, vec3(1.0/2.2)) * imageLoad(shadowBuffer, l_pixelCoords).rgb;
+    colour = pow(colour, vec3(1.0/2.2));
     
     imageStore(o_framebufferTex, l_pixelCoords, vec4(colour, 1.0f));
+    //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_shadow, 1.0f));
 }

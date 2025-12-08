@@ -63,11 +63,10 @@ struct Light
     vec3 colour;
     float intensity;
     float radius;
-    bool twoSided;
 };
 
 uniform Light u_lights[MAX_LIGHTS];
-uniform int u_numLights;
+uniform int u_lightCount;
 
 uniform int u_sampleCount;
 
@@ -275,7 +274,7 @@ void main()
     vec3 l_totalLight = imageLoad(shadowBuffer, l_pixelCoords).xyz;
     
     // Check shadows for each light
-    for(int i = 0; i < u_numLights; i++)
+    for(int i = 0; i < u_lightCount; i++)
     {
         vec3 l_incomingLight = vec3(0.0f);
         for(int j = 0; j < u_sampleCount; j++)

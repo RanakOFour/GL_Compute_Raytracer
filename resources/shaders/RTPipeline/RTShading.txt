@@ -96,15 +96,15 @@ void main()
         return;
     }
 
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(1.0, 0.0, 0.0, 1.0f));
-    return;
-
     int l_texId = int(imageLoad(texMatInfo, l_pixelCoords).b);
     int l_matId = int(imageLoad(texMatInfo, l_pixelCoords).a);
     
     vec3 l_objectcolour = texture(u_materialTextures[l_texId], l_texUVs).rgb;
 
     Material l_mat = materials[l_matId];
+
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_mat.metallic, l_mat.roughness, l_mat.ambientOcclusion, 1.0f));
+    //return;
 
     // Flip normal if it's facing away from the ray (backface)
     vec3 l_normal = normalize(imageLoad(triangleNormals, l_pixelCoords).rgb);
@@ -118,7 +118,7 @@ void main()
         vec3 l_halfLength = normalize(V + l_lightDir);
         float l_distance = length(u_lights[i].points[0] - l_position);
         float l_attenuation = 1.0 / (l_distance * l_distance);
-        vec3 l_radiance = u_lights[i].colour * u_lights[i].intensity * l_attenuation;
+        vec3 l_radiance = u_lights[i].colour  * l_attenuation;
 
         // Cook-Torrance BRDF
         float NDF = DistributionGGX(l_normal, l_halfLength, l_mat.roughness);

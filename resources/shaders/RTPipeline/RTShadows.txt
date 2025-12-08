@@ -5,7 +5,8 @@ layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 
 layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
-layout(r32f, binding = 4) uniform image2D shadowBuffer;
+
+layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
 
 
 struct Triangle
@@ -21,8 +22,8 @@ struct Triangle
     vec2 uvB;
     vec2 uvC;
 
-    int textureIndex;
-    int materialIndex;
+    int textureId;
+    int materialId;
 };
 
 layout(std430, binding = 5) readonly buffer b_trianglesSSBO
@@ -50,15 +51,27 @@ layout(std430, binding = 6) readonly buffer b_bvhNodes
 };
 
 // Maps bvhNode.leftFirst indexes to indexes in sceneTris
-layout(std430, binding = 7) readonly buffer b_bvhTriangleIndex
+layout(std430, binding = 7) readonly buffer b_bvhTriangleId
 {
     int bvhTriIdxs[];
 };
 
-struct Light { vec3 position; vec3 color; };
 #define MAX_LIGHTS 10
+struct Light
+{
+    vec3 points[4];
+    vec3 colour;
+    float intensity;
+    float radius;
+    bool twoSided;
+};
+
 uniform Light u_lights[MAX_LIGHTS];
 uniform int u_numLights;
+
+uniform int u_sampleCount;
+
+uniform float u_time;
 
 struct Ray  { vec3 origin; vec3 direction; };
 
@@ -67,14 +80,43 @@ struct RaycastResult {
     float distance;
     vec3 position;
     vec3 normal;
-    int triangleIndex;
+    int triangleId;
 };
 
-RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
+const float PI = 3.14159265359;
+
+// A "random" function I found in a stack overflow comment section
+// Basically, the pattern between sequential values is too much to make
+// to a person, so it may aswell be random
+uint pcg_hash(uint seed)
+{
+  uint state = seed * 747796405u + 2891336453u;
+  uint word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
+  return (word >> 22u) ^ word;
+}
+
+// Used to advance the PCG state.
+uint rand_pcg(inout uint rng_state)
+{
+  uint state = rng_state;
+  rng_state = rng_state * 747796405u + 2891336453u;
+  uint word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
+  return (word >> 22u) ^ word;
+}
+
+// Advances the prng state and returns the corresponding random float.
+float rand(uint state)
+{
+  uint x = rand_pcg(state);
+  state = x;
+  return float(x)*uintBitsToFloat(0x2f800000u);
+}
+
+RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
 {
     RaycastResult result;
     result.hit = false;
-    result.triangleIndex = _index;
+    result.triangleId = _index;
 
     float l_ep = 0.0001;
 
@@ -162,7 +204,7 @@ bool IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
 }
 
 // Shadow ray tracing (simplified version of TraverseBVH)
-bool isInShadow(vec3 _lightPos, vec3 _position, vec3 _normal, int _idx)
+bool IsInShadow(vec3 _lightPos, vec3 _position, vec3 _normal, int _idx)
 {
     Ray l_shadowRay;
     l_shadowRay.origin = _position + _normal * 0.001;
@@ -191,7 +233,7 @@ bool isInShadow(vec3 _lightPos, vec3 _position, vec3 _normal, int _idx)
                         continue;
                     }
 
-                    RaycastResult l_shadowHit = triangleIntersect(l_shadowRay, sceneTris[bvhTriIdxs[l_node.leftFirst + i]], bvhTriIdxs[l_node.leftFirst + i]);
+                    RaycastResult l_shadowHit = TriangleIntersect(l_shadowRay, sceneTris[bvhTriIdxs[l_node.leftFirst + i]], bvhTriIdxs[l_node.leftFirst + i]);
                     
                     // More than a minimum value to ignore close sceneTris
                     if(l_shadowHit.hit && l_shadowHit.distance < l_lightDistance && l_shadowHit.distance > 0.01f)
@@ -223,27 +265,54 @@ void main()
     vec3 l_position = imageLoad(hitLocations, l_pixelCoords).rgb;
     vec4 l_normalBVal = imageLoad(triangleNormals, l_pixelCoords);
     vec3 l_normal = l_normalBVal.rgb;
-    int l_triIndex = int(l_normalBVal.a);
+    int l_triId = int(l_normalBVal.a);
     
     if (length(l_position) < 0.001) {
         imageStore(shadowBuffer, l_pixelCoords, vec4(1.0)); // No shadow for background
         return;
     }
     
-    float shadowFactor = 1.0;;
+    vec3 l_totalLight = imageLoad(shadowBuffer, l_pixelCoords).xyz;
     
     // Check shadows for each light
-    for(int i = 0; i < u_numLights; i++) {
-        vec3 lightDir = normalize(u_lights[i].position - l_position);
-        float lightDistance = length(u_lights[i].position - l_position);
-        
-        // Offset to avoid self-intersection
-        vec3 shadowRayOrigin = l_position + l_normal * 0.001;
-        
-        if (isInShadow(u_lights[i].position, l_position, l_normal, l_triIndex)) {
-            shadowFactor *= 0.5f;
+    for(int i = 0; i < u_numLights; i++)
+    {
+        vec3 l_incomingLight = vec3(0.0f);
+        for(int j = 0; j < u_sampleCount; j++)
+        {
+            vec3 l_randomPoint = normalize(vec3(rand(gl_GlobalInvocationID.x),
+                                                rand(uint(u_time)),
+                                                rand(gl_GlobalInvocationID.y)));
+
+            // Translate point to surface of sphere
+            l_randomPoint *= u_lights[i].radius;
+            l_randomPoint += u_lights[i].points[0];
+            
+            vec3 lightDir = normalize(l_randomPoint - l_position);
+            float lightDistance = length(l_randomPoint - l_position);
+            float l_cosTheta = dot(lightDir, l_normal);
+
+            // https://www.physicsforums.com/threads/luminance-of-a-lambertian-sphere-formula.449703/
+            // Scales light intensity with inverse square
+            vec3 l_lightIntensity = l_cosTheta * 
+                                    u_lights[i].colour * 
+                                    u_lights[i].intensity * 
+                                    u_lights[i].radius * u_lights[i].radius *
+                                    PI * 4 / (lightDistance * lightDistance);
+
+
+            // Point is behind the light source or occluded
+            if (l_cosTheta <= 0 || IsInShadow(l_randomPoint, l_position, l_normal, l_triId))
+            {
+                continue;
+            }
+            
+            l_incomingLight += l_lightIntensity;
         }
+
+        l_incomingLight /= u_sampleCount;
+        l_totalLight += l_incomingLight;
     }
     
-    imageStore(shadowBuffer, l_pixelCoords, vec4(shadowFactor));
+    imageStore(shadowBuffer, l_pixelCoords, vec4(l_totalLight, 1.0f));
 }

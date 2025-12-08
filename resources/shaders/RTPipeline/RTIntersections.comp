@@ -108,8 +108,8 @@ RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
     RaycastResult result;
     result.hit = false;
     result.triangleId = _index;
-    
-    const float EPSILON = 0.000001;
+
+    const float l_ep = 0.000001;
     
     vec3 edge1 = _tri.b - _tri.a;
     vec3 edge2 = _tri.c - _tri.a;
@@ -117,9 +117,11 @@ RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
     vec3 h = cross(_ray.direction, edge2);
     float det = dot(edge1, h);
     
-    // If determinant is near zero, ray lies in plane of triangle
-    if (det > -EPSILON && det < EPSILON)
+    // If the determinant is negative, the triangle is back-facing.
+    if (det < l_ep)
+    {
         return result;
+    }
     
     float invDet = 1.0 / det;
     vec3 s = _ray.origin - _tri.a;
@@ -138,13 +140,12 @@ RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
     // the intersection point is on the line
     float t = invDet * dot(edge2, q);
     
-    if (t > EPSILON) // Ray intersection
+    if (t > l_ep) // Ray intersection
     {
         result.hit = true;
         result.position = _ray.origin + _ray.direction * t;
         result.distance = t;
         result.normal = normalize(cross(edge1, edge2));
-        result.triangleId = _index;
         return result;
     }
     
@@ -283,7 +284,7 @@ void main()
         // DEBUG: output greyscale to framebuffer
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(200.0f - (l_closestHit.distance * 20)), 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(normalize(l_closestHit.position), 1.0f));
-        imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texUVs, 0.0f, 1.0f));
+        //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texUVs, 0.0f, 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f, 1.0f, 0.0f), 1.0f));
     }
     else
@@ -293,10 +294,10 @@ void main()
         imageStore(texMatInfo, l_pixelCoords, vec4(0.0f));
 
         
-       imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f, 0.0f, 0.0f), 1.0f));
+       //imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f, 0.0f, 0.0f), 1.0f));
     }
 
     //l_closestHit.error = vec3(sceneTris[0].a.x, sceneTris[0].a.y, -sceneTris[0].a.z);
-    //imageStore(shadowBuffer, l_pixelCoords, vec4(1.0f));
+    imageStore(shadowBuffer, l_pixelCoords, vec4(1.0f));
     //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.error, 1.0f));
 }

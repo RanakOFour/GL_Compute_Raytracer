@@ -94,11 +94,11 @@ class Camera
     inline void Move(glm::vec3 _posChange) { m_Position += _posChange; };
     inline void Position(glm::vec3 _newPos) { m_Position = _newPos; };
 
-    glm::vec3& Position() { return m_Position; };
-    glm::vec3& Forward() { return m_Forward; };
-    glm::vec3& Right() { return m_Right; };
-    glm::vec3& Up() { return m_Up; };
-    glm::quat Rotation() {return m_Rotation;};
+    inline glm::vec3& Position() { return m_Position; };
+    inline glm::vec3& Forward() { return m_Forward; };
+    inline glm::vec3& Right() { return m_Right; };
+    inline glm::vec3& Up() { return m_Up; };
+    inline glm::quat Rotation() {return m_Rotation;};
     /** @} */
 };
 

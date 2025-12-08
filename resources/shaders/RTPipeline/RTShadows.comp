@@ -5,7 +5,7 @@ layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 
 layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
-layout(r32f, binding = 4) uniform image2D shadowBuffer;
+layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
 
 
 struct Triangle
@@ -55,7 +55,7 @@ layout(std430, binding = 7) readonly buffer b_bvhTriangleIndex
     int bvhTriIdxs[];
 };
 
-struct Light { vec3 position; vec3 colour; float intensity; };
+struct Light { vec3 points[4]; vec3 colour; float intensity; };
 #define MAX_LIGHTS 10
 uniform Light u_lights[MAX_LIGHTS];
 uniform int u_numLights;
@@ -234,16 +234,16 @@ void main()
     
     // Check shadows for each light
     for(int i = 0; i < u_numLights; i++) {
-        vec3 lightDir = normalize(u_lights[i].position - l_position);
-        float lightDistance = length(u_lights[i].position - l_position);
+        vec3 lightDir = normalize(u_lights[i].points[0] - l_position);
+        float lightDistance = length(u_lights[i].points[0] - l_position);
         
         // Offset to avoid self-intersection
         vec3 shadowRayOrigin = l_position + l_normal * 0.001;
         
-        if (isInShadow(u_lights[i].position, l_position, l_normal, l_triIndex)) {
+        if (isInShadow(u_lights[i].points[0], l_position, l_normal, l_triIndex)) {
             shadowFactor *= 0.5f;
         }
     }
     
-    imageStore(shadowBuffer, l_pixelCoords, vec4(shadowFactor));
+    imageStore(shadowBuffer, l_pixelCoords, vec4(shadowFactor, shadowFactor, shadowFactor, 1.0f));
 }
