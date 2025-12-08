@@ -50,9 +50,9 @@ int main(int argc, char* argv[])
 
 	printf("Creating vectors\n");
 	std::vector<Triangle> l_tris = l_curuthersModel.GetTriangles(glm::vec3(0.0f));
-	std::vector<Triangle> l_floorTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, -1.7f, 0.0f),
+	/*std::vector<Triangle> l_floorTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, -1.7f, 0.0f),
 																 glm::vec3(10.0f, 0.1f, 10.0f));
-	l_tris.insert(l_tris.end(), l_floorTris.begin(), l_floorTris.end());
+	l_tris.insert(l_tris.end(), l_floorTris.begin(), l_floorTris.end());*/
 	std::vector<Texture> l_textures;
 	std::vector<Material> l_materials;
 

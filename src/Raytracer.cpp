@@ -32,7 +32,7 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
     {       
         printf("Filling in buffer %i\n", i + 1);
         glBindTexture(GL_TEXTURE_2D, m_gBuffers[i]);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_screenSize.x, m_screenSize.y, 0, GL_RGBA, GL_FLOAT, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_screenSize.x, m_screenSize.y, 0, GL_RGBA32F, GL_FLOAT, 0);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -68,6 +68,7 @@ void Raytracer::Trace(float _deltaTime)
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
     glm::vec2 l_workGroups(ceil(m_screenSize.x / 8), ceil(m_screenSize.y / 4));
+    //glm::vec2 l_workGroups(1, 1);
 
     m_IntersectionComp.use();
     m_camera.UpdateShader(m_IntersectionComp);
