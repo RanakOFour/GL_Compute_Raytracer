@@ -64,7 +64,7 @@ class Model
   std::vector<Face>& GetFaces();
 
   GLsizei GetVertexCount() const;
-  std::vector<Triangle> GetTriangles(glm::vec3 _position);
+  std::vector<Triangle> GetTriangles(glm::vec3 _position, glm::vec3 _scale);
 };
 
 #include <stdexcept>
@@ -239,16 +239,17 @@ inline std::vector<Face>& Model::GetFaces()
   return m_faces;
 }
 
-inline std::vector<Triangle> Model::GetTriangles(glm::vec3 _position)
+inline std::vector<Triangle> Model::GetTriangles(glm::vec3 _position = glm::vec3(0.0f),
+                                                 glm::vec3 _scale = glm::vec3(1.0f))
 {
   std::vector<Triangle> l_triangles;
 
   for(size_t fi = 0; fi < m_faces.size(); ++fi)
   {
     Triangle newTri;
-    newTri.a = m_faces[fi].a.position + _position;
-    newTri.b = m_faces[fi].b.position + _position;
-    newTri.c = m_faces[fi].c.position + _position;
+    newTri.a = (m_faces[fi].a.position * _scale) + _position;
+    newTri.b = (m_faces[fi].b.position * _scale) + _position;
+    newTri.c = (m_faces[fi].c.position * _scale) + _position;
     
     newTri.uvA = m_faces[fi].a.texcoord;
     newTri.uvB = m_faces[fi].b.texcoord;

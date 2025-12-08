@@ -30,17 +30,6 @@ int main(int argc, char* argv[])
 
 	Model l_curuthersModel("./resources/objects/curuthers.obj");
 
-	Light l_light;
-	l_light.position = glm::vec3(0.0f, 0.0f, 3.0f);
-	l_light.colour = glm::vec3(1.0f, 1.0f, 1.0f);
-	
-	l_raytracer.AddLight(l_light);
-
-	printf("Creating vectors\n");
-	std::vector<Triangle> l_tris = l_curuthersModel.GetTriangles(glm::vec3(0.0f));
-	std::vector<Texture> l_textures;
-	std::vector<Material> l_materials;
-
 	Texture l_modelTexture = Texture("./resources/textures/Whiskers_diffuse.png");
 	
 	Material l_material;
@@ -48,6 +37,24 @@ int main(int argc, char* argv[])
 	l_material.metallic = 1.0f;
 	l_material.roughness = 0.0f;
 	l_material.ambientOcclusion = 1.0f;
+
+	Model l_cubeModel("./resources/objects/cube.obj");
+
+	Light l_light;
+	l_light.position = glm::vec3(0.0f, 0.0f, 3.0f);
+	l_light.colour = glm::vec3(1.0f, 1.0f, 1.0f);
+	l_light.intensity = 1.0f;
+	l_light.radius = 2.0f;
+	
+	l_raytracer.AddLight(l_light);
+
+	printf("Creating vectors\n");
+	std::vector<Triangle> l_tris = l_curuthersModel.GetTriangles(glm::vec3(0.0f));
+	std::vector<Triangle> l_floorTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, -1.7f, 0.0f),
+																 glm::vec3(10.0f, 0.1f, 10.0f));
+	l_tris.insert(l_tris.end(), l_floorTris.begin(), l_floorTris.end());
+	std::vector<Texture> l_textures;
+	std::vector<Material> l_materials;
 
 	for(int i = 0; i < l_tris.size(); i++)
 	{
@@ -123,7 +130,8 @@ int main(int argc, char* argv[])
 
 		l_rtCam->Update(l_inputMap);
 
-		l_raytracer.Trace();
+		float l_deltaTime = (float)(SDL_GetPerformanceCounter() * SDL_GetPerformanceFrequency());
+		l_raytracer.Trace(l_deltaTime);
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame();
@@ -138,6 +146,10 @@ int main(int argc, char* argv[])
 		glm::vec3 lightCol = l_light0->colour;
 		ImGui::ColorEdit3("Light Colour", &(lightCol[0]));
 		l_light0->colour = lightCol;
+
+		float inten = l_light0->intensity;
+		ImGui::SliderFloat("Light Intensity", &(inten), 0.0f, 20.0f);
+		l_light0->intensity = inten;
 
 		bool l_shadow = l_raytracer.Shadows();
 		ImGui::Checkbox("Shadows", &l_shadow);

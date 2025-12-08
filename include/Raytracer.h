@@ -43,11 +43,13 @@ class Raytracer : public GCP_Framework
     bool m_shadows;
     bool m_shading;
 
+    int m_frameCount;
+
     public:
     Raytracer(glm::ivec2 _screenSize);
     ~Raytracer();
 
-    void Trace();
+    void Trace(float _time);
 
     void SetTris(std::vector<Triangle>* _tris);
     void SetMaterials(std::vector<Material>* _mat);

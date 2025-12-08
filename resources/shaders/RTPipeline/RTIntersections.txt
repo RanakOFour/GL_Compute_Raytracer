@@ -8,7 +8,8 @@ layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
 layout(rgba32f, binding = 3) uniform image2D texMatInfo;
-layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
+
+layout(r32f, binding = 4) uniform image2D shadowBuffer;
 
 struct Triangle
 {
@@ -60,14 +61,7 @@ struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
 uniform Camera u_camera;
 
 #define MAX_LIGHTS 10
-struct Light
-{
-    vec3 position;
-    vec3 colour;
-    float intensity;
-    float radius;
-    bool twoSided;
-};
+struct Light{ vec3 color; vec3 position; };
 uniform Light u_lights[MAX_LIGHTS];
 uniform int u_numLights;
 
@@ -114,7 +108,7 @@ vec2 CalculateTexUVs(RaycastResult _result, Triangle _tri)
     return interpolatedUV;
 }
 
-RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
+RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
 {
     RaycastResult result;
     result.hit = false;
@@ -220,7 +214,7 @@ RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
             {
                 for(int i = 0; i < l_node.triangleCount; i++)
                 {
-                    RaycastResult newResult = TriangleIntersect(_ray, sceneTris[bvhTriIdxs[l_node.leftFirst + i]], bvhTriIdxs[l_node.leftFirst + i]);
+                    RaycastResult newResult = triangleIntersect(_ray, sceneTris[bvhTriIdxs[l_node.leftFirst + i]], bvhTriIdxs[l_node.leftFirst + i]);
                     if(newResult.hit && newResult.distance < _result.distance)
                     {
                         _result = newResult;
@@ -291,7 +285,7 @@ void main()
         imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(200.0f - (l_closestHit.distance * 20)), 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(normalize(l_closestHit.position), 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texUVs, 0.0f, 1.0f));
-        // imageStore(o_framebufferTex, l_pixelCoords, vec4(u_lights[0].colour, 1.0f));
+        // imageStore(o_framebufferTex, l_pixelCoords, vec4(u_lights[0].color, 1.0f));
     }
     else
     {

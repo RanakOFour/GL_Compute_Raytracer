@@ -55,7 +55,7 @@ layout(std430, binding = 7) readonly buffer b_bvhTriangleIndex
     int bvhTriIdxs[];
 };
 
-struct Light { vec3 position; vec3 colour; float intensity; };
+struct Light { vec3 position; vec3 color; };
 #define MAX_LIGHTS 10
 uniform Light u_lights[MAX_LIGHTS];
 uniform int u_numLights;
@@ -70,7 +70,7 @@ struct RaycastResult {
     int triangleIndex;
 };
 
-RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
+RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
 {
     RaycastResult result;
     result.hit = false;
@@ -191,7 +191,7 @@ bool isInShadow(vec3 _lightPos, vec3 _position, vec3 _normal, int _idx)
                         continue;
                     }
 
-                    RaycastResult l_shadowHit = TriangleIntersect(l_shadowRay, sceneTris[bvhTriIdxs[l_node.leftFirst + i]], bvhTriIdxs[l_node.leftFirst + i]);
+                    RaycastResult l_shadowHit = triangleIntersect(l_shadowRay, sceneTris[bvhTriIdxs[l_node.leftFirst + i]], bvhTriIdxs[l_node.leftFirst + i]);
                     
                     // More than a minimum value to ignore close sceneTris
                     if(l_shadowHit.hit && l_shadowHit.distance < l_lightDistance && l_shadowHit.distance > 0.01f)
