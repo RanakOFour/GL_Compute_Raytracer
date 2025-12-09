@@ -67,7 +67,6 @@ struct Light
     vec3 color;
     float intensity;
     float radius;
-    bool twoSided;
 };
 
 uniform Light u_lights[MAX_LIGHTS];
@@ -84,6 +83,35 @@ struct RaycastResult {
     vec3 normal;
     int triangleIndex;
 };
+
+const float PI = 3.14159265359;
+
+// A "random" function I found in a stack overflow comment section
+// Basically, the pattern between sequential values is too much to make
+// to a person, so it may aswell be random
+uint pcg_hash(uint seed)
+{
+  uint state = seed * 747796405u + 2891336453u;
+  uint word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
+  return (word >> 22u) ^ word;
+}
+
+// Used to advance the PCG state.
+uint rand_pcg(inout uint rng_state)
+{
+  uint state = rng_state;
+  rng_state = rng_state * 747796405u + 2891336453u;
+  uint word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
+  return (word >> 22u) ^ word;
+}
+
+// Advances the prng state and returns the corresponding random float.
+float rand(uint state)
+{
+  uint x = rand_pcg(state);
+  state = x;
+  return float(x)*uintBitsToFloat(0x2f800000u);
+}
 
 // Calculate barycentric coordinates of _result.position
 // Converts point on triangle to l_pixelCoords coordinate for texture)

@@ -1,152 +1,337 @@
 #version 430 core
 
 layout(local_size_x = 8, local_size_y = 4) in;
-
 layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 
 layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
-layout(rgba32f, binding = 3) uniform image2D texMatInfo;
+
 layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
 
-struct Material
+
+struct Triangle
 {
-    vec3 albedo;
-    float metallic;
-    float roughness;
-    float ambientOcclusion;
+    // Vertex positions
+    vec3 a;
+    vec3 b;
+    vec3 c;
+    vec3 normal;
+
+    // UV Coordinates for each vertex
+    vec2 uvA;
+    vec2 uvB;
+    vec2 uvC;
+
+    int textureId;
+    int materialId;
 };
 
-layout(std430, binding = 8) readonly buffer b_Materials
+layout(std430, binding = 5) readonly buffer b_trianglesSSBO
 {
-    Material materials[];
+    Triangle sceneTris[];
 };
 
-#define MAX_TEXTURES 10
-layout(binding = 9) uniform sampler2D u_materialTextures[MAX_TEXTURES];
 
-struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
-uniform Camera u_camera;
+struct Node
+{
+    // Laid out like this for bit packing
+    vec3 minBound;
+
+    // Holds index of left node (if not leaf node) or first triangle (if leaf node)
+    int leftFirst;
+    vec3 maxBound;
+
+    // Triangles in node (0 if not leaf node)
+    int triangleCount;
+};
+
+layout(std430, binding = 6) readonly buffer b_bvhNodes
+{
+    Node bvhNodes[];
+};
+
+// Maps bvhNode.leftFirst indexes to indexes in sceneTris
+layout(std430, binding = 7) readonly buffer b_bvhTriangleId
+{
+    int bvhTriIdxs[];
+};
+
+#define MAX_LIGHTS 10
 struct Light
 {
     vec3 points[4];
     vec3 colour;
     float intensity;
     float radius;
-    bool twoSided;
 };
-#define MAX_LIGHTS 10
+
 uniform Light u_lights[MAX_LIGHTS];
-uniform int u_numLights;
+uniform float u_lightCount;
+
+uniform int u_sampleCount;
+
+uniform float u_time;
+
+struct Ray  { vec3 origin; vec3 direction; };
+
+struct RaycastResult {
+    bool hit;
+    float distance;
+    vec3 position;
+    vec3 normal;
+    int triangleId;
+};
 
 const float PI = 3.14159265359;
-// ----------------------------------------------------------------------------
-float DistributionGGX(vec3 N, vec3 H, float roughness)
+
+// A "random" function I found in a stack overflow comment section
+// Basically, the pattern between sequential values is too much to make
+// to a person, so it may aswell be random
+uint pcg_hash(uint seed)
 {
-    float a = roughness*roughness;
-    float a2 = a*a;
-    float NdotH = max(dot(N, H), 0.0);
-    float NdotH2 = NdotH*NdotH;
-
-    float nom   = a2;
-    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
-    denom = PI * denom * denom;
-
-    return nom / denom;
+  uint state = seed * 747796405u + 2891336453u;
+  uint word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
+  return (word >> 22u) ^ word;
 }
-// ----------------------------------------------------------------------------
-float GeometrySchlickGGX(float NdotV, float roughness)
+
+// Used to advance the PCG state.
+uint rand_pcg(inout uint rng_state)
 {
-    float r = (roughness + 1.0);
-    float k = (r*r) / 8.0;
-
-    float nom   = NdotV;
-    float denom = NdotV * (1.0 - k) + k;
-
-    return nom / denom;
+  uint state = rng_state;
+  rng_state = rng_state * 747796405u + 2891336453u;
+  uint word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
+  return (word >> 22u) ^ word;
 }
-// ----------------------------------------------------------------------------
-float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
-{
-    float NdotV = max(dot(N, V), 0.0);
-    float NdotL = max(dot(N, L), 0.0);
-    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
-    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
 
-    return ggx1 * ggx2;
+// Advances the prng state and returns the corresponding random float.
+float rand(uint state)
+{
+  uint x = rand_pcg(state);
+  state = x;
+  return float(x)*uintBitsToFloat(0x2f800000u);
 }
-// ----------------------------------------------------------------------------
-vec3 fresnelSchlick(float cosTheta, vec3 F0)
+
+RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
 {
-    return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
-}
-// ----------------------------------------------------------------------------
+    RaycastResult result;
+    result.hit = false;
+    result.triangleId = _index;
 
-void main()
-{
-    ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+    float l_ep = 0.0001;
 
-    vec3 l_position = imageLoad(hitLocations, l_pixelCoords).xyz;
-    float l_distance = imageLoad(hitLocations, l_pixelCoords).w;
-    vec2 l_texUVs = imageLoad(texMatInfo, l_pixelCoords).rg;
+    vec3 l_edgeAB = _tri.a;
+    vec3 l_edgeAC = _tri.b; 
+    vec3 l_edgeAP = _tri.c;
 
-    if(l_distance < 0.01f)
+    vec3 edge1 = l_edgeAC - l_edgeAB;
+    vec3 edge2 = l_edgeAP - l_edgeAB;
+    vec3 ray_cross_edge2 = cross(_ray.direction, edge2);
+    float det = dot(edge1, ray_cross_edge2);
+
+    if(det > -l_ep && det < l_ep)
     {
-        imageStore(o_framebufferTex, l_pixelCoords, vec4(0.0, 0.1, 0.3, 1.0f));
-        return;
+        return result;
     }
 
-    int l_texId = int(imageLoad(texMatInfo, l_pixelCoords).b);
-    int l_matId = int(imageLoad(texMatInfo, l_pixelCoords).a);
+    float inv_det = 1.0 / det;
+    vec3 s = _ray.origin - l_edgeAB;
+    float u = inv_det * dot(s, ray_cross_edge2);
+
+    if(u < 0.0 || u > 1.0)
+    {
+        return result;
+    }
+
+    vec3 s_cross_e1 = cross(s, edge1);
+    float v = inv_det * dot(_ray.direction, s_cross_e1);
+
+    if(v < 0.0 || u + v > 1.0)
+    {
+        return result;
+    }
+
+    float t = inv_det * dot(edge2, s_cross_e1);
+
+    if(t > l_ep)
+    {
+        result.hit = true;
+        result.position = _ray.origin + _ray.direction * t;
+        result.distance = t;
+        result.normal = _tri.normal;
+        return result;
+    }
+
+    return result;
+}
+
+bool IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
+{
+    float tmin = 0.0f;
+    float tmax = 10000000.0f;
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (abs(_ray.direction[i]) < 0.0001f)
+        {
+            if (_ray.origin[i] < _minBound[i] || _ray.origin[i] > _maxBound[i])
+                return false;
+        }
+        else
+        {
+            float ood = 1.0f / _ray.direction[i];
+            float t1 = (_minBound[i] - _ray.origin[i]) * ood;
+            float t2 = (_maxBound[i] - _ray.origin[i]) * ood;
+
+            if (t1 > t2)
+            {
+                float temp = t1;
+                t1 = t2;
+                t2 = temp;
+            }
+
+            tmin = max(tmin, t1);
+            tmax = min(tmax, t2);
+
+            if (tmin > tmax)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+// Shadow ray tracing (simplified version of TraverseBVH)
+bool IsInShadow(vec3 _lightPos, vec3 _position, vec3 _normal, int _idx)
+{
+    Ray l_shadowRay;
+    l_shadowRay.origin = _position + _normal * 0.001;
+    l_shadowRay.direction = normalize(_lightPos - _position);
     
-    vec3 l_objectcolour = texture(u_materialTextures[l_texId], l_texUVs).rgb;
-
-    Material l_mat = materials[l_matId];
-
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_mat.metallic, l_mat.roughness, l_mat.ambientOcclusion, 1.0f));
-    //return;
-
-    // Flip normal if it's facing away from the ray (backface)
-    vec3 l_normal = normalize(imageLoad(triangleNormals, l_pixelCoords).rgb);
-    vec3 V = normalize(u_camera.position - l_position);
-
-    vec3 F0 = mix(vec3(0.04), l_mat.albedo, l_mat.metallic);
-    vec3 Lo = vec3(0.0f);
-    for(int i = 0; i < u_numLights; i++)
-    {   
-        vec3 l_lightDir = normalize(u_lights[i].points[0] - l_position);
-        vec3 l_halfLength = normalize(V + l_lightDir);
-        float l_distance = length(u_lights[i].points[0] - l_position);
-        float l_attenuation = 1.0 / (l_distance * l_distance);
-        vec3 l_radiance = u_lights[i].colour  * l_attenuation;
-
-        // Cook-Torrance BRDF
-        float NDF = DistributionGGX(l_normal, l_halfLength, l_mat.roughness);
-        float G = GeometrySmith(l_normal, V, l_lightDir, l_mat.roughness);
-        vec3 F = fresnelSchlick(clamp(dot(l_halfLength, V), 0.0, 1.0), F0);
-
-        vec3 l_numerator = NDF * G * F;
-
-        float NdotL = max(dot(l_normal, l_lightDir), 0.0);
-        float l_denom = 4.0 * max(dot(l_normal, V), 0.0) * NdotL + 0.001;
-        vec3 l_specular = l_numerator / l_denom;
-
-        vec3 kS = F;
-
-        vec3 kD = vec3(1.0) - kS;
-
-        kD *= 1.0 - l_mat.metallic;
-
-        Lo += ((kD * l_mat.albedo * l_objectcolour) / PI + l_specular) * l_radiance * NdotL;
-    };
+    float l_lightDistance = length(_lightPos - _position);
     
-    // Add ambient lighting (always present, even in shadows)
-    vec3 l_ambient = vec3(0.03) * l_objectcolour * l_mat.albedo * l_mat.ambientOcclusion;
-    
-    vec3 colour = l_ambient + Lo;
+    int l_indexStack[64];
+    int l_top = 0;
+    l_indexStack[l_top] = 0;
 
-    // Gamma correction
-    colour = pow(colour, vec3(1.0/2.2)) * imageLoad(shadowBuffer, l_pixelCoords).rgb;
+    Node l_node = bvhNodes[l_indexStack[l_top]];
+    l_top++;
+
+    do
+    {
+        if(IntersectAABB(l_shadowRay, l_node.minBound, l_node.maxBound))
+        {
+            if(l_node.triangleCount > 0)
+            {
+                for(int i = 0; i < l_node.triangleCount; i++)
+                {
+                    // Skip the same triangle
+                    if(bvhTriIdxs[l_node.leftFirst + i] == _idx)
+                    {
+                        continue;
+                    }
+
+                    RaycastResult l_shadowHit = TriangleIntersect(l_shadowRay, sceneTris[bvhTriIdxs[l_node.leftFirst + i]], bvhTriIdxs[l_node.leftFirst + i]);
+                    
+                    // More than a minimum value to ignore close sceneTris
+                    if(l_shadowHit.hit && l_shadowHit.distance < l_lightDistance && l_shadowHit.distance > 0.01f)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                l_indexStack[l_top] = l_node.leftFirst;
+                l_top++;
+                l_indexStack[l_top] = l_node.leftFirst + 1;
+                l_top++;
+            }
+        }
+
+        l_top--;
+        l_node = bvhNodes[l_indexStack[l_top]];
+    } while(l_top > -1);
+
+    return false;
+}
+
+void main() 
+{
+    ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
     
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(colour, 1.0f));
+    vec3 l_position = imageLoad(hitLocations, l_pixelCoords).xyz;
+    vec4 l_normalBVal = imageLoad(triangleNormals, l_pixelCoords);
+    vec3 l_normal = l_normalBVal.xyz;
+    int l_triId = int(l_normalBVal.w);
+    
+    if (length(l_position) < 0.001) {
+        imageStore(shadowBuffer, l_pixelCoords, vec4(1.0)); // No shadow for background
+        return;
+    }
+    
+    vec3 l_totalLight = vec3(1.0f);
+
+    float l_cosTheta = 0.0f;
+    
+    // Check shadows for each light
+    for(int i = 0; i < u_lightCount; i++)
+    {
+        vec3 l_incomingLight = vec3(0.0f);
+        for(int j = 0; j < u_sampleCount; j++)
+        {
+        // Lots of stuff going on, just get a random normalized position
+            vec3 l_randomPoint = normalize(
+                                           vec3(
+                                                rand(
+                                                     uint(
+                                                          dot(gl_GlobalInvocationID.xy + u_sampleCount, gl_GlobalInvocationID.xy * u_time)
+                                                          )
+                                                    )
+                                               )
+                                          );
+
+            // Translate point to surface of sphere
+            l_randomPoint *= u_lights[i].radius;
+            l_randomPoint += u_lights[i].points[0];
+            
+            vec3 lightDir = normalize(l_randomPoint - l_position);
+            float lightDistance = length(l_randomPoint - l_position);
+            l_cosTheta = dot(lightDir, l_normal);
+
+            // https://www.physicsforums.com/threads/luminance-of-a-lambertian-sphere-formula.449703/
+            // Scales light intensity with inverse square
+            vec3 l_lightIntensity = l_cosTheta * 
+                                    u_lights[i].colour * 
+                                    u_lights[i].intensity * 
+                                    u_lights[i].radius * u_lights[i].radius *
+                                    PI * 4 / (lightDistance * lightDistance);
+
+
+            // Point is behind the light source or occluded
+            if (l_cosTheta <= 0 || IsInShadow(l_randomPoint, l_position, l_normal, l_triId))
+            {
+                continue;
+            }
+            
+            l_incomingLight += l_lightIntensity;
+        }
+
+        l_incomingLight /= u_sampleCount;
+        l_totalLight += l_incomingLight;
+    }
+    
+    imageStore(shadowBuffer, l_pixelCoords, vec4(1.0f));
+
+    if(l_cosTheta <= 0)
+    {
+        imageStore(o_framebufferTex, l_pixelCoords, vec4(0.0f, 0.0f, 1.0f, 1.0f));
+    }
+    else
+    {
+        imageStore(o_framebufferTex, l_pixelCoords, vec4(0.0f, 1.0f, 0.0f, 1.0f));
+    }
+
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_totalLight, 1.0f));
 }

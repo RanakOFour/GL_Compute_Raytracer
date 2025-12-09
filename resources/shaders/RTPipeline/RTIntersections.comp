@@ -269,11 +269,6 @@ void main()
     {
         Triangle l_tri = sceneTris[l_closestHit.triangleId];
 
-        if(dot(l_closestHit.normal, l_ray.direction) > 0.0)
-        {
-            l_closestHit.normal = -l_closestHit.normal;
-        }
-
         imageStore(hitLocations, l_pixelCoords, vec4(l_closestHit.position, l_closestHit.distance));
         imageStore(triangleNormals, l_pixelCoords, vec4(l_closestHit.normal, l_closestHit.triangleId));
         
@@ -283,7 +278,7 @@ void main()
         // DEBUG: output greyscale to framebuffer
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(200.0f - (l_closestHit.distance * 20)), 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(normalize(l_closestHit.position), 1.0f));
-        //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texUVs, 0.0f, 1.0f));
+        // imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texUVs, 0.0f, 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f, 1.0f, 0.0f), 1.0f));
     }
     else
@@ -297,6 +292,6 @@ void main()
     }
 
     //l_closestHit.error = vec3(sceneTris[0].a.x, sceneTris[0].a.y, -sceneTris[0].a.z);
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.normal, 1.0f));
     imageStore(shadowBuffer, l_pixelCoords, vec4(1.0f));
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.error.x, 0.0f, 0.0f, 1.0f));
 }

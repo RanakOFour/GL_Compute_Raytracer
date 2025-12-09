@@ -89,13 +89,14 @@ void Raytracer::Trace(float _deltaTime)
         m_ShadowComp.use();
 
         // Cap light count at 10
-        m_ShadowComp.SetUniform("u_lightCount", (int)l_lightCount);
-
+        m_ShadowComp.SetUniform("u_lightCount", (float)l_lightCount);
+        m_ShadowComp.SetUniform("u_sampleCount", 1);
+        m_ShadowComp.SetUniform("u_time", _deltaTime);
         for(int i = 0; i < l_lightCount; i++)
         {
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].points[0]", m_lights[i].position);
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
+            m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
+            m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
         }
 
@@ -116,7 +117,7 @@ void Raytracer::Trace(float _deltaTime)
             m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].points[0]", m_lights[i].position);
             m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
             m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
+            //m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
         }
 
         for(int i = 0; i < m_textures->size(); i++)

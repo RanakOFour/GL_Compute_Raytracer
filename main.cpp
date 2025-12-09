@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	
 	Material l_material;
 	l_material.albedo = glm::vec3(1.0f);
-	l_material.metallic = 1.0f;
+	l_material.metallic = 0.0f;
 	l_material.roughness = 0.0f;
 	l_material.ambientOcclusion = 1.0f;
 
@@ -42,8 +42,8 @@ int main(int argc, char* argv[])
 
 	Light l_light;
 	l_light.position = glm::vec3(0.0f, 0.0f, 3.0f);
-	l_light.colour = glm::vec3(1.0f, 1.0f, 1.0f);
-	l_light.intensity = 1.0f;
+	l_light.colour = glm::vec3(1.0f);
+	l_light.intensity = 20.0f;
 	l_light.radius = 2.0f;
 	
 	l_raytracer.AddLight(l_light);
