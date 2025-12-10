@@ -1,3 +1,5 @@
+//https://blog.imaginationtech.com/implementing-fast-ray-traced-soft-shadows-in-a-game-engine/
+
 #version 430 core
 
 layout(local_size_x = 8, local_size_y = 4) in;
@@ -72,7 +74,7 @@ uniform int u_samplesPerFrame;
 
 uniform int u_frameCount;
 
-uniform float u_temporalDecay;
+uniform uvec4 u_initialRandom;
 
 struct Ray  { vec3 origin; vec3 direction; };
 
@@ -85,69 +87,6 @@ struct RaycastResult {
 };
 
 const float PI = 3.14159265359;
-
-// A "random" function I found in a stack overflow comment section
-
-// Used to advance the PCG state.
-uint Rand_pcg(inout uint state)
-{
-    state = state * 747796405u + 2891336453u;
-    uint word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
-    return (word >> 22u) ^ word;
-}
-
-float Rand01(inout uint state)
-{
-    return float(Rand_pcg(state)) / 4294967295.0;
-}
-
-void InitRNGStates(ivec2 pixel, out uvec4 states)
-{
-    uint base = uint(pixel.x) * 1973u + uint(pixel.y) * 9277u;
-    states.x = base + 1u;
-    states.y = base + 10007u;
-    states.z = base + 20011u;
-    states.w = base + 30013u;
-}
-
-uint GetRNGForSample(uvec4 states, int sampleIndex, int lightIndex)
-{
-    // Combine indices to select which RNG to use
-    int idx = (sampleIndex * 7 + lightIndex * 13) % 4;
-    
-    switch(idx) 
-    {
-        case 0: return states.x;
-        case 1: return states.y;
-        case 2: return states.z;
-        default: return states.w;
-    }
-}
-
-vec3 SamplePointOnSphere(inout uint rng_state, vec3 center, float radius)
-{
-    float u = (Rand01(rng_state) - 0.5f) * 2.0f;
-    float v = (Rand01(rng_state) - 0.5f) * 2.0f;
-
-    // Turn random numbers into cosine distribution
-    float theta = 2.0 * PI * u;
-    float phi = PI * v;
-
-    vec3 dir = normalize(vec3(
-                                cos(theta) * sin(phi),
-                                sin(theta) * sin(phi),
-                                cos(phi)
-                             ));
-    return center + dir * radius;
-}
-
-vec3 SamplePointOnPlane(inout uint rng_state, vec3 _corner, vec3 _edge1, vec3 _edge2)
-{
-    float u = Rand01(rng_state);
-    float v = Rand01(rng_state);
-
-    return _corner + u * _edge1 + v * _edge2;
-}
 
 RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
 {
@@ -301,8 +240,19 @@ void main()
     uvec4 b_rng = imageLoad(randomBuffer, l_pixelCoords);
     if(length(b_rng) == 0 || u_frameCount == 0)
     {
-        InitRNGStates(l_pixelCoords, b_rng);
+        uvec4 l_uniqueInit = uvec4(
+            gl_GlobalInvocationID.x,
+            gl_LocalInvocationID.y,
+            gl_GlobalInvocationID.y,
+            gl_LocalInvocationID.x
+        );
+
+        RandomResult l_res = Random(l_uniqueInit);
+
+        b_rng = u_initialRandom + l_res.state;
     }
+
+    RandomResult l_frameRNG = Random(b_rng);
     
     vec3 b_hitLocation = imageLoad(hitLocations, l_pixelCoords).xyz;
     float b_hitDistance = imageLoad(hitLocations, l_pixelCoords).w;
@@ -345,13 +295,13 @@ void main()
 
             if(u_lights[l_lightIdx].radius > 0.0)
             {
-                l_randomPoint = SamplePointOnSphere(b_rng.x, u_lights[l_lightIdx].points[0], u_lights[l_lightIdx].radius);
+                l_randomPoint = SamplePointOnSphere(l_frameRNG, u_lights[l_lightIdx].points[0], u_lights[l_lightIdx].radius);
             }
             else
             {
                 vec3 l_edge1 = normalize(u_lights[l_lightIdx].points[1] - u_lights[l_lightIdx].points[0]);
                 vec3 l_edge2 = normalize(u_lights[l_lightIdx].points[2] - u_lights[l_lightIdx].points[0]);
-                l_randomPoint = SamplePointOnPlane(b_rng.x, u_lights[l_lightIdx].points[0], l_edge1, l_edge2);
+                l_randomPoint = SamplePointOnPlane(l_frameRNG, u_lights[l_lightIdx].points[0], l_edge1, l_edge2);
             }
 
             if(!IsInShadow(l_randomPoint, b_hitLocation, l_hitTriangle.normal, b_triId, l_error))
@@ -374,8 +324,7 @@ void main()
 
     l_frameShadow = mix(b_previousShadow.x, l_frameShadow, alpha);
     
-    b_rng.x++;
-    imageStore(randomBuffer, l_pixelCoords, b_rng);
+    imageStore(randomBuffer, l_pixelCoords, l_frameRNG.state);
     imageStore(shadowBuffer, l_pixelCoords, vec4(l_frameShadow, l_frameShadow, l_frameShadow, float(b_totalSampleCount)));
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_frameShadow));
+    imageStore(o_framebufferTex, l_pixelCoords, l_frameRNG.state);
 }

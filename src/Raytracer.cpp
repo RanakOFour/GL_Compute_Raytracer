@@ -10,7 +10,7 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 , m_lights()
 , m_camera(_screenSize)
 , m_IntersectionComp("./resources/shaders/RTPipeline/RTIntersections.comp")
-, m_ShadowComp("./resources/shaders/RTPipeline/RTShadowsArea.comp")
+, m_ShadowComp("./resources/shaders/RTPipeline/RTShadowsFinal.comp")
 , m_ShadingComp("./resources/shaders/RTPipeline/RTShading.comp")
 , m_gBuffers{0, 0, 0, 0, 0}
 , m_triangleSSBO(-1)
@@ -57,16 +57,6 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
     glClearTexImage(m_gBuffers[4], 0, GL_RGBA, GL_UNSIGNED_INT, 0);
 
     glBindTexture(GL_TEXTURE_2D, 0);
-
-    // Initialise a random number into u_intitialState for the shadows
-    glm::uvec4 l_random = glm::uvec4(
-        (uint)rand() + 128 * rand(),
-        (uint)rand() + 128 * rand(),
-        (uint)rand() + 128 * rand(),
-        (uint)rand() + 128 * rand()  
-    );
-
-    m_ShadowComp.SetUniform("u_initialRandom", l_random);
 
     // Everything is bound here once as the bindings do not change
 }
