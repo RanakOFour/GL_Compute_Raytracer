@@ -7,6 +7,7 @@ layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
 
 layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
+layout(r32ui, binding = 5) uniform uimage2D randomBuffer;
 
 
 struct Triangle
@@ -26,7 +27,7 @@ struct Triangle
     int materialId;
 };
 
-layout(std430, binding = 5) readonly buffer b_trianglesSSBO
+layout(std430, binding = 6) readonly buffer b_trianglesSSBO
 {
     Triangle sceneTris[];
 };
@@ -44,13 +45,13 @@ struct Node
     int triangleCount;
 };
 
-layout(std430, binding = 6) readonly buffer b_bvhNodes
+layout(std430, binding = 7) readonly buffer b_bvhNodes
 {
     Node bvhNodes[];
 };
 
 // Maps bvhNode.leftFirst indexes to indexes in sceneTris
-layout(std430, binding = 7) readonly buffer b_bvhTriangleId
+layout(std430, binding = 8) readonly buffer b_bvhTriangleId
 {
     int bvhTriIdxs[];
 };
@@ -119,13 +120,14 @@ vec3 samplePointOnSphere(inout uint rng_state, vec3 center, float radius)
     float v = (rand01(rng_state) - 0.5f) * 2.0f;
 
     // Turn random numbers into cosine distribution
-    float radial = length(u);
-    float theta = 2.0 * PI * v;
+    float theta = 2.0 * PI * u;
+    float phi = PI * v;
 
-    float x = radial * cos(theta);
-    float y = radial * sin(theta);
-
-    vec3 dir = normalize(vec3(x, y, length(1.0f - u)));
+    vec3 dir = normalize(vec3(
+                                cos(theta) * sin(phi),
+                                sin(theta) * sin(phi),
+                                cos(phi)
+                             ));
     return center + dir * radius;
 }
 
@@ -296,6 +298,10 @@ void main()
         imageStore(shadowBuffer, l_pixelCoords, vec4(1.0)); // No shadow for background
         return;
     }
+
+    
+    uint l_rng = imageLoad(randomBuffer, l_pixelCoords).r;
+    vec3 l_lastFrameShadow = imageLoad(shadowBuffer, l_pixelCoords).xyz;
     
     vec3 l_totalLight = vec3(0.0);
 
@@ -303,10 +309,6 @@ void main()
     for(int i = 0; i < u_lightCount; i++)
     {
         vec3 l_incomingLight = vec3(0.0f);
-
-        uint seed = pcg_hash(uint(l_pixelCoords.x) + (uint(l_pixelCoords.y) << 16) + uint(i * 73856093u));
-        seed ^= uint(u_time * 1000.0);
-        uint rng = seed;
 
         for(int j = 0; j < u_sampleCount; j++)
         {
@@ -316,14 +318,15 @@ void main()
             float l_area;
             if(u_lights[i].radius > 0.0f)
             {
-                l_randomPoint = samplePointOnSphere(rng, u_lights[i].points[0], u_lights[i].radius);
+                l_randomPoint = samplePointOnSphere(l_rng, u_lights[i].points[0], u_lights[i].radius);
+                //l_randomPoint = u_lights[i].points[0];
                 l_area =  4.0 * PI * u_lights[i].radius * u_lights[i].radius;
             }
             else
             {
                 vec3 l_edge1 = u_lights[i].points[1] - u_lights[i].points[0];
                 vec3 l_edge2 = u_lights[i].points[2] - u_lights[i].points[0];
-                l_randomPoint = samplePointOnPlane(rng, 
+                l_randomPoint = samplePointOnPlane(l_rng,
                                                    u_lights[i].points[0],
                                                    normalize(l_edge1),
                                                    normalize(l_edge2));
@@ -339,17 +342,20 @@ void main()
             }
 
             // Simple geometric falloff + scaling. Keep existing intensity/colour conventions.
-            // Note: pdf for uniform sphere surface is 1/(4*pi*r^2) so multiplying by area (4*pi*r^2)
-            // cancels the pdf when sampling uniformly on the sphere surface (hence the factor below).
             vec3 l_lightIntensity = u_lights[i].colour * u_lights[i].intensity * l_area / (lightDistance * lightDistance);
 
             l_incomingLight += l_lightIntensity;
         }
 
         l_incomingLight /= float(u_sampleCount);
+        l_error /= float(u_sampleCount);
         l_totalLight += l_incomingLight;
     }
+
+    // Accumulate results over time
+    l_totalLight = u_temporalDecay * l_lastFrameShadow + (1.0f - u_temporalDecay) * l_totalLight;
     
+    imageStore(randomBuffer, l_pixelCoords, uvec4(l_rng));
     imageStore(shadowBuffer, l_pixelCoords, vec4(l_totalLight, 1.0f));
     imageStore(o_framebufferTex, l_pixelCoords, vec4(l_error, 1.0f));
 }

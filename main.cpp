@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
 	l_light.points[3] = glm::vec3(1.5f, 3.0f, 1.5f);
 	l_light.colour = glm::vec3(1.0f);
 	l_light.intensity = 1.0f;
-	l_light.radius = 0.0f;
+	l_light.radius = 2.0f;
 	
 	l_raytracer.AddLight(l_light);
 
@@ -142,12 +142,9 @@ int main(int argc, char* argv[])
 
 		ImGui::Begin("Settings");
 
-		for(int i = 0; i < 4; i++)
-		{
-			glm::vec3 lightPos = l_light0->points[i];
-			ImGui::DragFloat3("Light Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
-			l_light0->points[i] = lightPos;
-		}
+		glm::vec3 lightPos = l_light0->points[0];
+		ImGui::DragFloat3("Light Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
+		l_light0->points[0] = lightPos;
 
 		glm::vec3 lightCol = l_light0->colour;
 		ImGui::ColorEdit3("Light Colour", &(lightCol[0]));

@@ -27,7 +27,7 @@ struct Triangle
     int materialId;
 };
 
-layout(std430, binding = 5) readonly buffer b_trianglesSSBO
+layout(std430, binding = 6) readonly buffer b_trianglesSSBO
 {
     Triangle sceneTris[];
 };
@@ -45,13 +45,13 @@ struct Node
     int triangleCount;
 };
 
-layout(std430, binding = 6) readonly buffer b_bvhNodes
+layout(std430, binding = 7) readonly buffer b_bvhNodes
 {
     Node bvhNodes[];
 };
 
 // Maps bvhNode.leftFirst indexes to indexes in sceneTris
-layout(std430, binding = 7) readonly buffer b_bvhTriangleId
+layout(std430, binding = 8) readonly buffer b_bvhTriangleId
 {
     int bvhTriIdxs[];
 };
