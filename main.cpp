@@ -99,6 +99,8 @@ int main(int argc, char* argv[])
 	bool l_keepGoing = true;
 	bool l_mouseMovement = false;
 
+	float l_lastFrame = 0.0f;
+
 	SDL_Event l_event;
 	while(l_keepGoing)
 	{
@@ -146,11 +148,21 @@ int main(int argc, char* argv[])
 			l_inputMap.deltaMouseX = 0.0f;
 			l_inputMap.deltaMouseY = 0.0f;
 		}
+		
+		float l_currentTime = (float)(SDL_GetPerformanceCounter() * SDL_GetPerformanceFrequency());
 
-		l_rtCam->Update(l_inputMap);
 
-		float l_deltaTime = (float)(SDL_GetPerformanceCounter() * SDL_GetPerformanceFrequency());
+		float l_deltaTime = l_currentTime - l_lastFrame;
+
+		
+		printf("DeltaTime: %f\n", l_deltaTime);
+
+		l_rtCam->Update(l_inputMap, l_deltaTime);
+
 		l_raytracer.Trace(l_deltaTime);
+
+		
+		l_lastFrame = l_currentTime;
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame();

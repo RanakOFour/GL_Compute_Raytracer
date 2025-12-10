@@ -64,17 +64,6 @@ uniform int u_lightCount;
 uniform int u_samplesPerFrame;
 uniform int u_frameCount;
 
-struct Ray { vec3 origin; vec3 direction; };
-
-struct RaycastResult
-{
-    bool hit;
-    float distance;
-    vec3 position;
-    vec3 normal;
-    int triangleId;
-};
-
 const float PI = 3.14159265359;
 
 
@@ -138,112 +127,119 @@ float ChebyshevUpperBound(float _moment1, float _moment2, float _t)
     return clamp(p_max, 0.0, 1.0);
 }
 
-// Single ray trace for depth value
-float TraceShadowRay(vec3 origin, vec3 direction, float maxDistance)
+bool IntersectAABB(vec3 _origin, vec3 _direction, vec3 _minBound, vec3 _maxBound)
 {
-    Ray ray;
-    ray.origin = origin;
-    ray.direction = direction;
-    
-    float closestHit = maxDistance;
-    
-    int stack[64];
-    int stackPtr = 0;
-    stack[stackPtr++] = 0;
-    
-    while (stackPtr > 0)
+    float tmin = 0.0f;
+    float tmax = 10000000.0f;
+
+    for (int i = 0; i < 3; i++)
     {
-        int nodeIdx = stack[--stackPtr];
-        Node node = bvhNodes[nodeIdx];
-        
-        // AABB intersection
-        float tmin = 0.0;
-        float tmax = maxDistance;
-        
-        for (int i = 0; i < 3; i++) 
+        if (abs(_direction[i]) < 0.0001f)
         {
-            if (abs(direction[i]) < 0.0001) 
+            if (_origin[i] < _minBound[i] || _origin[i] > _maxBound[i])
+                return false;
+        }
+        else
+        {
+            float ood = 1.0f / _direction[i];
+            float t1 = (_minBound[i] - _origin[i]) * ood;
+            float t2 = (_maxBound[i] - _origin[i]) * ood;
+
+            if (t1 > t2)
             {
-                if (origin[i] < node.minBound[i] || origin[i] > node.maxBound[i]) 
-                {
-                    tmin = tmax + 1.0;
-                    break;
-                }
-            } 
-            else 
+                float temp = t1;
+                t1 = t2;
+                t2 = temp;
+            }
+
+            tmin = max(tmin, t1);
+            tmax = min(tmax, t2);
+
+            if (tmin > tmax)
             {
-                float invDir = 1.0 / direction[i];
-                float t1 = (node.minBound[i] - origin[i]) * invDir;
-                float t2 = (node.maxBound[i] - origin[i]) * invDir;
-                
-                if (t1 > t2) 
-                {
-                    float temp = t1;
-                    t1 = t2;
-                    t2 = temp;
-                }
-                
-                tmin = max(tmin, t1);
-                tmax = min(tmax, t2);
-                
-                if (tmin > tmax) 
-                {
-                    tmin = tmax + 1.0;
-                    break;
-                }
+                return false;
             }
         }
+    }
+
+    return true;
+}
+
+float TriangleIntersect(in Triangle _tri, vec3 _origin, vec3 _direction)
+{
+    // Triangle intersect thrown in here for 
+    vec3 l_edge1 = _tri.b - _tri.a;
+    vec3 l_edge2 = _tri.c - _tri.a;
+    vec3 h = cross(_direction, l_edge2);
+    float det = dot(l_edge1, h);
+    
+    if (abs(det) < 0.000001)
+    {
+        return 1e30f;
+    }
         
-        if (tmin <= tmax) 
+    float invDet = 1.0 / det;
+    vec3 s = _origin - _tri.a;
+    float u = invDet * dot(s, h);
+    
+    if (u < 0.0 || u > 1.0)
+    {
+        return 1e30f;
+    }
+        
+    vec3 q = cross(s, l_edge1);
+    float v = invDet * dot(_direction, q);
+    
+    if (v < 0.0 || u + v > 1.0)
+    {
+        return 1e30f;
+    }
+        
+    return invDet * dot(l_edge2, q);
+}
+
+// BVH traversal for only depth
+float TraceShadowRay(vec3 _origin, vec3 _direction, float _maxDistance)
+{
+    float l_closestHit = _maxDistance;
+    
+    int l_stack[64];
+    int l_stackPtr = 0;
+    l_stack[l_stackPtr++] = 0;
+    
+    while (l_stackPtr > 0)
+    {
+        int l_nodeIdx = l_stack[--l_stackPtr];
+        Node l_node = bvhNodes[l_nodeIdx];
+        
+        if (IntersectAABB(_origin, _direction, l_node.minBound, l_node.maxBound)) 
         {
-            if (node.triangleCount > 0) 
+            if (l_node.triangleCount > 0) 
             {
                 // Leaf node - check triangles
-                for (int i = 0; i < node.triangleCount; i++) 
+                for (int i = 0; i < l_node.triangleCount; i++) 
                 {
-                    int triIdx = bvhTriIdxs[node.leftFirst + i];
-                    Triangle tri = sceneTris[triIdx];
+                    int triIdx = bvhTriIdxs[l_node.leftFirst + i];
+                    Triangle l_tri = sceneTris[triIdx];
                     
-                    // Triangle intersect thrown in here for 
-                    vec3 edge1 = tri.b - tri.a;
-                    vec3 edge2 = tri.c - tri.a;
-                    vec3 h = cross(direction, edge2);
-                    float det = dot(edge1, h);
-                    
-                    if (abs(det) < 0.000001)
-                        continue;
-                        
-                    float invDet = 1.0 / det;
-                    vec3 s = origin - tri.a;
-                    float u = invDet * dot(s, h);
-                    
-                    if (u < 0.0 || u > 1.0)
-                        continue;
-                        
-                    vec3 q = cross(s, edge1);
-                    float v = invDet * dot(direction, q);
-                    
-                    if (v < 0.0 || u + v > 1.0)
-                        continue;
-                        
-                    float l_t = invDet * dot(edge2, q);
-                    
-                    if (l_t > 0.0001 && l_t < closestHit) 
+                    float l_distanceToTri = TriangleIntersect(l_tri, _origin, _direction);
+
+                    if(l_distanceToTri > 0.0001 && l_distanceToTri < l_closestHit)
                     {
-                        closestHit = l_t;
+                        l_closestHit = l_distanceToTri;
                     }
                 }
             } 
             else 
             {
                 // Interior node - push children
-                stack[stackPtr++] = node.leftFirst;
-                stack[stackPtr++] = node.leftFirst + 1;
+                l_stack[l_stackPtr++] = l_node.leftFirst;
+                l_stack[l_stackPtr++] = l_node.leftFirst + 1;
             }
         }
     }
     
-    return closestHit;
+    return l_closestHit;
 }
 
 // Gather neighboring depth moments for statistical estimation
@@ -330,7 +326,20 @@ void main()
     for (int i = 0; i < u_lightCount; i++) 
     {
         Light l_light = u_lights[i];
-        vec3 l_lightPos = l_light.points[0];
+        vec3 l_lightPos = vec3(0.0f);
+
+        if(l_light.radius > 0.0)
+        {
+            l_lightPos = SamplePointOnSphere(l_rngState, l_light.points[0], l_light.radius);
+        }
+        else
+        {
+            l_lightPos = SamplePointOnPlane(
+                                            l_rngState, l_light.points[0],
+                                            normalize(l_light.points[1] - l_light.points[0]),
+                                            normalize(l_light.points[2] - l_light.points[0])
+                                           );
+        }
         
         // Calculate light direction and distance
         vec3 l_lightDir = l_lightPos - l_hitLocation;
