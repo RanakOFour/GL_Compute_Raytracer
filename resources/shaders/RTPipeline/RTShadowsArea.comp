@@ -313,16 +313,21 @@ void main()
             // Lots of stuff going on, just get a random normalized position
 
             vec3 l_randomPoint = vec3(0.0f);
+            float l_area;
             if(u_lights[i].radius > 0.0f)
             {
                 l_randomPoint = samplePointOnSphere(rng, u_lights[i].points[0], u_lights[i].radius);
+                l_area =  4.0 * PI * u_lights[i].radius * u_lights[i].radius;
             }
             else
             {
+                vec3 l_edge1 = u_lights[i].points[1] - u_lights[i].points[0];
+                vec3 l_edge2 = u_lights[i].points[2] - u_lights[i].points[0];
                 l_randomPoint = samplePointOnPlane(rng, 
                                                    u_lights[i].points[0],
-                                                   normalize(u_lights[i].points[1] - u_lights[i].points[0]),
-                                                   normalize(u_lights[i].points[2] - u_lights[i].points[0]));
+                                                   normalize(l_edge1),
+                                                   normalize(l_edge2));
+                l_area = length(l_edge1) * length(l_edge2);
             }
             
             vec3 lightDir = normalize(l_randomPoint - l_hitLocation);
@@ -336,7 +341,7 @@ void main()
             // Simple geometric falloff + scaling. Keep existing intensity/colour conventions.
             // Note: pdf for uniform sphere surface is 1/(4*pi*r^2) so multiplying by area (4*pi*r^2)
             // cancels the pdf when sampling uniformly on the sphere surface (hence the factor below).
-            vec3 l_lightIntensity = u_lights[i].colour * u_lights[i].intensity * (4.0 * PI * u_lights[i].radius * u_lights[i].radius) / (lightDistance * lightDistance);
+            vec3 l_lightIntensity = u_lights[i].colour * u_lights[i].intensity * l_area / (lightDistance * lightDistance);
 
             l_incomingLight += l_lightIntensity;
         }
