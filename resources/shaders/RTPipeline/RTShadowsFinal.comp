@@ -1,3 +1,5 @@
+//https://blog.imaginationtech.com/implementing-fast-ray-traced-soft-shadows-in-a-game-engine/
+
 #version 430 core
 
 layout(local_size_x = 8, local_size_y = 4) in;
@@ -85,68 +87,6 @@ struct RaycastResult {
 };
 
 const float PI = 3.14159265359;
-
-// A "random" function I found in a stack overflow comment section
-
-// Random generator taken from https://developer.nvidia.com/gpugems/gpugems3/part-vi-gpu-computing/chapter-37-efficient-random-number-generation-and-application
-// Needs to be seede with CPU numbers and some uniqueness first, then seems to be usable
-struct RandomResult
-{
-    uvec4 state;
-    float value;
-};
-
-uint TausStep(uint z, int S1, int S2, int S3, uint M)
-{
-    uint b = (((z << S1) ^ z) >> S2);
-    return (((z & M) << S3) ^ b);    
-}
-
-uint LCGStep(uint z, uint A, uint C)
-{
-    return (A * z + C);    
-}
-
-RandomResult Random(inout uvec4 state)
-{
-    state.x = TausStep(state.x, 13, 19, 12, 4294967294);
-    state.y = TausStep(state.y, 2, 25, 4, 4294967288);
-    state.z = TausStep(state.z, 3, 11, 17, 4294967280);
-    state.w = LCGStep(state.w, 1664525, 1013904223);
-
-    RandomResult result;
-    result.state = state;
-    result.value = 2.3283064365387e-10 * (state.x ^ state.y ^ state.z ^ state.w);
-
-    return result;
-}
-
-vec3 SamplePointOnSphere(inout RandomResult rng_state, vec3 center, float radius)
-{
-    float u = (rng_state.value - 0.5f) * 2.0f;
-    rng_state = Random(rng_state.state);
-    float v = (rng_state.value - 0.5f) * 2.0f;
-
-    // Turn random numbers into cosine distribution
-    float theta = 2.0 * PI * u;
-    float phi = PI * v;
-
-    vec3 dir = normalize(vec3(
-                                cos(theta) * sin(phi),
-                                sin(theta) * sin(phi),
-                                cos(phi)
-                             ));
-    return center + dir * radius;
-}
-
-vec3 SamplePointOnPlane(inout RandomResult rng_state, vec3 _corner, vec3 _edge1, vec3 _edge2)
-{
-    float u = rng_state.value;
-    rng_state = Random(rng_state.state);
-    float v = rng_state.value;
-
-    return _corner + u * _edge1 + v * _edge2;
-}
 
 RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
 {

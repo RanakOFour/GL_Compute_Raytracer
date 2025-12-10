@@ -53,6 +53,20 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     glBindImageTexture(RANDOM_BUFFER_LOC, m_gBuffers[4], 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32UI);
+    
+    glClearTexImage(m_gBuffers[4], 0, GL_RGBA, GL_UNSIGNED_INT, 0);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // Initialise a random number into u_intitialState for the shadows
+    glm::uvec4 l_random = glm::uvec4(
+        (uint)rand() + 128 * rand(),
+        (uint)rand() + 128 * rand(),
+        (uint)rand() + 128 * rand(),
+        (uint)rand() + 128 * rand()  
+    );
+
+    m_ShadowComp.SetUniform("u_initialRandom", l_random);
 
     // Everything is bound here once as the bindings do not change
 }
@@ -103,8 +117,8 @@ void Raytracer::Trace(float _deltaTime)
 
         // Cap light count at 10
         m_ShadowComp.SetUniform("u_lightCount", l_lightCount);
-        m_ShadowComp.SetUniform("u_samplesPerLight", m_sampleCount);
-        m_ShadowComp.SetUniform("u_temporalDecay", m_decay);
+        m_ShadowComp.SetUniform("u_samplesPerFrame", m_sampleCount);
+        m_ShadowComp.SetUniform("u_frameCount", m_frameCount);
         for(int i = 0; i < l_lightCount; i++)
         {
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].points[0]", m_lights[i].points[0]);

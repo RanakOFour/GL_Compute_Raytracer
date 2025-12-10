@@ -120,3 +120,16 @@ void ComputeShader::SetUniform(std::string _name, glm::vec3 _value)
 
     glUniform3fv(glGetUniformLocation(m_ID, _name.c_str()), 1, glm::value_ptr(_value));
 }
+
+
+void ComputeShader::SetUniform(std::string _name, glm::uvec4 _value)
+{
+    GLint l_location = glGetUniformLocation(m_ID, _name.c_str());
+
+    if(l_location == -1)
+    {
+        printf("%s location: %i\n", _name.c_str(), l_location);
+    }
+
+    glUniform4uiv(glGetUniformLocation(m_ID, _name.c_str()), 1, glm::value_ptr(_value));
+}
