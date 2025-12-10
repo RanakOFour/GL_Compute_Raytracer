@@ -107,7 +107,6 @@ void Raytracer::Trace(float _deltaTime)
 
         // Cap light count at 10
         m_ShadowComp.SetUniform("u_lightCount", l_lightCount);
-        m_ShadowComp.SetUniform("u_samplesPerFrame", m_sampleCount);
         m_ShadowComp.SetUniform("u_frameCount", m_frameCount);
         for(int i = 0; i < l_lightCount; i++)
         {

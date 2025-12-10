@@ -7,7 +7,9 @@ layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
 
 layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
-layout(rgba32ui, binding = 5) uniform uimage2D randomBuffer;
+
+// Statistical shadows based on this paper
+// https://boksajak.github.io/files/RTG1_RayTracedShadows.pdf
 
 // STATISTICAL SHADOW PARAMETERS
 uniform float u_searchRadius = 0.1;        // Search radius in world units
@@ -61,7 +63,6 @@ uniform Light u_lights[MAX_LIGHTS];
 uniform int u_lightCount;
 uniform int u_samplesPerFrame;
 uniform int u_frameCount;
-uniform uvec4 u_initialRandom;
 
 struct Ray { vec3 origin; vec3 direction; };
 
@@ -78,57 +79,60 @@ const float PI = 3.14159265359;
 
 
 // Linear Congruential Generator
-uint lcg(inout uint seed)
+// Values chosen from https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
+uint lcg(inout uint _seed)
 {
-    seed = (1664525u * seed + 1013904223u);
-    return seed;
+    _seed = (1664525u * _seed + 1013904223u);
+    return _seed;
 }
 
 // Returns random number between 0 and 1
-float RandomFloat(inout uint seed)
+float RandomFloat(inout uint _seed)
 {
-    return float(lcg(seed)) / 4294967295.0;
+    //                        This is the uint number cap
+    return float(lcg(_seed)) / 4294967295.0f;
 }
 
-vec3 RandomPointOnSphere(inout uint seed, vec3 center, float radius)
+vec3 SamplePointOnSphere(inout uint _seed, vec3 center, float radius)
 {
-    // Uniform random point on sphere using Marsaglia's method
-    vec3 point;
-    do
-    {
-        point = vec3(
-            RandomFloat(seed) * 2.0 - 1.0,
-            RandomFloat(seed) * 2.0 - 1.0,
-            RandomFloat(seed) * 2.0 - 1.0
-        );
-    } while (dot(point, point) > 1.0);
-    return center + normalize(point) * radius;
+    float u = (RandomFloat(_seed) - 0.5f) * 2.0f;
+    float v = (RandomFloat(_seed) - 0.5f) * 2.0f;
+
+    // Turn random numbers into cosine distribution
+    float theta = 2.0 * PI * u;
+    float phi = PI * v;
+
+    vec3 dir = normalize(vec3(
+                                cos(theta) * sin(phi),
+                                sin(theta) * sin(phi),
+                                cos(phi)
+                             ));
+    return center + dir * radius;
 }
 
-vec3 RandomPointOnPlane(inout uint seed, vec3 origin, vec3 edge1, vec3 edge2)
+vec3 SamplePointOnPlane(inout uint _seed, vec3 _corner, vec3 _edge1, vec3 _edge2)
 {
-    float u = RandomFloat(seed);
-    float v = RandomFloat(seed);
-    return origin + edge1 * u + edge2 * v;
-}
+    float u = RandomFloat(_seed);
+    float v = RandomFloat(_seed);
 
-// ================== STATISTICAL SHADOW FUNCTIONS ==================
+    return _corner + u * _edge1 + v * _edge2;
+}
 
 // Chebyshev's inequality for variance shadow estimation
-float ChebyshevUpperBound(float moment1, float moment2, float t)
+float ChebyshevUpperBound(float _moment1, float _moment2, float _t)
 {
-    // t is the current depth
-    // moment1 is the mean (M1)
-    // moment2 is the mean of squares (M2)
+    // _t is the current depth
+    // _moment1 is the mean (M1)
+    // _moment2 is the mean of squares (M2)
     
-    if (t <= moment1)
+    if (_t <= _moment1)
     {
         // Surface is in front of the mean -> fully lit
         return 1.0;
     }
     
-    float variance = max(moment2 - moment1 * moment1, u_minVariance);
-    float d = t - moment1;
+    float variance = max(_moment2 - _moment1 * _moment1, u_minVariance);
+    float d = _t - _moment1;
     float p_max = variance / (variance + d * d);
     
     return clamp(p_max, 0.0, 1.0);
@@ -200,7 +204,7 @@ float TraceShadowRay(vec3 origin, vec3 direction, float maxDistance)
                     int triIdx = bvhTriIdxs[node.leftFirst + i];
                     Triangle tri = sceneTris[triIdx];
                     
-                    // Moller–Trumbore thrown into here for the speedup
+                    // Triangle intersect thrown in here for 
                     vec3 edge1 = tri.b - tri.a;
                     vec3 edge2 = tri.c - tri.a;
                     vec3 h = cross(direction, edge2);
@@ -222,11 +226,11 @@ float TraceShadowRay(vec3 origin, vec3 direction, float maxDistance)
                     if (v < 0.0 || u + v > 1.0)
                         continue;
                         
-                    float t = invDet * dot(edge2, q);
+                    float l_t = invDet * dot(edge2, q);
                     
-                    if (t > 0.0001 && t < closestHit) 
+                    if (l_t > 0.0001 && l_t < closestHit) 
                     {
-                        closestHit = t;
+                        closestHit = l_t;
                     }
                 }
             } 
@@ -243,7 +247,7 @@ float TraceShadowRay(vec3 origin, vec3 direction, float maxDistance)
 }
 
 // Gather neighboring depth moments for statistical estimation
-vec2 GatherDepthMoments(vec3 worldPos, vec3 normal, vec3 lightDir, float lightDistance, inout uint rngState) 
+vec2 GatherDepthMoments(vec3 worldPos, vec3 _normal, vec3 _lightDir, float lightDistance, inout uint _rngState) 
 {
     vec2 moments = vec2(0.0);
     float weightSum = 0.0;
@@ -253,8 +257,8 @@ vec2 GatherDepthMoments(vec3 worldPos, vec3 normal, vec3 lightDir, float lightDi
     {
         // Generate random offset within search radius
         vec2 offset = vec2(
-            RandomFloat(rngState) * 2.0 - 1.0,
-            RandomFloat(rngState) * 2.0 - 1.0
+            RandomFloat(_rngState) * 2.0 - 1.0,
+            RandomFloat(_rngState) * 2.0 - 1.0
         );
         
         if (dot(offset, offset) > 1.0) 
@@ -266,19 +270,19 @@ vec2 GatherDepthMoments(vec3 worldPos, vec3 normal, vec3 lightDir, float lightDi
         offset *= u_searchRadius / lightDistance;
         
         // Jittered ray direction
-        vec3 jitteredDir = normalize(lightDir + 
+        vec3 jitteredDir = normalize(_lightDir + 
                                      vec3(offset.x, offset.y, 0.0) * 
-                                     (1.0 - abs(dot(normal, lightDir))));
+                                     (1.0 - abs(dot(_normal, _lightDir))));
         
         // Trace to get depth
-        float depth = TraceShadowRay(worldPos + normal * u_bias, 
+        float depth = TraceShadowRay(worldPos + _normal * u_bias, 
                                     jitteredDir, lightDistance);
         
         // Convert to light space depth (0 at light, 1 at surface)
         float lightSpaceDepth = depth / lightDistance;
         
         // Weight by cosine between normal and light direction
-        float weight = max(dot(normal, jitteredDir), 0.0);
+        float weight = max(dot(_normal, jitteredDir), 0.0);
         
         // Exponential moving average for moments
         moments += vec2(lightSpaceDepth, lightSpaceDepth * lightSpaceDepth) * weight;
@@ -295,91 +299,83 @@ vec2 GatherDepthMoments(vec3 worldPos, vec3 normal, vec3 lightDir, float lightDi
 
 void main() 
 {
-    ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
-    
-    // Initialize RNG
-    uint rngState = uint(pixelCoords.x * 1973 + pixelCoords.y * 9277 + u_frameCount * 26699);
-    
+    ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+
+    uint l_rngState = uint(l_pixelCoords.x * 1973 + l_pixelCoords.y * 9277 + u_frameCount * 26699);
+
     // Load hit data
-    vec4 hitData = imageLoad(hitLocations, pixelCoords);
-    vec3 hitLocation = hitData.xyz;
-    float hitDistance = hitData.w;
+    vec4 b_hitData = imageLoad(hitLocations, l_pixelCoords);
+    vec3 l_hitLocation = b_hitData.xyz;
+    float l_hitDistance = b_hitData.w;
     
-    vec4 normalData = imageLoad(triangleNormals, pixelCoords);
-    vec3 normal = normalData.xyz;
-    int triId = int(normalData.w);
+    vec4 b_normalData = imageLoad(triangleNormals, l_pixelCoords);
+    vec3 l_normal = b_normalData.xyz;
+    int l_triId = int(b_normalData.w);
     
-    if (hitDistance < 0.001) 
+    if (l_hitDistance < 0.001) 
     {
-        imageStore(shadowBuffer, pixelCoords, vec4(1.0));
+        imageStore(shadowBuffer, l_pixelCoords, vec4(1.0));
         return;
     }
     
     // Load previous shadow result and sample count
-    vec4 prevShadowData = imageLoad(shadowBuffer, pixelCoords);
-    vec3 prevShadow = prevShadowData.xyz;
-    int totalSamples = int(prevShadowData.w);
+    vec4 b_prevShadowData = imageLoad(shadowBuffer, l_pixelCoords);
+    float l_prevShadow = b_prevShadowData.x;
+    int l_totalSamples = int(b_prevShadowData.w);
     
-    float shadowFactor = 0.0;
-    int validLights = 0;
+    float l_shadowInFrame = 0.0;
+    int l_validLights = 0;
     
     // Process each light
-    for (int lightIdx = 0; lightIdx < u_lightCount; lightIdx++) 
+    for (int i = 0; i < u_lightCount; i++) 
     {
-        Light light = u_lights[lightIdx];
-        vec3 lightPos = light.points[0];
+        Light l_light = u_lights[i];
+        vec3 l_lightPos = l_light.points[0];
         
         // Calculate light direction and distance
-        vec3 lightDir = lightPos - hitLocation;
-        float lightDistance = length(lightDir);
-        lightDir = normalize(lightDir);
+        vec3 l_lightDir = l_lightPos - l_hitLocation;
+        float l_lightDistance = length(l_lightDir);
+        l_lightDir = normalize(l_lightDir);
         
         // Skip if light is behind surface
-        float NdotL = dot(normal, lightDir);
+        float NdotL = dot(l_normal, l_lightDir);
         if (NdotL <= 0.0) 
         {
             continue;
         }
         
         // Gather statistical depth moments
-        vec2 moments = GatherDepthMoments(hitLocation, normal, lightDir, 
-                                         lightDistance, rngState);
+        vec2 l_moments = GatherDepthMoments(l_hitLocation, l_normal, l_lightDir, l_lightDistance, l_rngState);
         
         // Current depth in light space (0 = at light, 1 = at surface)
-        float currentDepth = 1.0; // We're at the surface
+        float l_currentDepth = 1.0; // We're at the surface
         
         // Apply Chebyshev's inequality
-        float visibility = ChebyshevUpperBound(moments.x, moments.y, currentDepth);
+        float l_visibility = ChebyshevUpperBound(l_moments.x, l_moments.y, l_currentDepth);
         
         // Apply distance attenuation (optional)
-        float attenuation = 1.0 / (1.0 + 0.1 * lightDistance * lightDistance);
+        float l_attenuation = 1.0 / (1.0 + 0.1 * l_lightDistance * l_lightDistance);
         
-        shadowFactor += visibility * attenuation * light.intensity * NdotL;
-        validLights++;
+        l_shadowInFrame += l_visibility * l_attenuation * l_light.intensity * NdotL;
+        l_validLights++;
     }
     
     // Average over lights
-    if (validLights > 0) 
+    if (l_validLights > 0) 
     {
-        shadowFactor /= float(validLights);
+        l_shadowInFrame /= float(l_validLights);
     } else
     {
-        shadowFactor = 0.0;
+        l_shadowInFrame = 0.0;
     }
     
     // Temporal accumulation
-    totalSamples++;
-    float alpha = 1.0 / float(totalSamples);
-    alpha = clamp(alpha, 0.01, 0.1);
+    l_totalSamples++;
+    float l_alpha = 1.0 / float(l_totalSamples);
+    l_alpha = clamp(l_alpha, 0.01, 0.1);
     
-    shadowFactor = mix(prevShadow.x, shadowFactor, alpha);
+    l_shadowInFrame = mix(l_prevShadow, l_shadowInFrame, l_alpha);
     
     // Store results
-    imageStore(shadowBuffer, pixelCoords, 
-               vec4(shadowFactor, shadowFactor, shadowFactor, float(totalSamples)));
-    
-    // Store random state for next frame
-    uvec4 randomState = uvec4(rngState, rngState * 1664525u, 
-                             rngState * 1103515245u, rngState * 214013u);
-    imageStore(randomBuffer, pixelCoords, randomState);
+    imageStore(shadowBuffer, l_pixelCoords, vec4(vec3(l_shadowInFrame), float(l_totalSamples)));
 }
