@@ -68,7 +68,7 @@ struct Light
 uniform Light u_lights[MAX_LIGHTS];
 uniform int u_lightCount;
 
-uniform int u_samplesPerLight;
+uniform int u_sampleCount;
 
 uniform int u_frameCount;
 
@@ -89,45 +89,25 @@ const float PI = 3.14159265359;
 // A "random" function I found in a stack overflow comment section
 
 // Used to advance the PCG state.
-uint Rand_pcg(inout uint state)
-{
+uint rand_pcg(inout uint state) {
     state = state * 747796405u + 2891336453u;
     uint word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
     return (word >> 22u) ^ word;
 }
 
-float Rand01(inout uint state)
-{
-    return float(Rand_pcg(state)) / 4294967295.0;
+float rand01(inout uint state) {
+    return float(rand_pcg(state)) / 4294967295.0;
 }
 
-void InitRNGStates(ivec2 pixel, out uvec4 states)
-{
+void InitRNGState(ivec2 pixel, out uint state) {
     uint base = uint(pixel.x) * 1973u + uint(pixel.y) * 9277u;
-    states.x = base + 1u;
-    states.y = base + 10007u;
-    states.z = base + 20011u;
-    states.w = base + 30013u;
+    state = hash(base + 20011u);
 }
 
-uint GetRNGForSample(uvec4 states, int sampleIndex, int lightIndex)
+vec3 samplePointOnSphere(inout uint rng_state, vec3 center, float radius)
 {
-    // Combine indices to select which RNG to use
-    int idx = (sampleIndex * 7 + lightIndex * 13) % 4;
-    
-    switch(idx) 
-    {
-        case 0: return states.x;
-        case 1: return states.y;
-        case 2: return states.z;
-        default: return states.w;
-    }
-}
-
-vec3 SamplePointOnSphere(inout uint rng_state, vec3 center, float radius)
-{
-    float u = (Rand01(rng_state) - 0.5f) * 2.0f;
-    float v = (Rand01(rng_state) - 0.5f) * 2.0f;
+    float u = (rand01(rng_state) - 0.5f) * 2.0f;
+    float v = (rand01(rng_state) - 0.5f) * 2.0f;
 
     // Turn random numbers into cosine distribution
     float theta = 2.0 * PI * u;
@@ -141,10 +121,10 @@ vec3 SamplePointOnSphere(inout uint rng_state, vec3 center, float radius)
     return center + dir * radius;
 }
 
-vec3 SamplePointOnPlane(inout uint rng_state, vec3 _corner, vec3 _edge1, vec3 _edge2)
+vec3 samplePointOnPlane(inout uint rng_state, vec3 _corner, vec3 _edge1, vec3 _edge2)
 {
-    float u = Rand01(rng_state);
-    float v = Rand01(rng_state);
+    float u = rand01(rng_state);
+    float v = rand01(rng_state);
 
     return _corner + u * _edge1 + v * _edge2;
 }
@@ -298,11 +278,11 @@ void main()
     vec3 l_error = vec3(0.0);
     ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
 
-    uvec4 b_rng = imageLoad(randomBuffer, l_pixelCoords);
+    uint b_rng = imageLoad(randomBuffer, l_pixelCoords).r;
 
-    if(length(b_rng) == 0 || u_frameCount == 0)
+    if(b_rng == 0 || u_frameCount == 0)
     {
-        InitRNGStates(l_pixelCoords, b_rng);
+        InitRNGState(l_pixelCoords, b_rng);
     }
     
     vec3 b_hitLocation = imageLoad(hitLocations, l_pixelCoords).xyz;
@@ -318,46 +298,34 @@ void main()
 
 
     vec3 b_accumulatedLight = imageLoad(shadowBuffer, l_pixelCoords).xyz;
-    int b_sampleCount = int(imageLoad(shadowBuffer, l_pixelCoords).w);
+    float b_sampleCount = imageLoad(shadowBuffer, l_pixelCoords).w;
     
     vec3 l_totalLight = vec3(0.0);
 
     // Check shadows for each light
     for(int i = 0; i < u_lightCount; i++)
     {
-        vec3 l_incomingLight = vec3(0.0);
+        vec3 l_incomingLight = vec3(0.0f);
 
-        for(int j = 0; j < u_samplesPerLight; j++)
+        for(int j = 0; j < u_sampleCount; j++)
         {
-            b_sampleCount++;
-            uint l_rngSample = GetRNGForSample(b_rng, b_sampleCount, i);
-            float u = Rand01(l_rngSample);
-            float v = Rand01(l_rngSample);
-
             vec3 l_randomPoint = vec3(0.0f);
             float l_area;
             if(u_lights[i].radius > 0.0f)
             {
-                // Sphere light
-                float u = u * 2.0 - 1.0;
-                float v = v * 2.0 - 1.0;
-                float theta = 2.0 * PI * u;
-                float phi = acos(2.0 * v - 1.0);
-                l_randomPoint = u_lights[i].points[0] + 
-                                u_lights[i].radius * vec3(
-                                sin(phi) * cos(theta),
-                                sin(phi) * sin(theta),
-                                cos(phi)
-                                );
-
-                l_area = 4 * PI * u_lights[i].radius * u_lights[i].radius;
+                l_randomPoint = samplePointOnSphere(b_rng, u_lights[i].points[0], u_lights[i].radius);
+                l_area =  4.0 * PI * u_lights[i].radius * u_lights[i].radius;
             }
             else
             {
-                vec3 l_edge1 = normalize(u_lights[i].points[1] - u_lights[i].points[0]);
-                vec3 l_edge2 = normalize(u_lights[i].points[2] - u_lights[i].points[0]);
-
-                l_randomPoint = u_lights[i].points[0] + u * l_edge1 + v * l_edge2;
+                vec3 l_edge1 = u_lights[i].points[1] - u_lights[i].points[0];
+                vec3 l_edge2 = u_lights[i].points[2] - u_lights[i].points[0];
+                l_randomPoint = samplePointOnPlane(
+                                                   b_rng,
+                                                   u_lights[i].points[0],
+                                                   normalize(l_edge1),
+                                                   normalize(l_edge2)
+                                                  );
 
                 l_area = length(l_edge1) * length(l_edge2);
             }
@@ -373,51 +341,24 @@ void main()
 
 
             // Simple geometric falloff + scaling. Keep existing intensity/colour conventions.
-            vec3 toLight = normalize(l_randomPoint - b_hitLocation);
-            float cosTheta = max(0.0, dot(l_hitTriangle.normal, toLight));
-            float cosLight = 1.0;  // For sphere lights, this would be max(0, dot(-toLight, lightNormal))
-            vec3 l_lightIntensity;
+            vec3 l_lightIntensity = u_lights[i].colour * u_lights[i].intensity * l_area / (l_lightDist * l_lightDist);
 
-            if (u_lights[i].radius > 0.0f)
-            {
-                // Sphere light - solid angle sampling
-                float sinThetaMax = u_lights[i].radius / l_lightDist;
-                float cosThetaMax = sqrt(max(0.0, 1.0 - sinThetaMax * sinThetaMax));
-                float solidAngle = 2.0 * PI * (1.0 - cosThetaMax);
-                float pdf = 1.0 / solidAngle;
-    
-                l_lightIntensity = u_lights[i].colour * u_lights[i].intensity * 
-                                    cosTheta * cosLight / 
-                                    (l_lightDist * l_lightDist * pdf);
-            }
-            else
-            {
-                // Area light
-                vec3 lightNormal = normalize(cross(u_lights[i].points[1] - u_lights[i].points[0],
-                                       u_lights[i].points[2] - u_lights[i].points[0]));
-                cosLight = max(0.0, dot(-toLight, lightNormal));
-                float pdf = 1.0 / l_area;
-    
-                l_lightIntensity = u_lights[i].colour * u_lights[i].intensity * 
-                       l_area * cosTheta * cosLight /
-                       (l_lightDist * l_lightDist * pdf);
-            }
-            
             l_incomingLight += l_lightIntensity;
         }
 
-        l_incomingLight /= float(u_samplesPerLight);
-        l_error /= float(u_samplesPerLight);
+        l_incomingLight /= float(u_sampleCount);
+        l_error /= float(u_sampleCount);
         l_totalLight += l_incomingLight;
     }
 
     // Accumulate results over time
     
-    float alpha = 1.0 / (b_sampleCount + 1.0);
-    alpha = clamp(alpha, 0.01, 0.1);
+    float alpha = 1.0 / (u_frameCount + 1.0);
+    alpha = clamp(alpha, 1.0, 0.05);
 
     l_totalLight = mix(b_accumulatedLight, l_totalLight, alpha);
     
-    imageStore(randomBuffer, l_pixelCoords, b_rng);
-    imageStore(shadowBuffer, l_pixelCoords, vec4(l_totalLight, float(b_sampleCount)));
+    imageStore(randomBuffer, l_pixelCoords, uvec4(b_rng));
+    imageStore(shadowBuffer, l_pixelCoords, vec4(l_totalLight, 1.0f));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_error, 1.0f));
 }

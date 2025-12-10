@@ -97,14 +97,31 @@ void main()
     int l_texId = int(imageLoad(texMatInfo, l_pixelCoords).b);
     int l_matId = int(imageLoad(texMatInfo, l_pixelCoords).a);
     
-    vec3 l_objectcolour = texture(u_materialTextures[l_texId], l_texUVs).rgb;
+    vec3 l_texColour = vec3(1.0);
 
-    Material l_mat = materials[l_matId];
+    if(l_texId > -1)
+    {
+        l_texColour = texture(u_materialTextures[l_texId], l_texUVs).rgb;
+    }
 
+    Material l_mat;
+
+    if(l_matId > -1)
+    {
+        l_mat = materials[l_matId];
+    }
+    else
+    {
+        l_mat.albedo = vec3(1.0);
+        l_mat.metallic = 1.0;
+        l_mat.roughness = 0.0;
+        l_mat.ambientOcclusion = 1.0;
+    }
+
+    //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texColour, 1.0f));
     //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_mat.metallic, l_mat.roughness, l_mat.ambientOcclusion, 1.0f));
     //return;
 
-    // Flip normal if it's facing away from the ray (backface)
     vec3 l_normal = normalize(imageLoad(triangleNormals, l_pixelCoords).rgb);
     vec3 V = normalize(u_cameraPos - l_position);
 
@@ -136,11 +153,11 @@ void main()
 
         kD *= 1.0 - l_mat.metallic;
 
-        Lo += ((kD * l_mat.albedo * l_objectcolour) / PI + l_specular) * l_radiance * NdotL;
+        Lo += ((kD * l_mat.albedo * l_texColour) / PI + l_specular) * l_radiance * NdotL;
     }
     
     // Add ambient lighting (always present, even in shadows)
-    vec3 l_ambient = vec3(0.03) * l_objectcolour * l_mat.albedo * l_mat.ambientOcclusion;
+    vec3 l_ambient = vec3(0.03) * l_texColour * l_mat.albedo * l_mat.ambientOcclusion;
     
     vec3 l_shadow = imageLoad(shadowBuffer, l_pixelCoords).xyz;
 

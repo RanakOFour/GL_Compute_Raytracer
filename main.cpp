@@ -32,13 +32,19 @@ int main(int argc, char* argv[])
 
 	Texture l_modelTexture = Texture("./resources/textures/Whiskers_diffuse.png");
 	
-	Material l_material;
-	l_material.albedo = glm::vec3(1.0f);
-	l_material.metallic = 0.0f;
-	l_material.roughness = 0.0f;
-	l_material.ambientOcclusion = 1.0f;
+	Material l_matCuruthers;
+	l_matCuruthers.albedo = glm::vec3(1.0f);
+	l_matCuruthers.metallic = 0.0f;
+	l_matCuruthers.roughness = 0.0f;
+	l_matCuruthers.ambientOcclusion = 1.0f;
 
 	Model l_cubeModel("./resources/objects/cube.obj");
+
+	Material l_matFloor;
+	l_matFloor.albedo = glm::vec3(1.0f);
+	l_matFloor.metallic = 0.0f;
+	l_matFloor.roughness = 0.0f;
+	l_matFloor.ambientOcclusion = 1.0f;
 
 	Light l_light;
 	l_light.points[0] = glm::vec3(-1.5f, 3.0f, -1.5f);
@@ -53,19 +59,29 @@ int main(int argc, char* argv[])
 
 	printf("Creating vectors\n");
 	std::vector<Triangle> l_tris = l_curuthersModel.GetTriangles(glm::vec3(0.0f));
-	std::vector<Triangle> l_floorTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, -1.7f, 0.0f),
-																 glm::vec3(10.0f, 0.1f, 10.0f));
-	l_tris.insert(l_tris.end(), l_floorTris.begin(), l_floorTris.end());
-	std::vector<Texture> l_textures;
-	std::vector<Material> l_materials;
 
-	for(int i = 0; i < l_tris.size(); i++)
+	for (int i = 0; i < l_tris.size(); i++)
 	{
 		l_tris[i].textureId = 0;
 		l_tris[i].materialId = 0;
 	}
 
-	l_materials.push_back(l_material);
+	std::vector<Triangle> l_floorTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, -1.7f, 0.0f),
+																 glm::vec3(10.0f, 0.1f, 10.0f));
+
+	for (int i = 0; i < l_floorTris.size(); i++)
+	{
+		l_floorTris[i].textureId = -1;
+		l_floorTris[i].materialId = -1;
+	}
+
+	l_tris.insert(l_tris.end(), l_floorTris.begin(), l_floorTris.end());
+	std::vector<Texture> l_textures;
+	std::vector<Material> l_materials;
+
+	l_materials.push_back(l_matCuruthers);
+	l_materials.push_back(l_matFloor);
+
 	l_textures.push_back(l_modelTexture);
 
 	

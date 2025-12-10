@@ -11,6 +11,7 @@
 #include "Datastructs/Texture.h"
 #include "Datastructs/Light.h"
 #include "ComputeShader.h"
+#include "BufferIndexes.h"
 
 #include <vector>
 
@@ -32,7 +33,7 @@ class Raytracer : public GCP_Framework
     ComputeShader m_ShadowComp;
     ComputeShader m_ShadingComp;
 
-    GLuint m_gBuffers[5];
+    GLuint m_gBuffers[GBUFFERCOUNT];
 
     GLuint m_triangleSSBO;
     GLuint m_materialSSBO;

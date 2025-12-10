@@ -96,32 +96,10 @@ uint Rand_pcg(inout uint state)
     return (word >> 22u) ^ word;
 }
 
+// Random number between 0 and 1
 float Rand01(inout uint state)
 {
     return float(Rand_pcg(state)) / 4294967295.0;
-}
-
-void InitRNGStates(ivec2 pixel, out uvec4 states)
-{
-    uint base = uint(pixel.x) * 1973u + uint(pixel.y) * 9277u;
-    states.x = base + 1u;
-    states.y = base + 10007u;
-    states.z = base + 20011u;
-    states.w = base + 30013u;
-}
-
-uint GetRNGForSample(uvec4 states, int sampleIndex, int lightIndex)
-{
-    // Combine indices to select which RNG to use
-    int idx = (sampleIndex * 7 + lightIndex * 13) % 4;
-    
-    switch(idx) 
-    {
-        case 0: return states.x;
-        case 1: return states.y;
-        case 2: return states.z;
-        default: return states.w;
-    }
 }
 
 vec3 SamplePointOnSphere(inout uint rng_state, vec3 center, float radius)
@@ -293,131 +271,104 @@ bool IsInShadow(vec3 _lightPos, vec3 _position, vec3 _normal, int _idx, inout ve
     return false;
 }
 
-void main() 
-{
-    vec3 l_error = vec3(0.0);
+void main() {
     ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
-
-    uvec4 b_rng = imageLoad(randomBuffer, l_pixelCoords);
-
-    if(length(b_rng) == 0 || u_frameCount == 0)
-    {
-        InitRNGStates(l_pixelCoords, b_rng);
-    }
     
+    // Load geometry
     vec3 b_hitLocation = imageLoad(hitLocations, l_pixelCoords).xyz;
     float b_hitDistance = imageLoad(hitLocations, l_pixelCoords).w;
-    int b_triId = int(imageLoad(triangleNormals, l_pixelCoords).w);
-    Triangle l_hitTriangle = sceneTris[b_triId];
     
     if (b_hitDistance < 0.001)
     {
-        imageStore(shadowBuffer, l_pixelCoords, vec4(1.0)); // No shadow for background
+        // Background: fully lit
+        imageStore(shadowBuffer, l_pixelCoords, vec4(1.0, 1.0, 1.0, 1.0));
         return;
     }
-
-
-    vec3 b_accumulatedLight = imageLoad(shadowBuffer, l_pixelCoords).xyz;
-    int b_sampleCount = int(imageLoad(shadowBuffer, l_pixelCoords).w);
     
-    vec3 l_totalLight = vec3(0.0);
-
-    // Check shadows for each light
-    for(int i = 0; i < u_lightCount; i++)
+    int b_triId = int(imageLoad(triangleNormals, l_pixelCoords).w);
+    Triangle l_hitTriangle = sceneTris[b_triId];
+    
+    // Load previous frame's SHADOW visibility (0=shadow, 1=lit)
+    vec4 b_preData = imageLoad(shadowBuffer, l_pixelCoords);
+    vec3 prevVisibility = b_preData.rgb;
+    float b_sampleCount = b_preData.a;
+    
+    uint b_rng = imageLoad(randomBuffer, l_pixelCoords).r;
+    if (b_rng == 0u || u_frameCount == 0)
     {
-        vec3 l_incomingLight = vec3(0.0);
-
-        for(int j = 0; j < u_samplesPerLight; j++)
-        {
-            b_sampleCount++;
-            uint l_rngSample = GetRNGForSample(b_rng, b_sampleCount, i);
-            float u = Rand01(l_rngSample);
-            float v = Rand01(l_rngSample);
-
-            vec3 l_randomPoint = vec3(0.0f);
-            float l_area;
-            if(u_lights[i].radius > 0.0f)
-            {
-                // Sphere light
-                float u = u * 2.0 - 1.0;
-                float v = v * 2.0 - 1.0;
-                float theta = 2.0 * PI * u;
-                float phi = acos(2.0 * v - 1.0);
-                l_randomPoint = u_lights[i].points[0] + 
-                                u_lights[i].radius * vec3(
-                                sin(phi) * cos(theta),
-                                sin(phi) * sin(theta),
-                                cos(phi)
-                                );
-
-                l_area = 4 * PI * u_lights[i].radius * u_lights[i].radius;
-            }
-            else
-            {
-                vec3 l_edge1 = normalize(u_lights[i].points[1] - u_lights[i].points[0]);
-                vec3 l_edge2 = normalize(u_lights[i].points[2] - u_lights[i].points[0]);
-
-                l_randomPoint = u_lights[i].points[0] + u * l_edge1 + v * l_edge2;
-
-                l_area = length(l_edge1) * length(l_edge2);
-            }
-            
-            vec3 l_lightDir = normalize(l_randomPoint - b_hitLocation);
-            float l_lightDist = length(l_randomPoint - b_hitLocation);
-
-
-            if (IsInShadow(l_randomPoint, b_hitLocation, l_hitTriangle.normal, b_triId, l_error))
-            {
-                continue;
-            }
-
-
-            // Simple geometric falloff + scaling. Keep existing intensity/colour conventions.
-            vec3 toLight = normalize(l_randomPoint - b_hitLocation);
-            float cosTheta = max(0.0, dot(l_hitTriangle.normal, toLight));
-            float cosLight = 1.0;  // For sphere lights, this would be max(0, dot(-toLight, lightNormal))
-            vec3 l_lightIntensity;
-
-            if (u_lights[i].radius > 0.0f)
-            {
-                // Sphere light - solid angle sampling
-                float sinThetaMax = u_lights[i].radius / l_lightDist;
-                float cosThetaMax = sqrt(max(0.0, 1.0 - sinThetaMax * sinThetaMax));
-                float solidAngle = 2.0 * PI * (1.0 - cosThetaMax);
-                float pdf = 1.0 / solidAngle;
-    
-                l_lightIntensity = u_lights[i].colour * u_lights[i].intensity * 
-                                    cosTheta * cosLight / 
-                                    (l_lightDist * l_lightDist * pdf);
-            }
-            else
-            {
-                // Area light
-                vec3 lightNormal = normalize(cross(u_lights[i].points[1] - u_lights[i].points[0],
-                                       u_lights[i].points[2] - u_lights[i].points[0]));
-                cosLight = max(0.0, dot(-toLight, lightNormal));
-                float pdf = 1.0 / l_area;
-    
-                l_lightIntensity = u_lights[i].colour * u_lights[i].intensity * 
-                       l_area * cosTheta * cosLight /
-                       (l_lightDist * l_lightDist * pdf);
-            }
-            
-            l_incomingLight += l_lightIntensity;
-        }
-
-        l_incomingLight /= float(u_samplesPerLight);
-        l_error /= float(u_samplesPerLight);
-        l_totalLight += l_incomingLight;
+        b_rng = uint(l_pixelCoords.x * 1973 + l_pixelCoords.y * 9277 + u_frameCount);
     }
-
-    // Accumulate results over time
     
+    // Calculate shadow visibility for this frame
+    vec3 newVisibility = vec3(0.0);
+    int testsDone = 0;
+    
+    for(int lightIdx = 0; lightIdx < u_lightCount; lightIdx++)
+    {
+        float lightVisible = 0.0;
+        
+        // Test shadow with one sample per light (for now)
+        uint sampleRNG = b_rng ^ uint(lightIdx * 10007);
+        
+        // Sample point on light
+        vec3 lightSample;
+        if (u_lights[lightIdx].radius > 0.0)
+        {
+            // Sphere light
+            float u = Rand01(sampleRNG) * 2.0 - 1.0;
+            float v = Rand01(sampleRNG) * 2.0 - 1.0;
+            float theta = 2.0 * PI * u;
+            float phi = acos(2.0 * v - 1.0);
+            lightSample = u_lights[lightIdx].points[0] + 
+                          u_lights[lightIdx].radius * vec3(
+                             sin(phi) * cos(theta),
+                             sin(phi) * sin(theta),
+                             cos(phi)
+                         );
+        }
+        else
+        {
+            // Quad light - sample uniformly
+            vec3 edge1 = normalize(u_lights[lightIdx].points[1] - u_lights[lightIdx].points[0]);
+            vec3 edge2 = normalize(u_lights[lightIdx].points[2] - u_lights[lightIdx].points[0]);
+            float u = Rand01(sampleRNG);
+            float v = Rand01(sampleRNG);
+            lightSample = u_lights[lightIdx].points[0] + u * edge1 + v * edge2;
+        }
+        
+        // Simple shadow test (returns true if in shadow)
+        vec3 biasNormal = l_hitTriangle.normal;
+        vec3 error = vec3(0.0);
+        if (!IsInShadow(lightSample, b_hitLocation, biasNormal, b_triId, error))
+        {
+            // Not in shadow = fully visible (1.0)
+            lightVisible = 1.0;
+        }
+        
+        newVisibility += vec3(lightVisible);
+        testsDone++;
+        
+        // Advance RNG
+        b_rng = sampleRNG;
+    }
+    
+    if (testsDone > 0)
+    {
+        newVisibility /= float(testsDone);
+    }
+    
+    // Temporal accumulation
     float alpha = 1.0 / (b_sampleCount + 1.0);
-    alpha = clamp(alpha, 0.01, 0.1);
-
-    l_totalLight = mix(b_accumulatedLight, l_totalLight, alpha);
+    alpha = clamp(alpha, 0.05, 0.5); // 5-50% blend
+    b_sampleCount += 1.0;
     
-    imageStore(randomBuffer, l_pixelCoords, b_rng);
-    imageStore(shadowBuffer, l_pixelCoords, vec4(l_totalLight, float(b_sampleCount)));
+    vec3 finalVisibility = mix(prevVisibility, newVisibility, alpha);
+    
+    // Store results
+    imageStore(shadowBuffer, l_pixelCoords, vec4(finalVisibility, float(b_sampleCount)));
+    imageStore(randomBuffer, l_pixelCoords, uvec4(b_rng));
+    
+    // DEBUG: Show visibility as grayscale
+    float avgVisibility = (finalVisibility.r + finalVisibility.g + finalVisibility.b) / 3.0;
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(avgVisibility), 1.0));
 }
