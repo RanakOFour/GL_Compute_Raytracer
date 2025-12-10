@@ -43,6 +43,9 @@ class Raytracer : public GCP_Framework
     bool m_shading;
 
     int m_frameCount;
+    int m_sampleCount;
+
+    float m_decay;
 
     public:
     Raytracer(glm::ivec2 _screenSize);
@@ -66,6 +69,13 @@ class Raytracer : public GCP_Framework
 
     bool Shadows() { return m_shadows; };
     void Shadows(bool _s) { m_shadows = _s; };
+
+    int Samples() { return m_sampleCount; };
+    void Samples(int _s) { m_sampleCount = _s; };
+
+
+    float Decay() { return m_decay; };
+    void Decay(float _s) { m_decay = _s; };
 };
 
 #endif

@@ -35,7 +35,7 @@ struct Light
 };
 #define MAX_LIGHTS 10
 uniform Light u_lights[MAX_LIGHTS];
-uniform float u_lightCount;
+uniform int u_lightCount;
 
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------
@@ -87,12 +87,10 @@ void main()
     vec3 l_position = imageLoad(hitLocations, l_pixelCoords).xyz;
     float l_posDistance = imageLoad(hitLocations, l_pixelCoords).w;
     vec2 l_texUVs = imageLoad(texMatInfo, l_pixelCoords).rg;
-    vec3 l_shadow = imageLoad(shadowBuffer, l_pixelCoords).xyz;
 
     if(l_posDistance < 0.01f)
     {
-        imageStore(o_framebufferTex, l_pixelCoords, vec4(0.0, 0.1, 0.3, 1.0f) * l_shadow.x);
-
+        imageStore(o_framebufferTex, l_pixelCoords, vec4(0.0, 0.1, 0.3, 1.0f));
         return;
     }
 
@@ -103,7 +101,7 @@ void main()
 
     Material l_mat = materials[l_matId];
 
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_mat.metallic, l_mat.roughness, l_mat.ambientOcclusion, 1.0f));
+    //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_mat.metallic, l_mat.roughness, l_mat.ambientOcclusion, 1.0f));
     //return;
 
     // Flip normal if it's facing away from the ray (backface)
@@ -144,10 +142,12 @@ void main()
     // Add ambient lighting (always present, even in shadows)
     vec3 l_ambient = vec3(0.03) * l_objectcolour * l_mat.albedo * l_mat.ambientOcclusion;
     
-    vec3 colour = l_ambient + Lo;
+    vec3 l_shadow = imageLoad(shadowBuffer, l_pixelCoords).xyz;
+
+    vec3 colour = (l_ambient + Lo) * l_shadow;
 
     // Gamma correction
-    colour = pow(colour, vec3(1.0/2.2)) * l_shadow;
+    colour = pow(colour, vec3(1.0/2.2));
     
     imageStore(o_framebufferTex, l_pixelCoords, vec4(colour, length(Lo)));
 }

@@ -41,9 +41,12 @@ int main(int argc, char* argv[])
 	Model l_cubeModel("./resources/objects/cube.obj");
 
 	Light l_light;
-	l_light.position = glm::vec3(0.0f, 0.0f, 3.0f);
+	l_light.points[0] = glm::vec3(-1.5f, 3.0f, -1.5f);
+	l_light.points[1] = glm::vec3(1.5f, 3.0f, -1.5f);
+	l_light.points[2] = glm::vec3(-1.5f, 3.0f, 1.5f);
+	l_light.points[3] = glm::vec3(1.5f, 3.0f, 1.5f);
 	l_light.colour = glm::vec3(1.0f);
-	l_light.intensity = 20.0f;
+	l_light.intensity = 1.0f;
 	l_light.radius = 2.0f;
 	
 	l_raytracer.AddLight(l_light);
@@ -139,9 +142,12 @@ int main(int argc, char* argv[])
 
 		ImGui::Begin("Settings");
 
-		glm::vec3 lightPos = l_light0->position;
-		ImGui::DragFloat3("Light Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
-		l_light0->position = lightPos;
+		for(int i = 0; i < 4; i++)
+		{
+			glm::vec3 lightPos = l_light0->points[i];
+			ImGui::DragFloat3("Light Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
+			l_light0->points[i] = lightPos;
+		}
 
 		glm::vec3 lightCol = l_light0->colour;
 		ImGui::ColorEdit3("Light Colour", &(lightCol[0]));
@@ -151,9 +157,24 @@ int main(int argc, char* argv[])
 		ImGui::SliderFloat("Light Intensity", &(inten), 0.0f, 20.0f);
 		l_light0->intensity = inten;
 
+		float l_e = l_light0->radius;
+		ImGui::SliderFloat("Light Radius", &l_e, 0.0f, 10.0f);
+		l_light0->radius = l_e;
+
 		bool l_shadow = l_raytracer.Shadows();
 		ImGui::Checkbox("Shadows", &l_shadow);
 		l_raytracer.Shadows(l_shadow);
+
+		if(l_shadow)
+		{
+			int l_sample = l_raytracer.Samples();
+			ImGui::SliderInt("SampleCount", &l_sample, 0, 50);
+			l_raytracer.Samples(l_sample);
+
+			float l_decay = l_raytracer.Decay();
+			ImGui::SliderFloat("Decay", &l_decay, 0.0f, 1.0f);
+			l_raytracer.Decay(l_decay);
+		}
 
 		bool l_shade = l_raytracer.Shading();
 		ImGui::Checkbox("Shading", &l_shade);

@@ -81,7 +81,7 @@ void ComputeShader::SetUniform(std::string _name, int _value)
     }
 
     
-    glUniform1f(l_location, _value);
+    glUniform1i(l_location, _value);
 }
 
 void ComputeShader::SetUniform(std::string _name, float _value)

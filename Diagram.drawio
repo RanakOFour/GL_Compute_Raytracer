@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="OE9D3wA5DGOfEw1pnoTS" name="Page-1">
-        <mxGraphModel dx="1726" dy="753" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="2227" dy="971" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -129,7 +129,7 @@
                     <mxGeometry y="22" width="424" height="71" as="geometry"/>
                 </mxCell>
                 <mxCell id="62" value="Break shader into passes" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-1164" y="494" width="2932" height="1905" as="geometry"/>
+                    <mxGeometry x="-1164" y="494" width="2932" height="2034" as="geometry"/>
                 </mxCell>
                 <mxCell id="65" style="edgeStyle=none;html=1;" parent="62" source="63" target="64" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -198,7 +198,7 @@
                     <mxGeometry x="580" y="111" width="680" height="224" as="geometry"/>
                 </mxCell>
                 <mxCell id="81" value="Data flow diagram" style="swimlane;whiteSpace=wrap;html=1;" parent="62" vertex="1">
-                    <mxGeometry x="34" y="351" width="2482" height="1528" as="geometry"/>
+                    <mxGeometry x="28" y="398" width="2482" height="1528" as="geometry"/>
                 </mxCell>
                 <mxCell id="101" style="edgeStyle=none;html=1;" parent="81" source="82" target="98" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -332,14 +332,107 @@
                 <mxCell id="130" value="The material Id could absolutely just be crammed into another buffer and save on having the extra 2" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="81" vertex="1">
                     <mxGeometry x="450" y="449.5" width="161" height="67" as="geometry"/>
                 </mxCell>
-                <mxCell id="138" style="edgeStyle=none;html=1;" edge="1" parent="81" source="135" target="137">
+                <mxCell id="138" style="edgeStyle=none;html=1;" parent="81" source="135" target="137" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="135" value="How can I do soft shadows?&lt;div&gt;- Area lights first (Prerequisite)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="81">
+                <mxCell id="135" value="How can I do soft shadows?&lt;div&gt;- Area lights first (Prerequisite)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" parent="81" vertex="1">
                     <mxGeometry x="706" y="572" width="441" height="245" as="geometry"/>
                 </mxCell>
-                <mxCell id="137" value="How do I implement area lights?&lt;div&gt;- Sample the area of the light&lt;/div&gt;&lt;div&gt;- What about polygons?&lt;/div&gt;&lt;div&gt;- Do cubes for now&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="81">
+                <mxCell id="137" value="How do I implement area lights?&lt;div&gt;- Sample the area of the light&lt;/div&gt;&lt;div&gt;- What about polygons?&lt;/div&gt;&lt;div&gt;- Do cubes for now&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" parent="81" vertex="1">
                     <mxGeometry x="1312" y="572" width="441" height="245" as="geometry"/>
+                </mxCell>
+                <mxCell id="139" value="Shadow Pass flowchart" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="394" y="862" width="1415" height="569" as="geometry"/>
+                </mxCell>
+                <mxCell id="157" style="edgeStyle=none;html=1;" edge="1" parent="139" source="140" target="156">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="140" value="Start" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="139">
+                    <mxGeometry x="19" y="41" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="159" value="Yes" style="edgeStyle=none;html=1;" edge="1" parent="139" source="156" target="158">
+                    <mxGeometry x="-0.1429" y="11" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="163" value="No" style="edgeStyle=none;html=1;" edge="1" parent="139" source="156" target="162">
+                    <mxGeometry x="0.0217" y="-13" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="156" value="Is hit distance small?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="139">
+                    <mxGeometry x="199" y="31" width="105" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="161" style="edgeStyle=none;html=1;" edge="1" parent="139" source="158" target="160">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="158" value="shadowBuffer = 1.0f" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="139">
+                    <mxGeometry x="191.5" y="139" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="160" value="End" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="139">
+                    <mxGeometry x="191.5" y="229" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="165" style="edgeStyle=none;html=1;" edge="1" parent="139" source="162" target="164">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="162" value="For each light" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;" vertex="1" parent="139">
+                    <mxGeometry x="396" y="31" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="167" style="edgeStyle=none;html=1;" edge="1" parent="139" source="164" target="166">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="164" value="Create random seed" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="139">
+                    <mxGeometry x="550" y="41" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="169" style="edgeStyle=none;html=1;" edge="1" parent="139" source="166" target="168">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="166" value="For i = 0 to lightCount" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;" vertex="1" parent="139">
+                    <mxGeometry x="704" y="31" width="120" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="171" style="edgeStyle=none;html=1;" edge="1" parent="139" source="168" target="170">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="168" value="l_randPoint = randPointOnSphere()" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="139">
+                    <mxGeometry x="857" y="41" width="147" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="170" value="lightDir = l_randPoint - trianglePos" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="139">
+                    <mxGeometry x="1037" y="41" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="172" value="" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="139">
+                    <mxGeometry x="1190" y="31" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="155" style="edgeStyle=none;html=1;" edge="1" parent="81" source="146" target="140">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="146" value="In Pass2" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="39" y="873" width="240" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="147" value="Light Data {Pos[], Inten, Radius}" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="146">
+                    <mxGeometry y="30" width="240" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="148" value="BVH Data (Nodes, IdxMap)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="146">
+                    <mxGeometry y="60" width="240" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="149" value="&amp;nbsp;Triangle Data" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="146">
+                    <mxGeometry y="90" width="240" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="154" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="81" source="150" target="140">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="316" y="1096"/>
+                            <mxPoint x="316" y="933"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="150" value="From Intersections" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="81">
+                    <mxGeometry x="39" y="1054" width="240" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="151" value="hitLocations (xyz) hitDistance(w)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="150">
+                    <mxGeometry y="30" width="240" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="152" value="triangleNormals (xyz) triangleId(w)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="150">
+                    <mxGeometry y="60" width="240" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="120" value="Raytracer" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="62" vertex="1">
                     <mxGeometry x="1324" y="89" width="194" height="194" as="geometry"/>

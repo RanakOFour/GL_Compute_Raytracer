@@ -8,7 +8,7 @@
 */
 struct Light
 {
-    glm::vec3 position;
+    glm::vec3 points[4];
     glm::vec3 colour;
     float intensity;
     float radius;
