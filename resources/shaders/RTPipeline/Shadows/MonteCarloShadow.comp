@@ -66,8 +66,8 @@ struct Light
     float radius;
 
     // Values for Square area light
-    vec3 normal;
-    vec3 halfExtents;
+    vec3 cornerA;
+    vec3 cornerB;
 };
 
 uniform Light u_lights[MAX_LIGHTS];
@@ -122,26 +122,12 @@ vec3 SamplePointOnSphere(inout uint _seed, vec3 center, float radius)
     return center + dir * radius;
 }
 
-vec3 SamplePointOnPlane(inout uint _seed, vec3 _center, vec3 _normal, vec3 _halfExtents)
+vec3 SamplePointOnPlane(inout uint _seed, vec3 _corner, vec3 _edge1, vec3 _edge2)
 {
-    float u = (RandomFloat(_seed) - 0.5f) * 2.0f;
-    float v = (RandomFloat(_seed) - 0.5f) * 2.0f;
+    float u = RandomFloat(_seed);
+    float v = RandomFloat(_seed);
 
-    vec3 l_tangent;
-    // Calculate tangent with normal and an arbitrary (but NOT perpendicular) axis
-    
-    if(abs(_normal.y) < 0.99)
-    {
-        l_tangent = normalize(cross(_normal, vec3(0.0, 1.0, 0.0)));
-    }
-    else
-    {
-        l_tangent = normalize(cross(_normal, vec3(0.0, 0.0, 1.0)));
-    }
-
-    vec3 l_biTangent = normalize(cross(_normal, l_tangent));
-
-    return _center + (l_tangent * u * length(_halfExtents)) + (l_biTangent * v * length(_halfExtents));
+    return _corner + (u * _edge1) + (v * _edge2);
 }
 
 RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
@@ -339,7 +325,7 @@ void main()
         }
         else
         {
-            l_randomPoint = SamplePointOnPlane(l_rngState, u_lights[l_lightIdx].position, u_lights[l_lightIdx].normal, u_lights[l_lightIdx].halfExtents);
+            l_randomPoint = SamplePointOnPlane(l_rngState, u_lights[l_lightIdx].position, u_lights[l_lightIdx].cornerA, u_lights[l_lightIdx].cornerB);
         }
 
         vec3 l_lightDir = l_randomPoint - b_hitLocation;

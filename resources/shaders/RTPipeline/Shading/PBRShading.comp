@@ -36,8 +36,8 @@ struct Light
     float radius;
 
     // Values for Square area light
-    vec3 normal;
-    vec3 halfExtents;
+    vec3 cornerA;
+    vec3 cornerB;
 };
 #define MAX_LIGHTS 10
 uniform Light u_lights[MAX_LIGHTS];
@@ -125,10 +125,6 @@ void main()
         l_mat.ambientOcclusion = 1.0;
     }
 
-    //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texColour, 1.0f));
-    //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_mat.metallic, l_mat.roughness, l_mat.ambientOcclusion, 1.0f));
-    //return;
-
     vec3 l_normal = normalize(imageLoad(triangleNormals, l_pixelCoords).rgb);
     vec3 V = normalize(u_cameraPos - l_position);
 
@@ -137,10 +133,22 @@ void main()
 
     for(int i = 0; i < u_lightCount; i++)
     {
-        vec3 l_lightDir = normalize(u_lights[i].position - l_position);
+        vec3 l_lightPosition = vec3(0.0);
+        if(u_lights[i].radius > 0.0f)
+        {
+            l_lightPosition = u_lights[i].position;
+        }
+        else
+        {
+            l_lightPosition = u_lights[i].position
+                              + 0.5 * (u_lights[i].cornerA - u_lights[i].position)
+                              + 0.5 * (u_lights[i].cornerB - u_lights[i].position);
+        }
+
+        vec3 l_lightDir = normalize(l_lightPosition - l_position);
         vec3 l_halfLength = normalize(V + l_lightDir);
-        float l_distance = length(u_lights[i].position - l_position);
-        float l_attenuation = 1.0 / (l_distance * l_distance);
+        float l_distance = length(l_lightPosition - l_position);
+        float l_attenuation = 1.0 / (1.0 + 0.1 * l_distance * l_distance);
         vec3 l_radiance = u_lights[i].colour * u_lights[i].intensity * l_attenuation;
 
         // Cook-Torrance BRDF

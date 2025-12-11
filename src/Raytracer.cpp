@@ -104,8 +104,8 @@ void Raytracer::Trace(float _deltaTime)
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].normal", m_lights[i].normal);
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].halfExtents", m_lights[i].halfExtents);
+            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
+            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
         }
 
         glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
@@ -124,9 +124,9 @@ void Raytracer::Trace(float _deltaTime)
             m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
             m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
             m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
-            //m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
-            //m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].normal", m_lights[i].normal);
-            //m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].halfExtents", m_lights[i].halfExtents);
+            m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
+            m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
+            m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
         }
 
         for (int i = 0; i < m_textures->size(); i++)
@@ -158,8 +158,8 @@ void Raytracer::Trace(float _deltaTime)
             m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
             //m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
             m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
-            m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].normal", m_lights[i].normal);
-            m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].halfExtents", m_lights[i].halfExtents);
+            m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
+            m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
         }
 
         glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);

@@ -20,7 +20,7 @@ inline void HandleMouseInput(Input& _inputMap, SDL_MouseMotionEvent& _mouseEvent
 int main(int argc, char* argv[])
 {
 	// Set window size
-	glm::ivec2 l_winSize(1920, 1080);
+	glm::ivec2 l_winSize(1000, 800);
 
 	printf("Initialising RT\n");
 	// This will handle rendering to screen
@@ -51,8 +51,8 @@ int main(int argc, char* argv[])
 	l_light.colour = glm::vec3(1.0f);
 	l_light.intensity = 1.0f;
 	l_light.radius = 1.0f;
-	l_light.normal = glm::vec3(0.0, -1.0, 0.0);
-	l_light.halfExtents = glm::vec3(0.5, 0.5, 0.5);
+	l_light.cornerA = glm::vec3(0.0, -1.0, 0.0);
+	l_light.cornerB = glm::vec3(0.5, 0.5, 0.5);
 	
 	l_raytracer.AddLight(l_light);
 
@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 		l_tris[i].materialId = 0;
 	}
 
-	std::vector<Triangle> l_floorTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, -1.7f, 0.0f),
+	std::vector<Triangle> l_floorTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, -2.3f, 0.0f),
 																 glm::vec3(10.0f, 0.1f, 10.0f));
 
 	for (int i = 0; i < l_floorTris.size(); i++)
@@ -99,6 +99,13 @@ int main(int argc, char* argv[])
 	bool l_mouseMovement = false;
 
 	float l_lastFrame = 0.0f;
+
+	bool l_lightIsSphere = true;
+	bool l_lastFrameLightIsSphere = l_lightIsSphere;
+
+	
+	bool l_lightIsQuad = false;
+	bool l_lastFrameLightIsQuad = l_lightIsQuad;
 
 	SDL_Event l_event;
 	while(l_keepGoing)
@@ -164,11 +171,50 @@ int main(int argc, char* argv[])
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 
-		ImGui::Begin("Settings");
+		ImGui::Begin("Light Settings");
+
+		l_lastFrameLightIsQuad = l_lightIsQuad;
+		l_lastFrameLightIsSphere = l_lightIsSphere;
+		ImGui::Checkbox("Sphere Light", &l_lightIsSphere);
+		if(l_lightIsSphere && l_lightIsSphere != l_lastFrameLightIsSphere)
+		{
+			l_lightIsQuad = false;
+			l_light0->radius = 1.0f;
+		}
+
+		ImGui::Checkbox("Quad Light", &l_lightIsQuad);
+		if(l_lightIsQuad && l_lightIsQuad != l_lastFrameLightIsQuad)
+		{
+			l_lightIsSphere = false;
+			l_light0->radius = 0.0f;
+		}
 
 		glm::vec3 lightPos = l_light0->position;
-		ImGui::DragFloat3("Light Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
+		
+		if(l_lightIsSphere)
+		{
+			ImGui::DragFloat3("Light Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
+
+			float l_radius = l_light0->radius;
+			ImGui::SliderFloat("Light Radius", &l_radius, 0.0f, 10.0f);
+			l_light0->radius = l_radius;
+		}
+		else
+		{
+			ImGui::DragFloat3("Light Corner 1", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
+			
+			glm::vec3 lightPos2 = l_light0->cornerA;
+			ImGui::DragFloat3("Light Corner 2", &(lightPos2[0]), 0.1f, -10.0f, 10.0f);
+			l_light0->cornerA = lightPos2;
+
+			glm::vec3 lightPos3 = l_light0->cornerB;
+			ImGui::DragFloat3("Light Corner 3", &(lightPos3[0]), 0.1f, -10.0f, 10.0f);
+			l_light0->cornerB = lightPos3;
+		}
+
 		l_light0->position = lightPos;
+
+		
 
 		glm::vec3 lightCol = l_light0->colour;
 		ImGui::ColorEdit3("Light Colour", &(lightCol[0]));
@@ -177,21 +223,6 @@ int main(int argc, char* argv[])
 		float inten = l_light0->intensity;
 		ImGui::SliderFloat("Light Intensity", &(inten), 0.0f, 100.0f);
 		l_light0->intensity = inten;
-
-		float l_e = l_light0->radius;
-		ImGui::SliderFloat("Light Radius", &l_e, 0.0f, 10.0f);
-		l_light0->radius = l_e;
-
-		if (l_e == 0.0f)
-		{
-			glm::vec3 l_norm = l_light0->normal;
-			ImGui::SliderFloat3("Light Normal", &l_norm[0], -1.0f, 1.0f);
-			l_light0->normal = l_norm;
-
-			glm::vec3 l_hext = l_light0->halfExtents;
-			ImGui::SliderFloat3("Light Half Extents", &l_hext[0], 0.0f, 10.0f);
-			l_light0->halfExtents = l_hext;
-		}
 
 		ImGui::End();
 

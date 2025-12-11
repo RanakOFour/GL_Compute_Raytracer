@@ -16,8 +16,8 @@ struct Light
     float radius;
 
     // Data for plane light
-    glm::vec3 normal;
-    glm::vec3 halfExtents;
+    glm::vec3 cornerA;
+    glm::vec3 cornerB;
 };
 
 #endif
