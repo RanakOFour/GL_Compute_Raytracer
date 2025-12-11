@@ -154,9 +154,6 @@ int main(int argc, char* argv[])
 
 		float l_deltaTime = l_currentTime - l_lastFrame;
 
-		
-		printf("DeltaTime: %f\n", l_deltaTime);
-
 		l_rtCam->Update(l_inputMap, l_deltaTime);
 
 		l_raytracer.Trace(l_deltaTime);
@@ -193,12 +190,8 @@ int main(int argc, char* argv[])
 		if(l_shadow)
 		{
 			int l_sample = l_raytracer.Samples();
-			ImGui::SliderInt("SampleCount", &l_sample, 0, 50);
+			ImGui::SliderInt("SampleCount", &l_sample, 1, 50);
 			l_raytracer.Samples(l_sample);
-
-			float l_decay = l_raytracer.Decay();
-			ImGui::SliderFloat("Decay", &l_decay, 0.0f, 1.0f);
-			l_raytracer.Decay(l_decay);
 		}
 
 		bool l_shade = l_raytracer.Shading();

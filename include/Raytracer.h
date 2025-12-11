@@ -46,8 +46,6 @@ class Raytracer : public GCP_Framework
     int m_frameCount;
     int m_sampleCount;
 
-    float m_decay;
-
     public:
     Raytracer(glm::ivec2 _screenSize);
     ~Raytracer();
@@ -73,10 +71,6 @@ class Raytracer : public GCP_Framework
 
     int Samples() { return m_sampleCount; };
     void Samples(int _s) { m_sampleCount = _s; };
-
-
-    float Decay() { return m_decay; };
-    void Decay(float _s) { m_decay = _s; };
 };
 
 #endif

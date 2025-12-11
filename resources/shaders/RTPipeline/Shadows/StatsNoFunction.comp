@@ -11,11 +11,11 @@ layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
 // Statistical shadows based on this paper
 // https://boksajak.github.io/files/RTG1_RayTracedShadows.pdf
 
-// STATISTICAL SHADOW PARAMETERS
-uniform float u_searchRadius = 0.1;        // Search radius in world units
-uniform float u_minVariance = 0.000001;    // Minimum variance to avoid divide by zero
-uniform int u_neighborCount = 8;           // Number of neighboring pixels to sample
-uniform float u_bias = 0.001;              // Shadow bias
+// Statistical shadow params
+uniform float u_searchRadius = 0.1;
+uniform float u_minVariance = 0.000001;
+uniform int u_neighborCount = 8;
+uniform float u_bias = 0.001;
 
 struct Triangle
 {
@@ -62,6 +62,8 @@ uniform Light u_lights[MAX_LIGHTS];
 uniform int u_lightCount;
 uniform int u_samplesPerFrame;
 uniform int u_frameCount;
+
+uniform float u_temporalDecay;
 
 const float PI = 3.14159265359;
 
@@ -126,38 +128,38 @@ float ChebyshevUpperBound(float _moment1, float _moment2, float _t)
 }
 
 // Single ray trace for depth value
-float TraceShadowRay(vec3 _origin, vec3 direction, float maxDistance)
+float TraceShadowRay(vec3 _origin, vec3 _direction, float _maxDistance)
 {
-    float closestHit = maxDistance;
+    float l_closestHit = _maxDistance;
     
-    int stack[64];
-    int stackPtr = 0;
-    stack[stackPtr++] = 0;
+    int l_stack[64];
+    int l_stackPtr = 0;
+    l_stack[l_stackPtr++] = 0;
     
-    while (stackPtr > 0)
+    while (l_stackPtr > 0)
     {
-        int nodeIdx = stack[--stackPtr];
-        Node node = bvhNodes[nodeIdx];
+        int l_nodeIdx = l_stack[--l_stackPtr];
+        Node l_node = bvhNodes[l_nodeIdx];
         
-        // AABB intersection
-        float tmin = 0.0;
-        float tmax = maxDistance;
+        // AABB intersection implanted here for the speedup
+        float l_tmin = 0.0;
+        float l_tmax = _maxDistance;
         
         for (int i = 0; i < 3; i++)
         {
-            if (abs(direction[i]) < 0.0001)
+            if (abs(_direction[i]) < 0.0001)
             {
-                if (_origin[i] < node.minBound[i] || _origin[i] > node.maxBound[i])
+                if (_origin[i] < l_node.minBound[i] || _origin[i] > l_node.maxBound[i])
                 {
-                    tmin = tmax + 1.0;
+                    l_tmin = l_tmax + 1.0;
                     break;
                 }
             }
             else
             {
-                float invDir = 1.0 / direction[i];
-                float t1 = (node.minBound[i] - _origin[i]) * invDir;
-                float t2 = (node.maxBound[i] - _origin[i]) * invDir;
+                float l_invDir = 1.0 / _direction[i];
+                float t1 = (l_node.minBound[i] - _origin[i]) * l_invDir;
+                float t2 = (l_node.maxBound[i] - _origin[i]) * l_invDir;
                 
                 if (t1 > t2)
                 {
@@ -166,18 +168,18 @@ float TraceShadowRay(vec3 _origin, vec3 direction, float maxDistance)
                     t2 = temp;
                 }
                 
-                tmin = max(tmin, t1);
-                tmax = min(tmax, t2);
+                l_tmin = max(l_tmin, t1);
+                l_tmax = min(l_tmax, t2);
                 
-                if (tmin > tmax)
+                if (l_tmin > l_tmax)
                 {
-                    tmin = tmax + 1.0;
+                    l_tmin = l_tmax + 1.0;
                     break;
                 }
             }
         }
         
-        if (tmin <= tmax)
+        if (l_tmin <= l_tmax)
         {
             if (node.triangleCount > 0)
             {
@@ -378,6 +380,8 @@ void main()
     
     l_shadowInFrame = mix(l_prevShadow, l_shadowInFrame, l_alpha);
     
+    //l_shadowInFrame = (1.0f - u_temporalDecay) * l_prevShadow + u_temporalDecay * l_shadowInFrame;
+
     // Store results
     imageStore(shadowBuffer, l_pixelCoords, vec4(vec3(l_shadowInFrame), float(l_totalSamples)));
 }

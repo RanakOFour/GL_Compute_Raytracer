@@ -45,8 +45,16 @@ class Camera
         // This is also platform specific, so I hope that it works on windows
         // Apparently, SDL timers can work to the nearest nanosecond (x10^9),
         // which is odd considering the value below (1x10^18) implies something much worse
-        float l_moveDelta = _deltaTime / 100000000000000000.0f;
+
         
+        float l_moveDelta = 0.0f;
+        
+        #if _WIN32
+        l_moveDelta = _deltaTime / 10000000000000.0f;
+        #else
+        l_moveDelta = _deltaTime / 100000000000000000.0f;
+        #endif
+
 		Move(_inputMap.forward * m_Forward * (l_moveDelta));
 
 		Move(_inputMap.right * m_Right * (l_moveDelta));

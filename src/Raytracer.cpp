@@ -10,7 +10,7 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 , m_lights()
 , m_camera(_screenSize)
 , m_IntersectionComp("./resources/shaders/RTPipeline/Intersections/Intersections.comp")
-, m_ShadowComp("./resources/shaders/RTPipeline/Shadows/StatsNoFunction.comp")
+, m_ShadowComp("./resources/shaders/RTPipeline/Shadows/MonteCarloShadow.comp")
 , m_ShadingComp("./resources/shaders/RTPipeline/Shading/PBRShading.comp")
 , m_gBuffers{0, 0, 0, 0, 0}
 , m_triangleSSBO(-1)
@@ -20,7 +20,6 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 , m_shading(true)
 , m_frameCount(0)
 , m_sampleCount(1)
-, m_decay(0.3f)
 {
     printf("Binding bufferTex\n");
     m_mainBuffer->BindGLImage();
@@ -108,6 +107,7 @@ void Raytracer::Trace(float _deltaTime)
         // Cap light count at 10
         m_ShadowComp.SetUniform("u_lightCount", l_lightCount);
         m_ShadowComp.SetUniform("u_frameCount", m_frameCount);
+        m_ShadowComp.SetUniform("u_samplesPerFrame", m_sampleCount);
         for(int i = 0; i < l_lightCount; i++)
         {
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].points[0]", m_lights[i].points[0]);
@@ -129,7 +129,6 @@ void Raytracer::Trace(float _deltaTime)
         m_ShadingComp.use();
 
         m_ShadingComp.SetUniform("u_cameraPos", m_camera.Position());
-
         m_ShadingComp.SetUniform("u_lightCount", l_lightCount);
         for(int i = 0; i < l_lightCount; i++)
         {
