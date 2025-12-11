@@ -20,7 +20,7 @@ inline void HandleMouseInput(Input& _inputMap, SDL_MouseMotionEvent& _mouseEvent
 int main(int argc, char* argv[])
 {
 	// Set window size
-	glm::ivec2 l_winSize(1000, 800);
+	glm::ivec2 l_winSize(1920, 1080);
 
 	printf("Initialising RT\n");
 	// This will handle rendering to screen
@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 	l_light.position = glm::vec3(-1.5f, 3.0f, -1.5f);
 	l_light.colour = glm::vec3(1.0f);
 	l_light.intensity = 1.0f;
-	l_light.radius = 2.0f;
+	l_light.radius = 1.0f;
 	l_light.normal = glm::vec3(0.0, -1.0, 0.0);
 	l_light.halfExtents = glm::vec3(0.5, 0.5, 0.5);
 	
@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
 		l_light0->colour = lightCol;
 
 		float inten = l_light0->intensity;
-		ImGui::SliderFloat("Light Intensity", &(inten), 0.0f, 20.0f);
+		ImGui::SliderFloat("Light Intensity", &(inten), 0.0f, 100.0f);
 		l_light0->intensity = inten;
 
 		float l_e = l_light0->radius;
