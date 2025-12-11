@@ -30,9 +30,30 @@ int main(int argc, char* argv[])
 
 	Model l_curuthersModel("./resources/objects/curuthers.obj");
 
+	Texture l_modelTexture = Texture("./resources/textures/Whiskers_diffuse.png");
+	
+	Material l_matCuruthers;
+	l_matCuruthers.albedo = glm::vec3(1.0f);
+	l_matCuruthers.metallic = 0.0f;
+	l_matCuruthers.roughness = 0.0f;
+	l_matCuruthers.ambientOcclusion = 1.0f;
+
+	Model l_cubeModel("./resources/objects/cube.obj");
+
+	Material l_matFloor;
+	l_matFloor.albedo = glm::vec3(1.0f);
+	l_matFloor.metallic = 0.0f;
+	l_matFloor.roughness = 0.0f;
+	l_matFloor.ambientOcclusion = 1.0f;
+
 	Light l_light;
-	l_light.position = glm::vec3(0.0f, 0.0f, 3.0f);
-	l_light.colour = glm::vec3(1.0f, 1.0f, 1.0f);
+	l_light.points[0] = glm::vec3(-1.5f, 3.0f, -1.5f);
+	l_light.points[1] = glm::vec3(1.5f, 3.0f, -1.5f);
+	l_light.points[2] = glm::vec3(-1.5f, 3.0f, 1.5f);
+	l_light.points[3] = glm::vec3(1.5f, 3.0f, 1.5f);
+	l_light.colour = glm::vec3(1.0f);
+	l_light.intensity = 1.0f;
+	l_light.radius = 2.0f;
 	
 	l_raytracer.AddLight(l_light);
 
@@ -42,24 +63,29 @@ int main(int argc, char* argv[])
 
 	printf("Creating vectors\n");
 	std::vector<Triangle> l_tris = l_curuthersModel.GetTriangles(glm::vec3(0.0f));
-	std::vector<Texture> l_textures;
-	std::vector<Material> l_materials;
 
-	Texture l_modelTexture = Texture("./resources/textures/Whiskers_diffuse.png");
-	
-	Material l_material;
-	l_material.albedo = glm::vec3(1.0f);
-	l_material.metallic = 1.0f;
-	l_material.roughness = 0.0f;
-	l_material.ambientOcclusion = 1.0f;
-
-	for(int i = 0; i < l_tris.size(); i++)
+	for (int i = 0; i < l_tris.size(); i++)
 	{
 		l_tris[i].textureId = 0;
 		l_tris[i].materialId = 0;
 	}
 
-	l_materials.push_back(l_material);
+	std::vector<Triangle> l_floorTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, -1.7f, 0.0f),
+																 glm::vec3(10.0f, 0.1f, 10.0f));
+
+	for (int i = 0; i < l_floorTris.size(); i++)
+	{
+		l_floorTris[i].textureId = -1;
+		l_floorTris[i].materialId = -1;
+	}
+
+	l_tris.insert(l_tris.end(), l_floorTris.begin(), l_floorTris.end());
+	std::vector<Texture> l_textures;
+	std::vector<Material> l_materials;
+
+	l_materials.push_back(l_matCuruthers);
+	l_materials.push_back(l_matFloor);
+
 	l_textures.push_back(l_modelTexture);
 
 	
@@ -76,6 +102,8 @@ int main(int argc, char* argv[])
 
 	bool l_keepGoing = true;
 	bool l_mouseMovement = false;
+
+	float l_lastFrame = 0.0f;
 
 	SDL_Event l_event;
 	while(l_keepGoing)
@@ -124,10 +152,18 @@ int main(int argc, char* argv[])
 			l_inputMap.deltaMouseX = 0.0f;
 			l_inputMap.deltaMouseY = 0.0f;
 		}
+		
+		float l_currentTime = (float)(SDL_GetPerformanceCounter() * SDL_GetPerformanceFrequency());
 
-		l_rtCam->Update(l_inputMap);
 
-		l_raytracer.Trace();
+		float l_deltaTime = l_currentTime - l_lastFrame;
+
+		l_rtCam->Update(l_inputMap, l_deltaTime);
+
+		l_raytracer.Trace(l_deltaTime);
+
+		
+		l_lastFrame = l_currentTime;
 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplSDL2_NewFrame();
@@ -135,17 +171,32 @@ int main(int argc, char* argv[])
 
 		ImGui::Begin("Settings");
 
-		glm::vec3 lightPos = l_light0->position;
+		glm::vec3 lightPos = l_light0->points[0];
 		ImGui::DragFloat3("Light Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
-		l_light0->position = lightPos;
+		l_light0->points[0] = lightPos;
 
 		glm::vec3 lightCol = l_light0->colour;
 		ImGui::ColorEdit3("Light Colour", &(lightCol[0]));
 		l_light0->colour = lightCol;
 
+		float inten = l_light0->intensity;
+		ImGui::SliderFloat("Light Intensity", &(inten), 0.0f, 20.0f);
+		l_light0->intensity = inten;
+
+		float l_e = l_light0->radius;
+		ImGui::SliderFloat("Light Radius", &l_e, 0.0f, 10.0f);
+		l_light0->radius = l_e;
+
 		bool l_shadow = l_raytracer.Shadows();
 		ImGui::Checkbox("Shadows", &l_shadow);
 		l_raytracer.Shadows(l_shadow);
+
+		if(l_shadow)
+		{
+			int l_sample = l_raytracer.Samples();
+			ImGui::SliderInt("SampleCount", &l_sample, 1, 50);
+			l_raytracer.Samples(l_sample);
+		}
 
 		bool l_shade = l_raytracer.Shading();
 		ImGui::Checkbox("Shading", &l_shade);

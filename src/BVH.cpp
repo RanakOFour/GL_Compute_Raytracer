@@ -204,7 +204,6 @@ GLuint BVH::GetIndexSSBO()
         glGenBuffers(1, &m_indexesSSBOID);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_indexesSSBOID);
         glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLint) * m_triIndexes.size(), &(m_triIndexes.at(0)), GL_DYNAMIC_READ);
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_indexesSSBOID);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
         printf("BVH indexes uploaded\n");
@@ -221,7 +220,6 @@ GLuint BVH::GetNodeSSBO()
         glGenBuffers(1, &m_nodeSSBOID);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_nodeSSBOID);
         glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(BVHNode) * m_nodes.size(), &(m_nodes.at(0)), GL_DYNAMIC_READ);
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_nodeSSBOID);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
         printf("BVH Nodes uploaded\n");

@@ -1,0 +1,8 @@
+#version 430 core
+
+layout(rgba32f, binding = 0) o_framebufferTex;
+
+void main()
+{
+	
+}

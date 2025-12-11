@@ -11,6 +11,7 @@
 #include "Datastructs/Texture.h"
 #include "Datastructs/Light.h"
 #include "ComputeShader.h"
+#include "BufferIndexes.h"
 
 #include <vector>
 
@@ -32,10 +33,9 @@ class Raytracer : public GCP_Framework
     ComputeShader m_ShadowComp;
     ComputeShader m_ShadingComp;
 
-    GLuint m_gBuffers[6];
+    GLuint m_gBuffers[GBUFFERCOUNT];
 
     GLuint m_triangleSSBO;
-    GLuint m_textureSSBO;
     GLuint m_materialSSBO;
 
     bool m_setup;
@@ -43,11 +43,14 @@ class Raytracer : public GCP_Framework
     bool m_shadows;
     bool m_shading;
 
+    int m_frameCount;
+    int m_sampleCount;
+
     public:
     Raytracer(glm::ivec2 _screenSize);
     ~Raytracer();
 
-    void Trace();
+    void Trace(float _time);
 
     void SetTris(std::vector<Triangle>* _tris);
     void SetMaterials(std::vector<Material>* _mat);
@@ -65,6 +68,9 @@ class Raytracer : public GCP_Framework
 
     bool Shadows() { return m_shadows; };
     void Shadows(bool _s) { m_shadows = _s; };
+
+    int Samples() { return m_sampleCount; };
+    void Samples(int _s) { m_sampleCount = _s; };
 };
 
 #endif

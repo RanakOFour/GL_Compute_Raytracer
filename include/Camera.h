@@ -39,22 +39,36 @@ class Camera
      * @brief
      * Update position and rotation using the Input struct
      */
-    inline void Update(Input _inputMap)
+    inline void Update(Input _inputMap, float _deltaTime)
     {
-		Move(_inputMap.forward * m_Forward * (1.0f / 30.0f));
+        // You do not wish to know how many tries it took me to get this somewhat reasonable
+        // This is also platform specific, so I hope that it works on windows
+        // Apparently, SDL timers can work to the nearest nanosecond (x10^9),
+        // which is odd considering the value below (1x10^18) implies something much worse
 
-		Move(_inputMap.right * m_Right * (1.0f / 30.0f));
+        
+        float l_moveDelta = 0.0f;
+        
+        #if _WIN32
+        l_moveDelta = _deltaTime / 10000000000000.0f;
+        #else
+        l_moveDelta = _deltaTime / 100000000000000000.0f;
+        #endif
 
-        Move(_inputMap.up * m_Up * (1.0f / 30.0f));
+		Move(_inputMap.forward * m_Forward * (l_moveDelta));
+
+		Move(_inputMap.right * m_Right * (l_moveDelta));
+
+        Move(_inputMap.up * m_Up * (l_moveDelta));
 
         if(abs(_inputMap.deltaMouseX) > 0.0f && abs(_inputMap.deltaMouseX) < 1.0f)
         {
-            Rotate(_inputMap.deltaMouseX, m_Up);
+            Rotate(_inputMap.deltaMouseX * (l_moveDelta), m_Up);
         }
 
         if(abs(_inputMap.deltaMouseY) > 0.0f && abs(_inputMap.deltaMouseY) < 1.0f)
         {
-            Rotate(_inputMap.deltaMouseY, m_Right);
+            Rotate(_inputMap.deltaMouseY * (l_moveDelta), m_Right);
         }
 
         //printf("%i, %i, %i, %f, %f\n", _inputMap.forward, _inputMap.right, _inputMap.up, _inputMap.deltaMouseX, _inputMap.deltaMouseY);
@@ -94,11 +108,11 @@ class Camera
     inline void Move(glm::vec3 _posChange) { m_Position += _posChange; };
     inline void Position(glm::vec3 _newPos) { m_Position = _newPos; };
 
-    glm::vec3& Position() { return m_Position; };
-    glm::vec3& Forward() { return m_Forward; };
-    glm::vec3& Right() { return m_Right; };
-    glm::vec3& Up() { return m_Up; };
-    glm::quat Rotation() {return m_Rotation;};
+    inline glm::vec3& Position() { return m_Position; };
+    inline glm::vec3& Forward() { return m_Forward; };
+    inline glm::vec3& Right() { return m_Right; };
+    inline glm::vec3& Up() { return m_Up; };
+    inline glm::quat Rotation() {return m_Rotation;};
     /** @} */
 };
 

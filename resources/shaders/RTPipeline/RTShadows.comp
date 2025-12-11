@@ -5,7 +5,7 @@ layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 
 layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
-layout(r32f, binding = 4) uniform image2D shadowBuffer;
+layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
 
 
 struct Triangle
@@ -55,10 +55,12 @@ layout(std430, binding = 7) readonly buffer b_bvhTriangleIndex
     int bvhTriIdxs[];
 };
 
-struct Light { vec3 position; vec3 color; };
+struct Light { vec3 points[4]; };
 #define MAX_LIGHTS 10
 uniform Light u_lights[MAX_LIGHTS];
-uniform int u_numLights;
+uniform int u_lightCount;
+
+uniform int u_sampleCount;
 
 struct Ray  { vec3 origin; vec3 direction; };
 
@@ -67,59 +69,61 @@ struct RaycastResult {
     float distance;
     vec3 position;
     vec3 normal;
-    int triangleIndex;
+    int triangleId;
+    vec3 error;
 };
 
-RaycastResult triangleIntersect(Ray _ray, Triangle _tri, int _index)
+RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
 {
     RaycastResult result;
     result.hit = false;
-    result.triangleIndex = _index;
+    result.triangleId = _index;
 
-    float l_ep = 0.0001;
-
-    vec3 l_edgeAB = _tri.a;
-    vec3 l_edgeAC = _tri.b; 
-    vec3 l_edgeAP = _tri.c;
-
-    vec3 edge1 = l_edgeAC - l_edgeAB;
-    vec3 edge2 = l_edgeAP - l_edgeAB;
-    vec3 ray_cross_edge2 = cross(_ray.direction, edge2);
-    float det = dot(edge1, ray_cross_edge2);
-
-    if(det > -l_ep && det < l_ep)
+    const float l_ep = 0.000001;
+    
+    vec3 edge1 = _tri.b - _tri.a;
+    vec3 edge2 = _tri.c - _tri.a;
+    
+    vec3 h = cross(_ray.direction, edge2);
+    float det = dot(edge1, h);
+    
+    // If the determinant is negative, the triangle is back-facing.
+    if (det < l_ep)
     {
         return result;
     }
-
-    float inv_det = 1.0 / det;
-    vec3 s = _ray.origin - l_edgeAB;
-    float u = inv_det * dot(s, ray_cross_edge2);
-
-    if(u < 0.0 || u > 1.0)
+    
+    float invDet = 1.0 / det;
+    vec3 s = _ray.origin - _tri.a;
+    float u = invDet * dot(s, h);
+    
+    if (u < 0.0 || u > 1.0)
     {
         return result;
     }
-
-    vec3 s_cross_e1 = cross(s, edge1);
-    float v = inv_det * dot(_ray.direction, s_cross_e1);
-
-    if(v < 0.0 || u + v > 1.0)
+    
+    vec3 q = cross(s, edge1);
+    float v = invDet * dot(_ray.direction, q);
+    
+    if (v < 0.0 || u + v > 1.0)
     {
         return result;
     }
-
-    float t = inv_det * dot(edge2, s_cross_e1);
-
-    if(t > l_ep)
+    
+    // At this stage we can compute t to find out where
+    // the intersection point is on the line
+    float t = invDet * dot(edge2, q);
+    
+    if (t > l_ep) // Ray intersection
     {
         result.hit = true;
         result.position = _ray.origin + _ray.direction * t;
         result.distance = t;
-        result.normal = _tri.normal;
+        result.normal = normalize(cross(edge1, edge2));
         return result;
     }
-
+    
+    // This means that there is a line intersection but not a ray intersection
     return result;
 }
 
@@ -162,7 +166,7 @@ bool IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
 }
 
 // Shadow ray tracing (simplified version of TraverseBVH)
-bool isInShadow(vec3 _lightPos, vec3 _position, vec3 _normal, int _idx)
+bool IsInShadow(vec3 _lightPos, vec3 _position, vec3 _normal, int _idx)
 {
     Ray l_shadowRay;
     l_shadowRay.origin = _position + _normal * 0.001;
@@ -171,49 +175,48 @@ bool isInShadow(vec3 _lightPos, vec3 _position, vec3 _normal, int _idx)
     float l_lightDistance = length(_lightPos - _position);
     
     int l_indexStack[64];
-    int l_top = 0;
-    l_indexStack[l_top] = 0;
-
-    Node l_node = bvhNodes[l_indexStack[l_top]];
-    l_top++;
-
-    do
+    int l_stack[64];
+    int l_stackPtr = 0;
+    l_stack[l_stackPtr++] = 0;  // Push root node
+    
+    while (l_stackPtr > 0)
     {
-        if(IntersectAABB(l_shadowRay, l_node.minBound, l_node.maxBound))
+        // Pop node from stack
+        int l_nodeIdx = l_stack[--l_stackPtr];
+        Node l_node = bvhNodes[l_nodeIdx];
+        
+        // Check if ray intersects this node's AABB
+        if (!IntersectAABB(l_shadowRay, l_node.minBound, l_node.maxBound))
         {
-            if(l_node.triangleCount > 0)
+            continue;
+        }
+        
+        if (l_node.triangleCount > 0)
+        {
+            // Leaf node - check triangles
+            for (int i = 0; i < l_node.triangleCount; i++)
             {
-                for(int i = 0; i < l_node.triangleCount; i++)
+                int triIdx = bvhTriIdxs[l_node.leftFirst + i];
+                
+                // Skip the triangle we're shading (self-intersection)
+                if (triIdx == _idx) continue;
+                
+                RaycastResult result = TriangleIntersect(l_shadowRay, sceneTris[triIdx], triIdx);
+                if (result.hit && result.distance > 0.0 && result.distance < l_lightDistance)
                 {
-                    // Skip the same triangle
-                    if(bvhTriIdxs[l_node.leftFirst + i] == _idx)
-                    {
-                        continue;
-                    }
-
-                    RaycastResult l_shadowHit = triangleIntersect(l_shadowRay, sceneTris[bvhTriIdxs[l_node.leftFirst + i]], bvhTriIdxs[l_node.leftFirst + i]);
-                    
-                    // More than a minimum value to ignore close sceneTris
-                    if(l_shadowHit.hit && l_shadowHit.distance < l_lightDistance && l_shadowHit.distance > 0.01f)
-                    {
-                        return true;
-                    }
+                    return true;  // Shadow found
                 }
             }
-            else
-            {
-                l_indexStack[l_top] = l_node.leftFirst;
-                l_top++;
-                l_indexStack[l_top] = l_node.leftFirst + 1;
-                l_top++;
-            }
         }
-
-        l_top--;
-        l_node = bvhNodes[l_indexStack[l_top]];
-    } while(l_top > -1);
-
-    return false;
+        else
+        {
+            // Internal node - push children (order matters for performance)
+            l_stack[l_stackPtr++] = l_node.leftFirst + 1;  // Right child
+            l_stack[l_stackPtr++] = l_node.leftFirst;      // Left child
+        }
+    }
+    
+    return false;  // No shadow
 }
 
 void main() 
@@ -225,21 +228,25 @@ void main()
     vec3 l_normal = l_normalBVal.rgb;
     int l_triIndex = int(l_normalBVal.a);
     
-    if (length(l_position) < 0.001) {
+    if (length(l_position) < 0.001)
+    {
         imageStore(shadowBuffer, l_pixelCoords, vec4(1.0)); // No shadow for background
         return;
     }
     
     // Check shadows for each light
-    for(int i = 0; i < u_numLights; i++) {
-        vec3 lightDir = normalize(u_lights[i].position - l_position);
-        float lightDistance = length(u_lights[i].position - l_position);
+    for(int i = 0; i < u_lightCount; i++)
+    {
+        vec3 lightDir = normalize(u_lights[i].points[0] - l_position);
+        float lightDistance = length(u_lights[i].points[0] - l_position);
         
         // Offset to avoid self-intersection
         vec3 shadowRayOrigin = l_position + l_normal * 0.001;
         
-        if (isInShadow(u_lights[i].position, l_position, l_normal, l_triIndex)) {
-            shadowFactor *= 0.5f;
+        if (IsInShadow(u_lights[i].points[0], l_position, l_normal, l_triIndex))
+        {
+            shadowFactor = 0.0;  // Completely in shadow
+            break;  // Can break early if any light is blocked
         }
     }
     

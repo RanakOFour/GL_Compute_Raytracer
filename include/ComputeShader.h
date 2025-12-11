@@ -31,6 +31,7 @@ class ComputeShader
     void SetUniform(std::string _name, float _value);
     void SetUniform(std::string _name, glm::vec2 _value);
     void SetUniform(std::string _name, glm::vec3 _value);
+    void SetUniform(std::string _name, glm::uvec4 _value);
     ///@}
 
     GLuint GetID() { return m_ID; };

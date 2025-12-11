@@ -30,17 +30,14 @@ bool InitGL()
 	// GLEW has a problem with loading core OpenGL
 	// See here: https://www.opengl.org/wiki/OpenGL_Loading_Library
 	// The temporary workaround is to enable its 'experimental' features
-	glewExperimental = GL_TRUE;
-
-	GLenum err = glewInit();
-	if (err != GLEW_OK)
-	{
-		/* Problem: glewInit failed, something is seriously wrong. */
-		std::cerr << "Error: GLEW failed to initialise with message: " << glewGetErrorString(err) << std::endl << "Err num: " << err << std::endl;
-		return false;
+	glewExperimental = GL_TRUE; // This is important for modern OpenGL
+	GLenum glewError = glewInit();
+	if (glewError != GLEW_OK) {
+		printf("GLEW Error: %s\n", glewGetErrorString(glewError));
+		return -1;
 	}
 
-	printf("glewInit() res: %i\n", (int)err);
+	printf("glewInit() res: %i\n", (int)glewError);
 
 	std::cout << "INFO: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
 

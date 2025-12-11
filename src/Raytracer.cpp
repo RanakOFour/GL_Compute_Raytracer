@@ -9,27 +9,28 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 , m_textures(nullptr)
 , m_lights()
 , m_camera(_screenSize)
-, m_IntersectionComp("./resources/shaders/RTPipeline/RTIntersections.comp")
-, m_ShadowComp("./resources/shaders/RTPipeline/RTShadows.comp")
-, m_ShadingComp("./resources/shaders/RTPipeline/RTShading.comp")
-, m_gBuffers{0, 0, 0, 0, 0, 0}
+, m_IntersectionComp("./resources/shaders/RTPipeline/Intersections/Intersections.comp")
+, m_ShadowComp("./resources/shaders/RTPipeline/Shadows/MonteCarloShadow.comp")
+, m_ShadingComp("./resources/shaders/RTPipeline/Shading/PBRShading.comp")
+, m_gBuffers{0, 0, 0, 0, 0}
 , m_triangleSSBO(-1)
-, m_textureSSBO(-1)
 , m_materialSSBO(-1)
 , m_setup(false)
 , m_shadows(true)
 , m_shading(true)
+, m_frameCount(0)
+, m_sampleCount(1)
 {
     printf("Binding bufferTex\n");
     m_mainBuffer->BindGLImage();
 
     printf("Creating texture buffers\n");
     //Create texture buffers on GPU
-    glGenTextures(4, &m_gBuffers[0]);
+    glGenTextures(GBUFFERCOUNT, &m_gBuffers[0]);
 
-    for(int i = 0; i < 3; i++)
+    for(int i = 0; i < GBUFFERCOUNT - 1; i++)
     {       
-        printf("Filling in buffer %i\n", i);
+        printf("Filling in buffer %i\n", i + 1);
         glBindTexture(GL_TEXTURE_2D, m_gBuffers[i]);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_screenSize.x, m_screenSize.y, 0, GL_RGBA, GL_FLOAT, 0);
 
@@ -41,37 +42,39 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
         glBindImageTexture(i + 1, m_gBuffers[i], 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
     }
 
-
-    printf("Shadow buffer\n");
-    glBindTexture(GL_TEXTURE_2D, m_gBuffers[3]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, m_screenSize.x, m_screenSize.y, 0, GL_RED, GL_FLOAT, 0);
+    printf("Creating random buffer");
+    glBindTexture(GL_TEXTURE_2D, m_gBuffers[4]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32UI, m_screenSize.x, m_screenSize.y, 0, GL_RGBA, GL_FLOAT, 0);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glBindImageTexture(4, m_gBuffers[3], 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+    glBindImageTexture(RANDOM_BUFFER_LOC, m_gBuffers[4], 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32UI);
     
+    glClearTexImage(m_gBuffers[4], 0, GL_RGBA, GL_UNSIGNED_INT, 0);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     // Everything is bound here once as the bindings do not change
 }
 
 Raytracer::~Raytracer()
 {
-    glDeleteTextures(6, &m_gBuffers[0]);
+    glDeleteTextures(5, &m_gBuffers[0]);
     glDeleteBuffers(1, &m_triangleSSBO);
     glDeleteBuffers(1, &m_materialSSBO);
 }
 
-void Raytracer::Trace()
+void Raytracer::Trace(float _deltaTime)
 {
     if(!m_setup)
     {
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, m_triangleSSBO);
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 6, m_BVH.GetNodeSSBO());
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 7, m_BVH.GetIndexSSBO());
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 8, m_materialSSBO);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, TRIANGLEDATA_BUFFER_LOC, m_triangleSSBO);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, BVHNODE_BUFFER_LOC, m_BVH.GetNodeSSBO());
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, BVHINDEX_BUFFER_LOC, m_BVH.GetIndexSSBO());
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, MATERIAL_BUFFER_LOC, m_materialSSBO);
         m_setup = true;
     }
 
@@ -81,36 +84,39 @@ void Raytracer::Trace()
 
     glm::vec2 l_workGroups(ceil(m_screenSize.x / 8), ceil(m_screenSize.y / 4));
 
+    printf("Intersection pass\n");
     m_IntersectionComp.use();
-    m_camera.UpdateShader(m_IntersectionComp);
+    
+
+    m_IntersectionComp.SetUniform("u_camera.position", m_camera.Position());
+    m_IntersectionComp.SetUniform("u_camera.up", m_camera.Up());
+    m_IntersectionComp.SetUniform("u_camera.right", m_camera.Right());
+    m_IntersectionComp.SetUniform("u_camera.forward", m_camera.Forward());
+
     m_IntersectionComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
 
-    // Cap light count at 10
+    glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
     int l_lightCount = m_lights.size() > 10 ? 10 : m_lights.size();
-    m_IntersectionComp.SetUniform("u_numLights", l_lightCount);
-    for(int i = 0; i < l_lightCount; i++)
-    {
-        m_IntersectionComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
-	    m_IntersectionComp.SetUniform("u_lights[" + std::to_string(i) + "].color", m_lights[i].colour);
-    }
-
-    
-	glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
-	glMemoryBarrier(GL_ALL_BARRIER_BITS);
-
     if(m_shadows)
     {
+        printf("Shadow pass\n");
         m_ShadowComp.use();
 
-        m_camera.UpdateShader(m_ShadowComp);
-
         // Cap light count at 10
-        int l_lightCount = m_lights.size() > 10 ? 10 : m_lights.size();
-        m_ShadowComp.SetUniform("u_numLights", l_lightCount);
+        m_ShadowComp.SetUniform("u_lightCount", l_lightCount);
+        m_ShadowComp.SetUniform("u_frameCount", m_frameCount);
+        m_ShadowComp.SetUniform("u_samplesPerFrame", m_sampleCount);
         for(int i = 0; i < l_lightCount; i++)
         {
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].color", m_lights[i].colour);
+            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].points[0]", m_lights[i].points[0]);
+            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].points[1]", m_lights[i].points[1]);
+            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].points[2]", m_lights[i].points[2]);
+            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].points[3]", m_lights[i].points[3]);
+            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
+            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
+            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
         }
 
 	    glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
@@ -119,32 +125,49 @@ void Raytracer::Trace()
 
     if(m_shading)
     {
+        printf("Shading pass\n");
         m_ShadingComp.use();
-        m_camera.UpdateShader(m_ShadingComp);
-        m_ShadingComp.SetUniform("u_numLights", l_lightCount);
 
+        m_ShadingComp.SetUniform("u_cameraPos", m_camera.Position());
+        m_ShadingComp.SetUniform("u_lightCount", l_lightCount);
         for(int i = 0; i < l_lightCount; i++)
         {
-            m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
-            m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].color", m_lights[i].colour);
+            m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].points[0]", m_lights[i].points[0]);
+            m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].points[1]", m_lights[i].points[1]);
+            m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].points[2]", m_lights[i].points[2]);
+            m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].points[3]", m_lights[i].points[3]);
+            m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
+            m_ShadingComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
+            //m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
         }
 
         for(int i = 0; i < m_textures->size(); i++)
         {
-            m_ShadingComp.SetUniform("u_materialTextures[" + std::to_string(i) + "]", 9 + i);
+            glActiveTexture(GL_TEXTURE0 + TEXTURE_BUFFER_LOC + i);
+            m_ShadingComp.SetUniform("u_materialTextures[" + std::to_string(i) + "]", TEXTURE_BUFFER_LOC + i);
         }
 
-	    glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
-        glMemoryBarrier(GL_ALL_BARRIER_BITS);
+        glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
+        glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
     }
+
+    m_frameCount++;
 }
 
 void Raytracer::SetTris(std::vector<Triangle>* _tris)
 {
     m_tris = _tris;
+    Triangle t = m_tris->at(0);
+
+    printf("First triangle uploaded to GPU:\n");
+    printf("  A: (%.2f, %.2f, %.2f)\n", t.a.x, t.a.y, t.a.z);
+    printf("  B: (%.2f, %.2f, %.2f)\n", t.b.x, t.b.y, t.b.z);
+    printf("  C: (%.2f, %.2f, %.2f)\n", t.c.x, t.c.y, t.c.z);
+    printf("  Normal: (%.2f, %.2f, %.2f)\n", t.normal.x, t.normal.y, t.normal.z);
+
     m_BVH.BuildBHV(_tris);
 
-    if(!m_triangleSSBO)
+    if (m_triangleSSBO == -1)
     {
         glGenBuffers(1, &m_triangleSSBO);
     }
@@ -152,20 +175,20 @@ void Raytracer::SetTris(std::vector<Triangle>* _tris)
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_triangleSSBO);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Triangle) * m_tris->size(), &(m_tris->at(0)), GL_DYNAMIC_READ);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
 }
 
 void Raytracer::SetMaterials(std::vector<Material>* _mat)
 {
     m_mats = _mat;
 
-    if(!m_materialSSBO)
+    if(m_materialSSBO == -1)
     {
         glGenBuffers(1, &m_materialSSBO);
     }
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_materialSSBO);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Material) * m_mats->size(), &(m_mats->at(0)), GL_DYNAMIC_DRAW);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 8, m_materialSSBO);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Material) * m_mats->size(), &(m_mats->at(0)), GL_DYNAMIC_READ);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
@@ -175,7 +198,7 @@ void Raytracer::SetTextures(std::vector<Texture>* _tex)
     
     for(int i = 0; i < m_textures->size(); i++)
     {
-        glActiveTexture(GL_TEXTURE9 + i);
+        glActiveTexture(GL_TEXTURE0 + TEXTURE_BUFFER_LOC + i);
         glBindTexture(GL_TEXTURE_2D, m_textures->at(i).GetID());
     }
 }

@@ -1,5 +1,6 @@
-// Code taken from previous work, then modified with Triangle instead of using Vertex and Face structs
+// Code taken from previous work, then modified with Triangle
 #ifndef MODEL_H
+
 #define MODEL_H
 
 #include "GL/glew.h"
@@ -11,9 +12,37 @@
 #include <fstream>
 #include <vector>
 
+struct Vertex
+{
+  Vertex();
+
+  glm::vec3 position;
+  glm::vec2 texcoord;
+  glm::vec3 normal;
+};
+  
+struct Face
+{
+  Vertex a;
+  Vertex b;
+  Vertex c;
+  glm::vec3 normal;
+
+  inline void CalculateNormal()
+  {
+    glm::vec3 ac = c.position - a.position;
+    glm::vec3 ab = b.position - a.position;
+    
+    normal = glm::cross(ac, ab);
+  };
+};
+
 class Model
 {
-  std::vector<Triangle> m_tris;
+  Model* model;
+  std::vector<Face> m_faces;
+  GLuint m_ssboId;
+  bool m_dirty;
 
   void SplitStringWhitespace(const std::string& _input,
     std::vector<std::string>& _output);
@@ -32,19 +61,25 @@ class Model
   Model& operator=(const Model& _assign);
   virtual ~Model();
 
+  std::vector<Face>& GetFaces();
+
   GLsizei GetVertexCount() const;
-  std::vector<Triangle> GetTriangles(glm::vec3 _position);
+  std::vector<Triangle> GetTriangles(glm::vec3 _position, glm::vec3 _scale);
 };
 
 #include <stdexcept>
 
 
-inline Model::Model()
-: m_position()
+inline Model::Model() :
+    m_dirty(false)
+  , m_position()
+  , m_ssboId(0)
 { }
 
-inline Model::Model(const std::string& _path)
-: m_position()
+inline Model::Model(const std::string& _path) :
+    m_dirty(false)
+  , m_position()
+  , m_ssboId(0)
 {
   std::vector<glm::vec3> L_positions;
   std::vector<glm::vec2> L_tcs;
@@ -92,24 +127,28 @@ inline Model::Model(const std::string& _path)
     }
     else if(L_tokens.at(0) == "f" && L_tokens.size() >= 4)
     {
-      Triangle l_tri;
+      Face f;
       std::vector<std::string> sub;
       SplitString(L_tokens.at(1), '/', sub);
-      if(sub.size() >= 1) l_tri.a = L_positions.at(atoi(sub.at(0).c_str()) - 1);
-      if(sub.size() >= 2) l_tri.uvA = L_tcs.at(atoi(sub.at(1).c_str()) - 1);
+      if(sub.size() >= 1) f.a.position = L_positions.at(atoi(sub.at(0).c_str()) - 1);
+      if(sub.size() >= 2) f.a.texcoord = L_tcs.at(atoi(sub.at(1).c_str()) - 1);
+      if(sub.size() >= 3) f.a.normal = L_normals.at(atoi(sub.at(2).c_str()) - 1);
 
       for(size_t ti = 2; ti + 1 < L_tokens.size(); ti++)
       {
         SplitString(L_tokens.at(ti), '/', sub);
-        if(sub.size() >= 1) l_tri.b = L_positions.at(atoi(sub.at(0).c_str()) - 1);
-        if(sub.size() >= 2) l_tri.uvB = L_tcs.at(atoi(sub.at(1).c_str()) - 1);
+        if(sub.size() >= 1) f.b.position = L_positions.at(atoi(sub.at(0).c_str()) - 1);
+        if(sub.size() >= 2) f.b.texcoord = L_tcs.at(atoi(sub.at(1).c_str()) - 1);
+        if(sub.size() >= 3) f.b.normal = L_normals.at(atoi(sub.at(2).c_str()) - 1);
 
         SplitString(L_tokens.at(ti + 1), '/', sub);
-        if(sub.size() >= 1) l_tri.c = L_positions.at(atoi(sub.at(0).c_str()) - 1);
-        if(sub.size() >= 2) l_tri.uvC = L_tcs.at(atoi(sub.at(1).c_str()) - 1);
+        if(sub.size() >= 1) f.c.position = L_positions.at(atoi(sub.at(0).c_str()) - 1);
+        if(sub.size() >= 2) f.c.texcoord = L_tcs.at(atoi(sub.at(1).c_str()) - 1);
+        if(sub.size() >= 3) f.c.normal = L_normals.at(atoi(sub.at(2).c_str()) - 1);
 
-        CalculateNormal(l_tri);
-        m_tris.push_back(l_tri);
+        f.CalculateNormal();
+        m_faces.push_back(f);
+        m_dirty = true;
       }
     }
   }
@@ -117,15 +156,22 @@ inline Model::Model(const std::string& _path)
 
 inline Model::~Model()
 {
+  if(m_ssboId)
+  {
+    glDeleteBuffers(1, &m_ssboId);
+  }
 }
 
 inline Model::Model(const Model& _copy)
-: m_tris(_copy.m_tris)
+  : m_ssboId(0)
+  , m_faces(_copy.m_faces)
+  , m_dirty(true)
 { }
 
 inline Model& Model::operator=(const Model& _assign)
 {
-  m_tris = _assign.m_tris;
+  m_faces = _assign.m_faces;
+  m_dirty = true;
 
   return *this;
 }
@@ -188,28 +234,45 @@ inline void Model::SplitString(const std::string& _input, char _splitter,
   }
 }
 
-inline std::vector<Triangle> Model::GetTriangles(glm::vec3 _position)
+inline std::vector<Face>& Model::GetFaces()
 {
-  std::vector<Triangle> l_tris;
-  
-  for(int i = 0; i < m_tris.size(); i++)
+  return m_faces;
+}
+
+inline std::vector<Triangle> Model::GetTriangles(glm::vec3 _position = glm::vec3(0.0f),
+                                                 glm::vec3 _scale = glm::vec3(1.0f))
+{
+  std::vector<Triangle> l_triangles;
+
+  for(size_t fi = 0; fi < m_faces.size(); ++fi)
   {
-    Triangle l_newTri;
-    l_newTri.a = m_tris[i].a + _position;
-    l_newTri.uvA = m_tris[i].uvA;
-    l_newTri.b = m_tris[i].b + _position;
-    l_newTri.uvB = m_tris[i].uvB;
-    l_newTri.c = m_tris[i].c + _position;
-    l_newTri.uvC = m_tris[i].uvC;
-    l_tris.push_back(l_newTri);
+    Triangle newTri;
+    newTri.a = (m_faces[fi].a.position * _scale) + _position;
+    newTri.b = (m_faces[fi].b.position * _scale) + _position;
+    newTri.c = (m_faces[fi].c.position * _scale) + _position;
+    
+    newTri.uvA = m_faces[fi].a.texcoord;
+    newTri.uvB = m_faces[fi].b.texcoord;
+    newTri.uvC = m_faces[fi].c.texcoord;
+
+    //printf("Triangle Locs:\n A: (%f, %f, %f)\n B: (%f, %f, %f)\n C: (%f, %f, %f)\n",  newTri.a.x, newTri.a.y, newTri.a.z, newTri.b.x, newTri.b.y, newTri.b.z, newTri.c.x, newTri.c.y, newTri.c.z);
+
+    CalculateNormal(newTri);
+    l_triangles.push_back(newTri);
   }
 
-  return l_tris;
+  return l_triangles;
 }
 
 inline GLsizei Model::GetVertexCount() const
 {
-  return (GLsizei)m_tris.size() * 3;
+  return (GLsizei)m_faces.size() * 3;
 }
+
+inline Vertex::Vertex()
+  : position(0, 0, 0)
+  , texcoord(0, 0)
+  , normal(0, 0, 0)
+{ }
 
 #endif
