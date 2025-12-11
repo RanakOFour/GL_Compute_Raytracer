@@ -7,7 +7,6 @@ layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
 
 layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
-layout(rgba32ui, binding = 5) uniform uimage2D randomBuffer;
 
 
 struct Triangle
@@ -59,10 +58,16 @@ layout(std430, binding = 8) readonly buffer b_bvhTriangleId
 #define MAX_LIGHTS 10
 struct Light
 {
-    vec3 points[4];
+    vec3 position;
     vec3 colour;
     float intensity;
+
+    // Values for sphere light
     float radius;
+
+    // Values for Square area light
+    vec3 normal;
+    vec3 halfExtents;
 };
 
 uniform Light u_lights[MAX_LIGHTS];
@@ -117,12 +122,26 @@ vec3 SamplePointOnSphere(inout uint _seed, vec3 center, float radius)
     return center + dir * radius;
 }
 
-vec3 SamplePointOnPlane(inout uint _seed, vec3 _corner, vec3 _edge1, vec3 _edge2)
+vec3 SamplePointOnPlane(inout uint _seed, vec3 _center, vec3 _normal, vec3 _halfExtents)
 {
-    float u = RandomFloat(_seed);
-    float v = RandomFloat(_seed);
+    float u = (RandomFloat(_seed) - 0.5f) * 2.0f;
+    float v = (RandomFloat(_seed) - 0.5f) * 2.0f;
 
-    return _corner + u * _edge1 + v * _edge2;
+    vec3 l_tangent;
+    // Calculate tangent with normal and an arbitrary (but NOT perpendicular) axis
+    
+    if(abs(_normal.y) < 0.99)
+    {
+        l_tangent = normalize(cross(_normal, vec3(0.0, 1.0, 0.0)));
+    }
+    else
+    {
+        l_tangent = normalize(cross(_normal, vec3(0.0, 0.0, 1.0)));
+    }
+
+    vec3 l_biTangent = normalize(cross(_normal, l_tangent));
+
+    return _center + (l_tangent * u * length(_halfExtents)) + (l_biTangent * v * length(_halfExtents));
 }
 
 RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
@@ -316,13 +335,11 @@ void main()
 
         if(u_lights[l_lightIdx].radius > 0.0)
         {
-            l_randomPoint = SamplePointOnSphere(l_rngState, u_lights[l_lightIdx].points[0], u_lights[l_lightIdx].radius);
+            l_randomPoint = SamplePointOnSphere(l_rngState, u_lights[l_lightIdx].position, u_lights[l_lightIdx].radius);
         }
         else
         {
-            vec3 l_edge1 = normalize(u_lights[l_lightIdx].points[1] - u_lights[l_lightIdx].points[0]);
-            vec3 l_edge2 = normalize(u_lights[l_lightIdx].points[2] - u_lights[l_lightIdx].points[0]);
-            l_randomPoint = SamplePointOnPlane(l_rngState, u_lights[l_lightIdx].points[0], l_edge1, l_edge2);
+            l_randomPoint = SamplePointOnPlane(l_rngState, u_lights[l_lightIdx].position, u_lights[l_lightIdx].normal, u_lights[l_lightIdx].halfExtents);
         }
 
         vec3 l_lightDir = l_randomPoint - b_hitLocation;

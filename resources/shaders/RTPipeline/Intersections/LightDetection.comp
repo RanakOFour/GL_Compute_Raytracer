@@ -1,0 +1,146 @@
+#version 430 core
+
+layout(local_size_x = 8, local_size_y = 4) in;
+
+layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
+layout(rgba32f, binding = 1) uniform image2D hitLocations;
+
+layout(rgba32f, binding = 5) uniform image2D lightContacts;
+
+struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
+uniform Camera u_camera;
+
+#define MAX_LIGHTS 10
+struct Light
+{
+    vec3 position;
+    vec3 colour;
+    float intensity;
+
+    float radius;
+
+    vec3 normal;
+    vec3 halfExtents;
+};
+
+uniform Light u_lights[MAX_LIGHTS];
+uniform int u_lightCount;
+
+uniform vec2 u_resolution;
+
+struct Ray  { vec3 origin; vec3 direction; };
+
+struct RaycastResult {
+    bool hit;
+    float distance;
+    int lightIdx;
+};
+
+float IntersectSphere(Ray _ray, vec3 _spherePos, float _radius)
+{
+    vec3 oc = _ray.origin - _spherePos;
+    float a = dot(_ray.direction, _ray.direction);
+    float b = 2.0 * dot(oc, _ray.direction);
+    float c = dot(oc, oc) - _radius * _radius;
+    
+    float l_discriminant = b * b - 4.0 * a * c;
+    
+    if (l_discriminant < 0.0)
+    {
+        return 1e30f;
+    }
+    
+    float sqrtDisc = sqrt(l_discriminant);
+    float l_hitLocation1 = (-b - sqrtDisc) / (2.0 * a);
+    float l_hitLocation2 = (-b + sqrtDisc) / (2.0 * a);
+    
+    float l_distance = (l_hitLocation1 > 0.0) ? l_hitLocation1 : l_hitLocation2;
+    if (l_distance <= 0.0)
+    {
+        return 1e30f;
+    }
+    
+    return l_distance;
+}
+
+// Method with help from https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection.html
+float IntersectPlane(Ray _ray, vec3 _center, vec3 _normal, vec3 _halfExtents)
+{
+    float l_denominator = dot(_ray.direction, _normal);
+
+    if(l_denominator > 0.001)
+    {
+        vec3 l_planeToRay = _center - _ray.origin;
+        float l_distance = dot(l_planeToRay, _normal) / l_denominator;
+
+        
+        vec3 l_hitPosition = _ray.origin + _ray.direction * l_distance;
+        vec3 l_hitToPlane = l_hitPosition - _center;
+
+        // Distance is smaller and hit position is within the halfExtents
+        if(l_distance >= 0.0f &&
+           abs(l_hitToPlane.x) < _halfExtents.x &&
+           abs(l_hitToPlane.y) < _halfExtents.y &&
+           abs(l_hitToPlane.z) < _halfExtents.z)
+        {
+            return l_distance;
+        }
+    }
+
+    return 1e30f;
+}
+
+void main()
+{
+    ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+
+    vec2 l_normalizedScreenCoords = vec2(((float(l_pixelCoords.x) / u_resolution.x) - 0.5) * 2.0,
+                                         ((float(l_pixelCoords.y) / u_resolution.y) - 0.5) * 2.0);
+
+    // Calculate aspect ratio
+    float aspect = u_resolution.x / u_resolution.y;
+
+    vec3 l_rayDir = normalize(u_camera.forward + 
+                           l_normalizedScreenCoords.x * u_camera.right * aspect + 
+                           l_normalizedScreenCoords.y * u_camera.up);
+    
+    Ray l_ray;
+    l_ray.origin = u_camera.position;
+    l_ray.direction = l_rayDir;
+
+    int l_hitLightIdx = -1;
+    float l_closestHitDistance = 1e30f;
+    float l_currentDistance = 1e30f;
+
+    for(int i = 0; i < u_lightCount; i++)
+    {
+        if(u_lights[i].radius > 0.0f)
+        {
+            l_currentDistance = IntersectSphere(l_ray, u_lights[i].position, u_lights[i].radius);
+        }
+        else
+        {
+            l_currentDistance = IntersectPlane(l_ray, u_lights[i].position, u_lights[i].normal, u_lights[i].halfExtents);
+        }
+
+        if(l_currentDistance < l_closestHitDistance)
+        {
+            l_closestHitDistance = l_currentDistance;
+            l_hitLightIdx = i;
+        }
+    }
+
+    if(l_hitLightIdx < 0)
+    {
+        return;
+    }
+
+    vec3 l_colourToWrite = u_lights[l_hitLightIdx].colour;
+
+    float l_closestObjHit = imageLoad(hitLocations, l_pixelCoords).w;
+
+    if(l_closestHitDistance < l_closestObjHit)
+    {
+        imageStore(o_framebufferTex, l_pixelCoords, vec4(l_colourToWrite, 1.0f));
+    }
+}

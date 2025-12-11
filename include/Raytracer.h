@@ -29,9 +29,10 @@ class Raytracer : public GCP_Framework
 
     Camera m_camera;
 
-    ComputeShader m_IntersectionComp;
+    ComputeShader m_ObjIntersectComp;
+    ComputeShader m_LightIntersectComp;
     ComputeShader m_ShadowComp;
-    ComputeShader m_ShadingComp;
+    ComputeShader m_PBRShadeComp;
 
     GLuint m_gBuffers[GBUFFERCOUNT];
 
@@ -40,6 +41,7 @@ class Raytracer : public GCP_Framework
 
     bool m_setup;
 
+    bool m_lightVision;
     bool m_shadows;
     bool m_shading;
 
@@ -61,9 +63,12 @@ class Raytracer : public GCP_Framework
 
     Material* GetMaterial(int _index);
 
-    Camera* GetCamera(); 
+    Camera* GetCamera();
 
-    bool Shading() {return m_shading;};
+    bool LightVision() { return m_lightVision; };
+    void LightVision(bool _l) { m_lightVision = _l; };
+
+    bool Shading() { return m_shading;};
     void Shading(bool _s) { m_shading = _s;};
 
     bool Shadows() { return m_shadows; };

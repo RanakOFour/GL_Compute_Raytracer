@@ -13,7 +13,7 @@
 #define NORMALS_BUFFER_LOC 2
 #define TEXMATINFO_BUFFER_LOC 3
 #define SHADOW_BUFFER_LOC 4
-#define RANDOM_BUFFER_LOC 5
+#define LIGHT_HIT_BUFFER 5
 
 // Locations to bind SSBOs to
 #define TRIANGLEDATA_BUFFER_LOC 6

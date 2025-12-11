@@ -47,13 +47,12 @@ int main(int argc, char* argv[])
 	l_matFloor.ambientOcclusion = 1.0f;
 
 	Light l_light;
-	l_light.points[0] = glm::vec3(-1.5f, 3.0f, -1.5f);
-	l_light.points[1] = glm::vec3(1.5f, 3.0f, -1.5f);
-	l_light.points[2] = glm::vec3(-1.5f, 3.0f, 1.5f);
-	l_light.points[3] = glm::vec3(1.5f, 3.0f, 1.5f);
+	l_light.position = glm::vec3(-1.5f, 3.0f, -1.5f);
 	l_light.colour = glm::vec3(1.0f);
 	l_light.intensity = 1.0f;
 	l_light.radius = 2.0f;
+	l_light.normal = glm::vec3(0.0, -1.0, 0.0);
+	l_light.halfExtents = glm::vec3(0.5, 0.5, 0.5);
 	
 	l_raytracer.AddLight(l_light);
 
@@ -167,9 +166,9 @@ int main(int argc, char* argv[])
 
 		ImGui::Begin("Settings");
 
-		glm::vec3 lightPos = l_light0->points[0];
+		glm::vec3 lightPos = l_light0->position;
 		ImGui::DragFloat3("Light Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
-		l_light0->points[0] = lightPos;
+		l_light0->position = lightPos;
 
 		glm::vec3 lightCol = l_light0->colour;
 		ImGui::ColorEdit3("Light Colour", &(lightCol[0]));
@@ -183,20 +182,32 @@ int main(int argc, char* argv[])
 		ImGui::SliderFloat("Light Radius", &l_e, 0.0f, 10.0f);
 		l_light0->radius = l_e;
 
+		if (l_e == 0.0f)
+		{
+			glm::vec3 l_norm = l_light0->normal;
+			ImGui::SliderFloat3("Light Normal", &l_norm[0], -1.0f, 1.0f);
+			l_light0->normal = l_norm;
+
+			glm::vec3 l_hext = l_light0->halfExtents;
+			ImGui::SliderFloat3("Light Half Extents", &l_hext[0], 0.0f, 10.0f);
+			l_light0->halfExtents = l_hext;
+		}
+
+		ImGui::End();
+
+		ImGui::Begin("Enabled Shaders");
+
 		bool l_shadow = l_raytracer.Shadows();
 		ImGui::Checkbox("Shadows", &l_shadow);
 		l_raytracer.Shadows(l_shadow);
 
-		if(l_shadow)
-		{
-			int l_sample = l_raytracer.Samples();
-			ImGui::SliderInt("SampleCount", &l_sample, 1, 50);
-			l_raytracer.Samples(l_sample);
-		}
-
 		bool l_shade = l_raytracer.Shading();
 		ImGui::Checkbox("Shading", &l_shade);
 		l_raytracer.Shading(l_shade);
+
+		bool l_lights = l_raytracer.LightVision();
+		ImGui::Checkbox("Light Vision", &l_lights);
+		l_raytracer.LightVision(l_lights);
 
 		ImGui::End();
 

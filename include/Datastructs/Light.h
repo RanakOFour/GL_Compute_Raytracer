@@ -8,10 +8,16 @@
 */
 struct Light
 {
-    glm::vec3 points[4];
+    glm::vec3 position;
     glm::vec3 colour;
     float intensity;
+
+    // Data for sphere light
     float radius;
+
+    // Data for plane light
+    glm::vec3 normal;
+    glm::vec3 halfExtents;
 };
 
 #endif
