@@ -196,7 +196,7 @@ int main(int argc, char* argv[])
 			ImGui::DragFloat3("Light Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
 
 			float l_radius = l_light0->radius;
-			ImGui::SliderFloat("Light Radius", &l_radius, 0.0f, 10.0f);
+			ImGui::SliderFloat("Light Radius", &l_radius, 0.001f, 10.0f);
 			l_light0->radius = l_radius;
 		}
 		else

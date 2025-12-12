@@ -1,0 +1,90 @@
+layout(rgba32f, binding = 1) uniform image2D hitLocations;
+layout(rgba32f, binding = 2) uniform image2D triangleNormals;
+
+layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
+layout(rgba32f, binding = 5) uniform image2D motionVectors;
+
+struct Camera { vec3 position; vec3 up; vec3 right; vec3 forward; }
+uniform Camera u_camera;
+uniform float u_resolution;
+
+// https://davidjcobb.github.io/articles/ray-plane-intersection
+vec3 RayPlaneIntersect(vec3 _rayOrigin, vec3 _direction, vec3 _planeOrigin, vec3 _normal)
+{
+    vec3 l_denom = dot(_normal, _direction);
+
+    if(abs(l_denom) > 0.001)
+    {
+        float l_distance = dot(_planeOrigin - _rayOrigin, _normal) / l_denom;
+        if(l_distance >= 0)
+        {
+            return _rayOrigin + _direction * l_distance;
+        }
+    }
+}
+
+vec2 WorldToScreenSpace(vec3 _worldPos)
+{
+    // Calculate view direction from camera to point
+    vec3 viewDir = normalize(_worldPos - u_camera.position);
+    
+    // Project onto camera basis
+    float forwardDot = dot(viewDir, u_camera.forward);
+    
+    // Check if point is behind camera
+    if (forwardDot <= 0.0)
+    {
+        return vec2(-1.0); // Invalid (behind camera)
+    }
+    
+    // Calculate angles relative to camera forward direction
+    float rightAngle = dot(viewDir, u_camera.right) / forwardDot;
+    float upAngle = dot(viewDir, u_camera.up) / forwardDot;
+    
+    // Convert to screen space (NDC)
+    vec2 screenNDC = vec2(rightAngle / (u_aspect), upAngle);
+    
+    // Convert NDC to pixel coordinates
+    vec2 screenPos = (screenNDC * 0.5 + 0.5) * u_resolution;
+    
+    return screenPos;
+}
+
+main()
+{
+    /*
+    Information from previous frame:
+    - Camera to World hit position
+    - Camera to World normal position
+    ^ the previous frame normal lets us calculate the shadow's new position on the current frame
+      because of weird perspective stuff
+
+    - Sampled Light Position
+    - Blocker Position (If in shadow)
+
+    How to calculate motion vector:
+    Ray l_mvRay;
+    l_mvRay.origin = lastFrameSamplePos;
+    l_mvRay.dir = lastFrameBlockerPos - lastFrameSamplePos;
+
+    vec3 l_intersectionPoint = RayPlaneIntersect(lastFrameSamplePos,
+                                                 lastFrameBlockerPos - lastFrameSamplePos,
+                                                 lastFrameLightPos,
+                                                 lastFrameNormal);
+
+    ivec2 l_lastFramePixelCoords = WorldToScreen(l_intersectionPoint, cameraInformation);
+    ivec2 l_motionVector = l_lastFramePixelCoords - l_pixelCoords;
+    */
+
+    vec3 l_lastFrameSamplePos = imageLoad(lastFrameSamples, l_pixelCoords).xyz;
+    vec3 l_lastFrameHitPos = imageLoad(lastFrameHitLocations, l_pixelCoords).xyz;
+    vec3 l_lastFrameNormal = imageLoad(lastFrameNormals, l_pixelCoords).xyz;
+
+    vec3 l_intersectionPoint = RayPlaneIntersect(lastFrameSamplePos,
+                                                 lastFrameBlockerPos - lastFrameSamplePos,
+                                                 lastFrameHitPosition,
+                                                 lastFrameNormal);
+
+    ivec2 l_lastFramePixelCoords = WorldToScreen(l_intersectionPoint, cameraInformation);
+    ivec2 l_motionVector = l_lastFramePixelCoords - l_pixelCoords;
+}

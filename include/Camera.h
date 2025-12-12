@@ -52,7 +52,7 @@ class Camera
         #if _WIN32
         l_moveDelta = _deltaTime / 10000000000000.0f;
         #else
-        l_moveDelta = _deltaTime / 100000000000000000.0f;
+        l_moveDelta = 0.1f;
         #endif
 
 		Move(_inputMap.forward * m_Forward * (l_moveDelta));

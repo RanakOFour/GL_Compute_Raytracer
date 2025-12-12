@@ -27,7 +27,7 @@ struct Triangle
     int materialId;
 };
 
-layout(std430, binding = 6) readonly buffer b_trianglesSSBO
+layout(std430, binding = 7) readonly buffer b_trianglesSSBO
 {
     Triangle sceneTris[];
 };
@@ -45,13 +45,13 @@ struct Node
     int triangleCount;
 };
 
-layout(std430, binding = 7) readonly buffer b_bvhNodes
+layout(std430, binding = 8) readonly buffer b_bvhNodes
 {
     Node bvhNodes[];
 };
 
 // Maps bvhNode.leftFirst indexes to indexes in sceneTris
-layout(std430, binding = 8) readonly buffer b_bvhTriangleId
+layout(std430, binding = 9) readonly buffer b_bvhTriangleId
 {
     int bvhTriIdxs[];
 };
@@ -60,6 +60,7 @@ struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
 uniform Camera u_camera;
 
 uniform vec2 u_resolution;
+uniform float u_aspect;
 
 struct Ray  { vec3 origin; vec3 direction; };
 
@@ -248,11 +249,8 @@ void main()
     vec2 l_normalizedScreenCoords = vec2(((float(l_pixelCoords.x) / u_resolution.x) - 0.5) * 2.0,
                                          ((float(l_pixelCoords.y) / u_resolution.y) - 0.5) * 2.0);
 
-    // Calculate aspect ratio
-    float aspect = u_resolution.x / u_resolution.y;
-
     vec3 l_rayDir = normalize(u_camera.forward + 
-                           l_normalizedScreenCoords.x * u_camera.right * aspect + 
+                           l_normalizedScreenCoords.x * u_camera.right * u_aspect + 
                            l_normalizedScreenCoords.y * u_camera.up);
     
     Ray l_ray;

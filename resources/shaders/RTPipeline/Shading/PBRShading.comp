@@ -17,13 +17,13 @@ struct Material
     float ambientOcclusion;
 };
 
-layout(std430, binding = 9) readonly buffer b_Materials
+layout(std430, binding = 10) readonly buffer b_Materials
 {
     Material materials[];
 };
 
 #define MAX_TEXTURES 10
-layout(binding = 10) uniform sampler2D u_materialTextures[MAX_TEXTURES];
+layout(binding = 11) uniform sampler2D u_materialTextures[MAX_TEXTURES];
 
 uniform vec3 u_cameraPos;
 struct Light

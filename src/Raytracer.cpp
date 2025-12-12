@@ -9,7 +9,7 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
     , m_textures(nullptr)
     , m_lights()
     , m_camera(_screenSize)
-    , m_ObjIntersectComp("./resources/shaders/RTPipeline/Intersections/Intersections.comp")
+    , m_ObjIntersectComp("./resources/shaders/RTPipeline/Intersections/IntersectionsWithMV.comp")
     , m_LightIntersectComp("./resources/shaders/RTPipeline/Intersections/LightDetection.comp")
     , m_ShadowComp("./resources/shaders/RTPipeline/Shadows/MonteCarloShadow.comp")
     , m_PBRShadeComp("./resources/shaders/RTPipeline/Shading/PBRShading.comp")
@@ -83,6 +83,7 @@ void Raytracer::Trace(float _deltaTime)
     m_ObjIntersectComp.SetUniform("u_camera.forward", m_camera.Forward());
 
     m_ObjIntersectComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
+    m_ObjIntersectComp.SetUniform("u_aspect", (float)m_screenSize.x / float(m_screenSize.y));
 
     glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
     glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
@@ -156,7 +157,7 @@ void Raytracer::Trace(float _deltaTime)
         {
             m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
             m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
-            //m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
+            m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
             m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
             m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
             m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);

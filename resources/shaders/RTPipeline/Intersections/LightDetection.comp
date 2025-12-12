@@ -5,8 +5,6 @@ layout(local_size_x = 8, local_size_y = 4) in;
 layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 layout(rgba32f, binding = 1) uniform image2D hitLocations;
 
-layout(rgba32f, binding = 5) uniform image2D lightContacts;
-
 struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
 uniform Camera u_camera;
 
@@ -64,7 +62,6 @@ float IntersectSphere(Ray _ray, vec3 _spherePos, float _radius)
 }
 
 
-// Method from https://graphics.cs.kuleuven.be/publications/LD05ERQIT/LD05ERQIT_paper.pdf
 float IntersectQuad(Ray _ray, vec3 _v0, vec3 _v1, vec3 _v2) 
 {
     vec3 _v3 = _v0 + (_v2 - _v1);
@@ -132,6 +129,7 @@ void main()
     int l_hitLightIdx = -1;
     float l_closestHitDistance = 1e30f;
     float l_currentDistance = 1e30f;
+    vec3 l_normal = vec3(0.0f);
 
     for(int i = 0; i < u_lightCount; i++)
     {
@@ -147,6 +145,17 @@ void main()
         if(l_currentDistance < l_closestHitDistance)
         {
             l_closestHitDistance = l_currentDistance;
+
+            if(u_lights[i].radius > 0.0)
+            {
+                l_normal = normalize((l_ray.origin + l_ray.direction * l_closestHitDistance) - u_lights[i].position);
+            }
+            else
+            {
+                l_normal = normalize(cross(u_lights[i].cornerA - u_lights[i].position,
+                                           u_lights[i].cornerB - u_lights[i].position));
+            }
+
             l_hitLightIdx = i;
         }
     }
@@ -156,12 +165,14 @@ void main()
         return;
     }
 
-    vec3 l_colourToWrite = u_lights[l_hitLightIdx].colour;
 
     float l_closestObjHit = imageLoad(hitLocations, l_pixelCoords).w;
 
     if(l_closestHitDistance < l_closestObjHit)
     {
+        float NdotD = -dot(l_normal, l_ray.direction);
+        vec3 l_colourToWrite = u_lights[l_hitLightIdx].colour * NdotD;
+
         imageStore(o_framebufferTex, l_pixelCoords, vec4(l_colourToWrite, 1.0f));
     }
 }
