@@ -304,7 +304,7 @@ void main()
                                                  l_lastFrameNormal);
 
     vec2 l_lastFramePixelCoords = WorldToScreenSpace(l_intersectionPoint);
-    vec2 l_motionVector = vec2(l_pixelCoords) - l_lastFramePixelCoords;
+    vec2 l_motionVector = vec2(l_pixelCoords + 0.5f) - l_lastFramePixelCoords;
 
     imageStore(motionVectors, l_pixelCoords, vec4(l_motionVector, 1.0f, 1.0f));
     //return;
@@ -363,5 +363,5 @@ void main()
     }
 
     //l_closestHit.error = vec3(sceneTris[0].a.x, sceneTris[0].a.y, -sceneTris[0].a.z);
-    imageStore(o_framebufferTex, l_pixelCoords, vec4((l_closestHit.position - l_lastFrameHitPos) / 10.0f, 1.0f));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_lastFramePixelCoords / u_resolution, 0.0f, 1.0f));
 }

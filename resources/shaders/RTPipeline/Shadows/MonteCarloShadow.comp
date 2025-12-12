@@ -345,8 +345,8 @@ void main()
 
     ivec2 b_motionVector = ivec2(imageLoad(motionVectors, l_pixelCoords).xy);
 
-    vec3 b_previousShadow = imageLoad(shadowBuffer, l_pixelCoords + b_motionVector).xyz;
-    int b_totalSampleCount = int(imageLoad(shadowBuffer, l_pixelCoords + b_motionVector).w);
+    vec3 b_previousShadow = imageLoad(shadowBuffer, b_motionVector + l_pixelCoords).xyz;
+    int b_totalSampleCount = int(imageLoad(shadowBuffer, b_motionVector + l_pixelCoords).w);
 
     // Temporal accumulation
     b_totalSampleCount++;
