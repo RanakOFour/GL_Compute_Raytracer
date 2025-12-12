@@ -5,7 +5,7 @@ layout(local_size_x = 8, local_size_y = 4) in;
 layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 layout(rgba32f, binding = 1) uniform image2D hitLocations;
 
-struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
+struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; float fov; };
 uniform Camera u_camera;
 
 #define MAX_LIGHTS 10
@@ -118,9 +118,17 @@ void main()
     // Calculate aspect ratio
     float aspect = u_resolution.x / u_resolution.y;
 
-    vec3 l_rayDir = normalize(u_camera.forward + 
-                           l_normalizedScreenCoords.x * u_camera.right * aspect + 
-                           l_normalizedScreenCoords.y * u_camera.up);
+    float tanHalfFov = tan(u_camera.fov * 0.5);
+    
+    // Scale the horizontal component by aspect ratio and FOV
+    float horizontalScale = tanHalfFov * aspect;
+    float verticalScale = tanHalfFov;
+
+    vec3 l_rayDir = normalize(
+        u_camera.forward + 
+        l_normalizedScreenCoords.x * u_camera.right * horizontalScale + 
+        l_normalizedScreenCoords.y * u_camera.up * verticalScale
+    );
     
     Ray l_ray;
     l_ray.origin = u_camera.position;

@@ -76,11 +76,7 @@ void Raytracer::Trace(float _deltaTime)
     printf("Intersection pass\n");
     m_ObjIntersectComp.use();
 
-
-    m_ObjIntersectComp.SetUniform("u_camera.position", m_camera.Position());
-    m_ObjIntersectComp.SetUniform("u_camera.up", m_camera.Up());
-    m_ObjIntersectComp.SetUniform("u_camera.right", m_camera.Right());
-    m_ObjIntersectComp.SetUniform("u_camera.forward", m_camera.Forward());
+    m_camera.UpdateShader(m_ObjIntersectComp);
 
     m_ObjIntersectComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
     m_ObjIntersectComp.SetUniform("u_aspect", (float)m_screenSize.x / float(m_screenSize.y));
@@ -145,10 +141,7 @@ void Raytracer::Trace(float _deltaTime)
         printf("Light Vision Pass\n");
         m_LightIntersectComp.use();
 
-        m_LightIntersectComp.SetUniform("u_camera.position", m_camera.Position());
-        m_LightIntersectComp.SetUniform("u_camera.up", m_camera.Up());
-        m_LightIntersectComp.SetUniform("u_camera.right", m_camera.Right());
-        m_LightIntersectComp.SetUniform("u_camera.forward", m_camera.Forward());
+        m_camera.UpdateShader(m_LightIntersectComp);
 
         m_LightIntersectComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
         m_LightIntersectComp.SetUniform("u_lightCount", l_lightCount);

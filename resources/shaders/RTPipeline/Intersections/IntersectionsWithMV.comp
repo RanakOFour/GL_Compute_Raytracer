@@ -58,7 +58,7 @@ layout(std430, binding = 9) readonly buffer b_bvhTriangleId
     int bvhTriIdxs[];
 };
 
-struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
+struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; float fov; };
 uniform Camera u_camera;
 
 uniform vec2 u_resolution;
@@ -95,23 +95,22 @@ vec2 WorldToScreenSpace(vec3 _worldPos)
     // Calculate view direction from camera to point
     vec3 viewDir = normalize(_worldPos - u_camera.position);
     
-    // Project onto camera basis
     float forwardDot = dot(viewDir, u_camera.forward);
     
-    // Check if point is behind camera
     if (forwardDot <= 0.0)
     {
-        return vec2(0.0); // Invalid (behind camera)
+        return vec2(0.0);
     }
     
-    // Calculate angles relative to camera forward direction
     float rightAngle = dot(viewDir, u_camera.right) / forwardDot;
     float upAngle = dot(viewDir, u_camera.up) / forwardDot;
+
+    float tanHalfFov = tan(u_camera.fov * 0.5);
+    vec2 screenNDC = vec2(
+        rightAngle / (tanHalfFov * u_aspect),
+        upAngle / tanHalfFov
+    );
     
-    // Convert to screen space (NDC)
-    vec2 screenNDC = vec2(rightAngle / (u_aspect), upAngle);
-    
-    // Convert NDC to pixel coordinates
     vec2 screenPos = vec2((screenNDC * 0.5 + 0.5) * u_resolution);
     
     return screenPos;
@@ -310,9 +309,18 @@ void main()
     imageStore(motionVectors, l_pixelCoords, vec4(l_motionVector, 1.0f, 1.0f));
     //return;
 
-    vec3 l_rayDir = normalize(u_camera.forward + 
-                           l_normalizedScreenCoords.x * u_camera.right * u_aspect + 
-                           l_normalizedScreenCoords.y * u_camera.up);
+    float tanHalfFov = tan(u_camera.fov * 0.5);
+    
+    // Scale the horizontal component by aspect ratio and FOV
+    float horizontalScale = tanHalfFov * u_aspect;
+    float verticalScale = tanHalfFov;
+    
+    // Calculate ray direction with proper FOV scaling
+    vec3 l_rayDir = normalize(
+        u_camera.forward + 
+        l_normalizedScreenCoords.x * u_camera.right * horizontalScale + 
+        l_normalizedScreenCoords.y * u_camera.up * verticalScale
+    );
     
     Ray l_ray;
     l_ray.origin = u_camera.position;
@@ -355,5 +363,5 @@ void main()
     }
 
     //l_closestHit.error = vec3(sceneTris[0].a.x, sceneTris[0].a.y, -sceneTris[0].a.z);
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_lastFramePixelCoords / u_resolution, 0.0f, 1.0f));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4((l_closestHit.position - l_lastFrameHitPos) / 10.0f, 1.0f));
 }

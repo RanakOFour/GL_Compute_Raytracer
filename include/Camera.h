@@ -22,6 +22,8 @@ class Camera
     glm::vec3 m_Up = glm::vec3(0.0f, 1.0f, 0.0f);
 
     glm::vec2 m_Resolution;
+
+    float m_fov;
     /**@} */
 
     public:
@@ -29,6 +31,7 @@ class Camera
     : m_Resolution(_resolution)
     , m_Position(0.0, 0.0, 3.0)
     , m_Rotation(1.0f, 0.0f, 0.0f, 0.0f)
+    , m_fov(0.5f)
     {
     };
 
@@ -84,6 +87,7 @@ class Camera
         _shader.SetUniform("u_camera.forward", m_Forward);
         _shader.SetUniform("u_camera.up", m_Up);
         _shader.SetUniform("u_camera.right", m_Right);
+        _shader.SetUniform("u_camera.fov", m_fov);
     }
 
     /**
@@ -113,6 +117,9 @@ class Camera
     inline glm::vec3& Right() { return m_Right; };
     inline glm::vec3& Up() { return m_Up; };
     inline glm::quat Rotation() {return m_Rotation;};
+
+    inline void fov(float _f) { m_fov = _f; };
+    inline float fov() { return m_fov; };
     /** @} */
 };
 
