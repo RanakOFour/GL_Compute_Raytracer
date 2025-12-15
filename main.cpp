@@ -232,9 +232,16 @@ int main(int argc, char* argv[])
 		ImGui::Checkbox("Shadows", &l_shadow);
 		l_raytracer.Shadows(l_shadow);
 
+		if(l_shadow)
+		{
+			int samples = l_raytracer.Samples();
+			ImGui::SliderInt("Sample Count", &samples, 1, 100);
+			l_raytracer.Samples(samples);
+		}
+
 		bool l_shade = l_raytracer.Shading();
 		ImGui::Checkbox("Shading", &l_shade);
-		l_raytracer.Shading(l_shade);
+		l_raytracer.Shading(l_shade);		
 
 		bool l_lights = l_raytracer.LightVision();
 		ImGui::Checkbox("Light Vision", &l_lights);

@@ -17,13 +17,13 @@ struct Material
     float ambientOcclusion;
 };
 
-layout(std430, binding = 10) readonly buffer b_Materials
+layout(std430, binding = 8) readonly buffer b_Materials
 {
     Material materials[];
 };
 
 #define MAX_TEXTURES 10
-layout(binding = 11) uniform sampler2D u_materialTextures[MAX_TEXTURES];
+layout(binding = 9) uniform sampler2D u_materialTextures[MAX_TEXTURES];
 
 uniform vec3 u_cameraPos;
 struct Light
@@ -94,7 +94,7 @@ void main()
     float l_posDistance = imageLoad(hitLocations, l_pixelCoords).w;
     vec2 l_texUVs = imageLoad(texMatInfo, l_pixelCoords).rg;
 
-    // No light or object hit, so background
+    // No object hit, so background
     if(l_posDistance == 1e30f)
     {
         imageStore(o_framebufferTex, l_pixelCoords, vec4(0.0, 0.1, 0.3, 1.0));
@@ -131,6 +131,7 @@ void main()
     vec3 F0 = mix(vec3(0.04), l_mat.albedo, l_mat.metallic);
     vec3 Lo = vec3(0.0f);
 
+    //int i = 0;
     for(int i = 0; i < u_lightCount; i++)
     {
         vec3 l_lightPosition = vec3(0.0);
@@ -174,12 +175,13 @@ void main()
     // Add ambient lighting (always present, even in shadows)
     vec3 l_ambient = vec3(0.03) * l_texColour * l_mat.albedo * l_mat.ambientOcclusion;
     
-    vec3 l_shadow = imageLoad(shadowBuffer, l_pixelCoords).xyz;
+    vec4 l_shadowData = imageLoad(shadowBuffer, l_pixelCoords);
 
-    vec3 colour = (l_ambient + Lo) * l_shadow;
+    vec3 colour = (l_ambient + Lo) * l_shadowData.xyz;
 
     // Gamma correction
     colour = pow(colour, vec3(1.0/2.2));
     
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(colour, length(Lo)));
+    //imageStore(o_framebufferTex, l_pixelCoords, vec4(colour, length(Lo)));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_shadowData));
 }

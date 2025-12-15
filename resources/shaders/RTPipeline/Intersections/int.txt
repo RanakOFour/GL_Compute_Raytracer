@@ -9,8 +9,6 @@ layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D triangleNormals;
 layout(rgba32f, binding = 3) uniform image2D texMatInfo;
 layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
-layout(rgba32f, binding = 5) uniform image2D motionVectors;
-layout(rgba32f, binding = 6) uniform image2D lastFrameSamples;
 
 struct Triangle
 {
@@ -29,7 +27,7 @@ struct Triangle
     int materialId;
 };
 
-layout(std430, binding = 7) readonly buffer b_trianglesSSBO
+layout(std430, binding = 5) readonly buffer b_trianglesSSBO
 {
     Triangle sceneTris[];
 };
@@ -47,18 +45,18 @@ struct Node
     int triangleCount;
 };
 
-layout(std430, binding = 8) readonly buffer b_bvhNodes
+layout(std430, binding = 6) readonly buffer b_bvhNodes
 {
     Node bvhNodes[];
 };
 
 // Maps bvhNode.leftFirst indexes to indexes in sceneTris
-layout(std430, binding = 9) readonly buffer b_bvhTriangleId
+layout(std430, binding = 7) readonly buffer b_bvhTriangleId
 {
     int bvhTriIdxs[];
 };
 
-struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
+struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; float fov; };
 uniform Camera u_camera;
 
 uniform vec2 u_resolution;
@@ -66,8 +64,7 @@ uniform float u_aspect;
 
 struct Ray  { vec3 origin; vec3 direction; };
 
-struct RaycastResult
-{
+struct RaycastResult {
     bool hit;
     float distance;
     vec3 position;
@@ -75,47 +72,6 @@ struct RaycastResult
     vec3 error;
     int triangleId;
 };
-
-vec3 RayPlaneIntersect(vec3 _rayOrigin, vec3 _direction, vec3 _planeOrigin, vec3 _normal)
-{
-    float l_denom = dot(_normal, _direction);
-
-    if(abs(l_denom) > 0.001)
-    {
-        float l_distance = dot(_planeOrigin - _rayOrigin, _normal) / l_denom;
-        if(l_distance >= 0)
-        {
-            return _rayOrigin + _direction * l_distance;
-        }
-    }
-}
-
-vec2 WorldToScreenSpace(vec3 _worldPos)
-{
-    // Calculate view direction from camera to point
-    vec3 viewDir = normalize(_worldPos - u_camera.position);
-    
-    // Project onto camera basis
-    float forwardDot = dot(viewDir, u_camera.forward);
-    
-    // Check if point is behind camera
-    if (forwardDot <= 0.0)
-    {
-        return vec2(0.0); // Invalid (behind camera)
-    }
-    
-    // Calculate angles relative to camera forward direction
-    float rightAngle = dot(viewDir, u_camera.right) / forwardDot;
-    float upAngle = dot(viewDir, u_camera.up) / forwardDot;
-    
-    // Convert to screen space (NDC)
-    vec2 screenNDC = vec2(rightAngle / (u_aspect), upAngle);
-    
-    // Convert NDC to pixel coordinates
-    vec2 screenPos = vec2((screenNDC * 0.5 + 0.5) * u_resolution);
-    
-    return screenPos;
-}
 
 vec2 CalculateTexUVs(RaycastResult _result, Triangle _tri)
 {
@@ -293,23 +249,7 @@ void main()
     vec2 l_normalizedScreenCoords = vec2(((float(l_pixelCoords.x) / u_resolution.x) - 0.5) * 2.0,
                                          ((float(l_pixelCoords.y) / u_resolution.y) - 0.5) * 2.0);
 
-    // Calculate motion vector from last frame
-
-    vec3 l_lastFrameSamplePos = imageLoad(lastFrameSamples, l_pixelCoords).xyz;
-    vec3 l_lastFrameHitPos = imageLoad(hitLocations, l_pixelCoords).xyz;
-    vec3 l_lastFrameNormal = imageLoad(triangleNormals, l_pixelCoords).xyz;
-
-    vec3 l_intersectionPoint = RayPlaneIntersect(l_lastFrameSamplePos,
-                                                 l_lastFrameHitPos - l_lastFrameSamplePos,
-                                                 l_lastFrameHitPos,
-                                                 l_lastFrameNormal);
-
-    vec2 l_lastFramePixelCoords = WorldToScreenSpace(l_intersectionPoint);
-    vec2 l_motionVector = vec2(l_pixelCoords) - l_lastFramePixelCoords;
-
-    imageStore(motionVectors, l_pixelCoords, vec4(l_motionVector, 1.0f, 1.0f));
-    //return;
-
+    
     vec3 l_rayDir = normalize(u_camera.forward + 
                            l_normalizedScreenCoords.x * u_camera.right * u_aspect + 
                            l_normalizedScreenCoords.y * u_camera.up);
@@ -355,5 +295,5 @@ void main()
     }
 
     //l_closestHit.error = vec3(sceneTris[0].a.x, sceneTris[0].a.y, -sceneTris[0].a.z);
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_lastFramePixelCoords / u_resolution, 0.0f, 1.0f));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.error, 1.0f));
 }

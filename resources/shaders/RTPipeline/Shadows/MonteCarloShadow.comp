@@ -4,11 +4,9 @@ layout(local_size_x = 8, local_size_y = 4) in;
 layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 
 layout(rgba32f, binding = 1) uniform image2D hitLocations;
-layout(rgba32f, binding = 2) uniform image2D triangleNormals;
+layout(rgba32f, binding = 2) uniform image2D hitNormals;
 
 layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
-layout(rgba32f, binding = 5) uniform image2D motionVectors;
-layout(rgba32f, binding = 6) uniform image2D lastFrameSamples;
 
 struct Triangle
 {
@@ -27,7 +25,7 @@ struct Triangle
     int materialId;
 };
 
-layout(std430, binding = 7) readonly buffer b_trianglesSSBO
+layout(std430, binding = 5) readonly buffer b_trianglesSSBO
 {
     Triangle sceneTris[];
 };
@@ -45,19 +43,16 @@ struct Node
     int triangleCount;
 };
 
-layout(std430, binding = 8) readonly buffer b_bvhNodes
+layout(std430, binding = 6) readonly buffer b_bvhNodes
 {
     Node bvhNodes[];
 };
 
 // Maps bvhNode.leftFirst indexes to indexes in sceneTris
-layout(std430, binding = 9) readonly buffer b_bvhTriangleId
+layout(std430, binding = 7) readonly buffer b_bvhTriangleId
 {
     int bvhTriIdxs[];
 };
-
-struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
-uniform Camera u_camera;
 
 #define MAX_LIGHTS 10
 struct Light
@@ -76,7 +71,9 @@ struct Light
 
 uniform Light u_lights[MAX_LIGHTS];
 uniform int u_lightCount;
+
 uniform int u_frameCount;
+uniform int u_sampleCount;
 
 struct Ray  { vec3 origin; vec3 direction; };
 
@@ -89,9 +86,7 @@ struct RaycastResult
 
 const float PI = 3.14159265359;
 
-// A "random" function I found in a stack overflow comment section
-
-// Random generator taken from https://developer.nvidia.com/gpugems/gpugems3/part-vi-gpu-computing/chapter-37-efficient-random-number-generation-and-application
+// Random generator found from https://developer.nvidia.com/gpugems/gpugems3/part-vi-gpu-computing/chapter-37-efficient-random-number-generation-and-application
 // Linear Congruential Generator
 // Values chosen from https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
 uint lcg(inout uint _seed)
@@ -136,11 +131,11 @@ bool TriangleIntersect(inout RaycastResult _result, Ray _ray, Triangle _tri, int
 {
     const float l_ep = 0.000001;
     
-    vec3 edge1 = _tri.b - _tri.a;
-    vec3 edge2 = _tri.c - _tri.a;
+    vec3 l_edge1 = _tri.b - _tri.a;
+    vec3 l_edge2 = _tri.c - _tri.a;
     
-    vec3 h = cross(_ray.direction, edge2);
-    float det = dot(edge1, h);
+    vec3 h = cross(_ray.direction, l_edge2);
+    float det = dot(l_edge1, h);
     
     // If the determinant is negative, the triangle is back-facing.
     if (det < l_ep)
@@ -157,7 +152,7 @@ bool TriangleIntersect(inout RaycastResult _result, Ray _ray, Triangle _tri, int
         return false;
     }
     
-    vec3 q = cross(s, edge1);
+    vec3 q = cross(s, l_edge1);
     float v = invDet * dot(_ray.direction, q);
     
     if (v < 0.0 || u + v > 1.0)
@@ -165,15 +160,13 @@ bool TriangleIntersect(inout RaycastResult _result, Ray _ray, Triangle _tri, int
         return false;
     }
     
-    // At this stage we can compute t to find out where
-    // the intersection point is on the line
-    float t = invDet * dot(edge2, q);
+    float l_distance = invDet * dot(l_edge2, q);
     
-    if (t > l_ep && t < _result.distance) // Ray intersection
+    if (l_distance > l_ep && l_distance < _result.distance) // Ray intersection
     {
-        _result.position = _ray.origin + _ray.direction * t;
-        _result.distance = t;
-        _result.normal = normalize(cross(edge1, edge2));
+        _result.position = _ray.origin + _ray.direction * l_distance;
+        _result.distance = l_distance;
+        _result.normal = normalize(cross(l_edge1, l_edge2));
         return true;
     }
     
@@ -247,6 +240,7 @@ bool IsInShadow(inout RaycastResult _result, vec3 _origin, vec3 _direction, floa
                     if(TriangleIntersect(_result, l_shadowRay, sceneTris[triIdx], triIdx)
                        && _result.distance < _distance)
                     {
+                        // Quit if the triangle is intersected at a reasonable distance ( < 1e30f)
                         _error += vec3(0.0, 0.5, 0.00);
                         return true;
                     }
@@ -274,12 +268,12 @@ void main()
     vec3 l_error = vec3(0.0);
     ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
 
-    // Initialise random state with thread GIID
-    uint l_rngState = uint(l_pixelCoords.x * 1973u + l_pixelCoords.y * 9277u + u_frameCount * 26699u);
+    // Initialise random state with thread GUID
+    uint l_rngState = uint(l_pixelCoords.x * 1973u + l_pixelCoords.y * 9277u);
     
     vec3 b_hitLocation = imageLoad(hitLocations, l_pixelCoords).xyz;
     float b_hitDistance = imageLoad(hitLocations, l_pixelCoords).w;
-    int b_triId = int(imageLoad(triangleNormals, l_pixelCoords).w);
+    int b_triId = int(imageLoad(hitNormals, l_pixelCoords).w);
     Triangle l_hitTriangle = sceneTris[b_triId];
     
     if (b_hitDistance < 0.001)
@@ -288,12 +282,13 @@ void main()
         return;
     }
 
-    vec4 b_normalData = imageLoad(triangleNormals, l_pixelCoords);
+    vec4 b_normalData = imageLoad(hitNormals, l_pixelCoords);
     vec3 l_normal = b_normalData.xyz;
 
     vec3 l_frameShadow = vec3(0.0f);
 
     // Sample every light, collect average shadow, then average the sum of average shadows for each sample
+    //for(sample)
     //  for(light)
     //      Get random point on light
     //      lightDir = randomPoint - hitLocation
@@ -304,57 +299,49 @@ void main()
     //endfor
     // Store result
 
-    vec3 l_shadowInSample = vec3(0.0f);
-
-    for(int l_lightIdx = 0; l_lightIdx < u_lightCount; l_lightIdx++)
+    for(int l_sample = 0; l_sample < u_sampleCount; l_sample++)
     {
-        vec3 l_randomPoint = vec3(0.0f);
+        vec3 l_shadowInSample = vec3(0.0f);
 
-        if(u_lights[l_lightIdx].radius > 0.0)
+        // Sample each light for how much shadow the pixel is in
+        for(int l_lightIdx = 0; l_lightIdx < u_lightCount; l_lightIdx++)
         {
-            l_randomPoint = SamplePointOnSphere(l_rngState, u_lights[l_lightIdx].position, u_lights[l_lightIdx].radius);
+            vec3 l_randomPoint = vec3(0.0f);
+
+            if(u_lights[l_lightIdx].radius > 0.0)
+            {
+                l_randomPoint = SamplePointOnSphere(l_rngState, u_lights[l_lightIdx].position, u_lights[l_lightIdx].radius);
+            }
+            else
+            {
+                l_randomPoint = SamplePointOnPlane(l_rngState, u_lights[l_lightIdx].position, u_lights[l_lightIdx].cornerA, u_lights[l_lightIdx].cornerB);
+            }
+
+            vec3 l_lightDir = l_randomPoint - b_hitLocation;
+            float l_lightDistance = length(l_lightDir);
+            l_lightDir = normalize(l_lightDir);
+
+            RaycastResult l_result;
+            l_result.distance = 1e30f;
+            l_result.position = vec3(0.0f);
+
+            if(!IsInShadow(l_result, b_hitLocation + l_normal * 0.001, l_lightDir, l_lightDistance, b_triId, l_error))
+            {
+                float NdotL = dot(l_normal, l_lightDir);
+                // ^ Makes light more bright the more direct the light is
+
+                float l_attenuation = 1.0 / (1.0 + 0.1 * l_lightDistance * l_lightDistance);
+                l_shadowInSample += u_lights[l_lightIdx].colour * u_lights[l_lightIdx].intensity * l_attenuation * NdotL;
+            }
         }
-        else
-        {
-            l_randomPoint = SamplePointOnPlane(l_rngState, u_lights[l_lightIdx].position, u_lights[l_lightIdx].cornerA, u_lights[l_lightIdx].cornerB);
-        }
 
-        vec3 l_lightDir = l_randomPoint - b_hitLocation;
-        float l_lightDistance = length(l_lightDir);
-        l_lightDir = normalize(l_lightDir);
-
-        RaycastResult l_result;
-        l_result.distance = 1e30f;
-        l_result.position = vec3(0.0f);
-
-        if(!IsInShadow(l_result, b_hitLocation + l_normal * 0.001, l_lightDir, l_lightDistance, b_triId, l_error))
-        {
-            float NdotL = dot(l_normal, l_lightDir);
-            // ^ Makes light more bright the more direct the light is
-
-            float l_attenuation = 1.0 / (1.0 + 0.1 * l_lightDistance * l_lightDistance);
-            l_shadowInSample += u_lights[l_lightIdx].colour * u_lights[l_lightIdx].intensity * l_attenuation * NdotL;
-        }
-
-
-            imageStore(lastFrameSamples, l_pixelCoords, vec4(l_randomPoint, 1.0f));
+        l_shadowInSample /= u_lightCount;
+        l_frameShadow += l_shadowInSample;
     }
 
-    l_shadowInSample /= u_lightCount;
-    l_frameShadow += l_shadowInSample;
+    l_frameShadow /= u_sampleCount;
 
-    ivec2 b_motionVector = ivec2(imageLoad(motionVectors, l_pixelCoords).xy);
 
-    vec3 b_previousShadow = imageLoad(shadowBuffer, b_motionVector + l_pixelCoords).xyz;
-    int b_totalSampleCount = int(imageLoad(shadowBuffer, b_motionVector + l_pixelCoords).w);
-
-    // Temporal accumulation
-    b_totalSampleCount++;
-    float l_alpha = 1.0 / float(b_totalSampleCount);
-    l_alpha = clamp(l_alpha, 0.01, 0.1);
-
-    l_frameShadow = mix(b_previousShadow, l_frameShadow, l_alpha);
-    
-    imageStore(shadowBuffer, l_pixelCoords, vec4(l_frameShadow, float(b_totalSampleCount)));
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(b_motionVector, 0.0f, 1.0f));
+    imageStore(shadowBuffer, l_pixelCoords, vec4(l_frameShadow, 1.0f));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_frameShadow, 1.0f));
 }

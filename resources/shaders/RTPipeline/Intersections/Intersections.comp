@@ -6,7 +6,7 @@ layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 
 // Data we write to that is used in later passes
 layout(rgba32f, binding = 1) uniform image2D hitLocations;
-layout(rgba32f, binding = 2) uniform image2D triangleNormals;
+layout(rgba32f, binding = 2) uniform image2D hitNormals;
 layout(rgba32f, binding = 3) uniform image2D texMatInfo;
 layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
 
@@ -27,7 +27,7 @@ struct Triangle
     int materialId;
 };
 
-layout(std430, binding = 7) readonly buffer b_trianglesSSBO
+layout(std430, binding = 5) readonly buffer b_trianglesSSBO
 {
     Triangle sceneTris[];
 };
@@ -45,18 +45,18 @@ struct Node
     int triangleCount;
 };
 
-layout(std430, binding = 8) readonly buffer b_bvhNodes
+layout(std430, binding = 6) readonly buffer b_bvhNodes
 {
     Node bvhNodes[];
 };
 
 // Maps bvhNode.leftFirst indexes to indexes in sceneTris
-layout(std430, binding = 9) readonly buffer b_bvhTriangleId
+layout(std430, binding = 7) readonly buffer b_bvhTriangleId
 {
     int bvhTriIdxs[];
 };
 
-struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; };
+struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; float fov; };
 uniform Camera u_camera;
 
 uniform vec2 u_resolution;
@@ -249,9 +249,10 @@ void main()
     vec2 l_normalizedScreenCoords = vec2(((float(l_pixelCoords.x) / u_resolution.x) - 0.5) * 2.0,
                                          ((float(l_pixelCoords.y) / u_resolution.y) - 0.5) * 2.0);
 
+    float l_fovTan = tan(u_camera.fov * 0.5f);
     vec3 l_rayDir = normalize(u_camera.forward + 
-                           l_normalizedScreenCoords.x * u_camera.right * u_aspect + 
-                           l_normalizedScreenCoords.y * u_camera.up);
+                           l_normalizedScreenCoords.x * u_camera.right * u_aspect * l_fovTan + 
+                           l_normalizedScreenCoords.y * u_camera.up * l_fovTan);
     
     Ray l_ray;
     l_ray.origin = u_camera.position;
@@ -272,7 +273,7 @@ void main()
         Triangle l_tri = sceneTris[l_closestHit.triangleId];
 
         imageStore(hitLocations, l_pixelCoords, vec4(l_closestHit.position, l_closestHit.distance));
-        imageStore(triangleNormals, l_pixelCoords, vec4(l_closestHit.normal, l_closestHit.triangleId));
+        imageStore(hitNormals, l_pixelCoords, vec4(l_closestHit.normal, l_closestHit.triangleId));
         
         vec2 l_texUVs = CalculateTexUVs(l_closestHit, l_tri);
         imageStore(texMatInfo, l_pixelCoords, vec4(l_texUVs, float(l_tri.textureId), float(l_tri.materialId)));
@@ -280,19 +281,19 @@ void main()
         // DEBUG: output greyscale to framebuffer
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(200.0f - (l_closestHit.distance * 20)), 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(normalize(l_closestHit.position), 1.0f));
-        // imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texUVs, 0.0f, 1.0f));
+        imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texUVs, 0.0f, 1.0f));
         // imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f, 1.0f, 0.0f), 1.0f));
     }
     else
     {
         imageStore(hitLocations, l_pixelCoords, vec4(1e30f));
-        imageStore(triangleNormals, l_pixelCoords, vec4(0.0f));
+        imageStore(hitNormals, l_pixelCoords, vec4(0.0f));
         imageStore(texMatInfo, l_pixelCoords, vec4(0.0f));
 
         
-       //imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f, 0.0f, 0.0f), 1.0f));
+       imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f, 0.0f, 0.0f), 1.0f));
     }
 
     //l_closestHit.error = vec3(sceneTris[0].a.x, sceneTris[0].a.y, -sceneTris[0].a.z);
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.error, 1.0f));
+    //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.error, 1.0f));
 }
