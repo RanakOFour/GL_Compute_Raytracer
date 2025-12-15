@@ -277,23 +277,14 @@ void main()
         
         vec2 l_texUVs = CalculateTexUVs(l_closestHit, l_tri);
         imageStore(texMatInfo, l_pixelCoords, vec4(l_texUVs, float(l_tri.textureId), float(l_tri.materialId)));
-
-        // DEBUG: output greyscale to framebuffer
-        // imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(200.0f - (l_closestHit.distance * 20)), 1.0f));
-        // imageStore(o_framebufferTex, l_pixelCoords, vec4(normalize(l_closestHit.position), 1.0f));
-        imageStore(o_framebufferTex, l_pixelCoords, vec4(l_texUVs, 0.0f, 1.0f));
-        // imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f, 1.0f, 0.0f), 1.0f));
     }
     else
     {
         imageStore(hitLocations, l_pixelCoords, vec4(1e30f));
         imageStore(hitNormals, l_pixelCoords, vec4(0.0f));
         imageStore(texMatInfo, l_pixelCoords, vec4(0.0f));
-
-        
-       imageStore(o_framebufferTex, l_pixelCoords, vec4(vec3(0.0f, 0.0f, 0.0f), 1.0f));
     }
 
     //l_closestHit.error = vec3(sceneTris[0].a.x, sceneTris[0].a.y, -sceneTris[0].a.z);
-    //imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.error, 1.0f));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.error, 1.0f));
 }

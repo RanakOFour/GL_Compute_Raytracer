@@ -6,7 +6,7 @@ layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D hitNormals;
 
-layout(rgba32f, binding = 4) uniform writeonly image2D shadowBuffer;
+layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
 
 struct Triangle
 {
