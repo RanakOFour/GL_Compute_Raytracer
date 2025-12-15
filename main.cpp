@@ -1,5 +1,6 @@
 
 #include "Raytracer.h"
+#include "GUI.h"
 #include "Input.h"
 #include "Datastructs/Texture.h"
 #include "Datastructs/Model.h"
@@ -25,6 +26,7 @@ int main(int argc, char* argv[])
 	printf("Initialising RT\n");
 	// This will handle rendering to screen
 	Raytracer l_raytracer(l_winSize);
+	GUI l_gui(&l_raytracer);
 
 	Input l_inputMap;
 
@@ -91,21 +93,13 @@ int main(int argc, char* argv[])
 	printf("Setting tris\n");
 	l_raytracer.SetTris(&l_tris);
 
-	Light* l_light0 = l_raytracer.GetLight(0);
 	Camera* l_rtCam = l_raytracer.GetCamera();
-	Material* l_material0 = l_raytracer.GetMaterial(0);
 
 	bool l_keepGoing = true;
 	bool l_mouseMovement = false;
 
-	float l_lastFrame = 0.0f;
-
-	bool l_lightIsSphere = true;
-	bool l_lastFrameLightIsSphere = l_lightIsSphere;
-
-	
-	bool l_lightIsQuad = false;
-	bool l_lastFrameLightIsQuad = l_lightIsQuad;
+	Uint64 l_lastTime = SDL_GetTicks64();
+	float l_deltaTime = 0.0f;
 
 	SDL_Event l_event;
 	while(l_keepGoing)
@@ -154,136 +148,26 @@ int main(int argc, char* argv[])
 			l_inputMap.deltaMouseX = 0.0f;
 			l_inputMap.deltaMouseY = 0.0f;
 		}
+
+		Uint64 l_startTime = SDL_GetTicks64();
+		l_deltaTime = (float)(l_startTime - l_lastTime) * 0.001f;
+		l_lastTime = l_startTime;
+
+		if(l_deltaTime < 16.6f)
+		{
+			SDL_Delay(16.6f - l_deltaTime);
+		}
 		
-		float l_currentTime = (float)(SDL_GetPerformanceCounter() * SDL_GetPerformanceFrequency());
-
-
-		float l_deltaTime = l_currentTime - l_lastFrame;
+		printf("FPS: %f\nDT: %f\n", 1.0f / l_deltaTime, l_deltaTime);
 
 		l_rtCam->Update(l_inputMap, l_deltaTime);
 
 		l_raytracer.Trace(l_deltaTime);
 
-		
-		l_lastFrame = l_currentTime;
-
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplSDL2_NewFrame();
-		ImGui::NewFrame();
-
-		ImGui::Begin("Light Settings");
-
-		l_lastFrameLightIsQuad = l_lightIsQuad;
-		l_lastFrameLightIsSphere = l_lightIsSphere;
-		ImGui::Checkbox("Sphere Light", &l_lightIsSphere);
-		if(l_lightIsSphere && l_lightIsSphere != l_lastFrameLightIsSphere)
-		{
-			l_lightIsQuad = false;
-			l_light0->radius = 1.0f;
-		}
-
-		ImGui::Checkbox("Quad Light", &l_lightIsQuad);
-		if(l_lightIsQuad && l_lightIsQuad != l_lastFrameLightIsQuad)
-		{
-			l_lightIsSphere = false;
-			l_light0->radius = 0.0f;
-		}
-
-		glm::vec3 lightPos = l_light0->position;
-		
-		if(l_lightIsSphere)
-		{
-			ImGui::DragFloat3("Light Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
-
-			float l_radius = l_light0->radius;
-			ImGui::SliderFloat("Light Radius", &l_radius, 0.001f, 10.0f);
-			l_light0->radius = l_radius;
-		}
-		else
-		{
-			ImGui::DragFloat3("Light Corner 1", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
-			
-			glm::vec3 lightPos2 = l_light0->cornerA;
-			ImGui::DragFloat3("Light Corner 2", &(lightPos2[0]), 0.1f, -10.0f, 10.0f);
-			l_light0->cornerA = lightPos2;
-
-			glm::vec3 lightPos3 = l_light0->cornerB;
-			ImGui::DragFloat3("Light Corner 3", &(lightPos3[0]), 0.1f, -10.0f, 10.0f);
-			l_light0->cornerB = lightPos3;
-		}
-
-		l_light0->position = lightPos;
-
-		
-
-		glm::vec3 lightCol = l_light0->colour;
-		ImGui::ColorEdit3("Light Colour", &(lightCol[0]));
-		l_light0->colour = lightCol;
-
-		float inten = l_light0->intensity;
-		ImGui::SliderFloat("Light Intensity", &(inten), 0.0f, 100.0f);
-		l_light0->intensity = inten;
-
-		ImGui::End();
-
-		ImGui::Begin("Enabled Shaders");
-
-		bool l_shadow = l_raytracer.Shadows();
-		ImGui::Checkbox("Shadows", &l_shadow);
-		l_raytracer.Shadows(l_shadow);
-
-		if(l_shadow)
-		{
-			int samples = l_raytracer.Samples();
-			ImGui::SliderInt("Sample Count", &samples, 1, 100);
-			l_raytracer.Samples(samples);
-		}
-
-		bool l_shade = l_raytracer.Shading();
-		ImGui::Checkbox("Shading", &l_shade);
-		l_raytracer.Shading(l_shade);		
-
-		bool l_lights = l_raytracer.LightVision();
-		ImGui::Checkbox("Light Vision", &l_lights);
-		l_raytracer.LightVision(l_lights);
-
-		ImGui::End();
-
-		ImGui::Begin("Camera Info");
-
-		glm::vec3 camPos = l_rtCam->Position();
-		std::string l_camPosText = "Camera Position: (" + std::to_string(camPos.x) + ", " + std::to_string(camPos.y) + ", " + std::to_string(camPos.z) + ")";
-		ImGui::Text(l_camPosText.c_str());
-
-		glm::quat camRot = l_rtCam->Rotation();
-		l_camPosText = "Camera Rotation: (" + std::to_string(camRot.x) + ", "+ std::to_string(camRot.y) + ", "+ std::to_string(camRot.z) + ", "+ std::to_string(camRot.w) + ")";
-		ImGui::Text(l_camPosText.c_str());
-
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-		ImGui::End();
-
-		ImGui::Begin("Material settings");
-
-		glm::vec3 l_alb = l_material0->albedo;
-		ImGui::ColorEdit3("Albedo", &l_alb[0]);
-		l_material0->albedo = l_alb;
-
-		float met = l_material0->metallic;
-		ImGui::SliderFloat("Metallic", &met, 0, 1);
-		l_material0->metallic = met;
-
-		float rog = l_material0->roughness;
-		ImGui::SliderFloat("Roughness", &rog, 0, 1);
-		l_material0->roughness = rog;
-		
-		float ao = l_material0->ambientOcclusion;
-		ImGui::SliderFloat("AO", &ao, 0, 1);
-		l_material0->ambientOcclusion = ao;
-
-		ImGui::End();
+		l_gui.ShowUI(l_deltaTime);
 
 		l_raytracer.Show();
+
 	}
 
 	l_raytracer.Shutdown();

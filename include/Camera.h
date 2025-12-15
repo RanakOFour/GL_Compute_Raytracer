@@ -44,34 +44,20 @@ class Camera
      */
     inline void Update(Input _inputMap, float _deltaTime)
     {
-        // You do not wish to know how many tries it took me to get this somewhat reasonable
-        // This is also platform specific, so I hope that it works on windows
-        // Apparently, SDL timers can work to the nearest nanosecond (x10^9),
-        // which is odd considering the value below (1x10^18) implies something much worse
+		Move(_inputMap.forward * m_Forward * 3.0f * _deltaTime);
 
-        
-        float l_moveDelta = 0.0f;
-        
-        #if _WIN32
-        l_moveDelta = _deltaTime / 10000000000000.0f;
-        #else
-        l_moveDelta = 0.1f;
-        #endif
+		Move(_inputMap.right * m_Right * 3.0f * _deltaTime);
 
-		Move(_inputMap.forward * m_Forward * (l_moveDelta));
-
-		Move(_inputMap.right * m_Right * (l_moveDelta));
-
-        Move(_inputMap.up * m_Up * (l_moveDelta));
+        Move(_inputMap.up * m_Up * 3.0f * _deltaTime);
 
         if(abs(_inputMap.deltaMouseX) > 0.0f && abs(_inputMap.deltaMouseX) < 1.0f)
         {
-            Rotate(_inputMap.deltaMouseX * (l_moveDelta), m_Up);
+            Rotate(_inputMap.deltaMouseX * 10.0f * _deltaTime, m_Up);
         }
 
         if(abs(_inputMap.deltaMouseY) > 0.0f && abs(_inputMap.deltaMouseY) < 1.0f)
         {
-            Rotate(_inputMap.deltaMouseY * (l_moveDelta), m_Right);
+            Rotate(_inputMap.deltaMouseY * 10.0f * _deltaTime, m_Right);
         }
 
         //printf("%i, %i, %i, %f, %f\n", _inputMap.forward, _inputMap.right, _inputMap.up, _inputMap.deltaMouseX, _inputMap.deltaMouseY);

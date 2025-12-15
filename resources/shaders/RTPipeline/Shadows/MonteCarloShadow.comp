@@ -269,7 +269,7 @@ void main()
     ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
 
     // Initialise random state with thread GUID
-    uint l_rngState = uint(l_pixelCoords.x * 1973u + l_pixelCoords.y * 9277u);
+    uint l_rngState = uint(l_pixelCoords.x * 1973u + l_pixelCoords.y * 9277u + u_frameCount * 26699u);
     
     vec3 b_hitLocation = imageLoad(hitLocations, l_pixelCoords).xyz;
     float b_hitDistance = imageLoad(hitLocations, l_pixelCoords).w;

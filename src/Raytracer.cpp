@@ -92,7 +92,6 @@ void Raytracer::Trace(float _deltaTime)
         m_ShadowComp.use();
 
         m_ShadowComp.SetUniform("u_lightCount", l_lightCount);
-        m_ShadowComp.SetUniform("u_frameCount", m_frameCount);
         m_ShadowComp.SetUniform("u_sampleCount", m_sampleCount);
         for (int i = 0; i < l_lightCount; i++)
         {

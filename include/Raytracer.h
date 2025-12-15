@@ -15,9 +15,11 @@
 
 #include <vector>
 
+class GUI;
 class Camera;
 class Raytracer : public GCP_Framework
 {
+    friend GUI;
     private:
     BVH m_BVH;
 
@@ -53,6 +55,8 @@ class Raytracer : public GCP_Framework
     ~Raytracer();
 
     void Trace(float _time);
+
+    void ShowUIOptions();
 
     void SetTris(std::vector<Triangle>* _tris);
     void SetMaterials(std::vector<Material>* _mat);
