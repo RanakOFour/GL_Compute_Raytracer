@@ -6,7 +6,7 @@ layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D hitNormals;
 
-layout(rgba32f, binding = 4) uniform writeonly image2D shadowBuffer;
+layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
 
 struct Triangle
 {
@@ -91,19 +91,15 @@ const float PI = 3.14159265359;
 // Values chosen from https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
 uint lcg(inout uint _seed)
 {
-    _seed = _seed * 747796405u + 2891336453u;
-    uint hashed = _seed ^ (_seed >> 14);
-    _seed = hashed;
-    return _seed >> 8;
+    _seed = (1664525u * _seed + 1013904223u);
+    return _seed;
 }
 
 // Returns random number between 0 and 1
 float RandomFloat(inout uint _seed)
 {
     //                        This is the uint number cap
-    uint l_result = lcg(_seed);
-    const float l_inv_max_int = 1.0f / 16777215.0f;
-    return float(lcg(_seed)) * l_inv_max_int;
+    return float(lcg(_seed)) / 4294967295.0f;
 }
 
 vec3 SamplePointOnSphere(inout uint _seed, vec3 center, float radius)
@@ -274,8 +270,6 @@ void main()
 
     // Initialise random state with thread GUID
     uint l_rngState = uint(l_pixelCoords.x * 1973u + l_pixelCoords.y * 9277u + u_frameCount * 26699u);
-    // Decorrelate the seeds from eachother
-    lcg(l_rngState);
     
     vec3 b_hitLocation = imageLoad(hitLocations, l_pixelCoords).xyz;
     float b_hitDistance = imageLoad(hitLocations, l_pixelCoords).w;
@@ -331,16 +325,14 @@ void main()
             l_result.distance = 1e30f;
             l_result.position = vec3(0.0f);
 
-            if(IsInShadow(l_result, b_hitLocation + l_normal * 0.001, l_lightDir, l_lightDistance, b_triId, l_error))
+            if(!IsInShadow(l_result, b_hitLocation + l_normal * 0.001, l_lightDir, l_lightDistance, b_triId, l_error))
             {
-                continue;
+                float NdotL = dot(l_normal, l_lightDir);
+                // ^ Makes light more bright the more direct the light is
+
+                float l_attenuation = 1.0 / (1.0 + 0.1 * l_lightDistance * l_lightDistance);
+                l_shadowInSample += u_lights[l_lightIdx].colour * u_lights[l_lightIdx].intensity * l_attenuation * NdotL;
             }
-
-            float NdotL = dot(l_normal, l_lightDir);
-            // ^ Makes light more bright the more direct the light is
-
-            float l_attenuation = 1.0 / (1.0 + 0.1 * l_lightDistance * l_lightDistance);
-            l_shadowInSample += u_lights[l_lightIdx].colour * u_lights[l_lightIdx].intensity * l_attenuation * NdotL;
         }
 
         l_shadowInSample /= u_lightCount;
