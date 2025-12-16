@@ -31,9 +31,12 @@ class Raytracer : public GCP_Framework
 
     Camera m_camera;
 
+    std::vector<ComputeInformation> m_Shaders;
+
     ComputeShader m_ObjIntersectComp;
     ComputeShader m_LightIntersectComp;
     ComputeShader m_ShadowComp;
+    ComputeShader m_shadowDenoise;
     ComputeShader m_PBRShadeComp;
 
     GLuint m_gBuffers[GBUFFERCOUNT];
@@ -46,6 +49,7 @@ class Raytracer : public GCP_Framework
     bool m_lightVision;
     bool m_shadows;
     bool m_shading;
+    bool m_denoise;
 
     int m_frameCount;
     int m_sampleCount;
@@ -61,6 +65,8 @@ class Raytracer : public GCP_Framework
     void SetTris(std::vector<Triangle>* _tris);
     void SetMaterials(std::vector<Material>* _mat);
     void SetTextures(std::vector<Texture>* _tex);
+
+    void SetShaders(std::vector<ComputeInformation> _info);
     
     void AddLight(Light _light);
     Light* GetLight(int index);

@@ -113,24 +113,14 @@ class GUI
 
         ImGui::Begin("Enabled Shaders");
 
-        bool l_shadow = m_rt->m_shadows;
-        ImGui::Checkbox("Shadows", &l_shadow);
-        m_rt->m_shadows = l_shadow;
+        std::vector<ComputeInformation>* l_shaderInfo = &(m_rt->m_Shaders);
 
-        if(l_shadow)
+        for(int i = 0; i < l_shaderInfo->size(); i++)
         {
-            int samples = m_rt->m_sampleCount;
-            ImGui::SliderInt("Sample Count", &samples, 1, 100);
-            m_rt->m_sampleCount = samples;
+            bool l_enabled = l_shaderInfo->at(i).Enabled();
+            ImGui::Checkbox(l_shaderInfo->at(i).Name().c_str(), &l_enabled);
+            l_shaderInfo->at(i).Enabled(l_enabled);
         }
-
-        bool l_shade = m_rt->m_shading;
-        ImGui::Checkbox("Shading", &l_shade);
-        m_rt->m_shading = l_shade;		
-
-        bool l_lights = m_rt->m_lightVision;
-        ImGui::Checkbox("Light Vision", &l_lights);
-        m_rt->m_lightVision = l_lights;
 
         ImGui::End();
 

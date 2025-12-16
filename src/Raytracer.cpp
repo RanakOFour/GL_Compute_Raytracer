@@ -2,35 +2,38 @@
 #include "Framebuffer.h"
 
 Raytracer::Raytracer(glm::ivec2 _screenSize)
-    : GCP_Framework(_screenSize)
-    , m_BVH()
-    , m_tris(nullptr)
-    , m_mats(nullptr)
-    , m_textures(nullptr)
-    , m_lights()
-    , m_camera(_screenSize)
-    , m_ObjIntersectComp("./resources/shaders/RTPipeline/Intersections/Intersections.comp")
-    , m_LightIntersectComp("./resources/shaders/RTPipeline/Intersections/LightDetection.comp")
-    , m_ShadowComp("./resources/shaders/RTPipeline/Shadows/MonteCarloShadow.comp")
-    , m_PBRShadeComp("./resources/shaders/RTPipeline/Shading/DefaultShading.comp")
-    , m_gBuffers()
-    , m_triangleSSBO(-1)
-    , m_materialSSBO(-1)
-    , m_setup(false)
-    , m_shadows(true)
-    , m_shading(true)
-    , m_lightVision(true)
-    , m_frameCount(0)
-    , m_sampleCount(1)
+: GCP_Framework(_screenSize)
+, m_BVH()
+, m_tris(nullptr)
+, m_mats(nullptr)
+, m_textures(nullptr)
+, m_lights()
+, m_camera(_screenSize)
+, m_ObjIntersectComp("./resources/shaders/RTPipeline/Intersections/Intersections.comp")
+, m_LightIntersectComp("./resources/shaders/RTPipeline/Intersections/LightDetection.comp")
+, m_ShadowComp("./resources/shaders/RTPipeline/Shadows/MonteCarloShadow.comp")
+, m_shadowDenoise("./resources/shaders/RTPipeline/Afters/ShadowDenoise.comp")
+, m_PBRShadeComp("./resources/shaders/RTPipeline/Shading/PBRShading.comp")
+, m_gBuffers()
+, m_triangleSSBO(-1)
+, m_materialSSBO(-1)
+, m_setup(false)
+, m_shadows(true)
+, m_shading(true)
+, m_lightVision(true)
+, m_frameCount(0)
+, m_sampleCount(1)
 {
     printf("Binding bufferTex\n");
     m_mainBuffer->BindGLImage();
 
     printf("Creating texture buffers\n");
-    //Create texture buffers on GPU
+    
+    // The gBuffers are bound here once as the bindings do not change
+
     glGenTextures(GBUFFERCOUNT, &m_gBuffers[0]);
 
-    for (int i = 0; i < GBUFFERCOUNT - 1; i++)
+    for (int i = 0; i < GBUFFERCOUNT; i++)
     {
         printf("Filling in buffer %i\n", i + 1);
         glBindTexture(GL_TEXTURE_2D, m_gBuffers[i]);
@@ -45,8 +48,6 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);
-
-    // Everything is bound here once as the bindings do not change
 }
 
 Raytracer::~Raytracer()
@@ -106,6 +107,14 @@ void Raytracer::Trace(float _deltaTime)
 
         glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
         glMemoryBarrier(GL_ALL_BARRIER_BITS);
+
+        if(m_denoise)
+        {
+            m_shadowDenoise.use();
+        
+            glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
+            glMemoryBarrier(GL_ALL_BARRIER_BITS);
+        }
     }
 
     if (m_shading)
@@ -209,6 +218,11 @@ void Raytracer::SetTextures(std::vector<Texture>* _tex)
         glActiveTexture(GL_TEXTURE0 + BufferIndices::TEXTURES + i);
         glBindTexture(GL_TEXTURE_2D, m_textures->at(i).GetID());
     }
+}
+
+void Raytracer::SetShaders(std::vector<ComputeInformation> _shaders)
+{
+    m_Shaders = _shaders;
 }
 
 void Raytracer::AddLight(Light _light)

@@ -43,4 +43,39 @@ class ComputeShader
     GLuint m_ID;
 };
 
+/*
+*   A struct used to contain information for the UI
+*/
+class ComputeInformation
+{
+    private:
+    std::string m_name;
+    ComputeShader* m_shader;
+    bool m_enabled;
+
+    public:
+    ComputeInformation(std::string _n, ComputeShader* _s)
+    : m_name(_n)
+    , m_shader(_s)
+    , m_enabled(true)
+    {
+
+    };
+
+    ~ComputeInformation()
+    {
+        delete(m_shader);
+    };
+
+    inline std::string Name() { return m_name; };
+    inline void Name(std::string _n) { m_name = _n; }
+
+    inline void Use() { m_shader->use(); };
+    inline ComputeShader* Shader() { return m_shader; };
+
+    inline bool Enabled() { return m_enabled; };
+    inline void Enabled(bool _e) { m_enabled = _e; };
+};
+
+
 #endif

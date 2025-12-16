@@ -8,6 +8,7 @@
 
 #include "GL/glew.h"
 
+#include "SDL/SDL.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
@@ -27,6 +28,8 @@ int main(int argc, char* argv[])
 	// This will handle rendering to screen
 	Raytracer l_raytracer(l_winSize);
 	GUI l_gui(&l_raytracer);
+
+	std::string l_masterString = "./resources/pipelines/master.txt";
 
 	Input l_inputMap;
 

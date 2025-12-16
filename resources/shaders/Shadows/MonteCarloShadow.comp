@@ -349,30 +349,6 @@ void main()
 
     l_frameShadow /= u_sampleCount;
 
-    vec3 filteredShadow = vec3(0.0);
-    float totalWeight = 0.0;
-
-    for(int dx = -1; dx <= 1; dx++) {
-        for(int dy = -1; dy <= 1; dy++) {
-            ivec2 sampleCoord = l_pixelCoords + ivec2(dx, dy);
-            vec3 sampleShadow = imageLoad(shadowBuffer, sampleCoord).rgb;
-            vec3 sampleNormal = imageLoad(hitNormals, sampleCoord).rgb;
-            
-            // Weight by normal similarity
-            float normalWeight = max(0.0, dot(l_normal, sampleNormal));
-            float spatialWeight = 1.0 / (1.0 + float(dx*dx + dy*dy));
-            
-            float weight = normalWeight * spatialWeight;
-            filteredShadow += sampleShadow * weight;
-            totalWeight += weight;
-        }
-    }
-
-    if(totalWeight > 0.0) {
-        l_frameShadow = filteredShadow / totalWeight;
-    }
-
-
     imageStore(shadowBuffer, l_pixelCoords, vec4(l_frameShadow, 1.0f));
     imageStore(o_framebufferTex, l_pixelCoords, vec4(l_frameShadow, 1.0f));
 }
