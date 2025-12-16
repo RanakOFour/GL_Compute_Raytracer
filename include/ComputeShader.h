@@ -45,6 +45,7 @@ class ComputeShader
 
 /*
 *   A struct used to contain information for the UI
+*   The raytracer did not like this, so it is unused
 */
 class ComputeInformation
 {

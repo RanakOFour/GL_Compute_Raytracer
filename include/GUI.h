@@ -113,14 +113,12 @@ class GUI
 
         ImGui::Begin("Enabled Shaders");
 
-        std::vector<ComputeInformation>* l_compInfo = &m_rt->m_Shaders;
+        std::vector<bool>* l_shaderEnabled = &m_rt->m_shaderEnabled;
 
         // Shadow shader
-        ComputeInformation& l_currentInfo = l_compInfo->at(1);
-
-        bool l_shadow = l_currentInfo.Enabled();
+        bool l_shadow = l_shaderEnabled->at(1);
         ImGui::Checkbox("Shadows", &l_shadow);
-        l_currentInfo.Enabled(l_shadow);
+        l_shaderEnabled->at(1) = l_shadow;
 
         if(l_shadow)
         {
@@ -128,23 +126,18 @@ class GUI
             ImGui::SliderInt("Sample Count", &samples, 1, 100);
             m_rt->m_sampleCount = samples;
 
-            l_currentInfo = l_compInfo->at(2);
-            bool l_denoise = l_currentInfo.Enabled();
+            bool l_denoise = l_shaderEnabled->at(2);
             ImGui::Checkbox("Denoise", &l_denoise);
-            l_currentInfo.Enabled(l_denoise);
+            l_shaderEnabled->at(2) = l_denoise;
         }
 
-
-        l_currentInfo = l_compInfo->at(3);
-        bool l_shade = l_currentInfo.Enabled();
+        bool l_shade = l_shaderEnabled->at(3);
         ImGui::Checkbox("Shading", &l_shade);
-        l_currentInfo.Enabled(l_shade);		
+        l_shaderEnabled->at(3) = l_shade;		
 
-
-        l_currentInfo = l_compInfo->at(4);
-        bool l_lights = l_currentInfo.Enabled();
+        bool l_lights = l_shaderEnabled->at(4);
         ImGui::Checkbox("Light Vision", &l_lights);
-        l_currentInfo.Enabled(l_lights);
+        l_shaderEnabled->at(4) = l_lights;
 
         ImGui::End();
 

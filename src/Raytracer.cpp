@@ -9,7 +9,9 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 , m_textures(nullptr)
 , m_lights()
 , m_camera(_screenSize)
+, m_shaderNames()
 , m_Shaders()
+, m_shaderEnabled()
 , m_gBuffers()
 , m_triangleSSBO(-1)
 , m_materialSSBO(-1)
@@ -19,25 +21,25 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 {
     printf("Creating shaders\n");
 
-    ComputeInformation l_intersectInfo("Intersections", 
-    "./resources/shaders/Intersections/Intersections.comp");
-    m_Shaders.push_back(l_intersectInfo);
+    m_shaderNames.push_back("Intersections");
+    m_Shaders.push_back(ComputeShader("./resources/shaders/Intersections/Intersections.comp"));
+    m_shaderEnabled.push_back(true);
 
-    ComputeInformation l_shadowInfo("Shadows", 
-    "./resources/shaders/Shadows/MonteCarloShadow.comp");
-    m_Shaders.push_back(l_shadowInfo);
+    m_shaderNames.push_back("Shadows");
+    m_Shaders.push_back(ComputeShader("./resources/shaders/Shadows/MonteCarloShadow.comp"));
+    m_shaderEnabled.push_back(true);
 
-    ComputeInformation l_denoiseInfo("Denoise", 
-    "./resources/shaders/Afters/ShadowDenoise.comp");
-    m_Shaders.push_back(l_denoiseInfo);
+    m_shaderNames.push_back("Denoise");
+    m_Shaders.push_back(ComputeShader("./resources/shaders/Afters/ShadowDenoise.comp"));
+    m_shaderEnabled.push_back(true);
 
-    ComputeInformation l_shadingInfo("Shading", 
-    "./resources/shaders/Shading/PBRShading.comp");
-    m_Shaders.push_back(l_shadingInfo);
+    m_shaderNames.push_back("Shading");
+    m_Shaders.push_back(ComputeShader("./resources/shaders/Shading/PBRShading.comp"));
+    m_shaderEnabled.push_back(true);
 
-    ComputeInformation l_lightDetInfo("Light Detection", 
-    "./resources/shaders/Intersections/LightDetection.comp");
-    m_Shaders.push_back(l_lightDetInfo);
+    m_shaderNames.push_back("Light Detection");
+    m_Shaders.push_back(ComputeShader("./resources/shaders/Intersections/LightDetection.comp"));
+    m_shaderEnabled.push_back(true);
 
     printf("Binding bufferTex\n");
     m_mainBuffer->BindGLImage();
@@ -91,16 +93,14 @@ void Raytracer::Trace(float _deltaTime)
 
     printf("Intersection pass\n");
 
-    ComputeShader* l_currentShader;
-
-    if(m_Shaders[0].Enabled())
+    if(m_shaderEnabled[0])
     {
-        l_currentShader = m_Shaders[0].Shader();
+        m_Shaders[0].use();
 
-        m_camera.UpdateShader(*l_currentShader);
+        m_camera.UpdateShader(m_Shaders[0]);
 
-        l_currentShader->SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
-        l_currentShader->SetUniform("u_aspect", (float)m_screenSize.x / float(m_screenSize.y));
+        m_Shaders[0].SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
+        m_Shaders[0].SetUniform("u_aspect", (float)m_screenSize.x / float(m_screenSize.y));
 
         glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
         glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
@@ -108,85 +108,83 @@ void Raytracer::Trace(float _deltaTime)
     
     int l_lightCount = m_lights.size() > 10 ? 10 : m_lights.size();
 
-    if (m_Shaders[1].Enabled())
+    if (m_shaderEnabled[1])
     {
         printf("Shadow pass\n");
-        l_currentShader = m_Shaders[1].Shader();
-
-        l_currentShader->SetUniform("u_lightCount", l_lightCount);
-        l_currentShader->SetUniform("u_sampleCount", m_sampleCount);
-        l_currentShader->SetUniform("u_frameCount", m_frameCount);
+        m_Shaders[1].use();
+        
+        m_Shaders[1].SetUniform("u_lightCount", l_lightCount);
+        m_Shaders[1].SetUniform("u_sampleCount", m_sampleCount);
+        m_Shaders[1].SetUniform("u_frameCount", m_frameCount);
         for (int i = 0; i < l_lightCount; i++)
         {
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
+            m_Shaders[1].SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
+            m_Shaders[1].SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
+            m_Shaders[1].SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
+            m_Shaders[1].SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
+            m_Shaders[1].SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
+            m_Shaders[1].SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
         }
 
         glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
         glMemoryBarrier(GL_ALL_BARRIER_BITS);
 
-        if(m_Shaders[2].Enabled())
+        if(m_shaderEnabled[2])
         {
-            m_Shaders[2].Use();
+            m_Shaders[2].use();
         
             glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
             glMemoryBarrier(GL_ALL_BARRIER_BITS);
         }
     }
 
-    if (m_Shaders[3].Enabled())
+    if (m_shaderEnabled[3])
     {
         printf("PBR pass\n");
-        l_currentShader = m_Shaders[3].Shader();
 
-        l_currentShader->use();
+        m_Shaders[3].use();
 
-        l_currentShader->SetUniform("u_cameraPos", m_camera.Position());
-        l_currentShader->SetUniform("u_lightCount", l_lightCount);
+        m_Shaders[3].SetUniform("u_cameraPos", m_camera.Position());
+        m_Shaders[3].SetUniform("u_lightCount", l_lightCount);
         for (int i = 0; i < l_lightCount; i++)
         {
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
+            m_Shaders[3].SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
+            m_Shaders[3].SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
+            m_Shaders[3].SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
+            m_Shaders[3].SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
+            m_Shaders[3].SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
+            m_Shaders[3].SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
         }
 
         for (int i = 0; i < m_textures->size(); i++)
         {
             glActiveTexture(GL_TEXTURE0 + BufferIndices::TEXTURES + i);
-            l_currentShader->SetUniform("u_materialTextures[" + std::to_string(i) + "]", BufferIndices::TEXTURES + i);
+            m_Shaders[3].SetUniform("u_materialTextures[" + std::to_string(i) + "]", BufferIndices::TEXTURES + i);
         }
 
         glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
         glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
     }
 
-    if (m_Shaders[4].Enabled())
+    if (m_shaderEnabled[4])
     {
         printf("Light Vision Pass\n");
-        l_currentShader = m_Shaders[4].Shader();
 
-        l_currentShader->use();
+        m_Shaders[4].use();
 
-        m_camera.UpdateShader(*l_currentShader);
+        m_camera.UpdateShader(m_Shaders[4]);
 
-        l_currentShader->SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
-        l_currentShader->SetUniform("u_lightCount", l_lightCount);
+        m_Shaders[4].SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
+        m_Shaders[4].SetUniform("u_lightCount", l_lightCount);
 
         for (int i = 0; i < l_lightCount; i++)
         {
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
-            l_currentShader->SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
+            m_Shaders[4].SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
+            m_Shaders[4].SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
+            m_Shaders[4].SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
+            m_Shaders[4].SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
+            m_Shaders[4].SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
+            m_Shaders[4].SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
         }
 
         glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
@@ -243,11 +241,6 @@ void Raytracer::SetTextures(std::vector<Texture>* _tex)
         glActiveTexture(GL_TEXTURE0 + BufferIndices::TEXTURES + i);
         glBindTexture(GL_TEXTURE_2D, m_textures->at(i).GetID());
     }
-}
-
-void Raytracer::SetShaders(std::vector<ComputeInformation> _shaders)
-{
-    m_Shaders = _shaders;
 }
 
 void Raytracer::AddLight(Light _light)

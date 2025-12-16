@@ -31,7 +31,9 @@ class Raytracer : public GCP_Framework
 
     Camera m_camera;
 
-    std::vector<ComputeInformation> m_Shaders;
+    std::vector<std::string> m_shaderNames;
+    std::vector<ComputeShader> m_Shaders;
+    std::vector<bool> m_shaderEnabled;
 
     GLuint m_gBuffers[GBUFFERCOUNT];
 
@@ -55,8 +57,6 @@ class Raytracer : public GCP_Framework
     void SetMaterials(std::vector<Material>* _mat);
     void SetTextures(std::vector<Texture>* _tex);
 
-    void SetShaders(std::vector<ComputeInformation> _info);
-    
     void AddLight(Light _light);
     Light* GetLight(int index);
 
