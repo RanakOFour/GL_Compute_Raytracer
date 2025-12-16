@@ -131,9 +131,8 @@ void main()
     vec3 F0 = mix(vec3(0.04), l_mat.albedo, l_mat.metallic);
     vec3 Lo = vec3(0.0f);
 
-    int i = 0;
-    //for(int i = 0; i < u_lightCount; i++)
-    //{
+    for(int i = 0; i < u_lightCount; i++)
+    {
         vec3 l_lightPosition = vec3(0.0);
         if(u_lights[i].radius > 0.0f)
         {
@@ -169,19 +168,18 @@ void main()
 
         kD *= 1.0 - l_mat.metallic;
 
-        Lo += ((kD * l_mat.albedo * l_texColour) / PI + l_specular) * l_radiance * NdotL;
-    //}
+        Lo += ((kD * l_mat.albedo) / PI + l_specular) * l_radiance * NdotL;
+    }
     
     // Add ambient lighting (always present, even in shadows)
-    vec3 l_ambient = vec3(0.03) * l_texColour * l_mat.albedo * l_mat.ambientOcclusion;
+    vec3 l_ambient = vec3(0.03) * l_mat.albedo * l_mat.ambientOcclusion;
     
     vec3 l_shadow = imageLoad(shadowBuffer, l_pixelCoords).xyz;
 
-    vec3 colour = (l_ambient + Lo) * l_shadow;
+    vec3 colour = (l_ambient + Lo) * l_shadow * l_texColour;
 
     // Gamma correction
     colour = pow(colour, vec3(1.0/2.2));
     
     imageStore(o_framebufferTex, l_pixelCoords, vec4(colour, 1.0f));
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_shadow, 1.0f));
 }

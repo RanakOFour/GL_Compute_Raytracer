@@ -73,9 +73,8 @@ void main()
 
     vec3 l_light = vec3(0.0f);
 
-    int i = 0;
-    //for(int i = 0; i < u_lightCount; i++)
-    //{
+    for(int i = 0; i < u_lightCount; i++)
+    {
         vec3 l_lightPosition = vec3(0.0);
         if(u_lights[i].radius > 0.0f)
         {
@@ -89,19 +88,20 @@ void main()
         }
 
         vec3 l_lightDir = normalize(l_lightPosition - l_position);
+        float NdotL = max(dot(l_normal, l_lightDir), 0.0f);
         float l_distance = length(l_lightPosition - l_position);
         float l_attenuation = 1.0 / (1.0 + 0.1 * l_distance * l_distance);
         vec3 l_radiance = u_lights[i].colour * u_lights[i].intensity * l_attenuation;
 
         l_light += l_radiance * NdotL;
-    //}
+    }
     
     // Add ambient lighting (always present, even in shadows)
     vec3 l_ambient = vec3(0.03) * l_texColour;
     
     vec3 l_shadow = imageLoad(shadowBuffer, l_pixelCoords).xyz;
 
-    vec3 colour = (l_ambient + l_light) * l_shadow;
+    vec3 colour = (l_ambient + l_light) * l_shadow * l_texColour;
 
     // Gamma correction
     colour = pow(colour, vec3(1.0/2.2));

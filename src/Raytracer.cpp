@@ -2,26 +2,26 @@
 #include "Framebuffer.h"
 
 Raytracer::Raytracer(glm::ivec2 _screenSize)
-    : GCP_Framework(_screenSize)
-    , m_BVH()
-    , m_tris(nullptr)
-    , m_mats(nullptr)
-    , m_textures(nullptr)
-    , m_lights()
-    , m_camera(_screenSize)
-    , m_ObjIntersectComp("./resources/shaders/RTPipeline/Intersections/Intersections.comp")
-    , m_LightIntersectComp("./resources/shaders/RTPipeline/Intersections/LightDetection.comp")
-    , m_ShadowComp("./resources/shaders/RTPipeline/Shadows/MonteCarloShadow.comp")
-    , m_PBRShadeComp("./resources/shaders/RTPipeline/Shading/DefaultShading.comp")
-    , m_gBuffers()
-    , m_triangleSSBO(-1)
-    , m_materialSSBO(-1)
-    , m_setup(false)
-    , m_shadows(true)
-    , m_shading(true)
-    , m_lightVision(true)
-    , m_frameCount(0)
-    , m_sampleCount(1)
+: GCP_Framework(_screenSize)
+, m_BVH()
+, m_tris(nullptr)
+, m_mats(nullptr)
+, m_textures(nullptr)
+, m_lights()
+, m_camera(_screenSize)
+, m_ObjIntersectComp("./resources/shaders/RTPipeline/Intersections/Intersections.comp")
+, m_LightIntersectComp("./resources/shaders/RTPipeline/Intersections/LightDetection.comp")
+, m_ShadowComp("./resources/shaders/RTPipeline/Shadows/MonteCarloShadow.comp")
+, m_PBRShadeComp("./resources/shaders/RTPipeline/Shading/PBRShading.comp")
+, m_gBuffers()
+, m_triangleSSBO(-1)
+, m_materialSSBO(-1)
+, m_setup(false)
+, m_shadows(true)
+, m_shading(true)
+, m_lightVision(true)
+, m_frameCount(0)
+, m_sampleCount(1)
 {
     printf("Binding bufferTex\n");
     m_mainBuffer->BindGLImage();
@@ -30,7 +30,7 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
     //Create texture buffers on GPU
     glGenTextures(GBUFFERCOUNT, &m_gBuffers[0]);
 
-    for (int i = 0; i < GBUFFERCOUNT - 1; i++)
+    for (int i = 0; i < GBUFFERCOUNT; i++)
     {
         printf("Filling in buffer %i\n", i + 1);
         glBindTexture(GL_TEXTURE_2D, m_gBuffers[i]);
@@ -166,12 +166,6 @@ void Raytracer::SetTris(std::vector<Triangle>* _tris)
 {
     m_tris = _tris;
     Triangle t = m_tris->at(0);
-
-    printf("First triangle uploaded to GPU:\n");
-    printf("  A: (%.2f, %.2f, %.2f)\n", t.a.x, t.a.y, t.a.z);
-    printf("  B: (%.2f, %.2f, %.2f)\n", t.b.x, t.b.y, t.b.z);
-    printf("  C: (%.2f, %.2f, %.2f)\n", t.c.x, t.c.y, t.c.z);
-    printf("  Normal: (%.2f, %.2f, %.2f)\n", t.normal.x, t.normal.y, t.normal.z);
 
     m_BVH.BuildBHV(_tris);
 

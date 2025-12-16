@@ -24,11 +24,9 @@ int main(int argc, char* argv[])
 	glm::ivec2 l_winSize(1000, 800);
 
 	printf("Initialising RT\n");
-	// This will handle rendering to screen
+	
 	Raytracer l_raytracer(l_winSize);
 	GUI l_gui(&l_raytracer);
-
-	Input l_inputMap;
 
 	Model l_curuthersModel("./resources/objects/curuthers.obj");
 
@@ -77,6 +75,56 @@ int main(int argc, char* argv[])
 	}
 
 	l_tris.insert(l_tris.end(), l_floorTris.begin(), l_floorTris.end());
+
+	// Create triangles for the back wall
+	l_floorTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, 5.0f, -10.0f),
+										   glm::vec3(10.0f, 10.0f, 0.1f));
+
+	for (int i = 0; i < l_floorTris.size(); i++)
+	{
+		l_floorTris[i].textureId = -1;
+		l_floorTris[i].materialId = -1;
+	}
+
+	l_tris.insert(l_tris.end(), l_floorTris.begin(), l_floorTris.end());
+
+	// Create triangles for the right wall
+	l_floorTris = l_cubeModel.GetTriangles(glm::vec3(10.0f, 3.7f, 0.0f),
+										   glm::vec3(0.1f, 10.0f, 10.0f));
+
+	for (int i = 0; i < l_floorTris.size(); i++)
+	{
+		l_floorTris[i].textureId = -1;
+		l_floorTris[i].materialId = -1;
+	}
+
+	l_tris.insert(l_tris.end(), l_floorTris.begin(), l_floorTris.end());
+
+	// Create triangles for the left wall
+	l_floorTris = l_cubeModel.GetTriangles(glm::vec3(-10.0f, 3.7f, -5.0f),
+										   glm::vec3(0.1f, 10.0f, 10.0f));
+
+	for (int i = 0; i < l_floorTris.size(); i++)
+	{
+		l_floorTris[i].textureId = -1;
+		l_floorTris[i].materialId = -1;
+	}
+
+	l_tris.insert(l_tris.end(), l_floorTris.begin(), l_floorTris.end());
+
+	// Create triangles for the ceiling
+	l_floorTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, 10.0f, 0.0f),
+										   glm::vec3(10.0f, 0.1f, 10.0f));
+
+	for (int i = 0; i < l_floorTris.size(); i++)
+	{
+		l_floorTris[i].textureId = -1;
+		l_floorTris[i].materialId = -1;
+	}
+
+	l_tris.insert(l_tris.end(), l_floorTris.begin(), l_floorTris.end());
+	
+
 	std::vector<Texture> l_textures;
 	std::vector<Material> l_materials;
 
@@ -93,6 +141,7 @@ int main(int argc, char* argv[])
 	printf("Setting tris\n");
 	l_raytracer.SetTris(&l_tris);
 
+	Input l_inputMap;
 	Camera* l_rtCam = l_raytracer.GetCamera();
 
 	bool l_keepGoing = true;

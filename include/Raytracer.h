@@ -56,8 +56,6 @@ class Raytracer : public GCP_Framework
 
     void Trace(float _time);
 
-    void ShowUIOptions();
-
     void SetTris(std::vector<Triangle>* _tris);
     void SetMaterials(std::vector<Material>* _mat);
     void SetTextures(std::vector<Texture>* _tex);

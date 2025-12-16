@@ -158,17 +158,19 @@ RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
     return result;
 }
 
-bool IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
+float IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
 {
     float tmin = 0.0f;
-    float tmax = 10000000.0f;
+    float tmax = 1e30f;
 
     for (int i = 0; i < 3; i++)
     {
         if (abs(_ray.direction[i]) < 0.0001f)
         {
             if (_ray.origin[i] < _minBound[i] || _ray.origin[i] > _maxBound[i])
-                return false;
+            {
+                return 1e30f;
+            }
         }
         else
         {
@@ -188,12 +190,12 @@ bool IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
 
             if (tmin > tmax)
             {
-                return false;
+                return 1e30f;
             }
         }
     }
 
-    return true;
+    return tmin;
 }
 
 
@@ -206,38 +208,70 @@ RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
     Node l_node = bvhNodes[l_indexStack[l_top]];
     l_top++;
 
-    do
+    while(l_top >= 0)
     {
-        if(IntersectAABB(_ray, l_node.minBound, l_node.maxBound))
+        if(l_node.triangleCount > 0)
         {
-            _result.error += vec3(0.02, 0.0, 0.0);
-            if(l_node.triangleCount > 0)
+            for(int i = 0; i < l_node.triangleCount; i++)
             {
-                for(int i = 0; i < l_node.triangleCount; i++)
+                int triIdx = bvhTriIdxs[l_node.leftFirst + i];
+                RaycastResult newResult = TriangleIntersect(_ray, sceneTris[triIdx], triIdx);
+                if(newResult.hit && newResult.distance < _result.distance)
                 {
-                    int triIdx = bvhTriIdxs[l_node.leftFirst + i];
-                    RaycastResult newResult = TriangleIntersect(_ray, sceneTris[triIdx], triIdx);
-                    if(newResult.hit && newResult.distance < _result.distance)
-                    {
-                        _result.error += vec3(0.0, 0.0, 1.0);
-                        newResult.error = _result.error;
-                        _result = newResult;
-                    }
+                    _result.error += vec3(0.0, 0.0, 0.5f);
+                    newResult.error = _result.error;
+                    _result = newResult;
                 }
             }
-            else
+
+            if(l_top == -1)
             {
-                l_indexStack[l_top] = l_node.leftFirst;
-                l_top++;
-                l_indexStack[l_top] = l_node.leftFirst + 1;
-                l_top++;
+                break;
+            }
+
+            l_node = bvhNodes[l_indexStack[l_top--]];
+
+            continue;
+        }
+
+        int l_child1 = l_node.leftFirst;
+        int l_child2 = l_node.leftFirst + 1;
+
+        float l_dist1 = IntersectAABB(_ray, bvhNodes[l_child1].minBound, bvhNodes[l_child1].maxBound);
+        float l_dist2 = IntersectAABB(_ray, bvhNodes[l_child2].minBound, bvhNodes[l_child2].maxBound);
+
+        if(l_dist1 > l_dist2)
+        {
+            float ftemp = l_dist1;
+            l_dist1 = l_dist2;
+            l_dist2 = ftemp;
+
+            int itemp = l_child1;
+            l_child1 = l_child2;
+            l_child2 = itemp;
+        }
+
+        if(l_dist1 == 1e30f)
+        {
+            if(l_top == -1)
+            {
+                break;
+            }
+
+            l_node = bvhNodes[l_indexStack[l_top--]];
+        }
+        else
+        {
+            l_node = bvhNodes[l_child1];
+            if(l_dist2 != 1e30f)
+            {
+                l_indexStack[++l_top] = l_child2;
             }
         }
 
-        
-        l_top--;
-        l_node = bvhNodes[l_indexStack[l_top]];
-    } while(l_top > -1);
+
+        _result.error += vec3(0.05f, 0.0f, 0.0f);
+    }
 
     return _result;
 }
