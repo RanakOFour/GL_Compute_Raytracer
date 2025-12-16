@@ -1,6 +1,8 @@
 #include "Raytracer.h"
 #include "Framebuffer.h"
 
+#include <chrono>
+
 Raytracer::Raytracer(glm::ivec2 _screenSize)
 : GCP_Framework(_screenSize)
 , m_BVH()
@@ -23,16 +25,12 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 , m_frameCount(0)
 , m_sampleCount(1)
 {
-    printf("Binding bufferTex\n");
     m_mainBuffer->BindGLImage();
-
-    printf("Creating texture buffers\n");
     //Create texture buffers on GPU
     glGenTextures(GBUFFERCOUNT, &m_gBuffers[0]);
 
     for (int i = 0; i < GBUFFERCOUNT; i++)
     {
-        printf("Filling in buffer %i\n", i + 1);
         glBindTexture(GL_TEXTURE_2D, m_gBuffers[i]);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_screenSize.x, m_screenSize.y, 0, GL_RGBA, GL_FLOAT, 0);
 
@@ -54,6 +52,8 @@ Raytracer::~Raytracer()
     glDeleteTextures(5, &m_gBuffers[0]);
     glDeleteBuffers(1, &m_triangleSSBO);
     glDeleteBuffers(1, &m_materialSSBO);
+
+    // The pointers don't need to be deleted because their lifetimes are handled by other objects
 }
 
 void Raytracer::Trace(float _deltaTime)
@@ -72,8 +72,6 @@ void Raytracer::Trace(float _deltaTime)
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
     glm::vec2 l_workGroups(ceil(m_screenSize.x / 8), ceil(m_screenSize.y / 4));
-
-    printf("Intersection pass\n");
     m_ObjIntersectComp.use();
 
     m_camera.UpdateShader(m_ObjIntersectComp);
@@ -88,7 +86,6 @@ void Raytracer::Trace(float _deltaTime)
     int l_lightCount = m_lights.size() > 10 ? 10 : m_lights.size();
     if (m_shadows)
     {
-        printf("Shadow pass\n");
         m_ShadowComp.use();
 
         m_ShadowComp.SetUniform("u_lightCount", l_lightCount);
@@ -110,7 +107,6 @@ void Raytracer::Trace(float _deltaTime)
 
     if (m_shading)
     {
-        printf("PBR pass\n");
         m_PBRShadeComp.use();
 
         m_PBRShadeComp.SetUniform("u_cameraPos", m_camera.Position());
@@ -137,7 +133,6 @@ void Raytracer::Trace(float _deltaTime)
 
     if (m_lightVision)
     {
-        printf("Light Vision Pass\n");
         m_LightIntersectComp.use();
 
         m_camera.UpdateShader(m_LightIntersectComp);
@@ -149,7 +144,6 @@ void Raytracer::Trace(float _deltaTime)
         {
             m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
             m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
-            m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
             m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
             m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
             m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);

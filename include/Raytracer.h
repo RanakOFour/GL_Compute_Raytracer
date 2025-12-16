@@ -23,6 +23,8 @@ class Raytracer : public GCP_Framework
     private:
     BVH m_BVH;
 
+    // I want to (in the future) be able to hook up the Raytracer to something else
+    // so just plugging in the vectors with pointers made the most sense
     std::vector<Triangle>* m_tris;
     std::vector<Material>* m_mats;
     std::vector<Texture>* m_textures;

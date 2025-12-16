@@ -208,7 +208,7 @@ RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
     Node l_node = bvhNodes[l_indexStack[l_top]];
     l_top++;
 
-    while(l_top >= 0)
+    while(true)
     {
         if(l_node.triangleCount > 0)
         {
