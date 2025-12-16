@@ -29,8 +29,6 @@ int main(int argc, char* argv[])
 	Raytracer l_raytracer(l_winSize);
 	GUI l_gui(&l_raytracer);
 
-	std::string l_masterString = "./resources/pipelines/master.txt";
-
 	Input l_inputMap;
 
 	Model l_curuthersModel("./resources/objects/curuthers.obj");

@@ -54,12 +54,19 @@ class ComputeInformation
     bool m_enabled;
 
     public:
-    ComputeInformation(std::string _n, ComputeShader* _s)
-    : m_name(_n)
-    , m_shader(_s)
+    ComputeInformation(std::string _name, ComputeShader* _shader)
+    : m_name(_name)
+    , m_shader(_shader)
     , m_enabled(true)
     {
 
+    };
+
+    ComputeInformation(std::string _name, std::string _shaderPath)
+    : m_name(_name)
+    , m_enabled(true)
+    {
+        m_shader = new ComputeShader(_shaderPath);
     };
 
     ~ComputeInformation()
