@@ -7,6 +7,11 @@
 
 #include "Raytracer.h"
 
+
+/*
+*  @brief
+*  Contains the ImGui calls for controlling the raytracer
+*/
 class GUI
 {
     private:
@@ -34,6 +39,14 @@ class GUI
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
 
+        // I was going to abstract the ComputeShaders into ComputeInformation, that would then handle
+        // all of these options as contained data structures that could be looped through, 
+        // but the design hurdles of how to expose options for specific values controlled by the raytracer (Sample count, uniforms, etc.)
+        // made me drop the idea, because the compromises I had came up with between the RT exposing
+        // parts and adding ways to interact with the pipeline weren't 'good enough'.
+
+        // The pattern is clearly there, I think it would just need some more time in the oven
+
         // Settings for individual lights
 
         ImGui::Begin("Light Settings");
@@ -50,6 +63,21 @@ class GUI
         ImGui::Combo("Selected Light", &m_selectedLight, l_lightSelectCombo.c_str());
 
         Light* l_selectedLight = &m_rt->m_lights[m_selectedLight];
+
+        bool quad = l_selectedLight->radius == 0.0f;
+        ImGui::Checkbox("Quad light", &quad);
+
+        if(quad)
+        {
+            l_selectedLight->radius = 0.0f;
+        }
+        else
+        {
+            if(l_selectedLight->radius == 0.0f)
+            {
+                l_selectedLight->radius = 0.1f;
+            }
+        }
 
         glm::vec3 lightPos = l_selectedLight->position;
         
@@ -111,6 +139,8 @@ class GUI
 
         // A box for enabling/disabling different compute shaders
 
+        // How would you list the uniforms and interpret what they mean inside a ComputeInformation?
+
         ImGui::Begin("Enabled Shaders");
 
         bool l_shadow = m_rt->m_shadows;
@@ -120,7 +150,7 @@ class GUI
         if(l_shadow)
         {
             int samples = m_rt->m_sampleCount;
-            ImGui::SliderInt("Sample Count", &samples, 1, 100);
+            ImGui::InputInt("Sample Count", &samples, 1, 100);
             m_rt->m_sampleCount = samples;
         }
 

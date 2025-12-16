@@ -1,6 +1,7 @@
 #ifndef STATICLOGGER_H
 #define STATIFLOGGER_H
 
+#include "SDL/SDL.h"
 #include <string>
 
 class Logger
@@ -18,6 +19,16 @@ class Logger
     {
         m_logString = "";
     };
+
+    static void Log(Uint64 _i)
+    {
+        if(!m_self)
+        {
+            m_self = new Logger();
+        }
+
+        m_self->m_logString += std::to_string(_i) + ", ";
+    }
 
     static void Log(float _f)
     {

@@ -132,6 +132,7 @@ int main(int argc, char* argv[])
 	// The camera needs to be updated by Input data, so it is done here
 	Input l_inputMap;
 	Camera* l_rtCam = l_raytracer.GetCamera();
+	l_rtCam->Position(glm::vec3(0.0f, 1.0f, 20.0f));
 
 	bool l_keepGoing = true;
 	bool l_mouseMovement = false;
@@ -190,11 +191,6 @@ int main(int argc, char* argv[])
 		Uint64 l_startTime = SDL_GetTicks64();
 		l_deltaTime = (float)(l_startTime - l_lastTime) * 0.001f;
 		l_lastTime = l_startTime;
-
-		if(l_deltaTime < 16.6f)
-		{
-			SDL_Delay(16.6f - l_deltaTime);
-		}
 		
 		printf("FPS: %f\nDT: %f\n", 1.0f / l_deltaTime, l_deltaTime);
 

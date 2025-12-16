@@ -1,5 +1,9 @@
 #version 430 core
 
+// Stratified sampling method involving taking root(samples) samples in a quadrant
+// borrowed from 
+// https://raytracing.github.io/books/RayTracingTheRestOfYourLife.html#asimplemontecarloprogram/stratifiedsamples(jittering)
+
 layout(local_size_x = 8, local_size_y = 4) in;
 layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
 
@@ -106,17 +110,6 @@ float RandomFloat(inout uint _seed)
     return float(lcg(_seed)) * l_inv_max_int;
 }
 
-vec3 RandomSampleSphere(inout uint _seed, vec3 _center, float _radius)
-{
-    vec3 l_randomDir = normalize(vec3(
-        RandomFloat(_seed),
-        RandomFloat(_seed),
-        RandomFloat(_seed)
-    ));
-
-    return _center + l_randomDir * _radius;
-}
-
 vec3 StratifiedSampleSphere(inout uint _seed, vec3 _center, float _radius, int _currentSample)
 {
     int gridSize = int(sqrt(float(u_sampleCount)));
@@ -135,21 +128,6 @@ vec3 StratifiedSampleSphere(inout uint _seed, vec3 _center, float _radius, int _
     float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
     
     vec3 dir = vec3(cos(phi) * sinTheta, sin(phi) * sinTheta, cosTheta);
-    return _center + dir * _radius;
-}
-
-vec3 UniformSampleSphere(inout uint _seed, vec3 _center, float _radius)
-{
-    float u = RandomFloat(_seed);
-    float v = RandomFloat(_seed);
-    
-    float phi = 2.0 * PI * u;
-    
-    float cosTheta = 1.0 - 2.0 * v;
-    float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
-    
-    vec3 dir = vec3(cos(phi) * sinTheta, sin(phi) * sinTheta, cosTheta);
-    
     return _center + dir * _radius;
 }
 
@@ -335,6 +313,8 @@ void main()
     //endfor
     // Store result
 
+    float l_sqrtSamples = sqrt(u_sampleCount);
+
     vec3 l_totalLight = vec3(0.0f);
 
     for(int i = 0; i < u_lightCount; i++)
@@ -342,37 +322,40 @@ void main()
         vec3 l_lightContribution = vec3(0.0f);
 
         // Sample each light for how much shadow the pixel is in
-        for(int j = 0; j < u_sampleCount; j++)
+        for(int j = 0; j < l_sqrtSamples; j++)
         {
-            vec3 l_randomPoint = vec3(0.0f);
-
-            if(u_lights[i].radius > 0.0)
+            for(int k = 0; k < l_sqrtSamples; k++)
             {
-                l_randomPoint = StratifiedSampleSphere(l_rngState, u_lights[i].position, u_lights[i].radius, j);
-            }
-            else
-            {
-                l_randomPoint = RandomSamplePlane(l_rngState, u_lights[i].position, u_lights[i].cornerA, u_lights[i].cornerB);
-            }
+                vec3 l_randomPoint = vec3(0.0f);
 
-            vec3 l_lightDir = l_randomPoint - b_hitLocation;
-            float l_lightDistance = length(l_lightDir);
-            l_lightDir = normalize(l_lightDir);
+                if(u_lights[i].radius > 0.0)
+                {
+                    l_randomPoint = StratifiedSampleSphere(l_rngState, u_lights[i].position, u_lights[i].radius, j);
+                }
+                else
+                {
+                    l_randomPoint = RandomSamplePlane(l_rngState, u_lights[i].position, u_lights[i].cornerA, u_lights[i].cornerB);
+                }
 
-            RaycastResult l_result;
-            l_result.distance = 1e30f;
-            l_result.position = vec3(0.0f);
+                vec3 l_lightDir = l_randomPoint - b_hitLocation;
+                float l_lightDistance = length(l_lightDir);
+                l_lightDir = normalize(l_lightDir);
 
-            if(IsInShadow(l_result, b_hitLocation + l_normal * 0.001, l_lightDir, l_lightDistance, b_triId, l_error))
-            {
-                continue;
-            }
+                RaycastResult l_result;
+                l_result.distance = 1e30f;
+                l_result.position = vec3(0.0f);
 
-            float NdotL = dot(l_normal, l_lightDir);
-            // ^ Makes light more bright the more direct the light is
+                if(IsInShadow(l_result, b_hitLocation + l_normal * 0.001, l_lightDir, l_lightDistance, b_triId, l_error))
+                {
+                    continue;
+                }
 
-            float l_attenuation = 1.0 / (1.0 + 0.1 * l_lightDistance * l_lightDistance);
-            l_lightContribution += u_lights[i].colour * u_lights[i].intensity * l_attenuation * NdotL;
+                float NdotL = dot(l_normal, l_lightDir);
+                // ^ Makes light more bright the more direct the light is
+
+                float l_attenuation = 1.0 / (1.0 + 0.1 * l_lightDistance * l_lightDistance);
+                l_lightContribution += u_lights[i].colour * u_lights[i].intensity * l_attenuation * NdotL;
+                }
         }
 
         l_lightContribution /= u_sampleCount;
