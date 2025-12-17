@@ -13,7 +13,7 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 , m_camera(_screenSize)
 , m_ObjIntersectComp("./resources/shaders/RTPipeline/Intersections/Intersections.comp")
 , m_LightIntersectComp("./resources/shaders/RTPipeline/Intersections/LightDetection.comp")
-, m_ShadowComp("./resources/shaders/RTPipeline/Shadows/MCStratified.comp")
+, m_ShadowComp("./resources/shaders/RTPipeline/Shadows/MonteCarloShadow.comp")
 , m_PBRShadeComp("./resources/shaders/RTPipeline/Shading/PBRShading.comp")
 , m_gBuffers()
 , m_triangleSSBO(-1)
@@ -100,6 +100,7 @@ void Raytracer::Trace(float _deltaTime)
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
         }
+
 
         glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
         glMemoryBarrier(GL_ALL_BARRIER_BITS);

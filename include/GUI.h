@@ -175,7 +175,7 @@ class GUI
         l_camPosText = "Camera Rotation: (" + std::to_string(camRot.x) + ", "+ std::to_string(camRot.y) + ", "+ std::to_string(camRot.z) + ", "+ std::to_string(camRot.w) + ")";
         ImGui::Text(l_camPosText.c_str());
 
-        ImGui::Text("Application average %.0f ms/frame (%.1f FPS)", _deltaTime * 1000.0f, 1.0f / _deltaTime);
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
         ImGui::End();
 

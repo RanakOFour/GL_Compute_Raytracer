@@ -1,5 +1,4 @@
 
-#include "StaticLogger.h"
 #include "Raytracer.h"
 #include "GUI.h"
 #include "Input.h"
@@ -14,6 +13,7 @@
 #include "imgui_impl_opengl3.h"
 
 #include <vector>
+#include <chrono>
 
 inline void HandleKBDownInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent);
 inline void HandleKBUpInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent);
@@ -40,10 +40,10 @@ int main(int argc, char* argv[])
 	Model l_cubeModel("./resources/objects/cube.obj");
 
 	Light l_light;
-	l_light.position = glm::vec3(0.0f, 5.0f, 0.0f);
+	l_light.position = glm::vec3(2.5f, 4.5f, 5.0f);
 	l_light.colour = glm::vec3(1.0f);
-	l_light.intensity = 1.0f;
-	l_light.radius = 1.0f;
+	l_light.intensity = 15.0f;
+	l_light.radius = 2.0f;
 	l_light.cornerA = glm::vec3(0.0, -1.0, 0.0);
 	l_light.cornerB = glm::vec3(0.5, 0.5, 0.5);
 	
@@ -69,53 +69,53 @@ int main(int argc, char* argv[])
 
 	l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
 
-	// Create triangles for the back wall
-	l_cornelBoxTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, 5.0f, -10.0f),
-										   glm::vec3(10.0f, 10.0f, 0.1f));
+	//// Create triangles for the back wall
+	//l_cornelBoxTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, 5.0f, -10.0f),
+	//									   glm::vec3(10.0f, 10.0f, 0.1f));
 
-	for (int i = 0; i < l_cornelBoxTris.size(); i++)
-	{
-		l_cornelBoxTris[i].textureId = -1;
-		l_cornelBoxTris[i].materialId = -1;
-	}
+	//for (int i = 0; i < l_cornelBoxTris.size(); i++)
+	//{
+	//	l_cornelBoxTris[i].textureId = -1;
+	//	l_cornelBoxTris[i].materialId = -1;
+	//}
 
-	l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
+	//l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
 
-	// Create triangles for the right wall
-	l_cornelBoxTris = l_cubeModel.GetTriangles(glm::vec3(10.0f, 3.7f, 0.0f),
-										   glm::vec3(0.1f, 10.0f, 10.0f));
+	//// Create triangles for the right wall
+	//l_cornelBoxTris = l_cubeModel.GetTriangles(glm::vec3(10.0f, 3.7f, 0.0f),
+	//									   glm::vec3(0.1f, 10.0f, 10.0f));
 
-	for (int i = 0; i < l_cornelBoxTris.size(); i++)
-	{
-		l_cornelBoxTris[i].textureId = -1;
-		l_cornelBoxTris[i].materialId = -1;
-	}
+	//for (int i = 0; i < l_cornelBoxTris.size(); i++)
+	//{
+	//	l_cornelBoxTris[i].textureId = -1;
+	//	l_cornelBoxTris[i].materialId = -1;
+	//}
 
-	l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
+	//l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
 
-	// Create triangles for the left wall
-	l_cornelBoxTris = l_cubeModel.GetTriangles(glm::vec3(-10.0f, 3.7f, -5.0f),
-										   glm::vec3(0.1f, 10.0f, 10.0f));
+	//// Create triangles for the left wall
+	//l_cornelBoxTris = l_cubeModel.GetTriangles(glm::vec3(-10.0f, 3.7f, -5.0f),
+	//									   glm::vec3(0.1f, 10.0f, 10.0f));
 
-	for (int i = 0; i < l_cornelBoxTris.size(); i++)
-	{
-		l_cornelBoxTris[i].textureId = -1;
-		l_cornelBoxTris[i].materialId = -1;
-	}
+	//for (int i = 0; i < l_cornelBoxTris.size(); i++)
+	//{
+	//	l_cornelBoxTris[i].textureId = -1;
+	//	l_cornelBoxTris[i].materialId = -1;
+	//}
 
-	l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
+	//l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
 
-	// Create triangles for the ceiling
-	l_cornelBoxTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, 10.0f, 0.0f),
-										   glm::vec3(10.0f, 0.1f, 10.0f));
+	//// Create triangles for the ceiling
+	//l_cornelBoxTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, 10.0f, 0.0f),
+	//									   glm::vec3(10.0f, 0.1f, 10.0f));
 
-	for (int i = 0; i < l_cornelBoxTris.size(); i++)
-	{
-		l_cornelBoxTris[i].textureId = -1;
-		l_cornelBoxTris[i].materialId = -1;
-	}
+	//for (int i = 0; i < l_cornelBoxTris.size(); i++)
+	//{
+	//	l_cornelBoxTris[i].textureId = -1;
+	//	l_cornelBoxTris[i].materialId = -1;
+	//}
 
-	l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
+	//l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
 	
 
 	std::vector<Texture> l_textures;
@@ -192,16 +192,27 @@ int main(int argc, char* argv[])
 		l_deltaTime = (float)(l_startTime - l_lastTime) * 0.001f;
 		l_lastTime = l_startTime;
 		
-		printf("FPS: %f\nDT: %f\n", 1.0f / l_deltaTime, l_deltaTime);
+		//printf("FPS: %f\nDT: %f\n", 1.0f / l_deltaTime, l_deltaTime);
 
 		l_rtCam->Update(l_inputMap, l_deltaTime);
 
+		std::chrono::steady_clock::time_point time1 = std::chrono::high_resolution_clock::now();
+
 		l_raytracer.Trace(l_deltaTime);
+
+		std::chrono::steady_clock::time_point time2 = std::chrono::high_resolution_clock::now();
+
+		std::chrono::microseconds l_timeElapsed =
+			std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1);
+
+		printf("%i, ", l_raytracer.Samples());
+		std::cout << l_timeElapsed.count() / 1000.0f;
 
 		l_gui.ShowUI(l_deltaTime);
 
 		l_raytracer.Show();
 
+		std::cout << std::endl;
 	}
 
 	l_raytracer.Shutdown();
@@ -238,6 +249,24 @@ void HandleKBDownInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent)
 			_inputMap.up = -1;
 			break;
 
+		case SDLK_j:
+			_inputMap.deltaMouseX += 0.05;
+			break;
+
+		case SDLK_l:
+			_inputMap.deltaMouseX += -0.05;
+			break;
+
+
+		case SDLK_i:
+			_inputMap.deltaMouseY += 0.05;
+			break;
+
+
+		case SDLK_k:
+			_inputMap.deltaMouseY += -0.05;
+			break;
+
 		case SDLK_ESCAPE:
 			SDL_SetRelativeMouseMode(SDL_FALSE);
 			break;
@@ -266,6 +295,6 @@ void HandleKBUpInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent)
 
 void HandleMouseInput(Input& _inputMap, SDL_MouseMotionEvent& _mouseEvent)
 {
-	_inputMap.deltaMouseX = glm::radians((float)-_mouseEvent.xrel) * 3.0f;
-	_inputMap.deltaMouseY = glm::radians((float)-_mouseEvent.yrel) * 3.0f;
+	_inputMap.deltaMouseX += glm::radians((float)-_mouseEvent.xrel) * 3.0f;
+	_inputMap.deltaMouseY += glm::radians((float)-_mouseEvent.yrel) * 3.0f;
 };

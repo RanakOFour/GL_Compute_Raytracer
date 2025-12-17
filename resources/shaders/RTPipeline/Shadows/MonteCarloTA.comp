@@ -74,6 +74,8 @@ uniform int u_lightCount;
 
 uniform int u_frameCount;
 
+uniform int u_sampleCount;
+
 struct Ray  { vec3 origin; vec3 direction; };
 
 struct RaycastResult 
@@ -317,8 +319,6 @@ void main()
     vec4 b_normalData = imageLoad(hitNormals, l_pixelCoords);
     vec3 l_normal = b_normalData.xyz;
 
-    vec3 l_frameShadow = vec3(0.0f);
-
     // Sample every light, collect average shadow, then average the sum of average shadows for each sample
     //for(sample)
     //  for(light)
@@ -331,46 +331,53 @@ void main()
     //endfor
     // Store result
 
-    vec3 l_shadowInSample = vec3(0.0f);
+     vec3 l_totalLight = vec3(0.0f);
 
-    // Sample each light for how much shadow the pixel is in
-    for(int l_lightIdx = 0; l_lightIdx < u_lightCount; l_lightIdx++)
+    for(int i = 0; i < u_lightCount; i++)
     {
-        vec3 l_randomPoint = vec3(0.0f);
+        vec3 l_lightContribution = vec3(0.0f);
 
-        if(u_lights[l_lightIdx].radius > 0.0)
+        // Sample each light for how much shadow the pixel is in
+        for(int j = 0; j < u_sampleCount; j++)
         {
-            l_randomPoint = SamplePointOnSphere(l_rngState, u_lights[l_lightIdx].position, u_lights[l_lightIdx].radius);
+            vec3 l_randomPoint = vec3(0.0f);
+
+            if(u_lights[i].radius > 0.0)
+            {
+                l_randomPoint = SamplePointOnSphere(l_rngState, u_lights[i].position, u_lights[i].radius, j);
+            }
+            else
+            {
+                l_randomPoint = SamplePointOnPlane(l_rngState, u_lights[i].position, u_lights[i].cornerA, u_lights[i].cornerB);
+            }
+
+            vec3 l_lightDir = l_randomPoint - b_hitLocation;
+            float l_lightDistance = length(l_lightDir);
+            l_lightDir = normalize(l_lightDir);
+
+            RaycastResult l_result;
+            l_result.distance = 1e30f;
+            l_result.position = vec3(0.0f);
+
+            if(IsInShadow(l_result, b_hitLocation + l_normal * 0.001, l_lightDir, l_lightDistance, b_triId, l_error))
+            {
+                continue;
+            }
+
+            float NdotL = dot(l_normal, l_lightDir);
+            // ^ Makes light more bright the more direct the light is
+
+            float l_attenuation = 1.0 / (1.0 + 0.1 * l_lightDistance * l_lightDistance);
+            l_lightContribution += u_lights[i].colour * u_lights[i].intensity * l_attenuation * NdotL;
         }
-        else
-        {
-            l_randomPoint = SamplePointOnPlane(l_rngState, u_lights[l_lightIdx].position, u_lights[l_lightIdx].cornerA, u_lights[l_lightIdx].cornerB);
-        }
 
-        vec3 l_lightDir = l_randomPoint - b_hitLocation;
-        float l_lightDistance = length(l_lightDir);
-        l_lightDir = normalize(l_lightDir);
-
-        RaycastResult l_result;
-        l_result.distance = 1e30f;
-        l_result.position = vec3(0.0f);
-
-        if(IsInShadow(l_result, b_hitLocation + l_normal * 0.001, l_lightDir, l_lightDistance, b_triId, l_error))
-        {
-            continue;
-        }
-
-        float NdotL = dot(l_normal, l_lightDir);
-        // ^ Makes light more bright the more direct the light is
-
-        float l_attenuation = 1.0 / (1.0 + 0.1 * l_lightDistance * l_lightDistance);
-        l_shadowInSample += u_lights[l_lightIdx].colour * u_lights[l_lightIdx].intensity * l_attenuation * NdotL;
+        l_lightContribution /= u_sampleCount;
+        l_totalLight += l_lightContribution;
     }
 
-    l_shadowInSample /= u_lightCount;
-    l_frameShadow += l_shadowInSample;
+    l_totalLight /= u_lightCount;
 
-    vec3 b_previousShadow = imageLoad(shadowBuffer, l_pixelCoords).xyz;
+    vec3 b_previousLight = imageLoad(shadowBuffer, l_pixelCoords).xyz;
     int b_totalSampleCount = int(imageLoad(shadowBuffer, l_pixelCoords).w);
 
     // Temporal accumulation
@@ -378,7 +385,7 @@ void main()
     float l_alpha = 1.0 / float(b_totalSampleCount);
     l_alpha = clamp(l_alpha, 0.01, 0.1);
 
-    l_frameShadow = mix(b_previousShadow, l_frameShadow, l_alpha);
+    l_frameShadow = mix(b_previousLight, l_totalLight, l_alpha);
 
     imageStore(shadowBuffer, l_pixelCoords, vec4(l_frameShadow, 1.0f));
     imageStore(o_framebufferTex, l_pixelCoords, vec4(l_frameShadow, 1.0f));

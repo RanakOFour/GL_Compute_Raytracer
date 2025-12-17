@@ -91,7 +91,7 @@ const float PI = 3.14159265359;
 // Values chosen from https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
 uint lcg(inout uint _seed)
 {
-    _seed = _seed * 747796405u + 2891336453u;
+    _seed = _seed * 1664525u + 1013904223u;
     uint hashed = _seed ^ (_seed >> 14);
     _seed = hashed;
     return _seed >> 8;
@@ -100,7 +100,6 @@ uint lcg(inout uint _seed)
 // Returns random number between 0 and 1
 float RandomFloat(inout uint _seed)
 {
-    //                        This is the uint number cap
     uint l_result = lcg(_seed);
     const float l_inv_max_int = 1.0f / 16777215.0f;
     return float(lcg(_seed)) * l_inv_max_int;
@@ -115,27 +114,6 @@ vec3 RandomSampleSphere(inout uint _seed, vec3 _center, float _radius)
     ));
 
     return _center + l_randomDir * _radius;
-}
-
-vec3 StratifiedSampleSphere(inout uint _seed, vec3 _center, float _radius, int _currentSample)
-{
-    int gridSize = int(sqrt(float(u_sampleCount)));
-    
-    int stratumX = _currentSample % gridSize;
-    int stratumY = _currentSample / gridSize;
-    
-    float jitterU = RandomFloat(_seed);
-    float jitterV = RandomFloat(_seed);
-    
-    float u = (float(stratumX) + jitterU) / float(gridSize);
-    float v = (float(stratumY) + jitterV) / float(gridSize);
-    
-    float phi = 2.0 * PI * u;
-    float cosTheta = 1.0 - 2.0 * v;
-    float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
-    
-    vec3 dir = vec3(cos(phi) * sinTheta, sin(phi) * sinTheta, cosTheta);
-    return _center + dir * _radius;
 }
 
 vec3 UniformSampleSphere(inout uint _seed, vec3 _center, float _radius)
@@ -307,7 +285,7 @@ void main()
     // Initialise random state with thread GUID
     uint l_rngState = uint(l_pixelCoords.x * 1973u + l_pixelCoords.y * 9277u + u_frameCount * 26699u);
     // Decorrelate the seeds from eachother
-    lcg(l_rngState);
+    //lcg(l_rngState);
     
     vec3 b_hitLocation = imageLoad(hitLocations, l_pixelCoords).xyz;
     float b_hitDistance = imageLoad(hitLocations, l_pixelCoords).w;
@@ -348,7 +326,7 @@ void main()
 
             if(u_lights[i].radius > 0.0)
             {
-                l_randomPoint = StratifiedSampleSphere(l_rngState, u_lights[i].position, u_lights[i].radius, j);
+                l_randomPoint = RandomSampleSphere(l_rngState, u_lights[i].position, u_lights[i].radius);
             }
             else
             {
