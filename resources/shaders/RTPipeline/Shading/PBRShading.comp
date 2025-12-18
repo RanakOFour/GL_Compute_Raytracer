@@ -39,6 +39,7 @@ struct Light
     vec3 cornerA;
     vec3 cornerB;
 };
+
 #define MAX_LIGHTS 10
 uniform Light u_lights[MAX_LIGHTS];
 uniform int u_lightCount;

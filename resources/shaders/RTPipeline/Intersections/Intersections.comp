@@ -331,7 +331,7 @@ void main()
     }
 
     // Draw debug information
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.error, 1.0f));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_pixelCoords / u_resolution, 0.0f, 1.0f));
 }
 
  

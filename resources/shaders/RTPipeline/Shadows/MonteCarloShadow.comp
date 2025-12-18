@@ -84,6 +84,12 @@ struct RaycastResult
     vec3 normal;
 };
 
+struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; float fov; };
+uniform Camera u_camera;
+uniform Camera u_lastFrameCamera;
+
+uniform vec2 u_resolution;
+
 const float PI = 3.14159265359;
 
 // Random generator found from https://developer.nvidia.com/gpugems/gpugems3/part-vi-gpu-computing/chapter-37-efficient-random-number-generation-and-application
@@ -105,6 +111,26 @@ float RandomFloat(inout uint _seed)
     return float(lcg(_seed)) * l_inv_max_int;
 }
 
+ivec2 CalculateLastFramePosition(vec3 position_ws)
+{
+    vec3 to_point = position_ws - u_lastFrameCamera.position;
+    vec3 to_point_nrm = normalize(to_point);
+    
+    vec3 fwd = u_lastFrameCamera.forward;
+    
+    float d = dot(u_lastFrameCamera.forward,to_point_nrm);
+    if(d < 0.01)
+        return ivec2(-1, -1);
+    
+    d = 1.0f / d;
+    
+    to_point = to_point_nrm * d - fwd;
+    
+    float x = (dot(to_point,u_lastFrameCamera.right) - 1.0) * 0.5;
+    float y = (dot(to_point,u_lastFrameCamera.up) - 1.0) * 0.5;
+    return ivec2(vec2(x, y) * u_resolution);
+}
+
 vec3 RandomSampleSphere(inout uint _seed, vec3 _center, float _radius)
 {
     vec3 l_randomDir = normalize(vec3(
@@ -114,21 +140,6 @@ vec3 RandomSampleSphere(inout uint _seed, vec3 _center, float _radius)
     ));
 
     return _center + l_randomDir * _radius;
-}
-
-vec3 UniformSampleSphere(inout uint _seed, vec3 _center, float _radius)
-{
-    float u = RandomFloat(_seed);
-    float v = RandomFloat(_seed);
-    
-    float phi = 2.0 * PI * u;
-    
-    float cosTheta = 1.0 - 2.0 * v;
-    float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
-    
-    vec3 dir = vec3(cos(phi) * sinTheta, sin(phi) * sinTheta, cosTheta);
-    
-    return _center + dir * _radius;
 }
 
 vec3 RandomSamplePlane(inout uint _seed, vec3 _corner, vec3 _edge1, vec3 _edge2)
@@ -282,10 +293,13 @@ void main()
     vec3 l_error = vec3(0.0);
     ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
 
+    vec2 l_normalizedScreenCoords = vec2(((float(l_pixelCoords.x) / u_resolution.x) - 0.5) * 2.0,
+                                         ((float(l_pixelCoords.y) / u_resolution.y) - 0.5) * 2.0);
+
     // Initialise random state with thread GUID
     uint l_rngState = uint(l_pixelCoords.x * 1973u + l_pixelCoords.y * 9277u + u_frameCount * 26699u);
     // Decorrelate the seeds from eachother
-    //lcg(l_rngState);
+    lcg(l_rngState);
     
     vec3 b_hitLocation = imageLoad(hitLocations, l_pixelCoords).xyz;
     float b_hitDistance = imageLoad(hitLocations, l_pixelCoords).w;
@@ -300,18 +314,6 @@ void main()
 
     vec4 b_normalData = imageLoad(hitNormals, l_pixelCoords);
     vec3 l_normal = b_normalData.xyz;
-
-    // Sample every light, collect average shadow, then average the sum of average shadows for each sample
-    //for(light)
-    //  for(sample)
-    //      Get random point on light
-    //      lightDir = randomPoint - hitLocation
-    //      is lightDir obstructed ? shadowInSample += 1
-    //  endFor
-    //  shadowInSample /= lightCount;
-    //  totalShadow += shadowInSample
-    //endfor
-    // Store result
 
     vec3 l_totalLight = vec3(0.0f);
 
@@ -359,7 +361,24 @@ void main()
 
     l_totalLight /= u_lightCount;
 
+    ivec2 l_previousUV = CalculateLastFramePosition(b_hitLocation);
 
-    imageStore(shadowBuffer, l_pixelCoords, vec4(l_totalLight, 1.0f));
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_totalLight, 1.0f));
+
+    int b_totalSampleCount = int(imageLoad(shadowBuffer, l_pixelCoords).w);
+
+    if(l_previousUV.x > -1)
+    {
+        vec3 b_previousLight = imageLoad(shadowBuffer, l_previousUV).xyz;
+
+        // Temporal accumulation
+        b_totalSampleCount += u_lightCount * u_sampleCount;
+        float l_alpha = 1.0 / float(b_totalSampleCount);
+        l_alpha = clamp(l_alpha, 0.01, 0.1);
+
+        l_totalLight = mix(b_previousLight, l_totalLight, l_alpha);
+    }
+    
+
+    imageStore(shadowBuffer, l_pixelCoords, vec4(l_totalLight, b_totalSampleCount));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_previousUV / u_resolution, 0.0f, 1.0f));
 }

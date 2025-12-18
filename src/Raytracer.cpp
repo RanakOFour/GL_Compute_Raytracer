@@ -13,7 +13,7 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 , m_camera(_screenSize)
 , m_ObjIntersectComp("./resources/shaders/RTPipeline/Intersections/Intersections.comp")
 , m_LightIntersectComp("./resources/shaders/RTPipeline/Intersections/LightDetection.comp")
-, m_ShadowComp("./resources/shaders/RTPipeline/Shadows/MonteCarloShadow.comp")
+, m_ShadowComp("./resources/shaders/RTPipeline/Shadows/MCStratified.comp")
 , m_PBRShadeComp("./resources/shaders/RTPipeline/Shading/PBRShading.comp")
 , m_gBuffers()
 , m_triangleSSBO(-1)
@@ -91,6 +91,7 @@ void Raytracer::Trace(float _deltaTime)
         m_ShadowComp.SetUniform("u_lightCount", l_lightCount);
         m_ShadowComp.SetUniform("u_sampleCount", m_sampleCount);
         m_ShadowComp.SetUniform("u_frameCount", m_frameCount);
+        m_ShadowComp.SetUniform("u_resolution", m_screenSize);
         for (int i = 0; i < l_lightCount; i++)
         {
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
@@ -104,6 +105,12 @@ void Raytracer::Trace(float _deltaTime)
 
         glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
         glMemoryBarrier(GL_ALL_BARRIER_BITS);
+
+        m_ShadowComp.SetUniform("u_lastFrameCamera.position", m_camera.Position());
+        m_ShadowComp.SetUniform("u_lastFrameCamera.forward", m_camera.Forward());
+        m_ShadowComp.SetUniform("u_lastFrameCamera.right", m_camera.Right());
+        m_ShadowComp.SetUniform("u_lastFrameCamera.up", m_camera.Up());
+        m_ShadowComp.SetUniform("u_lastFrameCamera.fov", m_camera.fov());
     }
 
     if (m_shading)

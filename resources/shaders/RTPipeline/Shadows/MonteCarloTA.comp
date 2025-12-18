@@ -73,7 +73,6 @@ uniform Light u_lights[MAX_LIGHTS];
 uniform int u_lightCount;
 
 uniform int u_frameCount;
-
 uniform int u_sampleCount;
 
 struct Ray  { vec3 origin; vec3 direction; };
@@ -106,24 +105,33 @@ float RandomFloat(inout uint _seed)
     return float(lcg(_seed)) * l_inv_max_int;
 }
 
-vec3 SamplePointOnSphere(inout uint _seed, vec3 center, float radius)
+vec3 RandomSampleSphere(inout uint _seed, vec3 _center, float _radius)
 {
-    float u = (RandomFloat(_seed) - 0.5f) * 2.0f;
-    float v = (RandomFloat(_seed) - 0.5f) * 2.0f;
+    vec3 l_randomDir = normalize(vec3(
+        RandomFloat(_seed),
+        RandomFloat(_seed),
+        RandomFloat(_seed)
+    ));
 
-    // Turn random numbers into cosine distribution
-    float theta = 2.0 * PI * u;
-    float phi = PI * v;
-
-    vec3 dir = normalize(vec3(
-                                cos(theta) * sin(phi),
-                                sin(theta) * sin(phi),
-                                cos(phi)
-                             ));
-    return center + dir * radius;
+    return _center + l_randomDir * _radius;
 }
 
-vec3 SamplePointOnPlane(inout uint _seed, vec3 _corner, vec3 _edge1, vec3 _edge2)
+vec3 UniformSampleSphere(inout uint _seed, vec3 _center, float _radius)
+{
+    float u = RandomFloat(_seed);
+    float v = RandomFloat(_seed);
+    
+    float phi = 2.0 * PI * u;
+    
+    float cosTheta = 1.0 - 2.0 * v;
+    float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
+    
+    vec3 dir = vec3(cos(phi) * sinTheta, sin(phi) * sinTheta, cosTheta);
+    
+    return _center + dir * _radius;
+}
+
+vec3 RandomSamplePlane(inout uint _seed, vec3 _corner, vec3 _edge1, vec3 _edge2)
 {
     float u = RandomFloat(_seed);
     float v = RandomFloat(_seed);
@@ -178,7 +186,7 @@ bool TriangleIntersect(inout RaycastResult _result, Ray _ray, Triangle _tri, int
     return false;
 }
 
-float IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
+bool IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
 {
     float tmin = 0.0f;
     float tmax = 10000000.0f;
@@ -188,9 +196,7 @@ float IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
         if (abs(_ray.direction[i]) < 0.0001f)
         {
             if (_ray.origin[i] < _minBound[i] || _ray.origin[i] > _maxBound[i])
-            {
-                return 1e30f;
-            }
+                return false;
         }
         else
         {
@@ -210,12 +216,12 @@ float IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
 
             if (tmin > tmax)
             {
-                return 1e30f;
+                return false;
             }
         }
     }
 
-    return tmin;
+    return true;
 }
 
 // Shadow ray tracing (simplified version of TraverseBVH)
@@ -232,65 +238,41 @@ bool IsInShadow(inout RaycastResult _result, vec3 _origin, vec3 _direction, floa
     Node l_node = bvhNodes[l_indexStack[l_top]];
     l_top++;
 
-    while(l_top >= 0)
+    // This is not the same traversal techinque as the Intersections.comp
+    // because changing the traversal broke the shadows, for some reason
+    do
     {
-        if(l_node.triangleCount > 0)
+        if(IntersectAABB(l_shadowRay, l_node.minBound, l_node.maxBound))
         {
-            for(int i = 0; i < l_node.triangleCount; i++)
+            _error += vec3(0.02, 0.0, 0.0);
+            if(l_node.triangleCount > 0)
             {
-                int triIdx = bvhTriIdxs[l_node.leftFirst + i];
-                if(TriangleIntersect(_result, l_shadowRay, sceneTris[triIdx], triIdx)
-                   && _result.distance < _result.distance)
+                for(int i = 0; i < l_node.triangleCount; i++)
                 {
-                    return true;
+                    _error += vec3(0.0, 0.0, 0.01);
+                    int triIdx = bvhTriIdxs[l_node.leftFirst + i];
+                    if(TriangleIntersect(_result, l_shadowRay, sceneTris[triIdx], triIdx)
+                       && _result.distance < _distance)
+                    {
+                        // Quit if the triangle is intersected at a reasonable distance ( < 1e30f)
+                        _error += vec3(0.0, 0.5, 0.00);
+                        return true;
+                    }
                 }
             }
-
-            if(l_top == -1)
+            else
             {
-                break;
-            }
-
-            l_node = bvhNodes[l_indexStack[l_top--]];
-
-            continue;
-        }
-
-        int l_child1 = l_node.leftFirst;
-        int l_child2 = l_node.leftFirst + 1;
-
-        float l_dist1 = IntersectAABB(l_shadowRay, bvhNodes[l_child1].minBound, bvhNodes[l_child1].maxBound);
-        float l_dist2 = IntersectAABB(l_shadowRay, bvhNodes[l_child2].minBound, bvhNodes[l_child2].maxBound);
-
-        if(l_dist1 > l_dist2)
-        {
-            float ftemp = l_dist1;
-            l_dist1 = l_dist2;
-            l_dist2 = ftemp;
-
-            int itemp = l_child1;
-            l_child1 = l_child2;
-            l_child2 = itemp;
-        }
-
-        if(l_dist1 == 1e30f)
-        {
-            if(l_top == -1)
-            {
-                break;
-            }
-
-            l_node = bvhNodes[l_indexStack[l_top--]];
-        }
-        else
-        {
-            l_node = bvhNodes[l_child1];
-            if(l_dist2 != 1e30f)
-            {
-                l_indexStack[++l_top] = l_child2;
+                l_indexStack[l_top] = l_node.leftFirst;
+                l_top++;
+                l_indexStack[l_top] = l_node.leftFirst + 1;
+                l_top++;
             }
         }
-    }
+
+        
+        l_top--;
+        l_node = bvhNodes[l_indexStack[l_top]];
+    } while(l_top > -1);
 
     return false;
 }
@@ -303,7 +285,7 @@ void main()
     // Initialise random state with thread GUID
     uint l_rngState = uint(l_pixelCoords.x * 1973u + l_pixelCoords.y * 9277u + u_frameCount * 26699u);
     // Decorrelate the seeds from eachother
-    lcg(l_rngState);
+    //lcg(l_rngState);
     
     vec3 b_hitLocation = imageLoad(hitLocations, l_pixelCoords).xyz;
     float b_hitDistance = imageLoad(hitLocations, l_pixelCoords).w;
@@ -319,19 +301,7 @@ void main()
     vec4 b_normalData = imageLoad(hitNormals, l_pixelCoords);
     vec3 l_normal = b_normalData.xyz;
 
-    // Sample every light, collect average shadow, then average the sum of average shadows for each sample
-    //for(sample)
-    //  for(light)
-    //      Get random point on light
-    //      lightDir = randomPoint - hitLocation
-    //      is lightDir obstructed ? shadowInSample += 1
-    //  endFor
-    //  shadowInSample /= lightCount;
-    //  totalShadow += shadowInSample
-    //endfor
-    // Store result
-
-     vec3 l_totalLight = vec3(0.0f);
+    vec3 l_totalLight = vec3(0.0f);
 
     for(int i = 0; i < u_lightCount; i++)
     {
@@ -344,11 +314,11 @@ void main()
 
             if(u_lights[i].radius > 0.0)
             {
-                l_randomPoint = SamplePointOnSphere(l_rngState, u_lights[i].position, u_lights[i].radius, j);
+                l_randomPoint = RandomSampleSphere(l_rngState, u_lights[i].position, u_lights[i].radius);
             }
             else
             {
-                l_randomPoint = SamplePointOnPlane(l_rngState, u_lights[i].position, u_lights[i].cornerA, u_lights[i].cornerB);
+                l_randomPoint = RandomSamplePlane(l_rngState, u_lights[i].position, u_lights[i].cornerA, u_lights[i].cornerB);
             }
 
             vec3 l_lightDir = l_randomPoint - b_hitLocation;
@@ -381,12 +351,12 @@ void main()
     int b_totalSampleCount = int(imageLoad(shadowBuffer, l_pixelCoords).w);
 
     // Temporal accumulation
-    b_totalSampleCount++;
+    b_totalSampleCount += u_lightCount * u_sampleCount;
     float l_alpha = 1.0 / float(b_totalSampleCount);
     l_alpha = clamp(l_alpha, 0.01, 0.1);
 
     l_frameShadow = mix(b_previousLight, l_totalLight, l_alpha);
 
-    imageStore(shadowBuffer, l_pixelCoords, vec4(l_frameShadow, 1.0f));
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_frameShadow, 1.0f));
+    imageStore(shadowBuffer, l_pixelCoords, vec4(l_frameShadow, b_totalSampleCount));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_totalLight, 1.0f));
 }

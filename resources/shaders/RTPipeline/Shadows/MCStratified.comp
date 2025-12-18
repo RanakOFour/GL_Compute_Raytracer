@@ -110,6 +110,46 @@ float RandomFloat(inout uint _seed)
     return float(lcg(_seed)) * l_inv_max_int;
 }
 
+struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; float fov; };
+uniform Camera u_lastFrameCamera;
+
+uniform vec2 u_resolution;
+
+ivec2 CalculateLastFramePosition(vec3 _worldPosition)
+{
+    // Transform world space position to camera space of last frame
+    vec3 l_viewDir = _worldPosition - u_lastFrameCamera.position;
+    
+    // Project onto camera basis
+    float l_angleDifference = dot(l_viewDir, u_lastFrameCamera.forward);
+    
+    // Check if point is in front of camera
+    if (l_angleDifference <= 0.0)
+    {
+        return ivec2(-1, -1);
+    }
+    
+    float l_aspect = u_resolution.x / u_resolution.y;
+    float l_tanHalfFOV = tan(u_lastFrameCamera.fov * 0.5);
+    
+    float x = dot(l_viewDir, u_lastFrameCamera.right);
+    float y = dot(l_viewDir, u_lastFrameCamera.up);
+    
+    // Turn coords to [-1, 1]
+    float ndc_x = clamp(x / (l_angleDifference * l_tanHalfFOV * l_aspect), -1.0f, 1.0f);
+    float ndc_y = clamp(y / (l_angleDifference * l_tanHalfFOV), -1.0f, 1.0f);
+    
+    // Shift values to [0, 1]
+    vec2 l_uvs = vec2(
+        (ndc_x + 1.0) * 0.5,
+        (ndc_y + 1.0) * 0.5
+    );
+    
+    ivec2 l_pixelCoords = ivec2(l_uvs * u_resolution);
+    
+    return l_pixelCoords;
+}
+
 vec3 StratifiedSampleSphere(inout uint _seed, vec3 _center, float _radius, int _currentSample)
 {
     int gridSize = int(sqrt(float(u_sampleCount)));
@@ -279,7 +319,7 @@ bool IsInShadow(inout RaycastResult _result, vec3 _origin, vec3 _direction, floa
 
 void main() 
 {
-    vec3 l_error = vec3(0.0);
+    vec3 l_traceError = vec3(0.0);
     ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
 
     // Initialise random state with thread GUID
@@ -333,7 +373,7 @@ void main()
                 l_result.distance = 1e30f;
                 l_result.position = vec3(0.0f);
 
-                if(IsInShadow(l_result, b_hitLocation + l_normal * 0.001, l_lightDir, l_lightDistance, b_triId, l_error))
+                if(IsInShadow(l_result, b_hitLocation + l_normal * 0.001, l_lightDir, l_lightDistance, b_triId, l_traceError))
                 {
                     continue;
                 }
@@ -352,7 +392,62 @@ void main()
 
     l_totalLight /= u_lightCount;
 
+    ivec2 l_previousUV = CalculateLastFramePosition(b_hitLocation);
 
-    imageStore(shadowBuffer, l_pixelCoords, vec4(l_totalLight, 1.0f));
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_totalLight, 1.0f));
+
+    int b_totalSampleCount = int(imageLoad(shadowBuffer, l_pixelCoords).w);
+
+    vec3 l_TAError = vec3(0.0f);
+
+    if(l_previousUV.x > -1)
+    {
+        float l_confidence = 1.0;
+        
+        float l_oldDepth = imageLoad(hitLocations, l_previousUV).w;
+        float l_depthChange = abs(b_hitDistance - l_oldDepth) / b_hitDistance;
+
+        // Depth is too different == new space (Should be reset)
+        if(l_depthChange > 0.01)
+        {
+            l_confidence *= 0.1;
+        }
+        
+        vec3 l_oldNormal = imageLoad(hitNormals, l_previousUV).xyz;
+        float l_normalChange = 1.0 - dot(l_oldNormal, l_normal);
+       
+        // Normal is too different == new space
+        if(l_normalChange > 0.1)
+        {
+            l_confidence *= 0.1;
+        }
+        
+        if(l_confidence > 0.1)
+        {
+            l_TAError.x = 1.0f;
+            vec3 b_previousLight = imageLoad(shadowBuffer, l_previousUV).xyz;
+            
+            // Use confidence to blend
+            float l_alpha = 1.0 / float(b_totalSampleCount);
+            l_alpha = clamp(l_alpha, 0.01, 0.2);
+            l_alpha = mix(1.0, l_alpha, l_confidence);
+            
+            // Variance-guided clamping
+            vec3 l_history_clamped = clamp(b_previousLight, l_totalLight - vec3(0.1), l_totalLight + vec3(0.1));
+            
+            l_totalLight = mix(l_history_clamped, l_totalLight, l_alpha);
+        }
+        else
+        {
+            l_TAError.z = 1.0f;
+            b_totalSampleCount = 1;
+        }
+    }
+    else
+    {
+        l_TAError.y = 1.0f;
+    }
+    
+
+    imageStore(shadowBuffer, l_pixelCoords, vec4(l_totalLight, b_totalSampleCount));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_TAError, 1.0f));
 }
