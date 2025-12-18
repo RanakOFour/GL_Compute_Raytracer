@@ -196,17 +196,17 @@ int main(int argc, char* argv[])
 
 		l_rtCam->Update(l_inputMap, l_deltaTime);
 
-		std::chrono::steady_clock::time_point time1 = std::chrono::high_resolution_clock::now();
+		// auto time1 = std::chrono::high_resolution_clock::now();
 
 		l_raytracer.Trace(l_deltaTime);
 
-		std::chrono::steady_clock::time_point time2 = std::chrono::high_resolution_clock::now();
+		// std::chrono::steady_clock::time_point time2 = std::chrono::high_resolution_clock::now();
 
-		std::chrono::microseconds l_timeElapsed =
-			std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1);
+		// std::chrono::microseconds l_timeElapsed =
+		// 	std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1);
 
-		printf("%i, ", l_raytracer.Samples());
-		std::cout << l_timeElapsed.count() / 1000.0f;
+		// printf("%i, ", l_raytracer.Samples());
+		// std::cout << l_timeElapsed.count() / 1000.0f;
 
 		l_gui.ShowUI(l_deltaTime);
 

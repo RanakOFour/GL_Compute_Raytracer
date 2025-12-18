@@ -355,8 +355,8 @@ void main()
     float l_alpha = 1.0 / float(b_totalSampleCount);
     l_alpha = clamp(l_alpha, 0.01, 0.1);
 
-    l_frameShadow = mix(b_previousLight, l_totalLight, l_alpha);
+    l_totalLight = mix(b_previousLight, l_totalLight, l_alpha);
 
-    imageStore(shadowBuffer, l_pixelCoords, vec4(l_frameShadow, b_totalSampleCount));
+    imageStore(shadowBuffer, l_pixelCoords, vec4(l_totalLight, b_totalSampleCount));
     imageStore(o_framebufferTex, l_pixelCoords, vec4(l_totalLight, 1.0f));
 }

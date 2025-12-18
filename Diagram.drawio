@@ -1,15 +1,9 @@
 <mxfile host="65bd71144e">
     <diagram id="OE9D3wA5DGOfEw1pnoTS" name="Page-1">
-        <mxGraphModel dx="3410" dy="1118" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="4600" dy="1718" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="4" value="ToDo" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="425" y="12" width="320" height="217" as="geometry"/>
-                </mxCell>
-                <mxCell id="9" value="- Make lights visible" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="4" vertex="1">
-                    <mxGeometry y="22" width="320" height="195" as="geometry"/>
-                </mxCell>
                 <mxCell id="10" value="Raytracing Shader Flowchart" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="-1180" y="-127" width="1115" height="464" as="geometry"/>
                 </mxCell>
@@ -454,7 +448,7 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="R6gTXlPxSGcn860LnpaN-207" value="&lt;b&gt;j &lt;/b&gt;== &lt;b&gt;sampleCount&lt;/b&gt;?" style="rhombus;whiteSpace=wrap;html=1;" parent="139" vertex="1">
-                    <mxGeometry x="688" y="188" width="130" height="80" as="geometry"/>
+                    <mxGeometry x="688" y="188" width="144" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="R6gTXlPxSGcn860LnpaN-249" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="139" source="R6gTXlPxSGcn860LnpaN-210" target="R6gTXlPxSGcn860LnpaN-247" edge="1">
                     <mxGeometry x="0.0026" y="-10" relative="1" as="geometry">
@@ -494,7 +488,7 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="R6gTXlPxSGcn860LnpaN-227" value="&lt;b&gt;sampledLight&amp;nbsp;&lt;/b&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;/= &lt;/span&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;sampleCount&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="139" vertex="1">
-                    <mxGeometry x="846.5" y="209" width="96" height="38" as="geometry"/>
+                    <mxGeometry x="863" y="209" width="96" height="38" as="geometry"/>
                 </mxCell>
                 <mxCell id="R6gTXlPxSGcn860LnpaN-232" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="139" source="R6gTXlPxSGcn860LnpaN-230" target="R6gTXlPxSGcn860LnpaN-220" edge="1">
                     <mxGeometry relative="1" as="geometry">
@@ -505,7 +499,7 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="R6gTXlPxSGcn860LnpaN-230" value="&lt;b&gt;totalLight &lt;/b&gt;+= &lt;b&gt;sampledLight&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="139" vertex="1">
-                    <mxGeometry x="971" y="209" width="96" height="38" as="geometry"/>
+                    <mxGeometry x="982" y="209" width="96" height="38" as="geometry"/>
                 </mxCell>
                 <mxCell id="R6gTXlPxSGcn860LnpaN-251" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="139" source="R6gTXlPxSGcn860LnpaN-247" target="R6gTXlPxSGcn860LnpaN-250" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -574,9 +568,6 @@
                 <mxCell id="R6gTXlPxSGcn860LnpaN-246" value="shadowBuffer.w = Something" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="R6gTXlPxSGcn860LnpaN-239" vertex="1">
                     <mxGeometry y="60" width="240" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="173" value="Calculate Screen Space Motion Vector" style="swimlane;whiteSpace=wrap;html=1;" parent="81" vertex="1">
-                    <mxGeometry x="246" y="1523" width="1176" height="654" as="geometry"/>
-                </mxCell>
                 <mxCell id="120" value="Raytracer" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="62" vertex="1">
                     <mxGeometry x="1324" y="89" width="194" height="194" as="geometry"/>
                 </mxCell>
@@ -589,10 +580,10 @@
                 <mxCell id="123" value="+ Raytracer(pass options)&lt;div&gt;+ ~Raytracer()&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ Update(std::vector&amp;lt;Triangle&amp;gt;*)&lt;/div&gt;&lt;div&gt;+ Execute()&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ Setters for pass options&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="120" vertex="1">
                     <mxGeometry y="83" width="194" height="111" as="geometry"/>
                 </mxCell>
-                <mxCell id="174" value="Testing Criteria" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="174" value="Testing Criteria" style="swimlane;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="-2033" y="-127" width="811" height="471" as="geometry"/>
                 </mxCell>
-                <mxCell id="175" value="- Warp size vs frame time&lt;div&gt;- Sampling methods and quality on shadows&lt;/div&gt;&lt;div&gt;- Sample count per frame vs frame time&lt;/div&gt;&lt;div&gt;- Whatever else comes to mind&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="174">
+                <mxCell id="175" value="- Warp size vs frame time&lt;div&gt;- Sampling methods and quality on shadows&lt;/div&gt;&lt;div&gt;- Sample count per frame vs frame time&lt;/div&gt;&lt;div&gt;- Whatever else comes to mind&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="174" vertex="1">
                     <mxGeometry y="23" width="811" height="448" as="geometry"/>
                 </mxCell>
             </root>

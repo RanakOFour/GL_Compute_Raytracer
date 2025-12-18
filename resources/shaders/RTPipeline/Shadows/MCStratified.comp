@@ -393,62 +393,65 @@ void main()
 
     l_totalLight /= u_lightCount;
 
-    ivec2 l_previousUV = CalculateLastFramePosition(b_hitLocation);
+    ivec2 l_previousCoord = CalculateLastFramePosition(b_hitLocation);
 
 
     int b_totalSampleCount = int(imageLoad(shadowBuffer, l_pixelCoords).w);
 
     vec3 l_TAError = vec3(0.0f);
+    float l_confidence = 1.0;
 
-    if(l_previousUV.x > -1)
+    if(l_previousCoord.x > -1)
     {
-        float l_confidence = 1.0;
-        
-        float l_oldDepth = imageLoad(hitLocations, l_previousUV).w;
+        float l_oldDepth = imageLoad(hitLocations, l_previousCoord).w;
         float l_depthChange = abs(b_hitDistance - l_oldDepth) / b_hitDistance;
 
         // Depth is too different == new space (Should be reset)
-        if(l_depthChange > 0.01)
+        if(l_depthChange > 0.05)
         {
-            l_confidence *= 0.1;
+            // Become less confident with bigger changes
+            l_confidence *= 1.0 - smoothstep(0.05, 0.3, l_depthChange);
         }
         
-        vec3 l_oldNormal = imageLoad(hitNormals, l_previousUV).xyz;
-        float l_normalChange = 1.0 - dot(l_oldNormal, l_normal);
+        vec3 l_oldNormal = imageLoad(hitNormals, l_previousCoord).xyz;
+        float l_normalChange = 1.0f - dot(l_oldNormal, l_normal);
        
         // Normal is too different == new space
-        if(l_normalChange > 0.1)
+        if(l_normalChange > 0.2)
         {
-            l_confidence *= 0.1;
+            // Become less confident with bigger changes
+            l_confidence *= 1.0 - smoothstep(0.05, 0.3, l_normalChange);
         }
         
         if(l_confidence > 0.1)
         {
             l_TAError.x = 1.0f;
-            vec3 b_previousLight = imageLoad(shadowBuffer, l_previousUV).xyz;
+            vec3 b_previousLight = imageLoad(shadowBuffer, l_previousCoord).xyz;
             
             // Use confidence to blend
-            float l_alpha = 1.0 / float(b_totalSampleCount);
-            l_alpha = clamp(l_alpha, 0.01, 0.2);
-            l_alpha = mix(1.0, l_alpha, l_confidence);
+            float l_alpha = 1.0f / float(b_totalSampleCount);
+            l_alpha = mix(l_alpha, 0.8, l_confidence);
+            l_alpha = clamp(l_alpha, 0.05, 0.8);
             
-            // Variance-guided clamping
-            vec3 l_history_clamped = clamp(b_previousLight, l_totalLight - vec3(0.1), l_totalLight + vec3(0.1));
-            
-            l_totalLight = mix(l_history_clamped, l_totalLight, l_alpha);
+            l_totalLight = mix(b_previousLight, l_totalLight, l_alpha);
+            b_totalSampleCount = min(b_totalSampleCount + 1, 64);
         }
         else
         {
             l_TAError.z = 1.0f;
-            b_totalSampleCount = 1;
+            b_totalSampleCount /= 2;
         }
     }
     else
     {
         l_TAError.y = 1.0f;
+        b_totalSampleCount = 1;
     }
     
 
     imageStore(shadowBuffer, l_pixelCoords, vec4(l_totalLight, b_totalSampleCount));
+
+    // Red means it's similar to the previous frame, blue means it's not conficent enough to accumulate it
+    // Green means the sample is invalid
     imageStore(o_framebufferTex, l_pixelCoords, vec4(l_TAError, 1.0f));
 }

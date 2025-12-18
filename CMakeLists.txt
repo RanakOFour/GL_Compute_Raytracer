@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 3.10)
 set(CXX_STANDARD 17)
 
+
 project ("GCP_Raytracer_Framework_CMAKE")
 
 # Add source to this project's executable.

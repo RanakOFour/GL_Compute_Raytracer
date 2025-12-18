@@ -82,18 +82,25 @@ void Raytracer::Trace(float _deltaTime)
     glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
     glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
+    // m_ObjIntersectComp.SetUniform("u_lastFrameCamera.position", m_camera.Position());
+    // m_ObjIntersectComp.SetUniform("u_lastFrameCamera.forward", m_camera.Forward());
+    // m_ObjIntersectComp.SetUniform("u_lastFrameCamera.right", m_camera.Right());
+    // m_ObjIntersectComp.SetUniform("u_lastFrameCamera.up", m_camera.Up());
+    // m_ObjIntersectComp.SetUniform("u_lastFrameCamera.fov", m_camera.fov());
 
     int l_lightCount = m_lights.size() > 10 ? 10 : m_lights.size();
+    
     if (m_shadows)
     {
         m_ShadowComp.use();
 
-        m_camera.UpdateShader(m_ShadowComp);
+        //m_camera.UpdateShader(m_ShadowComp);
 
         m_ShadowComp.SetUniform("u_lightCount", l_lightCount);
         m_ShadowComp.SetUniform("u_sampleCount", m_sampleCount);
         m_ShadowComp.SetUniform("u_frameCount", m_frameCount);
         m_ShadowComp.SetUniform("u_resolution", m_screenSize);
+
         for (int i = 0; i < l_lightCount; i++)
         {
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
