@@ -219,6 +219,7 @@ bool TriangleIntersect(inout RaycastResult _result, Ray _ray, Triangle _tri, int
         _result.position = _ray.origin + _ray.direction * l_distance;
         _result.distance = l_distance;
         _result.normal = normalize(cross(l_edge1, l_edge2));
+        _result.normal = normalize(cross(l_edge1, l_edge2));
         return true;
     }
     

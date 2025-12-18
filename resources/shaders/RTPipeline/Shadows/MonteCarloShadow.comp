@@ -85,7 +85,6 @@ struct RaycastResult
 };
 
 struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; float fov; };
-uniform Camera u_camera;
 uniform Camera u_lastFrameCamera;
 
 uniform vec2 u_resolution;
@@ -111,24 +110,39 @@ float RandomFloat(inout uint _seed)
     return float(lcg(_seed)) * l_inv_max_int;
 }
 
-ivec2 CalculateLastFramePosition(vec3 position_ws)
+ivec2 CalculateLastFramePosition(vec3 _worldPosition)
 {
-    vec3 to_point = position_ws - u_lastFrameCamera.position;
-    vec3 to_point_nrm = normalize(to_point);
+    // Transform world space position to camera space of last frame
+    vec3 l_viewDir = _worldPosition - u_lastFrameCamera.position;
     
-    vec3 fwd = u_lastFrameCamera.forward;
+    // Project onto camera basis
+    float l_angleDifference = dot(l_viewDir, u_lastFrameCamera.forward);
     
-    float d = dot(u_lastFrameCamera.forward,to_point_nrm);
-    if(d < 0.01)
+    // Check if point is in front of camera
+    if (l_angleDifference <= 0.0)
+    {
         return ivec2(-1, -1);
+    }
     
-    d = 1.0f / d;
+    float l_aspect = u_resolution.x / u_resolution.y;
+    float l_tanHalfFOV = tan(u_lastFrameCamera.fov * 0.5);
     
-    to_point = to_point_nrm * d - fwd;
+    float x = dot(l_viewDir, u_lastFrameCamera.right);
+    float y = dot(l_viewDir, u_lastFrameCamera.up);
     
-    float x = (dot(to_point,u_lastFrameCamera.right) - 1.0) * 0.5;
-    float y = (dot(to_point,u_lastFrameCamera.up) - 1.0) * 0.5;
-    return ivec2(vec2(x, y) * u_resolution);
+    // Turn coords to [-1, 1]
+    float ndc_x = clamp(x / (l_angleDifference * l_tanHalfFOV * l_aspect), -1.0f, 1.0f);
+    float ndc_y = clamp(y / (l_angleDifference * l_tanHalfFOV), -1.0f, 1.0f);
+    
+    // Shift values to [0, 1]
+    vec2 l_uvs = vec2(
+        (ndc_x + 1.0) * 0.5,
+        (ndc_y + 1.0) * 0.5
+    );
+    
+    ivec2 l_pixelCoords = ivec2(l_uvs * u_resolution);
+    
+    return l_pixelCoords;
 }
 
 vec3 RandomSampleSphere(inout uint _seed, vec3 _center, float _radius)
@@ -361,21 +375,59 @@ void main()
 
     l_totalLight /= u_lightCount;
 
-    ivec2 l_previousUV = CalculateLastFramePosition(b_hitLocation);
+     ivec2 l_previousUV = CalculateLastFramePosition(b_hitLocation);
 
 
     int b_totalSampleCount = int(imageLoad(shadowBuffer, l_pixelCoords).w);
 
+    vec3 l_TAError = vec3(0.0f);
+
     if(l_previousUV.x > -1)
     {
-        vec3 b_previousLight = imageLoad(shadowBuffer, l_previousUV).xyz;
+        float l_confidence = 1.0;
+        
+        float l_oldDepth = imageLoad(hitLocations, l_previousUV).w;
+        float l_depthChange = abs(b_hitDistance - l_oldDepth) / b_hitDistance;
 
-        // Temporal accumulation
-        b_totalSampleCount += u_lightCount * u_sampleCount;
-        float l_alpha = 1.0 / float(b_totalSampleCount);
-        l_alpha = clamp(l_alpha, 0.01, 0.1);
-
-        l_totalLight = mix(b_previousLight, l_totalLight, l_alpha);
+        // Depth is too different == new space (Should be reset)
+        if(l_depthChange > 0.01)
+        {
+            l_confidence *= 0.1;
+        }
+        
+        vec3 l_oldNormal = imageLoad(hitNormals, l_previousUV).xyz;
+        float l_normalChange = 1.0 - dot(l_oldNormal, l_normal);
+       
+        // Normal is too different == new space
+        if(l_normalChange > 0.1)
+        {
+            l_confidence *= 0.1;
+        }
+        
+        if(l_confidence > 0.1)
+        {
+            l_TAError.x = 1.0f;
+            vec3 b_previousLight = imageLoad(shadowBuffer, l_previousUV).xyz;
+            
+            // Use confidence to blend
+            float l_alpha = 1.0 / float(b_totalSampleCount);
+            l_alpha = clamp(l_alpha, 0.01, 0.2);
+            l_alpha = mix(1.0, l_alpha, l_confidence);
+            
+            // Variance-guided clamping
+            vec3 l_history_clamped = clamp(b_previousLight, l_totalLight - vec3(0.1), l_totalLight + vec3(0.1));
+            
+            l_totalLight = mix(l_history_clamped, l_totalLight, l_alpha);
+        }
+        else
+        {
+            l_TAError.z = 1.0f;
+            b_totalSampleCount = 1;
+        }
+    }
+    else
+    {
+        l_TAError.y = 1.0f;
     }
     
 

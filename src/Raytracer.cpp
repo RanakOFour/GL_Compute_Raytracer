@@ -88,6 +88,8 @@ void Raytracer::Trace(float _deltaTime)
     {
         m_ShadowComp.use();
 
+        m_camera.UpdateShader(m_ShadowComp);
+
         m_ShadowComp.SetUniform("u_lightCount", l_lightCount);
         m_ShadowComp.SetUniform("u_sampleCount", m_sampleCount);
         m_ShadowComp.SetUniform("u_frameCount", m_frameCount);
@@ -100,6 +102,12 @@ void Raytracer::Trace(float _deltaTime)
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
             m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
+        }
+
+        for (int i = 0; i < m_textures->size(); i++)
+        {
+            glActiveTexture(GL_TEXTURE0 + BufferIndices::TEXTURES + i);
+            m_PBRShadeComp.SetUniform("u_materialTextures[" + std::to_string(i) + "]", BufferIndices::TEXTURES + i);
         }
 
 
