@@ -103,7 +103,7 @@ const float PI = 3.14159265359;
 // Values chosen from https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
 uint lcg(inout uint _seed)
 {
-    _seed = _seed * 747796405u + 2891336453u;
+    _seed = _seed * 1664525u + 1013904223u;
     uint hashed = _seed ^ (_seed >> 14);
     _seed = hashed;
     return _seed >> 8;
@@ -354,6 +354,8 @@ void main()
 
     // Initialise random state with thread GUID
     uint l_rngState = uint(l_pixelCoords.x * 1973u + l_pixelCoords.y * 9277u + u_frameCount * 26699u);
+
+
     // Decorrelate the seeds from eachother
     lcg(l_rngState);
     
@@ -426,8 +428,6 @@ void main()
     l_totalLight /= u_lightCount;
 
     int b_totalSampleCount = int(imageLoad(shadowBuffer, l_pixelCoords).w);
-    // Debug value
-    vec3 l_TAError = vec3(0.0f);
 
     // We use this to determine if we accumulate or not
     float l_confidence = 1.0;
@@ -470,7 +470,7 @@ void main()
 
         if(l_confidence > 0.5)
         {
-            l_TAError.x = 1.0f;
+            // Accumulate normally if confident
             vec3 b_previousLight = imageLoad(shadowBuffer, l_previousCoord).xyz;
 
             b_totalSampleCount++;
@@ -481,20 +481,16 @@ void main()
         }
         else
         {
-            l_TAError.z = 1.0f;
-            b_totalSampleCount = 2;
+            b_totalSampleCount = 1;
         }
     }
     else
     {
-        l_TAError.z = 1.0f;
         b_totalSampleCount = 1;
     }
     
 
     imageStore(shadowBuffer, l_pixelCoords, vec4(l_totalLight, b_totalSampleCount));
 
-    // Red means it's similar to the previous frame, blue means it's not conficent enough to accumulate it
-    // Green means the sample is invalid
     imageStore(o_framebufferTex, l_pixelCoords, vec4(l_totalLight, 1.0f));
 }
