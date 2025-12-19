@@ -39,10 +39,7 @@ struct Face
 
 class Model
 {
-  Model* model;
   std::vector<Face> m_faces;
-  GLuint m_ssboId;
-  bool m_dirty;
 
   void SplitStringWhitespace(const std::string& _input,
     std::vector<std::string>& _output);
@@ -51,8 +48,6 @@ class Model
     std::vector<std::string>& _output);
 
   public:
-
-  glm::vec3 m_position;
    
   Model();
   Model(const std::string& _path);
@@ -70,16 +65,10 @@ class Model
 #include <stdexcept>
 
 
-inline Model::Model() :
-    m_dirty(false)
-  , m_position()
-  , m_ssboId(0)
+inline Model::Model()
 { }
 
-inline Model::Model(const std::string& _path) :
-    m_dirty(false)
-  , m_position()
-  , m_ssboId(0)
+inline Model::Model(const std::string& _path)
 {
   std::vector<glm::vec3> L_positions;
   std::vector<glm::vec2> L_tcs;
@@ -148,7 +137,6 @@ inline Model::Model(const std::string& _path) :
 
         f.CalculateNormal();
         m_faces.push_back(f);
-        m_dirty = true;
       }
     }
   }
@@ -156,22 +144,15 @@ inline Model::Model(const std::string& _path) :
 
 inline Model::~Model()
 {
-  if(m_ssboId)
-  {
-    glDeleteBuffers(1, &m_ssboId);
-  }
 }
 
 inline Model::Model(const Model& _copy)
-  : m_ssboId(0)
-  , m_faces(_copy.m_faces)
-  , m_dirty(true)
+  : m_faces(_copy.m_faces)
 { }
 
 inline Model& Model::operator=(const Model& _assign)
 {
   m_faces = _assign.m_faces;
-  m_dirty = true;
 
   return *this;
 }

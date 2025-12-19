@@ -9,8 +9,8 @@ layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D hitNormals;
 layout(rgba32f, binding = 3) uniform image2D texMatInfo;
 layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
-layout(rgba32f, binding = 5) uniform image2D prevFrameInfo;
-layout(rgba32f, binding = 6) uniform image2D motionVectors;
+layout(rgba32f, binding = 5) uniform image2D prevHitLocations;
+layout(rgba32f, binding = 6) uniform image2D prevHitNormals;
 
 struct Triangle
 {
@@ -60,7 +60,6 @@ layout(std430, binding = 9) readonly buffer b_bvhTriangleId
 
 struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; float fov; };
 uniform Camera u_camera;
-uniform Camera u_lastFrameCamera;
 
 uniform vec2 u_resolution;
 uniform float u_aspect;
@@ -76,29 +75,6 @@ struct RaycastResult
     vec3 error;
     int triangleId;
 };
-
-vec2 WorldToNDC(vec3 _worldPos, in Camera _camera)
-{
-    vec3 l_viewDir = _worldPos - _camera.position;
-    float l_depth = dot(l_viewDir, _camera.forward);
-    
-    if (l_depth <= 0.0) 
-    {
-        return vec2(2.0, 2.0);
-    }
-
-    float l_tanHalfFOV = tan(_camera.fov * 0.5);
-    
-    float x = dot(l_viewDir, _camera.right);
-    float y = dot(l_viewDir, _camera.up);
-    
-
-    // Basically the inverse of the ray direction calculation done in Intersecions
-    return vec2(
-        x / (l_depth * l_tanHalfFOV * u_aspect),
-        y / (l_depth * l_tanHalfFOV)
-    );
-}
 
 vec2 CalculateTexUVs(RaycastResult _result, Triangle _tri)
 {
@@ -315,9 +291,8 @@ void main()
     // Calculate information needed to create the ray for this pixel
     ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
 
-    // Move old data to the old data buffers
-    imageStore(prevFrameInfo, l_pixelCoords, vec4(imageLoad(hitNormals, l_pixelCoords).xyz,
-                                                  imageLoad(hitLocations, l_pixelCoords).w));
+    imageStore(prevHitLocations, l_pixelCoords, imageLoad(hitLocations, l_pixelCoords));
+    imageStore(prevHitNormals, l_pixelCoords, imageLoad(hitNormals, l_pixelCoords));
 
     vec2 l_normalizedScreenCoords = vec2(((float(l_pixelCoords.x) / u_resolution.x) - 0.5) * 2.0,
                                          ((float(l_pixelCoords.y) / u_resolution.y) - 0.5) * 2.0);
@@ -351,22 +326,6 @@ void main()
         
         vec2 l_texUVs = CalculateTexUVs(l_closestHit, l_tri);
         imageStore(texMatInfo, l_pixelCoords, vec4(l_texUVs, float(l_tri.textureId), float(l_tri.materialId)));
-
-        // Calculate current position
-        vec2 l_currentNDC = WorldToNDC(l_closestHit.position, u_camera);
-        
-        // Calculate previous frame position
-        vec2 l_prevNDC = WorldToNDC(l_closestHit.position, u_lastFrameCamera);
-        
-        // Motion vector is the difference in NDC space
-        vec2 l_motionVector = l_currentNDC - l_prevNDC;
-
-        // Calculate depth difference to offset weird bubble effect
-        float l_depth = length(l_closestHit.position - u_camera.position);
-        float l_depthScale = clamp(1.0 / (l_depth + 1.0), 0.1, 1.0);
-        
-        vec2 l_pixelVelocity = l_motionVector * 0.5 * u_resolution;
-        imageStore(motionVectors, l_pixelCoords, vec4(l_pixelVelocity, 1.0, 0.0));
     }
     else
     {
@@ -374,11 +333,10 @@ void main()
         imageStore(hitLocations, l_pixelCoords, vec4(1e30f));
         imageStore(hitNormals, l_pixelCoords, vec4(0.0f));
         imageStore(texMatInfo, l_pixelCoords, vec4(0.0f));
-        imageStore(motionVectors, l_pixelCoords, vec4(0.0f));
     }
 
     // Draw debug information
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_closestHit.error, 1.0f));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_pixelCoords / u_resolution, 0.0f, 1.0f));
 }
 
  

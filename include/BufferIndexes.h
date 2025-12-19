@@ -4,7 +4,7 @@
 // I got really tired of having to constantly change the bind locations
 // in Raytracer.cpp, so I centralised it here
 
-#define GBUFFERCOUNT 4
+#define GBUFFERCOUNT 6
 
 enum BufferIndices
 {
@@ -15,6 +15,8 @@ enum BufferIndices
     HITNORMALS,
     TEXMATINFO,
     SHADOW,
+    PREVFRAMEINFO,
+    MOTIONVECTORS,
 
     // SSBO locations
     TRIANGLE_DATA,

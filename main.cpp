@@ -132,7 +132,9 @@ int main(int argc, char* argv[])
 	// The camera needs to be updated by Input data, so it is done here
 	Input l_inputMap;
 	Camera* l_rtCam = l_raytracer.GetCamera();
-	l_rtCam->Position(glm::vec3(0.0f, 1.0f, 20.0f));
+	l_rtCam->Position(glm::vec3(-15.0f, 4.7f, 4.0f));
+	l_rtCam->Rotate(glm::radians(-60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	l_rtCam->Rotate(glm::radians(-40.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 	bool l_keepGoing = true;
 	bool l_mouseMovement = false;
@@ -191,22 +193,20 @@ int main(int argc, char* argv[])
 		Uint64 l_startTime = SDL_GetTicks64();
 		l_deltaTime = (float)(l_startTime - l_lastTime) * 0.001f;
 		l_lastTime = l_startTime;
-		
-		//printf("FPS: %f\nDT: %f\n", 1.0f / l_deltaTime, l_deltaTime);
 
 		l_rtCam->Update(l_inputMap, l_deltaTime);
 
-		// auto time1 = std::chrono::high_resolution_clock::now();
+		auto time1 = std::chrono::high_resolution_clock::now();
 
 		l_raytracer.Trace(l_deltaTime);
 
-		// std::chrono::steady_clock::time_point time2 = std::chrono::high_resolution_clock::now();
+		auto time2 = std::chrono::high_resolution_clock::now();
 
-		// std::chrono::microseconds l_timeElapsed =
-		// 	std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1);
+		std::chrono::microseconds l_timeElapsed =
+			std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1);
 
-		// printf("%i, ", l_raytracer.Samples());
-		// std::cout << l_timeElapsed.count() / 1000.0f;
+		printf("%i, ", l_raytracer.Samples());
+		std::cout << l_timeElapsed.count() / 1000.0f;
 
 		l_gui.ShowUI(l_deltaTime);
 

@@ -11,6 +11,8 @@ layout(rgba32f, binding = 1) uniform image2D hitLocations;
 layout(rgba32f, binding = 2) uniform image2D hitNormals;
 
 layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
+layout(rgba32f, binding = 5) uniform image2D prevFrameInfo;
+layout(rgba32f, binding = 6) uniform image2D motionVectors;
 
 struct Triangle
 {
@@ -29,7 +31,7 @@ struct Triangle
     int materialId;
 };
 
-layout(std430, binding = 5) readonly buffer b_trianglesSSBO
+layout(std430, binding = 7) readonly buffer b_trianglesSSBO
 {
     Triangle sceneTris[];
 };
@@ -47,13 +49,13 @@ struct Node
     int triangleCount;
 };
 
-layout(std430, binding = 6) readonly buffer b_bvhNodes
+layout(std430, binding = 8) readonly buffer b_bvhNodes
 {
     Node bvhNodes[];
 };
 
 // Maps bvhNode.leftFirst indexes to indexes in sceneTris
-layout(std430, binding = 7) readonly buffer b_bvhTriangleId
+layout(std430, binding = 9) readonly buffer b_bvhTriangleId
 {
     int bvhTriIdxs[];
 };
@@ -88,6 +90,12 @@ struct RaycastResult
     vec3 normal;
 };
 
+struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; float fov; };
+uniform Camera u_lastFrameCamera;
+
+uniform vec2 u_resolution;
+uniform float u_aspect;
+
 const float PI = 3.14159265359;
 
 // Random generator found from https://developer.nvidia.com/gpugems/gpugems3/part-vi-gpu-computing/chapter-37-efficient-random-number-generation-and-application
@@ -110,59 +118,69 @@ float RandomFloat(inout uint _seed)
     return float(lcg(_seed)) * l_inv_max_int;
 }
 
-struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; float fov; };
-uniform Camera u_lastFrameCamera;
+vec2 WorldToNDC(vec3 _worldPos, in Camera _camera)
+{
+    vec3 l_viewDir = _worldPos - _camera.position;
+    float l_depth = dot(l_viewDir, _camera.forward);
 
-uniform vec2 u_resolution;
+    if (l_depth <= 0.0) 
+    {
+        return vec2(2.0, 2.0);
+    }
+
+    float l_tanHalfFOV = tan(_camera.fov * 0.5);
+    
+    float x = dot(l_viewDir, _camera.right);
+    float y = dot(l_viewDir, _camera.up);
+    
+    // Basically the inverse of the ray direction calculation done in Intersecions
+    return vec2(
+        x / (l_depth * l_tanHalfFOV * u_aspect),
+        y / (l_depth * l_tanHalfFOV)
+    );
+}
+
+vec2 NDCToPixel(vec2 _coord)
+{
+    vec2 uv = _coord * 0.5 + 0.5;
+    return uv * u_resolution;
+}
 
 ivec2 CalculateLastFramePosition(vec3 _worldPosition)
 {
-    // Transform world space position to camera space of last frame
-    vec3 l_viewDir = _worldPosition - u_lastFrameCamera.position;
+    vec2 l_prevNDC = WorldToNDC(_worldPosition, u_lastFrameCamera);
     
-    // Project onto camera basis
-    float l_angleDifference = dot(l_viewDir, u_lastFrameCamera.forward);
-    
-    // Check if point is in front of camera
-    if (l_angleDifference <= 0.0)
+    // Check if point is visible in previous frame
+    if (abs(l_prevNDC.x) > 1.0f || abs(l_prevNDC.y) > 1.0f)
     {
         return ivec2(-1, -1);
     }
     
-    float l_aspect = u_resolution.x / u_resolution.y;
-    float l_tanHalfFOV = tan(u_lastFrameCamera.fov * 0.5);
+    vec2 l_prevPixel = NDCToPixel(l_prevNDC);
     
-    float x = dot(l_viewDir, u_lastFrameCamera.right);
-    float y = dot(l_viewDir, u_lastFrameCamera.up);
+    // Clamp to valid screen coordinates (The program can handle them being incorrect)
+    l_prevPixel = clamp(l_prevPixel, vec2(0.0), u_resolution);
     
-    // Turn coords to [-1, 1]
-    float ndc_x = clamp(x / (l_angleDifference * l_tanHalfFOV * l_aspect), -1.0f, 1.0f);
-    float ndc_y = clamp(y / (l_angleDifference * l_tanHalfFOV), -1.0f, 1.0f);
-    
-    // Shift values to [0, 1]
-    vec2 l_uvs = vec2(
-        (ndc_x + 1.0) * 0.5,
-        (ndc_y + 1.0) * 0.5
-    );
-    
-    ivec2 l_pixelCoords = ivec2(l_uvs * u_resolution);
-    
-    return l_pixelCoords;
+    return ivec2(l_prevPixel + 0.5);
 }
 
 vec3 StratifiedSampleSphere(inout uint _seed, vec3 _center, float _radius, int _currentSample)
 {
-    int gridSize = int(sqrt(float(u_sampleCount)));
+    // How many stratums we split the sphere into
+    int l_gridSize = int(sqrt(float(u_sampleCount)));
     
-    int stratumX = _currentSample % gridSize;
-    int stratumY = _currentSample / gridSize;
+    // Calculate which stratum we are in
+    int l_stratumX = _currentSample % l_gridSize;
+    int l_stratumY = _currentSample / l_gridSize;
     
-    float jitterU = RandomFloat(_seed);
-    float jitterV = RandomFloat(_seed);
+    // Random position within the stratum to use
+    float l_jitterU = RandomFloat(_seed);
+    float l_jitterV = RandomFloat(_seed);
     
-    float u = (float(stratumX) + jitterU) / float(gridSize);
-    float v = (float(stratumY) + jitterV) / float(gridSize);
+    float u = (float(l_stratumX) + l_jitterU) / float(l_gridSize);
+    float v = (float(l_stratumY) + l_jitterV) / float(l_gridSize);
     
+    // Convert from sphereical coordinates to world space
     float phi = 2.0 * PI * u;
     float cosTheta = 1.0 - 2.0 * v;
     float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
@@ -171,10 +189,21 @@ vec3 StratifiedSampleSphere(inout uint _seed, vec3 _center, float _radius, int _
     return _center + dir * _radius;
 }
 
-vec3 RandomSamplePlane(inout uint _seed, vec3 _corner, vec3 _edge1, vec3 _edge2)
+vec3 StratifiedSamplePlane(inout uint _seed, vec3 _corner, vec3 _edge1, vec3 _edge2, int _currentSample)
 {
-    float u = RandomFloat(_seed);
-    float v = RandomFloat(_seed);
+    // How many stratums we split the sphere into
+    int l_gridSize = int(sqrt(float(u_sampleCount)));
+    
+    // Calculate which stratum we are in
+    int l_stratumX = _currentSample % l_gridSize;
+    int l_stratumY = _currentSample / l_gridSize;
+    
+    // Random position within the stratum to use
+    float l_jitterU = RandomFloat(_seed);
+    float l_jitterV = RandomFloat(_seed);
+    
+    float u = (float(l_stratumX) + l_jitterU) / float(l_gridSize);
+    float v = (float(l_stratumY) + l_jitterV) / float(l_gridSize);
 
     return _corner + (u * _edge1) + (v * _edge2);
 }
@@ -359,11 +388,14 @@ void main()
 
                 if(u_lights[i].radius > 0.0)
                 {
-                    l_randomPoint = StratifiedSampleSphere(l_rngState, u_lights[i].position, u_lights[i].radius, j);
+                    l_randomPoint = StratifiedSampleSphere(l_rngState, u_lights[i].position, u_lights[i].radius, j + k);
                 }
                 else
                 {
-                    l_randomPoint = RandomSamplePlane(l_rngState, u_lights[i].position, u_lights[i].cornerA, u_lights[i].cornerB);
+                    l_randomPoint = StratifiedSamplePlane(l_rngState, u_lights[i].position,
+                                                          u_lights[i].cornerA - u_lights[i].position,
+                                                          u_lights[i].cornerB - u_lights[i].position,
+                                                          j + k);
                 }
 
                 vec3 l_lightDir = l_randomPoint - b_hitLocation;
@@ -384,7 +416,7 @@ void main()
 
                 float l_attenuation = 1.0 / (1.0 + 0.1 * l_lightDistance * l_lightDistance);
                 l_lightContribution += u_lights[i].colour * u_lights[i].intensity * l_attenuation * NdotL;
-                }
+            }
         }
 
         l_lightContribution /= u_sampleCount;
@@ -393,58 +425,69 @@ void main()
 
     l_totalLight /= u_lightCount;
 
-    ivec2 l_previousCoord = CalculateLastFramePosition(b_hitLocation);
-
-
     int b_totalSampleCount = int(imageLoad(shadowBuffer, l_pixelCoords).w);
-
+    // Debug value
     vec3 l_TAError = vec3(0.0f);
-    float l_confidence = 1.0;
 
-    if(l_previousCoord.x > -1)
+    // We use this to determine if we accumulate or not
+    float l_confidence = 1.0;
+    
+    // Calculate previous pixel using motion vectors
+    ivec2 l_previousCoord = CalculateLastFramePosition(b_hitLocation);
+    
+    // Get previous frame data
+    float l_oldDepth = imageLoad(prevFrameInfo, l_previousCoord).w;
+    vec3 l_oldNormal = imageLoad(prevFrameInfo, l_previousCoord).xyz;
+
+    vec4 l_motionData = imageLoad(motionVectors, l_pixelCoords);
+    vec2 l_motionVector = l_motionData.xy;
+    float l_motionValid = l_motionData.z;
+    
+    // Adjust confidence based on motion vector length
+    float l_motionLength = length(l_motionVector);
+    float l_motionConfidence = exp(-l_motionLength * 10.0);
+    l_confidence *= l_motionConfidence;
+
+    if(l_motionValid > 0.5)
     {
-        float l_oldDepth = imageLoad(hitLocations, l_previousCoord).w;
         float l_depthChange = abs(b_hitDistance - l_oldDepth) / b_hitDistance;
 
         // Depth is too different == new space (Should be reset)
         if(l_depthChange > 0.05)
         {
             // Become less confident with bigger changes
-            l_confidence *= 1.0 - smoothstep(0.05, 0.3, l_depthChange);
+            l_confidence *= 1.0 - mix(0.05, 0.4, l_depthChange);
         }
         
-        vec3 l_oldNormal = imageLoad(hitNormals, l_previousCoord).xyz;
         float l_normalChange = 1.0f - dot(l_oldNormal, l_normal);
        
         // Normal is too different == new space
         if(l_normalChange > 0.2)
         {
             // Become less confident with bigger changes
-            l_confidence *= 1.0 - smoothstep(0.05, 0.3, l_normalChange);
+            l_confidence *= 1.0 - mix(0.05, 0.3, l_normalChange);
         }
-        
-        if(l_confidence > 0.1)
+
+        if(l_confidence > 0.5)
         {
             l_TAError.x = 1.0f;
             vec3 b_previousLight = imageLoad(shadowBuffer, l_previousCoord).xyz;
-            
-            // Use confidence to blend
-            float l_alpha = 1.0f / float(b_totalSampleCount);
-            l_alpha = mix(l_alpha, 0.8, l_confidence);
-            l_alpha = clamp(l_alpha, 0.05, 0.8);
-            
+
+            b_totalSampleCount++;
+            float l_alpha = 1.0 / float(b_totalSampleCount);
+            l_alpha = clamp(l_alpha, 0.01, 0.1);
+
             l_totalLight = mix(b_previousLight, l_totalLight, l_alpha);
-            b_totalSampleCount = min(b_totalSampleCount + 1, 64);
         }
         else
         {
             l_TAError.z = 1.0f;
-            b_totalSampleCount /= 2;
+            b_totalSampleCount = 2;
         }
     }
     else
     {
-        l_TAError.y = 1.0f;
+        l_TAError.z = 1.0f;
         b_totalSampleCount = 1;
     }
     
@@ -453,5 +496,5 @@ void main()
 
     // Red means it's similar to the previous frame, blue means it's not conficent enough to accumulate it
     // Green means the sample is invalid
-    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_TAError, 1.0f));
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_totalLight, 1.0f));
 }

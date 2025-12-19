@@ -28,7 +28,6 @@ class BVH
     */
     bool m_dirtyNodes;
     bool m_dirtyIdxs;
-    bool m_dirtyTris;
     /**@} */
 
     // Bit alignment hocus pocus
@@ -78,7 +77,6 @@ class BVH
     , m_triIndexes()
     , m_dirtyNodes(true)
     , m_dirtyIdxs(true)
-    , m_dirtyTris(true)
     , m_planeCount(100)
     {
 

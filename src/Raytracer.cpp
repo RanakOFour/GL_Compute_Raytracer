@@ -23,7 +23,7 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 , m_shading(true)
 , m_lightVision(true)
 , m_frameCount(0)
-, m_sampleCount(1)
+, m_sampleCount(16)
 {
     m_mainBuffer->BindGLImage();
     //Create texture buffers on GPU
@@ -71,7 +71,9 @@ void Raytracer::Trace(float _deltaTime)
     glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(Material) * m_mats->size(), &(m_mats->at(0)));
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
+
     glm::vec2 l_workGroups(ceil(m_screenSize.x / 8), ceil(m_screenSize.y / 4));
+
     m_ObjIntersectComp.use();
 
     m_camera.UpdateShader(m_ObjIntersectComp);
@@ -82,11 +84,12 @@ void Raytracer::Trace(float _deltaTime)
     glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
     glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
-    // m_ObjIntersectComp.SetUniform("u_lastFrameCamera.position", m_camera.Position());
-    // m_ObjIntersectComp.SetUniform("u_lastFrameCamera.forward", m_camera.Forward());
-    // m_ObjIntersectComp.SetUniform("u_lastFrameCamera.right", m_camera.Right());
-    // m_ObjIntersectComp.SetUniform("u_lastFrameCamera.up", m_camera.Up());
-    // m_ObjIntersectComp.SetUniform("u_lastFrameCamera.fov", m_camera.fov());
+
+    m_ObjIntersectComp.SetUniform("u_lastFrameCamera.position", m_camera.Position());
+    m_ObjIntersectComp.SetUniform("u_lastFrameCamera.forward", m_camera.Forward());
+    m_ObjIntersectComp.SetUniform("u_lastFrameCamera.right", m_camera.Right());
+    m_ObjIntersectComp.SetUniform("u_lastFrameCamera.up", m_camera.Up());
+    m_ObjIntersectComp.SetUniform("u_lastFrameCamera.fov", m_camera.fov());
 
     int l_lightCount = m_lights.size() > 10 ? 10 : m_lights.size();
     
@@ -94,12 +97,11 @@ void Raytracer::Trace(float _deltaTime)
     {
         m_ShadowComp.use();
 
-        //m_camera.UpdateShader(m_ShadowComp);
-
         m_ShadowComp.SetUniform("u_lightCount", l_lightCount);
         m_ShadowComp.SetUniform("u_sampleCount", m_sampleCount);
         m_ShadowComp.SetUniform("u_frameCount", m_frameCount);
         m_ShadowComp.SetUniform("u_resolution", m_screenSize);
+        m_ShadowComp.SetUniform("u_aspect", (float)m_screenSize.x / float(m_screenSize.y));
 
         for (int i = 0; i < l_lightCount; i++)
         {
