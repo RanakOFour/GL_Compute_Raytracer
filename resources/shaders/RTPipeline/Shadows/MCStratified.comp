@@ -112,7 +112,6 @@ uint lcg(inout uint _seed)
 // Returns random number between 0 and 1
 float RandomFloat(inout uint _seed)
 {
-    //                        This is the uint number cap
     uint l_result = lcg(_seed);
     const float l_inv_max_int = 1.0f / 16777215.0f;
     return float(lcg(_seed)) * l_inv_max_int;
@@ -354,8 +353,7 @@ void main()
 
     // Initialise random state with thread GUID
     uint l_rngState = uint(l_pixelCoords.x * 1973u + l_pixelCoords.y * 9277u + u_frameCount * 26699u);
-
-
+    
     // Decorrelate the seeds from eachother
     lcg(l_rngState);
     
