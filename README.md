@@ -1,0 +1,2 @@
+## GL Compute Raytracer
+A real-time raytracting tech demo I created for my Graphics and Computational Programming module during my time at Bournemouth University.
