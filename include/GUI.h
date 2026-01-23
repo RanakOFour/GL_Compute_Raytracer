@@ -169,12 +169,11 @@ class GUI
 
         glm::vec3 camPos = m_rt->m_camera.Position();
         std::string l_camPosText = "Camera Position: (" + std::to_string(camPos.x) + ", " + std::to_string(camPos.y) + ", " + std::to_string(camPos.z) + ")";
-        ImGui::Text(l_camPosText.c_str());
+        ImGui::Text("%s", l_camPosText.c_str());
 
         glm::quat camRot = m_rt->m_camera.Rotation();
         l_camPosText = "Camera Rotation: (" + std::to_string(camRot.x) + ", "+ std::to_string(camRot.y) + ", "+ std::to_string(camRot.z) + ", "+ std::to_string(camRot.w) + ")";
-        ImGui::Text(l_camPosText.c_str());
-
+        ImGui::Text("%s", l_camPosText.c_str());    
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
         ImGui::End();
