@@ -43,47 +43,4 @@ class ComputeShader
     GLuint m_ID;
 };
 
-/*
-*   A struct used to contain information for the UI
-*   The raytracer did not like this, so it is unused
-*/
-class ComputeInformation
-{
-    private:
-    std::string m_name;
-    ComputeShader* m_shader;
-    bool m_enabled;
-
-    public:
-    ComputeInformation(std::string _name, ComputeShader* _shader)
-    : m_name(_name)
-    , m_shader(_shader)
-    , m_enabled(true)
-    {
-
-    };
-
-    ComputeInformation(std::string _name, std::string _shaderPath)
-    : m_name(_name)
-    , m_enabled(true)
-    {
-        m_shader = new ComputeShader(_shaderPath);
-    };
-
-    ~ComputeInformation()
-    {
-        delete(m_shader);
-    };
-
-    inline std::string Name() { return m_name; };
-    inline void Name(std::string _n) { m_name = _n; }
-
-    inline void Use() { m_shader->use(); };
-    inline ComputeShader* Shader() { return m_shader; };
-
-    inline bool Enabled() { return m_enabled; };
-    inline void Enabled(bool _e) { m_enabled = _e; };
-};
-
-
 #endif

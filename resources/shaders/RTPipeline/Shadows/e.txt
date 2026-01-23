@@ -1,0 +1,487 @@
+#version 430 core
+
+// Stratified sampling method involving taking root(samples) samples in a quadrant
+// borrowed from 
+// https://raytracing.github.io/books/RayTracingTheRestOfYourLife.html#asimplemontecarloprogram/stratifiedsamples(jittering)
+
+layout(local_size_x = 8, local_size_y = 4) in;
+layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
+
+layout(rgba32f, binding = 1) uniform image2D hitLocations;
+layout(rgba32f, binding = 2) uniform image2D hitNormals;
+
+layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
+
+layout(rgba32f, binding = 5) uniform image2D prevHitLocations;
+layout(rgba32f, binding = 6) uniform image2D prevHitNormals;
+
+struct Triangle
+{
+    // Vertex positions
+    vec3 a;
+    vec3 b;
+    vec3 c;
+    vec3 normal;
+
+    // UV Coordinates for each vertex
+    vec2 uvA;
+    vec2 uvB;
+    vec2 uvC;
+
+    int textureId;
+    int materialId;
+};
+
+layout(std430, binding = 7) readonly buffer b_trianglesSSBO
+{
+    Triangle sceneTris[];
+};
+
+struct Node
+{
+    // Laid out like this for bit packing
+    vec3 minBound;
+
+    // Holds index of left node (if not leaf node) or first triangle (if leaf node)
+    int leftFirst;
+    vec3 maxBound;
+
+    // Triangles in node (0 if not leaf node)
+    int triangleCount;
+};
+
+layout(std430, binding = 8) readonly buffer b_bvhNodes
+{
+    Node bvhNodes[];
+};
+
+// Maps bvhNode.leftFirst indexes to indexes in sceneTris
+layout(std430, binding = 9) readonly buffer b_bvhTriangleId
+{
+    int bvhTriIdxs[];
+};
+
+#define MAX_LIGHTS 10
+struct Light
+{
+    vec3 position;
+    vec3 colour;
+    float intensity;
+
+    // Values for sphere light
+    float radius;
+
+    // Values for Square area light
+    vec3 cornerA;
+    vec3 cornerB;
+};
+
+uniform Light u_lights[MAX_LIGHTS];
+uniform int u_lightCount;
+
+uniform int u_frameCount;
+uniform int u_sampleCount;
+
+struct Ray  { vec3 origin; vec3 direction; };
+
+struct RaycastResult 
+{
+    float distance;
+    vec3 position;
+    vec3 normal;
+};
+
+struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; float fov; };
+uniform Camera u_lastFrameCamera;
+
+uniform vec2 u_resolution;
+
+const float PI = 3.14159265359;
+
+// Random generator found from https://developer.nvidia.com/gpugems/gpugems3/part-vi-gpu-computing/chapter-37-efficient-random-number-generation-and-application
+// Linear Congruential Generator
+// Values chosen from https://en.wikipedia.org/wiki/Linear_congruential_generator#Parameters_in_common_use
+uint lcg(inout uint _seed)
+{
+    _seed = _seed * 747796405u + 2891336453u;
+    uint hashed = _seed ^ (_seed >> 14);
+    _seed = hashed;
+    return _seed >> 8;
+}
+
+// Returns random number between 0 and 1
+float RandomFloat(inout uint _seed)
+{
+    //                        This is the uint number cap
+    uint l_result = lcg(_seed);
+    const float l_inv_max_int = 1.0f / 16777215.0f;
+    return float(lcg(_seed)) * l_inv_max_int;
+}
+
+ivec2 CalculateLastFramePosition(vec3 _worldPosition)
+{
+    // Transform world space position to camera space of last frame
+    vec3 l_viewDir = _worldPosition - u_lastFrameCamera.position;
+    
+    // Project onto camera basis
+    float l_angleDifference = dot(l_viewDir, u_lastFrameCamera.forward);
+    
+    // Check if point is in front of camera
+    if (l_angleDifference <= 0.0)
+    {
+        return ivec2(-1, -1);
+    }
+    
+    float l_aspect = u_resolution.x / u_resolution.y;
+    float l_tanHalfFOV = tan(u_lastFrameCamera.fov * 0.5);
+    
+    float x = dot(l_viewDir, u_lastFrameCamera.right);
+    float y = dot(l_viewDir, u_lastFrameCamera.up);
+    
+    // Turn coords to [-1, 1]
+    float ndc_x = clamp(x / (l_angleDifference * l_tanHalfFOV * l_aspect), -1.0f, 1.0f);
+    float ndc_y = clamp(y / (l_angleDifference * l_tanHalfFOV), -1.0f, 1.0f);
+    
+    // Shift values to [0, 1]
+    vec2 l_uvs = vec2(
+        (ndc_x + 1.0) * 0.5,
+        (ndc_y + 1.0) * 0.5
+    );
+    
+    ivec2 l_pixelCoords = ivec2(l_uvs * u_resolution + 0.5f);
+    
+    return l_pixelCoords;
+}
+
+
+// vec4 BilinearSample(ivec2 _pixelCoord)
+// {
+//     uv = uv * resolution - 0.5;
+//     ivec2 baseCoord = ivec2(floor(uv));
+//     vec2 f = fract(uv);
+    
+//     vec4 s00 = texelFetch(tex, baseCoord, 0);
+//     vec4 s10 = texelFetch(tex, baseCoord + ivec2(1, 0), 0);
+//     vec4 s01 = texelFetch(tex, baseCoord + ivec2(0, 1), 0);
+//     vec4 s11 = texelFetch(tex, baseCoord + ivec2(1, 1), 0);
+    
+//     return mix(mix(s00, s10, f.x), mix(s01, s11, f.x), f.y);
+// }
+
+vec3 StratifiedSampleSphere(inout uint _seed, vec3 _center, float _radius, int _currentSample)
+{
+    int gridSize = int(sqrt(float(u_sampleCount)));
+    
+    int stratumX = _currentSample % gridSize;
+    int stratumY = _currentSample / gridSize;
+    
+    float jitterU = RandomFloat(_seed);
+    float jitterV = RandomFloat(_seed);
+    
+    float u = (float(stratumX) + jitterU) / float(gridSize);
+    float v = (float(stratumY) + jitterV) / float(gridSize);
+    
+    float phi = 2.0 * PI * u;
+    float cosTheta = 1.0 - 2.0 * v;
+    float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
+    
+    vec3 dir = vec3(cos(phi) * sinTheta, sin(phi) * sinTheta, cosTheta);
+    return _center + dir * _radius;
+}
+
+vec3 RandomSamplePlane(inout uint _seed, vec3 _corner, vec3 _edge1, vec3 _edge2)
+{
+    float u = RandomFloat(_seed);
+    float v = RandomFloat(_seed);
+
+    return _corner + (u * _edge1) + (v * _edge2);
+}
+
+bool TriangleIntersect(inout RaycastResult _result, Ray _ray, Triangle _tri, int _index)
+{
+    const float l_ep = 0.000001;
+    
+    vec3 l_edge1 = _tri.b - _tri.a;
+    vec3 l_edge2 = _tri.c - _tri.a;
+    
+    vec3 h = cross(_ray.direction, l_edge2);
+    float det = dot(l_edge1, h);
+    
+    // If the determinant is negative, the triangle is back-facing.
+    if (det < l_ep)
+    {
+        return false;
+    }
+    
+    float invDet = 1.0 / det;
+    vec3 s = _ray.origin - _tri.a;
+    float u = invDet * dot(s, h);
+    
+    if (u < 0.0 || u > 1.0)
+    {
+        return false;
+    }
+    
+    vec3 q = cross(s, l_edge1);
+    float v = invDet * dot(_ray.direction, q);
+    
+    if (v < 0.0 || u + v > 1.0)
+    {
+        return false;
+    }
+    
+    float l_distance = invDet * dot(l_edge2, q);
+    
+    if (l_distance > l_ep && l_distance < _result.distance) // Ray intersection
+    {
+        _result.position = _ray.origin + _ray.direction * l_distance;
+        _result.distance = l_distance;
+        _result.normal = normalize(cross(l_edge1, l_edge2));
+        _result.normal = normalize(cross(l_edge1, l_edge2));
+        return true;
+    }
+    
+    // This means that there is a line intersection but not a ray intersection
+    return false;
+}
+
+bool IntersectAABB(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
+{
+    float tmin = 0.0f;
+    float tmax = 10000000.0f;
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (abs(_ray.direction[i]) < 0.0001f)
+        {
+            if (_ray.origin[i] < _minBound[i] || _ray.origin[i] > _maxBound[i])
+                return false;
+        }
+        else
+        {
+            float ood = 1.0f / _ray.direction[i];
+            float t1 = (_minBound[i] - _ray.origin[i]) * ood;
+            float t2 = (_maxBound[i] - _ray.origin[i]) * ood;
+
+            if (t1 > t2)
+            {
+                float temp = t1;
+                t1 = t2;
+                t2 = temp;
+            }
+
+            tmin = max(tmin, t1);
+            tmax = min(tmax, t2);
+
+            if (tmin > tmax)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+// Shadow ray tracing (simplified version of TraverseBVH)
+bool IsInShadow(inout RaycastResult _result, vec3 _origin, vec3 _direction, float _distance, int _idx, inout vec3 _error)
+{
+    Ray l_shadowRay;
+    l_shadowRay.origin = _origin;
+    l_shadowRay.direction = _direction;
+    
+    int l_indexStack[64];
+    int l_top = 0;
+    l_indexStack[l_top] = 0;
+
+    Node l_node = bvhNodes[l_indexStack[l_top]];
+    l_top++;
+
+    // This is not the same traversal techinque as the Intersections.comp
+    // because changing the traversal broke the shadows, for some reason
+    do
+    {
+        if(IntersectAABB(l_shadowRay, l_node.minBound, l_node.maxBound))
+        {
+            _error += vec3(0.02, 0.0, 0.0);
+            if(l_node.triangleCount > 0)
+            {
+                for(int i = 0; i < l_node.triangleCount; i++)
+                {
+                    _error += vec3(0.0, 0.0, 0.01);
+                    int triIdx = bvhTriIdxs[l_node.leftFirst + i];
+                    if(TriangleIntersect(_result, l_shadowRay, sceneTris[triIdx], triIdx)
+                       && _result.distance < _distance)
+                    {
+                        // Quit if the triangle is intersected at a reasonable distance ( < 1e30f)
+                        _error += vec3(0.0, 0.5, 0.00);
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                l_indexStack[l_top] = l_node.leftFirst;
+                l_top++;
+                l_indexStack[l_top] = l_node.leftFirst + 1;
+                l_top++;
+            }
+        }
+
+        
+        l_top--;
+        l_node = bvhNodes[l_indexStack[l_top]];
+    } while(l_top > -1);
+
+    return false;
+}
+
+void main() 
+{
+    vec3 l_traceError = vec3(0.0);
+    ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+
+    // Initialise random state with thread GUID
+    uint l_rngState = uint(l_pixelCoords.x * 1973u + l_pixelCoords.y * 9277u + u_frameCount * 26699u);
+    // Decorrelate the seeds from eachother
+    lcg(l_rngState);
+    
+    vec3 b_hitLocation = imageLoad(hitLocations, l_pixelCoords).xyz;
+    float b_hitDistance = imageLoad(hitLocations, l_pixelCoords).w;
+    int b_triId = int(imageLoad(hitNormals, l_pixelCoords).w);
+    Triangle l_hitTriangle = sceneTris[b_triId];
+    
+    if (b_hitDistance < 0.001)
+    {
+        imageStore(shadowBuffer, l_pixelCoords, vec4(1.0)); // No shadow for background
+        return;
+    }
+
+    vec4 b_normalData = imageLoad(hitNormals, l_pixelCoords);
+    vec3 l_normal = b_normalData.xyz;
+
+    float l_sqrtSamples = sqrt(u_sampleCount);
+
+    vec3 l_totalLight = vec3(0.0f);
+
+    for(int i = 0; i < u_lightCount; i++)
+    {
+        vec3 l_lightContribution = vec3(0.0f);
+
+        // Sample each light for how much shadow the pixel is in
+        for(int j = 0; j < l_sqrtSamples; j++)
+        {
+            for(int k = 0; k < l_sqrtSamples; k++)
+            {
+                vec3 l_randomPoint = vec3(0.0f);
+
+                if(u_lights[i].radius > 0.0)
+                {
+                    l_randomPoint = StratifiedSampleSphere(l_rngState, u_lights[i].position, u_lights[i].radius, j);
+                }
+                else
+                {
+                    l_randomPoint = RandomSamplePlane(l_rngState, u_lights[i].position, u_lights[i].cornerA, u_lights[i].cornerB);
+                }
+
+                vec3 l_lightDir = l_randomPoint - b_hitLocation;
+                float l_lightDistance = length(l_lightDir);
+                l_lightDir = normalize(l_lightDir);
+
+                RaycastResult l_result;
+                l_result.distance = 1e30f;
+                l_result.position = vec3(0.0f);
+
+                if(IsInShadow(l_result, b_hitLocation + l_normal * 0.001, l_lightDir, l_lightDistance, b_triId, l_traceError))
+                {
+                    continue;
+                }
+
+                float NdotL = dot(l_normal, l_lightDir);
+                // ^ Makes light more bright the more direct the light is
+
+                float l_attenuation = 1.0 / (1.0 + 0.1 * l_lightDistance * l_lightDistance);
+                l_lightContribution += u_lights[i].colour * u_lights[i].intensity * l_attenuation * NdotL;
+            }
+        }
+
+        l_lightContribution /= u_sampleCount;
+        l_totalLight += l_lightContribution;
+    }
+
+    l_totalLight /= u_lightCount;
+
+    ivec2 l_previousCoord = CalculateLastFramePosition(b_hitLocation);
+
+
+    int b_totalSampleCount = int(imageLoad(shadowBuffer, l_pixelCoords).w);
+
+    vec3 l_TAError = vec3(0.0f);
+    float l_confidence = 1.0;
+
+    float l_depthChange = 0.0f;
+    float l_normalChange = 0.0f;
+
+    float l_oldDepth = imageLoad(prevHitLocations, l_previousCoord).w;
+    vec3 l_oldNormal = imageLoad(prevHitNormals, l_previousCoord).xyz;
+
+    if(l_previousCoord.x > -1 && b_hitLocation.x != 1e30f)
+    {
+        l_depthChange = abs(b_hitDistance - l_oldDepth) / b_hitDistance;
+
+        // Depth is too different == new space (Should be reset)
+        if(l_depthChange > 0.05)
+        {
+            // Become less confident with bigger changes
+            l_confidence *= 1.0 - mix(0.05, 0.4, l_depthChange);
+        }
+        
+        l_normalChange = 1.0f - dot(l_oldNormal, l_normal);
+       
+        // Normal is too different == new space
+        if(l_normalChange > 0.2)
+        {
+            // Become less confident with bigger changes
+            l_confidence *= 1.0 - mix(0.05, 0.3, l_normalChange);
+        }
+
+        
+        
+        if(l_confidence > 0.5)
+        {
+            l_TAError.x = 1.0f;
+            vec3 b_previousLight = imageLoad(shadowBuffer, l_previousCoord).xyz;
+            
+            // Use confidence to blend
+            // b_totalSampleCount++;
+            // float l_alpha = 1.0f / float(b_totalSampleCount);
+            // l_alpha = mix(l_alpha, 0.8, l_confidence);
+            // l_alpha = clamp(l_alpha, 0.05, 0.8);
+            
+            // l_totalLight = mix(b_previousLight, l_totalLight, l_alpha);
+
+            b_totalSampleCount += u_lightCount * u_sampleCount;
+            float l_alpha = 1.0 / float(b_totalSampleCount);
+            l_alpha = clamp(l_alpha, 0.01, 0.1);
+
+            l_totalLight = mix(b_previousLight, l_totalLight, l_alpha);
+        }
+        else
+        {
+            l_TAError.z = 1.0f;
+            b_totalSampleCount = 2;
+        }
+    }
+    else
+    {
+        l_TAError.z = 1.0f;
+        b_totalSampleCount = 1;
+    }
+    
+
+    imageStore(shadowBuffer, l_pixelCoords, vec4(l_totalLight, b_totalSampleCount));
+
+    // Red means it's similar to the previous frame, blue means it's not conficent enough to accumulate it
+    // Green means the sample is invalid
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_totalLight, 1.0f));
+}

@@ -1,8 +1,0 @@
-# The program NEEDS this script in order to run
-# Otherwise, the program will 
-# The program also ignores whitespace, so take that into account when naming shaders
-
-Shader : ./resources/shaders/Intersections/Intersections.comp
-Shader : ./resources/shaders/Shadows/MonteCarloShadow.comp
-Shader : ./resources/shaders/Shading/DefaultShading.comp
-Shader : ./resources/shaders/Intersections/LightDetection.comp

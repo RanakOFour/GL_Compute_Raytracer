@@ -23,6 +23,8 @@ class Raytracer : public GCP_Framework
     private:
     BVH m_BVH;
 
+    // I want to (in the future) be able to hook up the Raytracer to something else
+    // so just plugging in the vectors with pointers made the most sense
     std::vector<Triangle>* m_tris;
     std::vector<Material>* m_mats;
     std::vector<Texture>* m_textures;
@@ -31,9 +33,10 @@ class Raytracer : public GCP_Framework
 
     Camera m_camera;
 
-    std::vector<std::string> m_shaderNames;
-    std::vector<ComputeShader> m_Shaders;
-    std::vector<bool> m_shaderEnabled;
+    ComputeShader m_ObjIntersectComp;
+    ComputeShader m_LightIntersectComp;
+    ComputeShader m_ShadowComp;
+    ComputeShader m_PBRShadeComp;
 
     GLuint m_gBuffers[GBUFFERCOUNT];
 
@@ -41,6 +44,10 @@ class Raytracer : public GCP_Framework
     GLuint m_materialSSBO;
 
     bool m_setup;
+
+    bool m_lightVision;
+    bool m_shadows;
+    bool m_shading;
 
     int m_frameCount;
     int m_sampleCount;
@@ -51,18 +58,25 @@ class Raytracer : public GCP_Framework
 
     void Trace(float _time);
 
-    void ShowUIOptions();
-
     void SetTris(std::vector<Triangle>* _tris);
     void SetMaterials(std::vector<Material>* _mat);
     void SetTextures(std::vector<Texture>* _tex);
-
+    
     void AddLight(Light _light);
     Light* GetLight(int index);
 
     Material* GetMaterial(int _index);
 
     Camera* GetCamera();
+
+    bool LightVision() { return m_lightVision; };
+    void LightVision(bool _l) { m_lightVision = _l; };
+
+    bool Shading() { return m_shading;};
+    void Shading(bool _s) { m_shading = _s;};
+
+    bool Shadows() { return m_shadows; };
+    void Shadows(bool _s) { m_shadows = _s; };
 
     int Samples() { return m_sampleCount; };
     void Samples(int _s) { m_sampleCount = _s; };

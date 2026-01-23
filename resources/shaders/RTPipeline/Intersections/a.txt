@@ -1,0 +1,342 @@
+#version 430 core
+
+layout(local_size_x = 8, local_size_y = 4) in;
+
+layout(rgba32f, binding = 0) uniform image2D o_framebufferTex;
+
+// Data we write to that is used in later passes
+layout(rgba32f, binding = 1) uniform image2D hitLocations;
+layout(rgba32f, binding = 2) uniform image2D hitNormals;
+layout(rgba32f, binding = 3) uniform image2D texMatInfo;
+layout(rgba32f, binding = 4) uniform image2D shadowBuffer;
+layout(rgba32f, binding = 5) uniform image2D prevHitLocations;
+layout(rgba32f, binding = 6) uniform image2D prevHitNormals;
+
+struct Triangle
+{
+    // Vertex positions
+    vec3 a;
+    vec3 b;
+    vec3 c;
+    vec3 normal;
+
+    // UV Coordinates for each vertex
+    vec2 uvA;
+    vec2 uvB;
+    vec2 uvC;
+
+    int textureId;
+    int materialId;
+};
+
+layout(std430, binding = 7) readonly buffer b_trianglesSSBO
+{
+    Triangle sceneTris[];
+};
+
+struct Node
+{
+    // Laid out like this for bit packing
+    vec3 minBound;
+
+    // Holds index of left node (if not leaf node) or first triangle (if leaf node)
+    int leftFirst;
+    vec3 maxBound;
+
+    // Triangles in node (0 if not leaf node)
+    int triangleCount;
+};
+
+layout(std430, binding = 8) readonly buffer b_bvhNodes
+{
+    Node bvhNodes[];
+};
+
+// Maps bvhNode.leftFirst indexes to indexes in sceneTris
+layout(std430, binding = 9) readonly buffer b_bvhTriangleId
+{
+    int bvhTriIdxs[];
+};
+
+struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; float fov; };
+uniform Camera u_camera;
+
+uniform vec2 u_resolution;
+uniform float u_aspect;
+
+struct Ray  { vec3 origin; vec3 direction; };
+
+struct RaycastResult
+{
+    bool hit;
+    float distance;
+    vec3 position;
+    vec3 normal;
+    vec3 error;
+    int triangleId;
+};
+
+vec2 CalculateTexUVs(RaycastResult _result, Triangle _tri)
+{
+    // Calculate barycentric coordinates (Converts point on triangle to uv coordinate for texture)
+    vec3 l_edgeAB = _tri.b - _tri.a;
+    vec3 l_edgeAC = _tri.c - _tri.a;
+    vec3 l_edgeAP = _result.position - _tri.a;
+
+    // Calculate cross products for barycentric coordinates
+    vec3 l_PcrossAB = cross(l_edgeAP, l_edgeAB);
+    vec3 l_PcrossAC = cross(l_edgeAP, l_edgeAC);
+    
+    // Total triangle area is twice the actual area, because the triangle is 3D and has 2 sides
+    float l_invTotalTriangleArea = 1.0f /  length(cross(l_edgeAB, l_edgeAC));
+    
+    // Calculate area of 3 triangles inside ABC, each made of 2 vertices and the intersection point
+    float l_areaPCA = length(l_PcrossAC) * l_invTotalTriangleArea;
+    float l_areaPAB = length(l_PcrossAB) * l_invTotalTriangleArea;
+
+    // Total area of the system = 1, so we can cheat the last one
+    float l_areaPBC = 1.0 - l_areaPCA - l_areaPAB;
+    
+    // The UV coordinate at P is the sum of the uv coordinates at each vertex,
+    // each weighted by an area of a triangle consisting of the other 3 points.
+    // The system has the Triangle edges (A, B, C) and the point of interest (P)
+    vec2 interpolatedUV = _tri.uvA * l_areaPBC + 
+                          _tri.uvB * l_areaPCA + 
+                          _tri.uvC * l_areaPAB;
+    
+    return interpolatedUV;
+}
+
+RaycastResult TriangleIntersect(Ray _ray, Triangle _tri, int _index)
+{
+    RaycastResult result;
+    result.hit = false;
+    result.triangleId = _index;
+
+    const float l_ep = 0.000001;
+    
+    vec3 edge1 = _tri.b - _tri.a;
+    vec3 edge2 = _tri.c - _tri.a;
+    
+    vec3 h = cross(_ray.direction, edge2);
+    float det = dot(edge1, h);
+    
+    // If the determinant is negative, the triangle is back-facing.
+    if (det < l_ep)
+    {
+        return result;
+    }
+    
+    float invDet = 1.0 / det;
+    vec3 s = _ray.origin - _tri.a;
+    float u = invDet * dot(s, h);
+    
+    if (u < 0.0 || u > 1.0)
+    {
+        return result;
+    }
+    
+    vec3 q = cross(s, edge1);
+    float v = invDet * dot(_ray.direction, q);
+    
+    // Point is outside the triangle
+
+    if (v < 0.0 || u + v > 1.0)
+    {
+        return result;
+    }
+    
+    // At this stage we can compute t to find out where
+    // the intersection point is on the line
+    float t = invDet * dot(edge2, q);
+    
+    if (t > l_ep) // Ray intersection
+    {
+        result.hit = true;
+        result.position = _ray.origin + _ray.direction * t;
+        result.distance = t;
+        result.normal = normalize(cross(edge1, edge2));
+        return result;
+    }
+    
+    // This means that there is a line intersection but not a ray intersection
+    return result;
+}
+
+float AABBIntersection(inout Ray _ray, vec3 _minBound, vec3 _maxBound)
+{
+    float tmin = 0.0f;
+    float tmax = 1e30f;
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (abs(_ray.direction[i]) < 0.0001f)
+        {
+            if (_ray.origin[i] < _minBound[i] || _ray.origin[i] > _maxBound[i])
+            {
+                return 1e30f;
+            }
+        }
+        else
+        {
+            float ood = 1.0f / _ray.direction[i];
+            float t1 = (_minBound[i] - _ray.origin[i]) * ood;
+            float t2 = (_maxBound[i] - _ray.origin[i]) * ood;
+
+            if (t1 > t2)
+            {
+                float temp = t1;
+                t1 = t2;
+                t2 = temp;
+            }
+
+            tmin = max(tmin, t1);
+            tmax = min(tmax, t2);
+
+            if (tmin > tmax)
+            {
+                return 1e30f;
+            }
+        }
+    }
+
+    return tmin;
+}
+
+
+RaycastResult TraverseBVH(inout RaycastResult _result, inout Ray _ray)
+{
+    int l_indexStack[64];
+    int l_top = 0;
+    l_indexStack[l_top] = 0;
+
+    Node l_node = bvhNodes[l_indexStack[l_top]];
+    l_top++;
+
+    // Continue until a result has been found
+    while(true)
+    {
+        // Node is leaf
+        if(l_node.triangleCount > 0)
+        {
+            for(int i = 0; i < l_node.triangleCount; i++)
+            {
+                int triIdx = bvhTriIdxs[l_node.leftFirst + i];
+                RaycastResult newResult = TriangleIntersect(_ray, sceneTris[triIdx], triIdx);
+                if(newResult.hit && newResult.distance < _result.distance)
+                {
+                    _result.error += vec3(0.0, 0.0, 0.1f);
+                    newResult.error = _result.error;
+                    _result = newResult;
+                }
+            }
+
+            // Quit if stack is empty
+            if(l_top == -1)
+            {
+                break;
+            }
+
+            l_node = bvhNodes[l_indexStack[l_top--]];
+
+            continue;
+        }
+
+        // Node is not leaf; check children
+        int l_child1 = l_node.leftFirst;
+        int l_child2 = l_node.leftFirst + 1;
+
+        float l_dist1 = AABBIntersection(_ray, bvhNodes[l_child1].minBound, bvhNodes[l_child1].maxBound);
+        float l_dist2 = AABBIntersection(_ray, bvhNodes[l_child2].minBound, bvhNodes[l_child2].maxBound);
+
+        if(l_dist1 > l_dist2)
+        {
+            float ftemp = l_dist1;
+            l_dist1 = l_dist2;
+            l_dist2 = ftemp;
+
+            int itemp = l_child1;
+            l_child1 = l_child2;
+            l_child2 = itemp;
+        }
+
+        if(l_dist1 == 1e30f)
+        {
+            // Quit if stack is emptya
+            if(l_top == -1)
+            {
+                break;
+            }
+
+            l_node = bvhNodes[l_indexStack[l_top--]];
+        }
+        else
+        {
+            l_node = bvhNodes[l_child1];
+            if(l_dist2 != 1e30f)
+            {
+                l_indexStack[++l_top] = l_child2;
+            }
+        }
+
+
+        _result.error += vec3(0.02f, 0.0f, 0.0f);
+    }
+
+    return _result;
+}
+
+void main()
+{
+    // Calculate information needed to create the ray for this pixel
+    ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
+
+    imageStore(prevHitLocations, l_pixelCoords, imageLoad(hitLocations, l_pixelCoords));
+    imageStore(prevHitNormals, l_pixelCoords, imageLoad(hitNormals, l_pixelCoords));
+
+    vec2 l_normalizedScreenCoords = vec2(((float(l_pixelCoords.x) / u_resolution.x) - 0.5) * 2.0,
+                                         ((float(l_pixelCoords.y) / u_resolution.y) - 0.5) * 2.0);
+
+    float l_fovTan = tan(u_camera.fov * 0.5f);
+    vec3 l_rayDir = normalize(u_camera.forward + 
+                           l_normalizedScreenCoords.x * u_camera.right * u_aspect * l_fovTan + 
+                           l_normalizedScreenCoords.y * u_camera.up * l_fovTan);
+    
+    // Create the ray
+    Ray l_ray;
+    l_ray.origin = u_camera.position;
+    l_ray.direction = l_rayDir;
+
+    RaycastResult l_closestHit;
+    l_closestHit.hit = false;
+    l_closestHit.distance = 1e30f;
+    l_closestHit.normal = vec3(0.0);
+    l_closestHit.error = vec3(0.0);
+
+    // Fill RaycastResult structure with information
+    TraverseBVH(l_closestHit, l_ray);
+
+    if(l_closestHit.hit)
+    {
+        Triangle l_tri = sceneTris[l_closestHit.triangleId];
+
+        // Store information if hit
+        imageStore(hitLocations, l_pixelCoords, vec4(l_closestHit.position, l_closestHit.distance));
+        imageStore(hitNormals, l_pixelCoords, vec4(l_closestHit.normal, l_closestHit.triangleId));
+        
+        vec2 l_texUVs = CalculateTexUVs(l_closestHit, l_tri);
+        imageStore(texMatInfo, l_pixelCoords, vec4(l_texUVs, float(l_tri.textureId), float(l_tri.materialId)));
+    }
+    else
+    {
+        // Store nothing if nothing
+        imageStore(hitLocations, l_pixelCoords, vec4(1e30f));
+        imageStore(hitNormals, l_pixelCoords, vec4(0.0f));
+        imageStore(texMatInfo, l_pixelCoords, vec4(0.0f));
+    }
+
+    // Draw debug information
+    imageStore(o_framebufferTex, l_pixelCoords, vec4(l_pixelCoords / u_resolution, 0.0f, 1.0f));
+}
+
+ 

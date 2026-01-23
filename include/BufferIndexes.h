@@ -4,26 +4,28 @@
 // I got really tired of having to constantly change the bind locations
 // in Raytracer.cpp, so I centralised it here
 
-#define GBUFFERCOUNT 4
+#define GBUFFERCOUNT 6
 
 enum BufferIndices
 {
-    OUTPUT_IMAGE = 0,
+    OUTPUT_IMAGE,
 
     // Gbuffers
-    HITPOSITION = 1,
-    HITNORMALS = 2,
-    TEXMATINFO = 3,
-    SHADOW = 4,
+    HITPOSITION,
+    HITNORMALS,
+    TEXMATINFO,
+    SHADOW,
+    PREVFRAMEINFO,
+    MOTIONVECTORS,
 
     // SSBO locations
-    TRIANGLE_DATA = 5,
-    BVH_NODES = 6,
-    BVH_INDICES = 7,
-    MATERIALS = 8,
+    TRIANGLE_DATA,
+    BVH_NODES,
+    BVH_INDICES,
+    MATERIALS,
 
     // Texture location
-    TEXTURES = 9
+    TEXTURES
 };
 
 #endif

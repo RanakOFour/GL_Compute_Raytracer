@@ -1,8 +1,9 @@
-cmake_minimum_required (VERSION 3.10)
+cmake_minimum_required (VERSION 3.20)
+
+set(CXX_STANDARD 20)
 
 project ("GCP_Raytracer_Framework_CMAKE")
 
-# Add source to this project's executable.
 add_executable (GCP_Raytracer_Framework_CMAKE "main.cpp")
 
 add_subdirectory(src)
