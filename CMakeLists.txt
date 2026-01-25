@@ -2,30 +2,34 @@ cmake_minimum_required (VERSION 3.20)
 
 set(CXX_STANDARD 20)
 
-project ("GCP_Raytracer_Framework_CMAKE")
+project ("GLTracer")
 
-add_executable (GCP_Raytracer_Framework_CMAKE "main.cpp")
+add_executable (GLTracer "main.cpp")
 
 add_subdirectory(src)
 add_subdirectory(external)
 
-target_include_directories(GCP_Raytracer_Framework_CMAKE PUBLIC include external/IMGUI external)
-target_link_directories(GCP_Raytracer_Framework_CMAKE PUBLIC ${PROJECT_SOURCE_DIR}/lib)
+
+target_include_directories(GLTracer PUBLIC include)
+
+target_include_directories(GLTracer SYSTEM PUBLIC external/IMGUI external)
+
+target_link_directories(GLTracer PUBLIC ${PROJECT_SOURCE_DIR}/lib)
 
 if(WIN32)
-	target_link_libraries(GCP_Raytracer_Framework_CMAKE PUBLIC SDL2 SDL2main opengl32)
+	target_link_libraries(GLTracer PUBLIC SDL2 SDL2main opengl32)
 else()
-	target_link_libraries(GCP_Raytracer_Framework_CMAKE PUBLIC SDL2 SDL2main GL)
+	target_link_libraries(GLTracer PUBLIC SDL2 SDL2main GL)
 endif()
 
 # TODO: Add tests and install targets if needed.
-#add_custom_command(TARGET GCP_Raytracer_Framework_CMAKE POST_BUILD {CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/resources" $<TARGET_FILE_DIR:GCP_Raytracer_Framework_CMAKE>/resources/)
-add_custom_command(TARGET GCP_Raytracer_Framework_CMAKE POST_BUILD
+#add_custom_command(TARGET GLTracer POST_BUILD {CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/resources" $<TARGET_FILE_DIR:GLTracer>/resources/)
+add_custom_command(TARGET GLTracer POST_BUILD
 				   COMMAND ${CMAKE_COMMAND} -E copy_directory
 				   "${PROJECT_SOURCE_DIR}/resources"
-				   $<TARGET_FILE_DIR:GCP_Raytracer_Framework_CMAKE>/resources/)
+				   $<TARGET_FILE_DIR:GLTracer>/resources/)
 
-add_custom_command(TARGET GCP_Raytracer_Framework_CMAKE POST_BUILD
+add_custom_command(TARGET GLTracer POST_BUILD
 				   COMMAND ${CMAKE_COMMAND} -E copy_directory
 				   "${PROJECT_SOURCE_DIR}/lib"
-				   "$<TARGET_FILE_DIR:GCP_Raytracer_Framework_CMAKE>/")
+				   "$<TARGET_FILE_DIR:GLTracer>/")

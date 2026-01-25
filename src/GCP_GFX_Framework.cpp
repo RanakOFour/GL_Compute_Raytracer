@@ -333,7 +333,7 @@ bool GCP_Framework::Init( glm::ivec2 screenSize )
 	m_SDLwindow = SDL_CreateWindow("OpenGL Raytracer",  // The first parameter is the window title
 		winPosX, winPosY,
 		winWidth, winHeight,
-		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
 
 	// The last parameter lets us specify a number of options
 	// Here, we tell SDL that we want the window to be shown and that it can be resized

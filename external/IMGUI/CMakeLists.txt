@@ -1,6 +1,5 @@
 file(GLOB SRCS *.cpp)
 
-target_sources(GCP_Raytracer_Framework_CMAKE PUBLIC ${SRCS})
-target_sources(GCP_Raytracer_Framework_CMAKE PUBLIC ${SRCS})
+target_sources(GLTracer PUBLIC ${SRCS})
 
-target_include_directories(GCP_Raytracer_Framework_CMAKE PUBLIC external/IMGUI)
+target_include_directories(GLTracer SYSTEM PUBLIC external/IMGUI)

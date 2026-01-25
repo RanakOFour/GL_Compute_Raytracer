@@ -11,6 +11,12 @@
 */
 class ComputeShader
 {
+    private:
+    /*
+    *   ShaderID of the compiled program on the GPU
+    */
+    GLuint m_ID;
+    
     public:
     /*
     *   Loads a new Compute shader from the given filepath.
@@ -18,6 +24,15 @@ class ComputeShader
     */
     ComputeShader(std::string _path);
     ~ComputeShader();
+
+    // Move semantics (required because destructor deletes GL program)
+    ComputeShader(ComputeShader&& other) noexcept;
+    ComputeShader& operator=(ComputeShader&& other) noexcept;
+
+    // Delete copy operations to prevent accidental program deletion
+    ComputeShader(const ComputeShader&) = delete;
+    ComputeShader& operator=(const ComputeShader&) = delete;
+
 
     /*
     *   Sets the shader to be used by OpenGl
@@ -35,12 +50,6 @@ class ComputeShader
     ///@}
 
     GLuint GetID() { return m_ID; };
-
-    private:
-    /*
-    *   ShaderID of the compiled program on the GPU
-    */
-    GLuint m_ID;
 };
 
 #endif
