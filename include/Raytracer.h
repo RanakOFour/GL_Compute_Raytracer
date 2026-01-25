@@ -1,7 +1,6 @@
 #ifndef RAYTRACER_H
 #define RAYTRACER_H
 
-#include "GCP_GFX_Framework.h"
 #include "GLM/ext.hpp"
 
 #include "Camera.h"
@@ -17,7 +16,7 @@
 
 class GUI;
 class Camera;
-class Raytracer : public GCP_Framework
+class Raytracer
 {
     friend GUI;
     private:
@@ -43,6 +42,10 @@ class Raytracer : public GCP_Framework
     GLuint m_triangleSSBO;
     GLuint m_materialSSBO;
 
+    GLuint m_mainTextureLoc;
+
+    glm::ivec2 m_renderSize;
+
     bool m_setup;
 
     bool m_lightVision;
@@ -53,7 +56,7 @@ class Raytracer : public GCP_Framework
     int m_sampleCount;
 
     public:
-    Raytracer(glm::ivec2 _screenSize);
+    Raytracer(glm::ivec2 _screenSize, GLuint _mainTextureLoc);
     ~Raytracer();
 
     void Trace(float _time);

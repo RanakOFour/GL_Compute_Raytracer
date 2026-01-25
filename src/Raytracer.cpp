@@ -1,10 +1,10 @@
 #include "Raytracer.h"
-#include "Framebuffer.h"
 
 #include <chrono>
 
-Raytracer::Raytracer(glm::ivec2 _screenSize)
-: GCP_Framework(_screenSize)
+Raytracer::Raytracer(glm::ivec2 _screenSize, GLuint _mainTextureLoc)
+: m_mainTextureLoc(_mainTextureLoc)
+, m_renderSize(_screenSize)
 , m_BVH()
 , m_tris(nullptr)
 , m_mats(nullptr)
@@ -25,14 +25,15 @@ Raytracer::Raytracer(glm::ivec2 _screenSize)
 , m_frameCount(0)
 , m_sampleCount(16)
 {
-    m_mainBuffer->BindGLImage();
+    glBindImageTexture(0, _mainTextureLoc, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+
     //Create texture buffers on GPU
     glGenTextures(GBUFFERCOUNT, &m_gBuffers[0]);
 
     for (int i = 0; i < GBUFFERCOUNT; i++)
     {
         glBindTexture(GL_TEXTURE_2D, m_gBuffers[i]);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_screenSize.x, m_screenSize.y, 0, GL_RGBA, GL_FLOAT, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_renderSize.x, m_renderSize.y, 0, GL_RGBA, GL_FLOAT, 0);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -72,14 +73,14 @@ void Raytracer::Trace(float _deltaTime)
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
 
-    glm::vec2 l_workGroups(ceil(m_screenSize.x / 8), ceil(m_screenSize.y / 4));
+    glm::vec2 l_workGroups(ceil(m_renderSize.x / 8), ceil(m_renderSize.y / 4));
 
     m_ObjIntersectComp.use();
 
     m_camera.UpdateShader(m_ObjIntersectComp);
 
-    m_ObjIntersectComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
-    m_ObjIntersectComp.SetUniform("u_aspect", (float)m_screenSize.x / float(m_screenSize.y));
+    m_ObjIntersectComp.SetUniform("u_resolution", glm::vec2(m_renderSize.x, m_renderSize.y));
+    m_ObjIntersectComp.SetUniform("u_aspect", (float)m_renderSize.x / float(m_renderSize.y));
 
     glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
     glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
@@ -100,8 +101,8 @@ void Raytracer::Trace(float _deltaTime)
         m_ShadowComp.SetUniform("u_lightCount", l_lightCount);
         m_ShadowComp.SetUniform("u_sampleCount", m_sampleCount);
         m_ShadowComp.SetUniform("u_frameCount", m_frameCount);
-        m_ShadowComp.SetUniform("u_resolution", m_screenSize);
-        m_ShadowComp.SetUniform("u_aspect", (float)m_screenSize.x / float(m_screenSize.y));
+        m_ShadowComp.SetUniform("u_resolution", m_renderSize);
+        m_ShadowComp.SetUniform("u_aspect", (float)m_renderSize.x / float(m_renderSize.y));
 
         for (int i = 0; i < l_lightCount; i++)
         {
@@ -162,7 +163,7 @@ void Raytracer::Trace(float _deltaTime)
 
         m_camera.UpdateShader(m_LightIntersectComp);
 
-        m_LightIntersectComp.SetUniform("u_resolution", glm::vec2(m_screenSize.x, m_screenSize.y));
+        m_LightIntersectComp.SetUniform("u_resolution", glm::vec2(m_renderSize.x, m_renderSize.y));
         m_LightIntersectComp.SetUniform("u_lightCount", l_lightCount);
 
         for (int i = 0; i < l_lightCount; i++)

@@ -1,4 +1,4 @@
-
+#include "Window.h"
 #include "Raytracer.h"
 #include "GUI.h"
 #include "Input.h"
@@ -23,8 +23,9 @@ int main(int argc, char* argv[])
 {
 	// Set window size
 	glm::ivec2 l_winSize(1000, 800);
-	
-	Raytracer l_raytracer(l_winSize);
+
+	Window l_window(l_winSize);
+	Raytracer l_raytracer(l_winSize, l_window.GetScreenTexture());
 	GUI l_gui(&l_raytracer);
 
 	// Create curuthers model, texture and mat
@@ -210,12 +211,10 @@ int main(int argc, char* argv[])
 
 		l_gui.ShowUI(l_deltaTime);
 
-		l_raytracer.Show();
+		l_window.Show();
 
 		std::cout << std::endl;
 	}
-
-	l_raytracer.Shutdown();
 
     return 0;
 };
