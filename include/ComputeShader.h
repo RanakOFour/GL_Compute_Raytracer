@@ -33,7 +33,6 @@ class ComputeShader
     ComputeShader(const ComputeShader&) = delete;
     ComputeShader& operator=(const ComputeShader&) = delete;
 
-
     /*
     *   Sets the shader to be used by OpenGl
     */

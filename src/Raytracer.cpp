@@ -85,7 +85,6 @@ void Raytracer::Trace(float _deltaTime)
     glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
     glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
-
     m_ObjIntersectComp.SetUniform("u_lastFrameCamera.position", m_camera.Position());
     m_ObjIntersectComp.SetUniform("u_lastFrameCamera.forward", m_camera.Forward());
     m_ObjIntersectComp.SetUniform("u_lastFrameCamera.right", m_camera.Right());
