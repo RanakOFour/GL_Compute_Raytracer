@@ -1,31 +1,80 @@
+/**
+ * @file BufferIndexes.h
+ * @brief Centralized definitions for OpenGL buffer binding locations
+ * 
+ * This file provides a single location for all buffer binding indices used
+ * throughout the raytracer, avoiding the need to update multiple files
+ * when changing binding locations.
+ */
+
 #ifndef BUFFERINDEX_H
 #define BUFFERINDEX_H
 
-// I got really tired of having to constantly change the bind locations
-// in Raytracer.cpp, so I centralised it here
-
+/** @brief Number of G-buffers used in deferred rendering passes */
 #define GBUFFERCOUNT 6
 
+/**
+ * @enum BufferIndices
+ * @brief Binding locations for all OpenGL buffers and images
+ * 
+ * Defines the binding points for image units, SSBOs, and texture units
+ * used by the raytracer's compute shaders.
+ */
 enum BufferIndices
 {
+    /** @brief Output render target image */
     OUTPUT_IMAGE,
 
-    // Gbuffers
+    /**
+     * @name G-Buffer Binding Locations
+     * @brief Binding points for deferred rendering G-buffers
+     * @{
+     */
+    /** @brief World-space hit position buffer */
     HITPOSITION,
+    
+    /** @brief Surface normal buffer */
     HITNORMALS,
+    
+    /** @brief Texture and material information buffer */
     TEXMATINFO,
+    
+    /** @brief Shadow mask buffer */
     SHADOW,
+    
+    /** @brief Previous frame information for temporal effects */
     PREVFRAMEINFO,
+    
+    /** @brief Motion vectors for temporal effects */
     MOTIONVECTORS,
+    /** @} */
 
-    // SSBO locations
+    /**
+     * @name SSBO Binding Locations
+     * @brief Binding points for Shader Storage Buffer Objects
+     * @{
+     */
+    /** @brief Triangle geometry data SSBO */
     TRIANGLE_DATA,
+    
+    /** @brief BVH node data SSBO */
     BVH_NODES,
+    
+    /** @brief BVH triangle index SSBO */
     BVH_INDICES,
+    
+    /** @brief Material data SSBO */
     MATERIALS,
+    /** @} */
 
-    // Texture location
+    /**
+     * @name Texture Binding Locations
+     * @brief Binding points for texture units
+     * @{
+     */
+    /** @brief Texture array binding location */
     TEXTURES
+    /** @} */
 };
 
 #endif

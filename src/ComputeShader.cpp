@@ -5,22 +5,6 @@
 
 #include <iostream>
 
-void PrintActiveUniforms(GLuint _program)
-{
-    GLint l_count = 0;
-    glGetProgramiv(_program, GL_ACTIVE_UNIFORMS, &l_count);
-    char nameBuf[256];
-    for (GLint i = 0; i < l_count; ++i) 
-    {
-        GLsizei len = 0;
-        GLint size = 0;
-        GLenum type = 0;
-        glGetActiveUniform(_program, (GLuint)i, sizeof(nameBuf), &len, &size, &type, nameBuf);
-        GLint loc = glGetUniformLocation(_program, nameBuf);
-        printf("active uniform %d: %s size=%d type=0x%x loc=%d\n", i, nameBuf, size, type, loc);
-    }
-}
-
 ComputeShader::ComputeShader(std::string _path)
 {
     printf("Compiling shader at %s\n", _path.c_str());
@@ -60,8 +44,6 @@ ComputeShader::ComputeShader(std::string _path)
     }
 
     glDeleteShader(compute);
-
-    PrintActiveUniforms(m_ID);
 }
 
 ComputeShader::~ComputeShader()
@@ -179,4 +161,17 @@ void ComputeShader::SetUniform(std::string _name, glm::uvec4 _value)
     }
 
     glUniform4uiv(l_location, 1, glm::value_ptr(_value));
+}
+
+void ComputeShader::SetUniform(std::string _name, glm::vec4 _value)
+{
+    GLint l_location = glGetUniformLocation(m_ID, _name.c_str());
+
+    if(l_location == -1)
+    {
+        printf("%s location: %i\n", _name.c_str(), l_location);
+        return;
+    }
+
+    glUniform4fv(l_location, 1, glm::value_ptr(_value));
 }

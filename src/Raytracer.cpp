@@ -1,4 +1,5 @@
 #include "Raytracer.h"
+#include "ShaderInfo.h"
 
 #include <chrono>
 
@@ -11,19 +12,11 @@ Raytracer::Raytracer(glm::ivec2 _screenSize, GLuint _mainTextureLoc)
 , m_textures(nullptr)
 , m_lights()
 , m_camera(_screenSize)
-, m_ObjIntersectComp("./resources/shaders/RTPipeline/Intersections/Intersections.comp")
-, m_LightIntersectComp("./resources/shaders/RTPipeline/Intersections/LightDetection.comp")
-, m_ShadowComp("./resources/shaders/RTPipeline/Shadows/MCStratified.comp")
-, m_PBRShadeComp("./resources/shaders/RTPipeline/Shading/PBRShading.comp")
-, m_gBuffers()
+, m_gBuffers(GBUFFERCOUNT)
 , m_triangleSSBO(-1)
 , m_materialSSBO(-1)
 , m_setup(false)
-, m_shadows(true)
-, m_shading(true)
-, m_lightVision(true)
 , m_frameCount(0)
-, m_sampleCount(16)
 {
     glBindImageTexture(0, _mainTextureLoc, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
 
@@ -44,6 +37,19 @@ Raytracer::Raytracer(glm::ivec2 _screenSize, GLuint _mainTextureLoc)
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    ComputeShader* l_objIntersectComp = new ComputeShader("resources/shaders/RTPipeline/Intersections/Intersections.comp");
+    ComputeShader* l_lightIntersectComp = new ComputeShader("resources/shaders/RTPipeline/Intersections/LightDetection.comp");
+    ComputeShader* l_shadowComp = new ComputeShader("resources/shaders/RTPipeline/Shadows/MCStratified.comp");
+    ComputeShader* l_pbrShadeComp = new ComputeShader("resources/shaders/RTPipeline/Shading/PBRShading.comp");
+
+    ShaderInfoCollection::Init();
+    ShaderInfoCollection::LogShader(l_objIntersectComp, "Object Intersection Compute Shader");
+    ShaderInfoCollection::LogShader(l_lightIntersectComp, "Light Intersection Compute Shader");
+    ShaderInfoCollection::LogShader(l_shadowComp, "Shadow Compute Shader");
+    ShaderInfoCollection::LogShader(l_pbrShadeComp, "PBR Shading Compute Shader");
+
+    m_shaders = ShaderInfoCollection::Init()->GetShaders();
 
     // Everything is bound here once as the bindings do not change
 }
@@ -72,111 +78,53 @@ void Raytracer::Trace(float _deltaTime)
     glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(Material) * m_mats->size(), &(m_mats->at(0)));
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-
     glm::vec2 l_workGroups(ceil(m_renderSize.x / 8), ceil(m_renderSize.y / 4));
 
-    m_ObjIntersectComp.use();
-
-    m_camera.UpdateShader(m_ObjIntersectComp);
-
-    m_ObjIntersectComp.SetUniform("u_resolution", glm::vec2(m_renderSize.x, m_renderSize.y));
-    m_ObjIntersectComp.SetUniform("u_aspect", (float)m_renderSize.x / float(m_renderSize.y));
-
-    glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
-    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
-
-    m_ObjIntersectComp.SetUniform("u_lastFrameCamera.position", m_camera.Position());
-    m_ObjIntersectComp.SetUniform("u_lastFrameCamera.forward", m_camera.Forward());
-    m_ObjIntersectComp.SetUniform("u_lastFrameCamera.right", m_camera.Right());
-    m_ObjIntersectComp.SetUniform("u_lastFrameCamera.up", m_camera.Up());
-    m_ObjIntersectComp.SetUniform("u_lastFrameCamera.fov", m_camera.fov());
-
-    int l_lightCount = m_lights.size() > 10 ? 10 : m_lights.size();
-    
-    if (m_shadows)
+    for(int i = 0; i < m_shaders.size(); i++)
     {
-        m_ShadowComp.use();
+        if(m_shaders[i].Enabled() == false)
+            continue;
 
-        m_ShadowComp.SetUniform("u_lightCount", l_lightCount);
-        m_ShadowComp.SetUniform("u_sampleCount", m_sampleCount);
-        m_ShadowComp.SetUniform("u_frameCount", m_frameCount);
-        m_ShadowComp.SetUniform("u_resolution", m_renderSize);
-        m_ShadowComp.SetUniform("u_aspect", (float)m_renderSize.x / float(m_renderSize.y));
+        printf("Executing shader: %s\n", m_shaders[i].Name().c_str());
+        
+        ComputeShader* shader = m_shaders[i].Shader();
+        shader->use();
 
-        for (int i = 0; i < l_lightCount; i++)
+        // Set camera uniforms (current and last frame)
+        m_camera.UpdateShader(*shader);
+
+        // Set resolution and aspect ratio
+        shader->SetUniform("u_resolution", glm::vec2(m_renderSize));
+        shader->SetUniform("u_aspect", (float)m_renderSize.x / (float)m_renderSize.y);
+
+        // Set frame count
+        shader->SetUniform("u_frameCount", m_frameCount);
+
+        // Set light uniforms
+        shader->SetUniform("u_lightCount", (int)m_lights.size());
+        for (int j = 0; j < m_lights.size() && j < 10; j++) // MAX_LIGHTS = 10
         {
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
-            m_ShadowComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
+            std::string prefix = "u_lights[" + std::to_string(j) + "].";
+            shader->SetUniform(prefix + "position", m_lights[j].position);
+            shader->SetUniform(prefix + "colour", m_lights[j].color);
+            shader->SetUniform(prefix + "intensity", m_lights[j].intensity);
+            shader->SetUniform(prefix + "radius", m_lights[j].radius);
+            shader->SetUniform(prefix + "cornerA", m_lights[j].cornerA);
+            shader->SetUniform(prefix + "cornerB", m_lights[j].cornerB);
         }
 
-        for (int i = 0; i < m_textures->size(); i++)
-        {
-            glActiveTexture(GL_TEXTURE0 + BufferIndices::TEXTURES + i);
-            m_PBRShadeComp.SetUniform("u_materialTextures[" + std::to_string(i) + "]", BufferIndices::TEXTURES + i);
-        }
+        // Set camera position (for shaders that use u_cameraPos instead of u_camera.position)
+        shader->SetUniform("u_cameraPos", m_camera.Position());
 
-
-        glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
-        glMemoryBarrier(GL_ALL_BARRIER_BITS);
-
-        m_ShadowComp.SetUniform("u_lastFrameCamera.position", m_camera.Position());
-        m_ShadowComp.SetUniform("u_lastFrameCamera.forward", m_camera.Forward());
-        m_ShadowComp.SetUniform("u_lastFrameCamera.right", m_camera.Right());
-        m_ShadowComp.SetUniform("u_lastFrameCamera.up", m_camera.Up());
-        m_ShadowComp.SetUniform("u_lastFrameCamera.fov", m_camera.fov());
-    }
-
-    if (m_shading)
-    {
-        m_PBRShadeComp.use();
-
-        m_PBRShadeComp.SetUniform("u_cameraPos", m_camera.Position());
-        m_PBRShadeComp.SetUniform("u_lightCount", l_lightCount);
-        for (int i = 0; i < l_lightCount; i++)
-        {
-            m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
-            m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
-            m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].intensity", m_lights[i].intensity);
-            m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
-            m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
-            m_PBRShadeComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
-        }
-
-        for (int i = 0; i < m_textures->size(); i++)
-        {
-            glActiveTexture(GL_TEXTURE0 + BufferIndices::TEXTURES + i);
-            m_PBRShadeComp.SetUniform("u_materialTextures[" + std::to_string(i) + "]", BufferIndices::TEXTURES + i);
-        }
+        // Set user-editable properties (non-read-only ones)
+        m_shaders[i].UpdateShader();
 
         glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
         glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
     }
 
-    if (m_lightVision)
-    {
-        m_LightIntersectComp.use();
-
-        m_camera.UpdateShader(m_LightIntersectComp);
-
-        m_LightIntersectComp.SetUniform("u_resolution", glm::vec2(m_renderSize.x, m_renderSize.y));
-        m_LightIntersectComp.SetUniform("u_lightCount", l_lightCount);
-
-        for (int i = 0; i < l_lightCount; i++)
-        {
-            m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].position", m_lights[i].position);
-            m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].colour", m_lights[i].colour);
-            m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].radius", m_lights[i].radius);
-            m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerA", m_lights[i].cornerA);
-            m_LightIntersectComp.SetUniform("u_lights[" + std::to_string(i) + "].cornerB", m_lights[i].cornerB);
-        }
-
-        glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
-        glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
-    }
+    // Store current camera state for next frame's u_lastFrameCamera
+    m_camera.StoreLastFrameState();
 
     m_frameCount++;
 }
@@ -239,7 +187,31 @@ Material* Raytracer::GetMaterial(int _index)
     return &(m_mats->at(_index));
 }
 
-Camera* Raytracer::GetCamera()
+void Raytracer::SyncLightToShader(int _index)
 {
-    return &m_camera;
+    if (_index < 0 || _index >= (int)m_lights.size())
+        return;
+
+    for(auto& shaderInfo : m_shaders)
+    {
+        if(!shaderInfo.Enabled())
+            continue;
+
+        ComputeShader* shader = shaderInfo.Shader();
+        shader->use();
+
+        std::string prefix = "u_lights[" + std::to_string(_index) + "].";
+        shader->SetUniform(prefix + "position", m_lights[_index].position);
+        shader->SetUniform(prefix + "colour", m_lights[_index].color);
+        shader->SetUniform(prefix + "intensity", m_lights[_index].intensity);
+        shader->SetUniform(prefix + "radius", m_lights[_index].radius);
+        shader->SetUniform(prefix + "cornerA", m_lights[_index].cornerA);
+        shader->SetUniform(prefix + "cornerB", m_lights[_index].cornerB);
+    }
+}
+
+void Raytracer::SyncMaterialToShader(int _index)
+{
+    // Materials are synced via SSBO in Trace(), so just mark as needing update
+    // The actual sync happens in Trace() via glBufferSubData
 }

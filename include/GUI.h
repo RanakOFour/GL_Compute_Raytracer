@@ -1,219 +1,477 @@
-#ifndef IMGUI_H
-#define IMGUI_H
+/**
+ * @file GUI.h
+ * @brief ImGui-based graphical user interface for the raytracer
+ * 
+ * This file provides the GUI class for rendering ImGui interfaces including
+ * camera information, scene settings (lights and materials), shader management,
+ * and uniform visibility controls.
+ */
 
-#include "imgui.h"
-#include "imgui_impl_sdl.h"
-#include "imgui_impl_opengl3.h"
+#ifndef GUI_H
+#define GUI_H
 
 #include "Raytracer.h"
+#include "ShaderInfo.h"
 
+#include "IMGUI/imgui.h"
+#include "IMGUI/imgui_impl_sdl.h"
+#include "IMGUI/imgui_impl_opengl3.h"
 
-/*
-*  @brief
-*  Contains the ImGui calls for controlling the raytracer
-*/
+#include <string>
+#include <vector>
+
+/**
+ * @class GUI
+ * @brief Manages the ImGui-based user interface for the raytracer
+ * 
+ * Provides windows for displaying camera information, editing scene settings
+ * (lights and materials), managing shaders, and controlling uniform visibility.
+ */
 class GUI
 {
-    private:
+private:
+    /** @brief Pointer to the raytracer instance */
     Raytracer* m_rt;
-
+    
+    /** @brief Currently selected light index in the UI */
     int m_selectedLight;
+    
+    /** @brief Currently selected material index in the UI */
     int m_selectedMaterial;
+    
+    /** @brief Currently selected shader index for property editing */
+    int m_selectedShaderForProps;
+    
+    /** @brief Buffer for entering new hidden prefix text */
+    char m_newPrefixBuffer[128];
+    
+    /** @brief Buffer for entering new shader file path */
+    char m_newShaderPathBuffer[256];
+    
+    /** @brief Buffer for entering new shader display name */
+    char m_newShaderNameBuffer[128];
 
-
-    public:
-    GUI(Raytracer* _rt)
-    : m_rt(_rt)
-    , m_selectedLight(0)
-    , m_selectedMaterial(0)
+public:
+    /**
+     * @brief Construct a new GUI object
+     * @param _rt Pointer to the raytracer instance to control
+     */
+    GUI(Raytracer* _rt) 
+        : m_rt(_rt)
+        , m_selectedLight(0)
+        , m_selectedMaterial(0)
+        , m_selectedShaderForProps(0)
     {
+        memset(m_newPrefixBuffer, 0, sizeof(m_newPrefixBuffer));
+        memset(m_newShaderPathBuffer, 0, sizeof(m_newShaderPathBuffer));
+        memset(m_newShaderNameBuffer, 0, sizeof(m_newShaderNameBuffer));
+    }
 
-    };
+    /** @brief Destructor */
+    ~GUI() {}
 
-    ~GUI() {};
-
-
-    void ShowUI(float& _deltaTime)
+    /**
+     * @brief Main UI render function - displays all UI windows
+     * @param _deltaTime Time elapsed since last frame (for display purposes)
+     */
+    void ShowUI(float _deltaTime)
     {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
 
-        // I was going to abstract the ComputeShaders into ComputeInformation, that would then handle
-        // all of these options as contained data structures that could be looped through, 
-        // but the design hurdles of how to expose options for specific values controlled by the raytracer (Sample count, uniforms, etc.)
-        // made me drop the idea, because the compromises I had came up with between the RT exposing
-        // parts and adding ways to interact with the pipeline weren't 'good enough'.
+        ShowCameraInfoUI();
+        ShowSceneSettingsUI();
+        ShowEnabledShadersUI();
+        ShowVisibilitySettingsUI();
+        ShowShaderManagementUI();
 
-        // The pattern is clearly there, I think it would just need some more time in the oven
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
 
-        // Settings for individual lights
+    /**
+     * @brief Display the camera information window
+     * 
+     * Shows current camera position, direction vectors, and FOV.
+     * All values are read-only display.
+     */
+    void ShowCameraInfoUI()
+    {
+        ImGui::Begin("Camera Info");
+        Camera& cam = m_rt->GetCamera();
+        glm::vec3 pos = cam.Position();
+        glm::vec3 fwd = cam.Forward();
+        glm::vec3 right = cam.Right();
+        glm::vec3 up = cam.Up();
+        float fov = cam.fov();
 
-        ImGui::Begin("Light Settings");
+        ImGui::Text("Position: (%.2f, %.2f, %.2f)", pos.x, pos.y, pos.z);
+        ImGui::Text("Forward:  (%.2f, %.2f, %.2f)", fwd.x, fwd.y, fwd.z);
+        ImGui::Text("Right:    (%.2f, %.2f, %.2f)", right.x, right.y, right.z);
+        ImGui::Text("Up:       (%.2f, %.2f, %.2f)", up.x, up.y, up.z);
+        ImGui::Text("FOV:      %.2f", fov);
+        ImGui::End();
+    }
 
-        std::string l_lightSelectCombo = "";
-        
-        for(int i = 0; i < m_rt->m_lights.size(); i++)
+    /**
+     * @brief Display the scene settings window with Lights and Materials tabs
+     * 
+     * Provides a tabbed interface for editing light properties (position, color,
+     * intensity, radius) and material properties (color, roughness, metallic, etc.)
+     */
+    void ShowSceneSettingsUI()
+    {
+        ImGui::Begin("Scene Settings");
+
+        if (ImGui::BeginTabBar("SceneSettingsTabBar"))
         {
-            l_lightSelectCombo += "Light " + std::to_string(i + 1) + '\0';
-        }
-
-        l_lightSelectCombo += "\0";
-
-        ImGui::Combo("Selected Light", &m_selectedLight, l_lightSelectCombo.c_str());
-
-        Light* l_selectedLight = &m_rt->m_lights[m_selectedLight];
-
-        bool quad = l_selectedLight->radius == 0.0f;
-        ImGui::Checkbox("Quad light", &quad);
-
-        if(quad)
-        {
-            l_selectedLight->radius = 0.0f;
-        }
-        else
-        {
-            if(l_selectedLight->radius == 0.0f)
+            // Lights Tab
+            if (ImGui::BeginTabItem("Lights"))
             {
-                l_selectedLight->radius = 0.1f;
-            }
-        }
+                std::vector<Light>& lights = m_rt->GetLights();
+                int lightCount = static_cast<int>(lights.size());
 
-        glm::vec3 lightPos = l_selectedLight->position;
-        
-        if(l_selectedLight->radius > 0.0f)
-        {
-            ImGui::DragFloat3("Light Position", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
+                if (lightCount > 0)
+                {
+                    if (m_selectedLight >= lightCount)
+                        m_selectedLight = lightCount - 1;
 
-            float l_radius = l_selectedLight->radius;
-            ImGui::SliderFloat("Light Radius", &l_radius, 0.001f, 10.0f);
-            l_selectedLight->radius = l_radius;
-        }
-        else
-        {
-            ImGui::DragFloat3("Light Corner 1", &(lightPos[0]), 0.1f, -10.0f, 10.0f);
-            
-            glm::vec3 lightPos2 = l_selectedLight->cornerA;
-            ImGui::DragFloat3("Light Corner 2", &(lightPos2[0]), 0.1f, -10.0f, 10.0f);
-            l_selectedLight->cornerA = lightPos2;
+                    // Light selector
+                    std::vector<const char*> lightNames;
+                    for (int i = 0; i < lightCount; ++i)
+                    {
+                        static char nameBuf[32];
+                        snprintf(nameBuf, sizeof(nameBuf), "Light %d", i);
+                        lightNames.push_back(nameBuf);
+                    }
 
-            glm::vec3 lightPos3 = l_selectedLight->cornerB;
-            ImGui::DragFloat3("Light Corner 3", &(lightPos3[0]), 0.1f, -10.0f, 10.0f);
-            l_selectedLight->cornerB = lightPos3;
-        }
+                    ImGui::Combo("Select Light", &m_selectedLight, lightNames.data(), lightCount);
+                    ImGui::Separator();
 
-        l_selectedLight->position = lightPos;
+                    Light& light = lights[m_selectedLight];
+                    ImGui::DragFloat3("Position", &light.position.x, 0.1f);
+                    ImGui::ColorEdit3("Color", &light.color.x);
+                    ImGui::DragFloat("Intensity", &light.intensity, 0.01f, 0.0f, 100.0f);
+                    ImGui::DragFloat("Radius", &light.radius, 0.01f, 0.0f, 10.0f);
 
-        glm::vec3 lightCol = l_selectedLight->colour;
-        ImGui::ColorEdit3("Light Colour", &(lightCol[0]));
-        l_selectedLight->colour = lightCol;
+                    m_rt->SyncLightToShader(m_selectedLight);
+                }
+                else
+                {
+                    ImGui::Text("No lights in the scene.");
+                }
 
-        float inten = l_selectedLight->intensity;
-        ImGui::SliderFloat("Light Intensity", &(inten), 0.0f, 100.0f);
-        l_selectedLight->intensity = inten;
-
-        if(ImGui::Button("Add Light"))
-        {
-            Light l_newLight;
-            l_newLight.position = glm::vec3(0.0f);
-            l_newLight.colour = glm::vec3(1.0f);
-            l_newLight.radius = 1.0f;
-
-            m_rt->m_lights.push_back(l_newLight);
-        }
-
-        if(ImGui::Button("Delete Light"))
-        {
-            if(m_rt->m_lights.size() > 1)
-            {
-                m_rt->m_lights.erase(m_rt->m_lights.begin() + m_selectedLight);
+                ImGui::EndTabItem();
             }
 
-            if(m_selectedLight >= m_rt->m_lights.size())
+            // Materials Tab
+            if (ImGui::BeginTabItem("Materials"))
             {
-                m_selectedLight = m_rt->m_lights.size() - 1;
+                std::vector<Material>& materials = m_rt->GetMaterials();
+                int materialCount = static_cast<int>(materials.size());
+
+                if (materialCount > 0)
+                {
+                    if (m_selectedMaterial >= materialCount)
+                        m_selectedMaterial = materialCount - 1;
+
+                    // Material selector
+                    std::vector<const char*> materialNames;
+                    for (int i = 0; i < materialCount; ++i)
+                    {
+                        static char nameBuf[32];
+                        snprintf(nameBuf, sizeof(nameBuf), "Material %d", i);
+                        materialNames.push_back(nameBuf);
+                    }
+
+                    ImGui::Combo("Select Material", &m_selectedMaterial, materialNames.data(), materialCount);
+                    ImGui::Separator();
+
+                    Material& mat = materials[m_selectedMaterial];
+                    ImGui::ColorEdit3("Albedo", &mat.albedo.x);
+                    ImGui::DragFloat("Roughness", &mat.roughness, 0.01f, 0.0f, 1.0f);
+                    ImGui::DragFloat("Metallic", &mat.metallic, 0.01f, 0.0f, 1.0f);
+                    ImGui::DragFloat("Ambient Occlusion", &mat.ambientOcclusion, 0.01f, 0.0f, 1.0f);
+
+                    m_rt->SyncMaterialToShader(m_selectedMaterial);
+                }
+                else
+                {
+                    ImGui::Text("No materials in the scene.");
+                }
+
+                ImGui::EndTabItem();
             }
+
+            ImGui::EndTabBar();
         }
 
         ImGui::End();
+    }
 
-        // A box for enabling/disabling different compute shaders
+    /**
+     * @brief Display the visibility settings window with tabs for prefix and property control
+     * 
+     * Tab 1: Manage hidden uniform prefixes (add/remove prefixes that hide uniforms from GUI)
+     * Tab 2: Per-property visibility toggle for individual shader properties
+     */
+    void ShowVisibilitySettingsUI()
+    {
+        ImGui::Begin("Visibility Settings");
 
-        // How would you list the uniforms and interpret what they mean inside a ComputeInformation?
+        if (ImGui::BeginTabBar("VisibilityTabBar"))
+        {
+            // Hidden Prefixes Tab
+            if (ImGui::BeginTabItem("Hidden Prefixes"))
+            {
+                auto hiddenMgr = HiddenUniformManager::Get();
+                const auto& prefixes = hiddenMgr->GetPrefixes();
 
+                ImGui::Text("Uniforms matching these prefixes are hidden from GUI:");
+                ImGui::Separator();
+
+                // List current prefixes with remove buttons
+                std::string prefixToRemove;
+                for (const auto& prefix : prefixes)
+                {
+                    ImGui::PushID(prefix.c_str());
+                    if (ImGui::Button("X"))
+                    {
+                        prefixToRemove = prefix;
+                    }
+                    ImGui::SameLine();
+                    ImGui::Text("%s", prefix.c_str());
+                    ImGui::PopID();
+                }
+
+                if (!prefixToRemove.empty())
+                {
+                    hiddenMgr->RemovePrefix(prefixToRemove);
+                    ShaderInfoCollection::RefreshAllVisibilityStatic();
+                }
+
+                ImGui::Separator();
+
+                // Add new prefix
+                ImGui::InputText("New Prefix", m_newPrefixBuffer, sizeof(m_newPrefixBuffer));
+                ImGui::SameLine();
+                if (ImGui::Button("Add"))
+                {
+                    if (strlen(m_newPrefixBuffer) > 0)
+                    {
+                        hiddenMgr->AddPrefix(m_newPrefixBuffer);
+                        ShaderInfoCollection::RefreshAllVisibilityStatic();
+                        memset(m_newPrefixBuffer, 0, sizeof(m_newPrefixBuffer));
+                    }
+                }
+
+                ImGui::Separator();
+                if (ImGui::Button("Reset to Defaults"))
+                {
+                    hiddenMgr->ResetToDefaults();
+                    ShaderInfoCollection::RefreshAllVisibilityStatic();
+                }
+
+                ImGui::EndTabItem();
+            }
+
+            // Property Visibility Tab
+            if (ImGui::BeginTabItem("Property Visibility"))
+            {
+                auto collection = ShaderInfoCollection::Get();
+                if (collection)
+                {
+                    auto& shaders = collection->GetShaders();
+
+                    if (!shaders.empty())
+                    {
+                        // Shader selector
+                        std::vector<const char*> shaderNames;
+                        for (auto& shader : shaders)
+                        {
+                            shaderNames.push_back(shader.Name().c_str());
+                        }
+
+                        if (m_selectedShaderForProps >= static_cast<int>(shaders.size()))
+                            m_selectedShaderForProps = 0;
+
+                        ImGui::Combo("Select Shader", &m_selectedShaderForProps, shaderNames.data(), static_cast<int>(shaderNames.size()));
+                        ImGui::Separator();
+
+                        // List properties with visibility toggles
+                        ShaderInfo& selectedShader = shaders[m_selectedShaderForProps];
+                        auto& properties = selectedShader.GetProperties();
+
+                        ImGui::Text("Toggle visibility for each property:");
+                        for (auto& prop : properties)
+                        {
+                            bool visible = prop.visible;
+                            if (ImGui::Checkbox(prop.name.c_str(), &visible))
+                            {
+                                prop.SetVisible(visible);
+                            }
+                            ImGui::SameLine();
+                            ImGui::TextDisabled("(%s)", prop.Type().c_str());
+                        }
+                    }
+                    else
+                    {
+                        ImGui::Text("No shaders loaded.");
+                    }
+                }
+                else
+                {
+                    ImGui::Text("ShaderInfoCollection not initialized.");
+                }
+
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
+        }
+
+        ImGui::End();
+    }
+
+    /**
+     * @brief Display the shader management window
+     * 
+     * Allows loading new shaders from file paths and removing existing shaders.
+     * Shows list of currently loaded shaders with remove buttons.
+     */
+    void ShowShaderManagementUI()
+    {
+        ImGui::Begin("Shader Management");
+
+        auto collection = ShaderInfoCollection::Get();
+        if (!collection)
+        {
+            ImGui::Text("ShaderInfoCollection not initialized.");
+            ImGui::End();
+            return;
+        }
+
+        // Load new shader section
+        ImGui::Text("Load New Shader:");
+        ImGui::InputText("File Path", m_newShaderPathBuffer, sizeof(m_newShaderPathBuffer));
+        ImGui::InputText("Display Name", m_newShaderNameBuffer, sizeof(m_newShaderNameBuffer));
+
+        if (ImGui::Button("Load Shader"))
+        {
+            if (strlen(m_newShaderPathBuffer) > 0 && strlen(m_newShaderNameBuffer) > 0)
+            {
+                ShaderInfo* loaded = collection->LoadShader(m_newShaderPathBuffer, m_newShaderNameBuffer);
+                if (loaded)
+                {
+                    memset(m_newShaderPathBuffer, 0, sizeof(m_newShaderPathBuffer));
+                    memset(m_newShaderNameBuffer, 0, sizeof(m_newShaderNameBuffer));
+                }
+            }
+        }
+
+        ImGui::Separator();
+        ImGui::Text("Loaded Shaders:");
+
+        auto& shaders = collection->GetShaders();
+        std::string shaderToRemove;
+
+        for (size_t i = 0; i < shaders.size(); ++i)
+        {
+            ImGui::PushID(static_cast<int>(i));
+            
+            if (ImGui::Button("X"))
+            {
+                shaderToRemove = shaders[i].Name();
+            }
+            ImGui::SameLine();
+            
+            bool enabled = shaders[i].Enabled();
+            if (ImGui::Checkbox("##enabled", &enabled))
+            {
+                shaders[i].Enabled(enabled);
+            }
+            ImGui::SameLine();
+            
+            ImGui::Text("%s", shaders[i].Name().c_str());
+            
+            ImGui::PopID();
+        }
+
+        if (!shaderToRemove.empty())
+        {
+            collection->RemoveShader(shaderToRemove);
+        }
+
+        ImGui::End();
+    }
+
+    /**
+     * @brief Display the enabled shaders window
+     * 
+     * Shows checkboxes to enable/disable each shader and displays
+     * editable properties for each enabled shader's visible uniforms.
+     */
+    void ShowEnabledShadersUI()
+    {
         ImGui::Begin("Enabled Shaders");
 
-        bool l_shadow = m_rt->m_shadows;
-        ImGui::Checkbox("Shadows", &l_shadow);
-        m_rt->m_shadows = l_shadow;
-
-        if(l_shadow)
+        auto collection = ShaderInfoCollection::Get();
+        if (!collection)
         {
-            int samples = m_rt->m_sampleCount;
-            ImGui::InputInt("Sample Count", &samples, 1, 100);
-            m_rt->m_sampleCount = samples;
+            ImGui::Text("ShaderInfoCollection not initialized.");
+            ImGui::End();
+            return;
         }
 
-        bool l_shade = m_rt->m_shading;
-        ImGui::Checkbox("Shading", &l_shade);
-        m_rt->m_shading = l_shade;		
-
-        bool l_lights = m_rt->m_lightVision;
-        ImGui::Checkbox("Light Vision", &l_lights);
-        m_rt->m_lightVision = l_lights;
-
-        ImGui::End();
-
-        // A box that displays the camera information
-        ImGui::Begin("Camera Info");
-
-        glm::vec3 camPos = m_rt->m_camera.Position();
-        std::string l_camPosText = "Camera Position: (" + std::to_string(camPos.x) + ", " + std::to_string(camPos.y) + ", " + std::to_string(camPos.z) + ")";
-        ImGui::Text("%s", l_camPosText.c_str());
-
-        glm::quat camRot = m_rt->m_camera.Rotation();
-        l_camPosText = "Camera Rotation: (" + std::to_string(camRot.x) + ", "+ std::to_string(camRot.y) + ", "+ std::to_string(camRot.z) + ", "+ std::to_string(camRot.w) + ")";
-        ImGui::Text("%s", l_camPosText.c_str());    
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-        ImGui::End();
-
-
-        // Settings for individual materials
-
-        ImGui::Begin("Material settings");
-
-        std::string l_materialSelectCombo = "";
-        
-        for(int i = 0; i < m_rt->m_mats->size(); i++)
+        for (ShaderInfo& shaderInfo : collection->GetShaders())
         {
-            l_materialSelectCombo += "Mat " + std::to_string(i + 1) + '\0';
+            bool enabled = shaderInfo.Enabled();
+            if (ImGui::Checkbox(shaderInfo.Name().c_str(), &enabled))
+            {
+                shaderInfo.Enabled(enabled);
+            }
+
+            if (enabled)
+            {
+                ImGui::Indent();
+                
+                auto visibleProps = shaderInfo.GetVisibleProperties();
+                for (ShaderProperty* prop : visibleProps)
+                {
+                    ImGui::PushID(prop->name.c_str());
+                    
+                    switch (prop->type)
+                    {
+                        case ShaderProperty::INT:
+                            ImGui::DragInt(prop->name.c_str(), &prop->value.i);
+                            break;
+                        case ShaderProperty::FLOAT:
+                            ImGui::DragFloat(prop->name.c_str(), &prop->value.f, 0.01f);
+                            break;
+                        case ShaderProperty::BOOL:
+                            ImGui::Checkbox(prop->name.c_str(), &prop->value.b);
+                            break;
+                        case ShaderProperty::VEC2:
+                            ImGui::DragFloat2(prop->name.c_str(), prop->value.vec2, 0.01f);
+                            break;
+                        case ShaderProperty::VEC3:
+                            ImGui::DragFloat3(prop->name.c_str(), prop->value.vec3, 0.01f);
+                            break;
+                        case ShaderProperty::VEC4:
+                            ImGui::DragFloat4(prop->name.c_str(), prop->value.vec4, 0.01f);
+                            break;
+                    }
+                    
+                    ImGui::PopID();
+                }
+                
+                ImGui::Unindent();
+            }
         }
 
-        l_materialSelectCombo += "\0";
-
-        ImGui::Combo("Selected Material", &m_selectedMaterial, l_materialSelectCombo.c_str());
-
-        Material* l_selectedMat = &(m_rt->m_mats->at(m_selectedMaterial));
-
-        glm::vec3 l_alb = l_selectedMat->albedo;
-        ImGui::ColorEdit3("Albedo", &l_alb[0]);
-        l_selectedMat->albedo = l_alb;
-
-        float met = l_selectedMat->metallic;
-        ImGui::SliderFloat("Metallic", &met, 0, 1);
-        l_selectedMat->metallic = met;
-
-        float rog = l_selectedMat->roughness;
-        ImGui::SliderFloat("Roughness", &rog, 0, 1);
-        l_selectedMat->roughness = rog;
-        
-        float ao = l_selectedMat->ambientOcclusion;
-        ImGui::SliderFloat("AO", &ao, 0, 1);
-        l_selectedMat->ambientOcclusion = ao;
-
         ImGui::End();
-    };
+    }
 };
 
 #endif

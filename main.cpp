@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 
 	Light l_light;
 	l_light.position = glm::vec3(2.5f, 4.5f, 5.0f);
-	l_light.colour = glm::vec3(1.0f);
+	l_light.color = glm::vec3(1.0f);
 	l_light.intensity = 15.0f;
 	l_light.radius = 2.0f;
 	l_light.cornerA = glm::vec3(0.0, -1.0, 0.0);
@@ -70,55 +70,6 @@ int main(int argc, char* argv[])
 
 	l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
 
-	//// Create triangles for the back wall
-	//l_cornelBoxTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, 5.0f, -10.0f),
-	//									   glm::vec3(10.0f, 10.0f, 0.1f));
-
-	//for (int i = 0; i < l_cornelBoxTris.size(); i++)
-	//{
-	//	l_cornelBoxTris[i].textureId = -1;
-	//	l_cornelBoxTris[i].materialId = -1;
-	//}
-
-	//l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
-
-	//// Create triangles for the right wall
-	//l_cornelBoxTris = l_cubeModel.GetTriangles(glm::vec3(10.0f, 3.7f, 0.0f),
-	//									   glm::vec3(0.1f, 10.0f, 10.0f));
-
-	//for (int i = 0; i < l_cornelBoxTris.size(); i++)
-	//{
-	//	l_cornelBoxTris[i].textureId = -1;
-	//	l_cornelBoxTris[i].materialId = -1;
-	//}
-
-	//l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
-
-	//// Create triangles for the left wall
-	//l_cornelBoxTris = l_cubeModel.GetTriangles(glm::vec3(-10.0f, 3.7f, -5.0f),
-	//									   glm::vec3(0.1f, 10.0f, 10.0f));
-
-	//for (int i = 0; i < l_cornelBoxTris.size(); i++)
-	//{
-	//	l_cornelBoxTris[i].textureId = -1;
-	//	l_cornelBoxTris[i].materialId = -1;
-	//}
-
-	//l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
-
-	//// Create triangles for the ceiling
-	//l_cornelBoxTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, 10.0f, 0.0f),
-	//									   glm::vec3(10.0f, 0.1f, 10.0f));
-
-	//for (int i = 0; i < l_cornelBoxTris.size(); i++)
-	//{
-	//	l_cornelBoxTris[i].textureId = -1;
-	//	l_cornelBoxTris[i].materialId = -1;
-	//}
-
-	//l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
-	
-
 	std::vector<Texture> l_textures;
 	std::vector<Material> l_materials;
 
@@ -132,10 +83,10 @@ int main(int argc, char* argv[])
 
 	// The camera needs to be updated by Input data, so it is done here
 	Input l_inputMap;
-	Camera* l_rtCam = l_raytracer.GetCamera();
-	l_rtCam->Position(glm::vec3(-15.0f, 4.7f, 4.0f));
-	l_rtCam->Rotate(glm::radians(-60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	l_rtCam->Rotate(glm::radians(-40.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	Camera& l_rtCam = l_raytracer.GetCamera();
+	l_rtCam.Position(glm::vec3(-15.0f, 4.7f, 4.0f));
+	l_rtCam.Rotate(glm::radians(-60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	l_rtCam.Rotate(glm::radians(-40.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 	bool l_keepGoing = true;
 	bool l_mouseMovement = false;
@@ -195,7 +146,7 @@ int main(int argc, char* argv[])
 		l_deltaTime = (float)(l_startTime - l_lastTime) * 0.001f;
 		l_lastTime = l_startTime;
 
-		l_rtCam->Update(l_inputMap, l_deltaTime);
+		l_rtCam.Update(l_inputMap, l_deltaTime);
 
 		auto time1 = std::chrono::high_resolution_clock::now();
 
@@ -206,8 +157,7 @@ int main(int argc, char* argv[])
 		std::chrono::microseconds l_timeElapsed =
 			std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1);
 
-		printf("%i, ", l_raytracer.Samples());
-		std::cout << l_timeElapsed.count() / 1000.0f;
+		std::cout << "DeltaTime: " << l_timeElapsed.count() / 1000.0f << " ms" << std::endl;
 
 		l_gui.ShowUI(l_deltaTime);
 
