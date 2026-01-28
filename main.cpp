@@ -24,8 +24,8 @@ int main(int argc, char* argv[])
 	// Set window size
 	glm::ivec2 l_winSize(1000, 800);
 
-	Window l_window(l_winSize);
-	Raytracer l_raytracer(l_winSize, l_window.GetScreenTexture());
+	Window l_window(l_winSize, l_winSize / 2);
+	Raytracer l_raytracer(l_winSize / 2, l_window.GetScreenTexture());
 	GUI l_gui(&l_raytracer);
 
 	// Create curuthers model, texture and mat

@@ -26,6 +26,8 @@ class Window
 private:
     /** @brief Window dimensions (width, height) */
     glm::ivec2 m_screenSize;
+
+    glm::ivec2 m_renderSize;
     
     /** @brief SDL window handle */
     std::shared_ptr<SDL_Window> m_window;
@@ -60,7 +62,7 @@ public:
      * @brief Construct a window with specified size
      * @param _size Window dimensions (width, height)
      */
-    Window(glm::ivec2 _size);
+    Window(glm::ivec2 _size, glm::ivec2 _renderSize);
     
     /** @brief Destructor - releases SDL and OpenGL resources */
     ~Window();

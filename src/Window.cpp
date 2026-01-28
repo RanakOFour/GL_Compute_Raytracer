@@ -163,8 +163,9 @@ GLuint LoadShaders(std::string vertFilename, std::string fragFilename)
 	return l_screenShader;
 }
 
-Window::Window(glm::ivec2 _screenSize)
+Window::Window(glm::ivec2 _screenSize, glm::ivec2 _renderSize)
 : m_screenSize(_screenSize)
+, m_renderSize(_renderSize)
 , m_screenTrianglesBuffer(0)
 , m_screenTrianglesVAO(0)
 , m_screenShader(0)
@@ -219,7 +220,7 @@ Window::Window(glm::ivec2 _screenSize)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_screenSize.x, m_screenSize.y, 0, GL_RGBA, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_renderSize.x, m_renderSize.y, 0, GL_RGBA, GL_FLOAT, 0);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 

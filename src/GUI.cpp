@@ -88,8 +88,6 @@ void GUI::ShowSceneSettingsUI()
                 ImGui::ColorEdit3("Color", &light.color.x);
                 ImGui::DragFloat("Intensity", &light.intensity, 0.01f, 0.0f, 100.0f);
                 ImGui::DragFloat("Radius", &light.radius, 0.01f, 0.0f, 10.0f);
-
-                m_rt->SyncLightToShader(m_selectedLight);
             }
             else
             {
@@ -127,8 +125,6 @@ void GUI::ShowSceneSettingsUI()
                 ImGui::DragFloat("Roughness", &mat.roughness, 0.01f, 0.0f, 1.0f);
                 ImGui::DragFloat("Metallic", &mat.metallic, 0.01f, 0.0f, 1.0f);
                 ImGui::DragFloat("Ambient Occlusion", &mat.ambientOcclusion, 0.01f, 0.0f, 1.0f);
-
-                m_rt->SyncMaterialToShader(m_selectedMaterial);
             }
             else
             {
@@ -207,10 +203,10 @@ void GUI::ShowVisibilitySettingsUI()
         // Property Visibility Tab
         if (ImGui::BeginTabItem("Property Visibility"))
         {
-            auto collection = ShaderInfoCollection::Get();
+            std::shared_ptr<ShaderInfoCollection> collection = ShaderInfoCollection::Get();
             if (collection)
             {
-                auto& shaders = collection->GetShaders();
+                std::vector<ShaderInfo>& shaders = collection->GetShaders();
 
                 if (!shaders.empty())
                 {
@@ -232,7 +228,7 @@ void GUI::ShowVisibilitySettingsUI()
                     auto& properties = selectedShader.GetProperties();
 
                     ImGui::Text("Toggle visibility for each property:");
-                    for (auto& prop : properties)
+                    for (ShaderProperty& prop : properties)
                     {
                         bool visible = prop.visible;
                         if (ImGui::Checkbox(prop.name.c_str(), &visible))
@@ -332,7 +328,7 @@ void GUI::ShowEnabledShadersUI()
 {
     ImGui::Begin("Enabled Shaders");
 
-    auto collection = ShaderInfoCollection::Get();
+    std::shared_ptr<ShaderInfoCollection> collection = ShaderInfoCollection::Get();
     if (!collection)
     {
         ImGui::Text("ShaderInfoCollection not initialized.");
@@ -352,7 +348,7 @@ void GUI::ShowEnabledShadersUI()
         {
             ImGui::Indent();
             
-            auto visibleProps = shaderInfo.GetVisibleProperties();
+            std::vector<ShaderProperty*> visibleProps = shaderInfo.GetVisibleProperties();
             for (ShaderProperty* prop : visibleProps)
             {
                 ImGui::PushID(prop->name.c_str());

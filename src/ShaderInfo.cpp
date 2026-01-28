@@ -237,6 +237,7 @@ ShaderInfo::ShaderInfo(std::string _name, ComputeShader* _shader)
     , m_shader(_shader)
     , m_enabled(true)
 {
+    printf("Initializing ShaderInfo for shader: %s\n", m_name.c_str());
     GLint l_count = 0;
     GLuint l_programID = _shader->GetID();
     glGetProgramiv(l_programID, GL_ACTIVE_UNIFORMS, &l_count);

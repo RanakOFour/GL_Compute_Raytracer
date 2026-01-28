@@ -3,22 +3,9 @@
 
 #include <chrono>
 
-Raytracer::Raytracer(glm::ivec2 _screenSize, GLuint _mainTextureLoc)
-: m_mainTextureLoc(_mainTextureLoc)
-, m_renderSize(_screenSize)
-, m_BVH()
-, m_tris(nullptr)
-, m_mats(nullptr)
-, m_textures(nullptr)
-, m_lights()
-, m_camera(_screenSize)
-, m_gBuffers(GBUFFERCOUNT)
-, m_triangleSSBO(-1)
-, m_materialSSBO(-1)
-, m_setup(false)
-, m_frameCount(0)
+void Raytracer::BuildRenderDataBuffers()
 {
-    glBindImageTexture(0, _mainTextureLoc, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+    glBindImageTexture(0, m_mainTextureLoc, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
 
     //Create texture buffers on GPU
     glGenTextures(GBUFFERCOUNT, &m_gBuffers[0]);
@@ -37,19 +24,37 @@ Raytracer::Raytracer(glm::ivec2 _screenSize, GLuint _mainTextureLoc)
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+Raytracer::Raytracer(glm::ivec2 _renderSize, GLuint _mainTextureLoc)
+: m_mainTextureLoc(_mainTextureLoc)
+, m_renderSize(_renderSize)
+, m_BVH()
+, m_tris(nullptr)
+, m_mats(nullptr)
+, m_textures(nullptr)
+, m_lights()
+, m_camera(_renderSize)
+, m_gBuffers(GBUFFERCOUNT)
+, m_triangleSSBO(-1)
+, m_materialSSBO(-1)
+, m_setup(false)
+, m_frameCount(0)
+{
+    BuildRenderDataBuffers();
 
     ComputeShader* l_objIntersectComp = new ComputeShader("resources/shaders/RTPipeline/Intersections/Intersections.comp");
-    ComputeShader* l_lightIntersectComp = new ComputeShader("resources/shaders/RTPipeline/Intersections/LightDetection.comp");
-    ComputeShader* l_shadowComp = new ComputeShader("resources/shaders/RTPipeline/Shadows/MCStratified.comp");
+    ComputeShader* l_shadowComp = new ComputeShader("resources/shaders/RTPipeline/Shadows/MonteCarloShadow.comp");
     ComputeShader* l_pbrShadeComp = new ComputeShader("resources/shaders/RTPipeline/Shading/PBRShading.comp");
+    ComputeShader* l_lightIntersectComp = new ComputeShader("resources/shaders/RTPipeline/Intersections/LightDetection.comp");
 
     ShaderInfoCollection::Init();
-    ShaderInfoCollection::LogShader(l_objIntersectComp, "Object Intersection Compute Shader");
-    ShaderInfoCollection::LogShader(l_lightIntersectComp, "Light Intersection Compute Shader");
-    ShaderInfoCollection::LogShader(l_shadowComp, "Shadow Compute Shader");
-    ShaderInfoCollection::LogShader(l_pbrShadeComp, "PBR Shading Compute Shader");
+    ShaderInfoCollection::LogShader(l_objIntersectComp, "Object Intersection");
+    ShaderInfoCollection::LogShader(l_shadowComp, "Shadows");
+    ShaderInfoCollection::LogShader(l_pbrShadeComp, "PBR Shading");
+    ShaderInfoCollection::LogShader(l_lightIntersectComp, "Light Detection");
 
-    m_shaders = ShaderInfoCollection::Init()->GetShaders();
+    m_shaders = &ShaderInfoCollection::Init()->GetShaders();
 
     // Everything is bound here once as the bindings do not change
 }
@@ -79,15 +84,17 @@ void Raytracer::Trace(float _deltaTime)
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
     glm::vec2 l_workGroups(ceil(m_renderSize.x / 8), ceil(m_renderSize.y / 4));
+    ShaderInfo* l_currentShader;
 
-    for(int i = 0; i < m_shaders.size(); i++)
+    for(int i = 0; i < m_shaders->size(); i++)
     {
-        if(m_shaders[i].Enabled() == false)
+        l_currentShader = &m_shaders->at(i);
+        if(l_currentShader->Enabled() == false)
             continue;
 
-        printf("Executing shader: %s\n", m_shaders[i].Name().c_str());
+        printf("Executing shader: %s\n", l_currentShader->Name().c_str());
         
-        ComputeShader* shader = m_shaders[i].Shader();
+        ComputeShader* shader = l_currentShader->Shader();
         shader->use();
 
         // Set camera uniforms (current and last frame)
@@ -102,7 +109,7 @@ void Raytracer::Trace(float _deltaTime)
 
         // Set light uniforms
         shader->SetUniform("u_lightCount", (int)m_lights.size());
-        for (int j = 0; j < m_lights.size() && j < 10; j++) // MAX_LIGHTS = 10
+        for (int j = 0; j < m_lights.size() && j < 10; j++)
         {
             std::string prefix = "u_lights[" + std::to_string(j) + "].";
             shader->SetUniform(prefix + "position", m_lights[j].position);
@@ -117,7 +124,7 @@ void Raytracer::Trace(float _deltaTime)
         shader->SetUniform("u_cameraPos", m_camera.Position());
 
         // Set user-editable properties (non-read-only ones)
-        m_shaders[i].UpdateShader();
+        l_currentShader->UpdateShader();
 
         glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
         glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
@@ -185,33 +192,4 @@ Light* Raytracer::GetLight(int _index)
 Material* Raytracer::GetMaterial(int _index)
 {
     return &(m_mats->at(_index));
-}
-
-void Raytracer::SyncLightToShader(int _index)
-{
-    if (_index < 0 || _index >= (int)m_lights.size())
-        return;
-
-    for(auto& shaderInfo : m_shaders)
-    {
-        if(!shaderInfo.Enabled())
-            continue;
-
-        ComputeShader* shader = shaderInfo.Shader();
-        shader->use();
-
-        std::string prefix = "u_lights[" + std::to_string(_index) + "].";
-        shader->SetUniform(prefix + "position", m_lights[_index].position);
-        shader->SetUniform(prefix + "colour", m_lights[_index].color);
-        shader->SetUniform(prefix + "intensity", m_lights[_index].intensity);
-        shader->SetUniform(prefix + "radius", m_lights[_index].radius);
-        shader->SetUniform(prefix + "cornerA", m_lights[_index].cornerA);
-        shader->SetUniform(prefix + "cornerB", m_lights[_index].cornerB);
-    }
-}
-
-void Raytracer::SyncMaterialToShader(int _index)
-{
-    // Materials are synced via SSBO in Trace(), so just mark as needing update
-    // The actual sync happens in Trace() via glBufferSubData
 }

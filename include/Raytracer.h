@@ -63,7 +63,7 @@ private:
     Camera m_camera;
 
     /** @brief Collection of compute shaders used in the pipeline */
-    std::vector<ShaderInfo> m_shaders;
+    std::vector<ShaderInfo>* m_shaders;
     
     /** @brief G-buffer texture handles for deferred rendering */
     std::vector<GLuint> m_gBuffers;
@@ -85,6 +85,8 @@ private:
 
     /** @brief Current frame counter for temporal effects */
     int m_frameCount;
+
+    inline void BuildRenderDataBuffers();
 
 public:
     /**
@@ -161,18 +163,6 @@ public:
      * @return Reference to the materials vector (from external pointer)
      */
     std::vector<Material>& GetMaterials() { return *m_mats; }
-
-    /**
-     * @brief Synchronize a specific light's data to shaders
-     * @param _index Index of the light to sync
-     */
-    void SyncLightToShader(int _index);
-
-    /**
-     * @brief Synchronize a specific material's data to shaders
-     * @param _index Index of the material to sync
-     */
-    void SyncMaterialToShader(int _index);
 };
 
 #endif
