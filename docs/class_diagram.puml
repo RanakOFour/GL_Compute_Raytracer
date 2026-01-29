@@ -1,0 +1,452 @@
+@startuml GL_Compute_Raytracer Class Diagram
+
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+title GL Compute Raytracer - Class Diagram
+
+package "Core" {
+    class Raytracer {
+        - m_BVH : BVH
+        - m_tris : std::vector<Triangle>*
+        - m_mats : std::vector<Material>*
+        - m_textures : std::vector<Texture>*
+        - m_lights : std::vector<Light>
+        - m_camera : Camera
+        - m_shaders : std::vector<ShaderInfo>*
+        - m_gBuffers : std::vector<GLuint>
+        - m_triangleSSBO : GLuint
+        - m_materialSSBO : GLuint
+        - m_mainTextureLoc : GLuint
+        - m_renderSize : glm::ivec2
+        - m_setup : bool
+        - m_frameCount : int
+        --
+        + Raytracer(screenSize, mainTextureLoc)
+        + ~Raytracer()
+        + Trace(time : float) : void
+        + SetTris(tris : std::vector<Triangle>*) : void
+        + SetMaterials(mat : std::vector<Material>*) : void
+        + SetTextures(tex : std::vector<Texture>*) : void
+        + AddLight(light : Light) : void
+        + GetLight(index : int) : Light*
+        + GetMaterial(index : int) : Material*
+        + GetCamera() : Camera&
+        + GetLights() : std::vector<Light>&
+        + GetMaterials() : std::vector<Material>&
+    }
+
+    class Window {
+        - m_screenSize : glm::ivec2
+        - m_renderSize : glm::ivec2
+        - m_window : std::shared_ptr<SDL_Window>
+        - m_renderer : std::shared_ptr<SDL_Renderer>
+        - m_context : SDL_GLContext
+        - m_screenTexture : GLuint
+        - m_screenTrianglesBuffer : GLuint
+        - m_screenTrianglesVAO : GLuint
+        - m_screenShader : GLuint
+        --
+        + Window()
+        + Window(size, renderSize)
+        + ~Window()
+        + Show() : void
+        + ScreenSize(size) : void
+        + ScreenSize() : glm::ivec2
+        + GetScreenTexture() : GLuint
+    }
+
+    class Camera {
+        - m_Position : glm::vec3
+        - m_Rotation : glm::quat
+        - m_Forward : glm::vec3
+        - m_Right : glm::vec3
+        - m_Up : glm::vec3
+        - m_Resolution : glm::vec2
+        - m_fov : float
+        - m_LastPosition : glm::vec3
+        - m_LastForward : glm::vec3
+        - m_LastRight : glm::vec3
+        - m_LastUp : glm::vec3
+        - m_LastFov : float
+        --
+        + Camera(resolution)
+        + ~Camera()
+        + StoreLastFrameState() : void
+        + Update(inputMap, deltaTime) : void
+        + UpdateShader(shader : ComputeShader&) : void
+        + Rotate(angle, axis) : void
+        + Move(posChange) : void
+        + Position(newPos) : void
+        + Position() : glm::vec3&
+        + Forward() : glm::vec3&
+        + Right() : glm::vec3&
+        + Up() : glm::vec3&
+        + Rotation() : glm::quat
+        + fov(f : float) : void
+        + fov() : float
+    }
+
+    class GUI {
+        - m_rt : Raytracer*
+        - m_selectedLight : int
+        - m_selectedMaterial : int
+        - m_selectedShaderForProps : int
+        - m_newPrefixBuffer : char[128]
+        - m_newShaderPathBuffer : char[256]
+        - m_newShaderNameBuffer : char[128]
+        --
+        + GUI(rt : Raytracer*)
+        + ~GUI()
+        + ShowUI(deltaTime : float) : void
+        + ShowCameraInfoUI() : void
+        + ShowSceneSettingsUI() : void
+        + ShowVisibilitySettingsUI() : void
+        + ShowShaderManagementUI() : void
+        + ShowEnabledShadersUI() : void
+    }
+}
+
+package "Acceleration" {
+    class BVH {
+        - m_nodeSSBOID : GLuint
+        - m_indexesSSBOID : GLuint
+        - m_dirtyNodes : bool
+        - m_dirtyIdxs : bool
+        - m_tris : std::vector<Triangle>*
+        - m_triIndexes : std::vector<int>
+        - m_nodes : std::vector<BVHNode>
+        - m_planeCount : int
+        --
+        - UpdateNodeBounds(nodeIndex) : void
+        - CalculateSAH(node, axis, pos) : float
+        - FindBestSplitPlane(node, bestAxis, bestPos) : float
+        - CalcNodeCost(node) : float
+        - Subdivide(nodeIndex) : void
+        --
+        + BVH()
+        + BVH(tris : std::vector<Triangle>*)
+        + ~BVH()
+        + PlaneCount(planes) : void
+        + PlaneCount() : int
+        + BuildBHV(tris) : void
+        + GetIndexSSBO() : GLuint
+        + GetNodeSSBO() : GLuint
+    }
+
+    class BVHNode <<struct>> {
+        + minBound : glm::vec3
+        + leftFirst : int
+        + maxBound : glm::vec3
+        + triangleCount : int
+    }
+
+    struct AABB <<struct>> {
+        + bmin : glm::vec3
+        + bmax : glm::vec3
+        --
+        + AABB()
+        + Grow(p : glm::vec3&) : void
+        + Area() : float
+    }
+}
+
+package "Shader System" {
+    class ComputeShader {
+        - m_ID : GLuint
+        --
+        + ComputeShader(path : std::string)
+        + ~ComputeShader()
+        + ComputeShader(ComputeShader&&)
+        + operator=(ComputeShader&&) : ComputeShader&
+        + use() : void
+        + SetUniform(name, value : bool) : void
+        + SetUniform(name, value : int) : void
+        + SetUniform(name, value : float) : void
+        + SetUniform(name, value : glm::vec2) : void
+        + SetUniform(name, value : glm::vec3) : void
+        + SetUniform(name, value : glm::vec4) : void
+        + SetUniform(name, value : glm::uvec4) : void
+        + GetID() : GLuint
+    }
+
+    class ShaderInfo {
+        - m_name : std::string
+        - m_properties : std::vector<ShaderProperty>
+        - m_shader : ComputeShader*
+        - m_enabled : bool
+        --
+        + ShaderInfo(name, shader)
+        + ~ShaderInfo()
+        + Name() : std::string
+        + Name(n : std::string) : void
+        + Use() : void
+        + Shader() : ComputeShader*
+        + UpdateShader() : void
+        + Enabled() : bool
+        + Enabled(e : bool) : void
+        + GetProperties() : std::vector<ShaderProperty>&
+        + GetVisibleProperties() : std::vector<ShaderProperty*>
+        + RefreshPropertyVisibility() : void
+        + SetPropertyVisibility(name, visible) : bool
+        + GetProperty(name) : ShaderProperty*
+    }
+
+    struct ShaderProperty <<struct>> {
+        + name : std::string
+        + type : PropertyType
+        + value : Value
+        + location : GLuint
+        + visible : bool
+        + readOnly : bool
+        --
+        + ShaderProperty(name, type, loc)
+        + ShaderProperty(name, type, value, loc)
+        + RefreshVisibility() : void
+        + RefreshReadOnly() : void
+        + SetVisible(visible) : void
+        + SetReadOnly(readOnly) : void
+        + Type() : std::string
+        + AsString() : std::string
+    }
+
+    enum PropertyType {
+        INT
+        FLOAT
+        BOOL
+        VEC2
+        VEC3
+        VEC4
+    }
+
+    class ShaderInfoCollection <<singleton>> {
+        - m_shaders : std::vector<ShaderInfo>
+        - {static} m_selfPtr : std::shared_ptr<ShaderInfoCollection>
+        --
+        + {static} Init() : std::shared_ptr<ShaderInfoCollection>
+        + {static} Get() : std::shared_ptr<ShaderInfoCollection>
+        + AddShader(shader : ShaderInfo) : void
+        + LoadShader(path, name) : ShaderInfo*
+        + RemoveShader(name) : bool
+        + RemoveShaderAt(index) : bool
+        + GetShader(name) : ShaderInfo*
+        + RefreshAllVisibility() : void
+        + ReorderShader(fromIndex, toIndex) : bool
+        + {static} LogShader(shader, name) : void
+        + {static} LoadShaderStatic(path, name) : ShaderInfo*
+        + {static} RemoveShaderStatic(name) : bool
+        + {static} RefreshAllVisibilityStatic() : void
+        + {static} PrintAllShaders() : void
+        + GetShaders() : std::vector<ShaderInfo>&
+        + GetShaderCount() : size_t
+    }
+
+    class HiddenUniformManager <<singleton>> {
+        - m_hiddenPrefixes : std::set<std::string>
+        - {static} m_instance : std::shared_ptr<HiddenUniformManager>
+        --
+        + {static} Get() : std::shared_ptr<HiddenUniformManager>
+        + AddPrefix(prefix) : void
+        + RemovePrefix(prefix) : void
+        + HasPrefix(prefix) : bool
+        + GetPrefixes() : const std::set<std::string>&
+        + ClearPrefixes() : void
+        + ResetToDefaults() : void
+        + ShouldBeHidden(name) : bool
+    }
+
+    class ReadOnlyUniformManager <<singleton>> {
+        - m_readOnlyPrefixes : std::set<std::string>
+        - {static} m_instance : std::shared_ptr<ReadOnlyUniformManager>
+        --
+        + {static} Get() : std::shared_ptr<ReadOnlyUniformManager>
+        + AddPrefix(prefix) : void
+        + RemovePrefix(prefix) : void
+        + HasPrefix(prefix) : bool
+        + GetPrefixes() : const std::set<std::string>&
+        + ShouldBeReadOnly(name) : bool
+    }
+}
+
+package "Data Structures" {
+    struct Triangle <<struct>> {
+        + a : glm::vec3
+        + _padding_a : float
+        + b : glm::vec3
+        + _padding_b : float
+        + c : glm::vec3
+        + _padding_c : float
+        + normal : glm::vec3
+        + _padding_n : float
+        + uvA : glm::vec2
+        + uvB : glm::vec2
+        + uvC : glm::vec2
+        + textureId : int
+        + materialId : int
+    }
+
+    struct Material <<struct>> {
+        + albedo : glm::vec3
+        + metallic : float
+        + roughness : float
+        + ambientOcclusion : float
+    }
+
+    struct Light <<struct>> {
+        + position : glm::vec3
+        + color : glm::vec3
+        + intensity : float
+        + radius : float
+        + cornerA : glm::vec3
+        + cornerB : glm::vec3
+    }
+
+    class Texture {
+        # m_dirty : bool
+        # m_data : std::vector<unsigned char>
+        # m_size : glm::ivec2
+        # m_id : GLuint
+        --
+        + Texture(path : std::string)
+        + Texture(size : glm::ivec2)
+        + ~Texture()
+        + Size(size) : void
+        + Size() : const glm::ivec2
+        + {virtual} Load(path) : void
+        + Pixel(position, color) : void
+        + Pixel(position) : const glm::vec4
+        + GetID() : GLuint
+    }
+}
+
+package "Model Loading" {
+    struct Vertex <<struct>> {
+        + position : glm::vec3
+        + texcoord : glm::vec2
+        + normal : glm::vec3
+        --
+        + Vertex()
+    }
+
+    struct Face <<struct>> {
+        + a : Vertex
+        + b : Vertex
+        + c : Vertex
+        + normal : glm::vec3
+        --
+        + CalculateNormal() : void
+    }
+
+    class Model {
+        - m_faces : std::vector<Face>
+        --
+        - SplitStringWhitespace(input, output) : void
+        - SplitString(input, splitter, output) : void
+        --
+        + Model()
+        + Model(path : std::string)
+        + Model(const Model& copy)
+        + operator=(const Model& assign) : Model&
+        + {virtual} ~Model()
+        + GetFaces() : std::vector<Face>&
+        + GetVertexCount() : GLsizei
+        + GetTriangles(position, scale) : std::vector<Triangle>
+    }
+}
+
+package "Input & Utility" {
+    struct Input <<struct>> {
+        + forward : int
+        + right : int
+        + up : int
+        + deltaMouseX : float
+        + deltaMouseY : float
+        --
+        + Input()
+    }
+
+    class OpenGLError <<static>> {
+        + {static} DisplayDebugMessage(...) : void
+        + {static} Init() : void
+    }
+
+    enum BufferIndices {
+        OUTPUT_IMAGE
+        HITPOSITION
+        HITNORMALS
+        TEXMATINFO
+        SHADOW
+        PREVFRAMEINFO
+        MOTIONVECTORS
+        TRIANGLE_DATA
+        BVH_NODES
+        BVH_INDICES
+        MATERIALS
+        TEXTURES
+    }
+}
+
+' Relationships
+
+' Composition
+Raytracer *-- BVH : contains
+Raytracer *-- Camera : contains
+BVH *-- "many" BVHNode : contains
+
+' Aggregation
+Raytracer o-- "many" Triangle : references
+Raytracer o-- "many" Material : references
+Raytracer o-- "many" Texture : references
+Raytracer o-- "many" Light : contains
+Raytracer o-- "many" ShaderInfo : references
+
+' Association
+GUI --> Raytracer : controls
+Camera --> ComputeShader : updates
+Camera ..> Input : uses
+BVH --> Triangle : accelerates
+
+' ShaderInfo owns ComputeShader
+ShaderInfo --> ComputeShader : wraps
+ShaderInfo *-- "many" ShaderProperty : contains
+ShaderProperty --> PropertyType : has type
+ShaderProperty ..> HiddenUniformManager : checks visibility
+ShaderProperty ..> ReadOnlyUniformManager : checks read-only
+
+' ShaderInfoCollection
+ShaderInfoCollection *-- "many" ShaderInfo : manages
+
+' Model to Face/Triangle
+Model *-- "many" Face : contains
+Face *-- "3" Vertex : contains
+Model ..> Triangle : produces
+
+' Friend relationship
+GUI ..> Raytracer : <<friend>>
+
+note right of Raytracer
+  Main raytracing engine that
+  manages the compute shader
+  pipeline, scene geometry, 
+  and GPU resources.
+end note
+
+note right of BVH
+  Uses Surface Area Heuristic (SAH)
+  for optimal tree construction.
+  Uploads nodes and indices to GPU SSBOs.
+end note
+
+note right of ShaderInfoCollection
+  Singleton that manages all
+  compute shaders and their
+  properties at runtime.
+end note
+
+note bottom of Triangle
+  GPU-aligned struct with padding
+  for 16-byte SSBO alignment.
+end note
+
+@enduml

@@ -65,6 +65,52 @@ void Camera::UpdateShader(ComputeShader& _shader)
     _shader.SetUniform("u_camera.fov", m_fov);
 }
 
+void Camera::ExportState(ShaderInfo* _shaderInfo)
+{
+    ShaderProperty* posProp = _shaderInfo->GetProperty("u_camera.position");
+    posProp->value.vec3 = m_Position;
+    _shaderInfo->Shader()->SetUniform("u_camera.position", m_Position);
+
+    ShaderProperty* fwdProp = _shaderInfo->GetProperty("u_camera.forward");
+    fwdProp->value.vec3 = m_Forward;
+    _shaderInfo->Shader()->SetUniform("u_camera.forward", m_Forward);
+
+    ShaderProperty* rightProp = _shaderInfo->GetProperty("u_camera.right");
+    rightProp->value.vec3 = m_Right;
+    _shaderInfo->Shader()->SetUniform("u_camera.right", m_Right);
+
+    ShaderProperty* upProp = _shaderInfo->GetProperty("u_camera.up");
+    upProp->value.vec3 = m_Up;
+    _shaderInfo->Shader()->SetUniform("u_camera.up", m_Up);
+
+    ShaderProperty* fovProp = _shaderInfo->GetProperty("u_camera.fov");
+    fovProp->value.f = m_fov;
+    _shaderInfo->Shader()->SetUniform("u_camera.fov", m_fov);
+}
+
+void Camera::ExportLastFrameState(ShaderInfo* _shaderInfo)
+{
+    ShaderProperty* posProp = _shaderInfo->GetProperty("u_lastFrameCamera.position");
+    posProp->value.vec3 = m_LastPosition;
+    _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.position", m_LastPosition);
+
+    ShaderProperty* fwdProp = _shaderInfo->GetProperty("u_lastFrameCamera.forward");
+    fwdProp->value.vec3 = m_LastForward;
+    _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.forward", m_LastForward);
+
+    ShaderProperty* rightProp = _shaderInfo->GetProperty("u_lastFrameCamera.right");
+    rightProp->value.vec3 = m_LastRight;
+    _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.right", m_LastRight);
+
+    ShaderProperty* upProp = _shaderInfo->GetProperty("u_lastFrameCamera.up");
+    upProp->value.vec3 = m_LastUp;
+    _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.up", m_LastUp);
+
+    ShaderProperty* fovProp = _shaderInfo->GetProperty("u_lastFrameCamera.fov");
+    fovProp->value.f = m_LastFov;
+    _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.fov", m_LastFov);
+}
+
 void Camera::Rotate(float _angle, glm::vec3 _axis)
 {
     glm::quat rotation = glm::angleAxis(_angle, glm::normalize(_axis));

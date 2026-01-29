@@ -72,7 +72,7 @@ void HiddenUniformManager::ResetToDefaults()
 
 bool HiddenUniformManager::ShouldBeHidden(const std::string& _name) const
 {
-    for (const auto& prefix : m_hiddenPrefixes)
+    for (const std::string& prefix : m_hiddenPrefixes)
     {
         if (_name.find(prefix) == 0)
         {
@@ -134,7 +134,7 @@ const std::set<std::string>& ReadOnlyUniformManager::GetPrefixes() const
 
 bool ReadOnlyUniformManager::ShouldBeReadOnly(const std::string& _name) const
 {
-    for (const auto& prefix : m_readOnlyPrefixes)
+    for (const std::string& prefix : m_readOnlyPrefixes)
     {
         if (_name.find(prefix) == 0)
         {
@@ -149,21 +149,22 @@ bool ReadOnlyUniformManager::ShouldBeReadOnly(const std::string& _name) const
 //=============================================================================
 
 ShaderProperty::ShaderProperty(std::string _name, PropertyType _type, GLuint _loc)
-    : name(_name)
-    , type(_type)
-    , location(_loc)
-    , visible(!HiddenUniformManager::Get()->ShouldBeHidden(_name))
-    , readOnly(ReadOnlyUniformManager::Get()->ShouldBeReadOnly(_name))
+: name(_name)
+, type(_type)
+, value{}
+, location(_loc)
+, visible(!HiddenUniformManager::Get()->ShouldBeHidden(_name))
+, readOnly(ReadOnlyUniformManager::Get()->ShouldBeReadOnly(_name))
 {
 }
 
 ShaderProperty::ShaderProperty(std::string _name, PropertyType _type, Value _value, GLuint _loc)
-    : name(_name)
-    , type(_type)
-    , value(_value)
-    , location(_loc)
-    , visible(!HiddenUniformManager::Get()->ShouldBeHidden(_name))
-    , readOnly(ReadOnlyUniformManager::Get()->ShouldBeReadOnly(_name))
+: name(_name)
+, type(_type)
+, value(_value)
+, location(_loc)
+, visible(!HiddenUniformManager::Get()->ShouldBeHidden(_name))
+, readOnly(ReadOnlyUniformManager::Get()->ShouldBeReadOnly(_name))
 {
 }
 
@@ -278,13 +279,13 @@ ShaderInfo::ShaderInfo(std::string _name, ComputeShader* _shader)
                 glGetUniformiv(l_programID, loc, &l_property.value.i);
                 break;
             case ShaderProperty::VEC2:
-                glGetnUniformfv(l_programID, loc, 2 * sizeof(float), l_property.value.vec2);
+                glGetnUniformfv(l_programID, loc, 2 * sizeof(float), &l_property.value.vec2[0]);
                 break;
             case ShaderProperty::VEC3:
-                glGetnUniformfv(l_programID, loc, 3 * sizeof(float), l_property.value.vec3);
+                glGetnUniformfv(l_programID, loc, 3 * sizeof(float), &l_property.value.vec3[0]);
                 break;
             case ShaderProperty::VEC4:
-                glGetnUniformfv(l_programID, loc, 4 * sizeof(float), l_property.value.vec4);
+                glGetnUniformfv(l_programID, loc, 4 * sizeof(float), &l_property.value.vec4[0]);
                 break;
         }
 
@@ -301,6 +302,33 @@ ShaderInfo::ShaderInfo(std::string _name, ComputeShader* _shader)
 
 ShaderInfo::~ShaderInfo()
 {
+    printf("Destroying ShaderInfo for shader: %s\n Final values: \n", m_name.c_str());
+    for (const ShaderProperty& prop : m_properties)
+    {
+        switch(prop.type)
+        {
+            case ShaderProperty::INT:
+                glGetUniformiv(m_shader->GetID(), prop.location, (GLint*)&prop.value.i);
+                break;
+            case ShaderProperty::FLOAT:
+                glGetUniformfv(m_shader->GetID(), prop.location, (GLfloat*)&prop.value.f);
+                break;
+            case ShaderProperty::BOOL:
+                glGetUniformiv(m_shader->GetID(), prop.location, (GLint*)&prop.value.i);
+                break;
+            case ShaderProperty::VEC2:
+                glGetnUniformfv(m_shader->GetID(), prop.location, 2 * sizeof(float), (GLfloat*)&prop.value.vec2[0]);
+                break;
+            case ShaderProperty::VEC3:
+                glGetnUniformfv(m_shader->GetID(), prop.location, 3 * sizeof(float), (GLfloat*)&prop.value.vec3[0]);
+                break;
+            case ShaderProperty::VEC4:
+                glGetnUniformfv(m_shader->GetID(), prop.location, 4 * sizeof(float), (GLfloat*)&prop.value.vec4[0]);
+                break;
+        }
+
+        printf("  %s: %s\n", prop.name.c_str(), prop.AsString().c_str());
+    }
 }
 
 std::string ShaderInfo::Name()
@@ -323,7 +351,7 @@ void ShaderInfo::Use()
 
 ComputeShader* ShaderInfo::Shader()
 {
-    return m_shader;
+    return m_shader.get();
 }
 
 void ShaderInfo::UpdateShader()
@@ -378,7 +406,7 @@ std::vector<ShaderProperty>& ShaderInfo::GetProperties()
 std::vector<ShaderProperty*> ShaderInfo::GetVisibleProperties()
 {
     std::vector<ShaderProperty*> visibleProps;
-    for (auto& prop : m_properties)
+    for (ShaderProperty& prop : m_properties)
     {
         if (prop.visible)
         {
@@ -398,7 +426,7 @@ void ShaderInfo::RefreshPropertyVisibility()
 
 bool ShaderInfo::SetPropertyVisibility(const std::string& _name, bool _visible)
 {
-    for (auto& prop : m_properties)
+    for (ShaderProperty& prop : m_properties)
     {
         if (prop.name == _name)
         {
@@ -411,7 +439,7 @@ bool ShaderInfo::SetPropertyVisibility(const std::string& _name, bool _visible)
 
 ShaderProperty* ShaderInfo::GetProperty(const std::string& _name)
 {
-    for (auto& prop : m_properties)
+    for (ShaderProperty& prop : m_properties)
     {
         if (prop.name == _name)
         {
@@ -453,31 +481,31 @@ std::shared_ptr<ShaderInfoCollection> ShaderInfoCollection::Get()
     return m_selfPtr;
 }
 
-void ShaderInfoCollection::AddShader(ShaderInfo _shader)
+void ShaderInfoCollection::AddShader(std::shared_ptr<ShaderInfo> _shader)
 {
     m_shaders.push_back(_shader);
 }
 
-ShaderInfo* ShaderInfoCollection::LoadShader(const std::string& _path, const std::string& _name)
+std::weak_ptr<ShaderInfo> ShaderInfoCollection::LoadShader(const std::string& _path, const std::string& _name)
 {
     ComputeShader* shader = new ComputeShader(_path.c_str());
     if (shader->GetID() == 0)
     {
         printf("ERROR: Failed to load shader from %s\n", _path.c_str());
         delete shader;
-        return nullptr;
+        return std::weak_ptr<ShaderInfo>();
     }
     
-    m_shaders.push_back(ShaderInfo(_name, shader));
+    m_shaders.push_back(std::make_shared<ShaderInfo>(_name, shader));
     printf("Loaded shader: %s from %s\n", _name.c_str(), _path.c_str());
-    return &m_shaders.back();
+    return m_shaders.back();
 }
 
 bool ShaderInfoCollection::RemoveShader(const std::string& _name)
 {
     for (auto it = m_shaders.begin(); it != m_shaders.end(); ++it)
     {
-        if (it->Name() == _name)
+        if ((*it)->Name() == _name)
         {
             m_shaders.erase(it);
             printf("Removed shader: %s\n", _name.c_str());
@@ -495,29 +523,29 @@ bool ShaderInfoCollection::RemoveShaderAt(size_t _index)
         printf("WARNING: Invalid shader index %zu\n", _index);
         return false;
     }
-    std::string name = m_shaders[_index].Name();
+    std::string name = m_shaders[_index]->Name();
     m_shaders.erase(m_shaders.begin() + _index);
     printf("Removed shader at index %zu: %s\n", _index, name.c_str());
     return true;
 }
 
-ShaderInfo* ShaderInfoCollection::GetShader(const std::string& _name)
+std::weak_ptr<ShaderInfo> ShaderInfoCollection::GetShader(const std::string& _name)
 {
-    for (auto& shader : m_shaders)
+    for (std::shared_ptr<ShaderInfo> shader : m_shaders)
     {
-        if (shader.Name() == _name)
+        if (shader->Name() == _name)
         {
-            return &shader;
+            return shader;
         }
     }
-    return nullptr;
+    return std::weak_ptr<ShaderInfo>();
 }
 
 void ShaderInfoCollection::RefreshAllVisibility()
 {
-    for (auto& shader : m_shaders)
+    for (std::shared_ptr<ShaderInfo> shader : m_shaders)
     {
-        shader.RefreshPropertyVisibility();
+        shader->RefreshPropertyVisibility();
     }
 }
 
@@ -533,7 +561,7 @@ bool ShaderInfoCollection::ReorderShader(size_t _fromIndex, size_t _toIndex)
         return true;
     }
 
-    ShaderInfo shader = std::move(m_shaders[_fromIndex]);
+    std::shared_ptr<ShaderInfo> shader = std::move(m_shaders[_fromIndex]);
     m_shaders.erase(m_shaders.begin() + _fromIndex);
     m_shaders.insert(m_shaders.begin() + _toIndex, std::move(shader));
     return true;
@@ -543,7 +571,7 @@ void ShaderInfoCollection::LogShader(ComputeShader* _shader, std::string _name)
 {
     if (m_selfPtr)
     {
-        m_selfPtr->AddShader(ShaderInfo(_name, _shader));
+        m_selfPtr->AddShader(std::make_shared<ShaderInfo>(_name, _shader));
     }
     else
     {
@@ -551,14 +579,15 @@ void ShaderInfoCollection::LogShader(ComputeShader* _shader, std::string _name)
     }
 }
 
-ShaderInfo* ShaderInfoCollection::LoadShaderStatic(const std::string& _path, const std::string& _name)
+std::weak_ptr<ShaderInfo> ShaderInfoCollection::Load(const std::string& _path, const std::string& _name)
 {
     if (m_selfPtr)
     {
         return m_selfPtr->LoadShader(_path, _name);
     }
+
     printf("WARNING: No ShaderInfoCollection instance exists!\n");
-    return nullptr;
+    return std::weak_ptr<ShaderInfo>();
 }
 
 bool ShaderInfoCollection::RemoveShaderStatic(const std::string& _name)
@@ -583,10 +612,10 @@ void ShaderInfoCollection::PrintAllShaders()
 {
     if (m_selfPtr)
     {
-        for (ShaderInfo& shader : m_selfPtr->m_shaders)
+        for (std::shared_ptr<ShaderInfo> shader : m_selfPtr->m_shaders)
         {
-            printf("Shader: %s\n", shader.Name().c_str());
-            for (ShaderProperty& prop : shader.GetProperties())
+            printf("Shader: %s\n", shader->Name().c_str());
+            for (ShaderProperty& prop : shader->GetProperties())
             {
                 printf(" - Property: %s (visible: %s)\n", 
                     prop.name.c_str(), 
@@ -600,7 +629,7 @@ void ShaderInfoCollection::PrintAllShaders()
     }
 }
 
-std::vector<ShaderInfo>& ShaderInfoCollection::GetShaders()
+std::vector<std::shared_ptr<ShaderInfo>>& ShaderInfoCollection::GetShaders()
 {
     return m_shaders;
 }

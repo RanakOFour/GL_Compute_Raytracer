@@ -11,6 +11,7 @@
 #define CAMERA_H
 
 #include "GLM/ext.hpp"
+#include "ShaderInfo.h"
 #include "ComputeShader.h"
 #include "Input.h"
 
@@ -106,6 +107,9 @@ public:
      * - u_camera.position, forward, up, right, fov (current frame)
      */
     void UpdateShader(ComputeShader& _shader);
+
+    void ExportState(ShaderInfo* _shaderInfo);
+    void ExportLastFrameState(ShaderInfo* _shaderInfo);
 
     /**
      * @name Setters and Getters

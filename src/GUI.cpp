@@ -47,10 +47,9 @@ void GUI::ShowCameraInfoUI()
     float fov = cam.fov();
 
     ImGui::Text("Position: (%.2f, %.2f, %.2f)", pos.x, pos.y, pos.z);
-    ImGui::Text("Forward:  (%.2f, %.2f, %.2f)", fwd.x, fwd.y, fwd.z);
-    ImGui::Text("Right:    (%.2f, %.2f, %.2f)", right.x, right.y, right.z);
-    ImGui::Text("Up:       (%.2f, %.2f, %.2f)", up.x, up.y, up.z);
-    ImGui::Text("FOV:      %.2f", fov);
+    ImGui::Text("Orientation: (%.3f, %.3f, %.3f, %.3f)", cam.Rotation().x, cam.Rotation().y, cam.Rotation().z, cam.Rotation().w);
+    ImGui::Text("Delta Time: %.3f ms @ %.1f FPS", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
     ImGui::End();
 }
 
@@ -206,7 +205,7 @@ void GUI::ShowVisibilitySettingsUI()
             std::shared_ptr<ShaderInfoCollection> collection = ShaderInfoCollection::Get();
             if (collection)
             {
-                std::vector<ShaderInfo>& shaders = collection->GetShaders();
+                std::vector<std::shared_ptr<ShaderInfo>>& shaders = collection->GetShaders();
 
                 if (!shaders.empty())
                 {
@@ -214,7 +213,7 @@ void GUI::ShowVisibilitySettingsUI()
                     std::vector<const char*> shaderNames;
                     for (auto& shader : shaders)
                     {
-                        shaderNames.push_back(shader.Name().c_str());
+                        shaderNames.push_back(shader->Name().c_str());
                     }
 
                     if (m_selectedShaderForProps >= static_cast<int>(shaders.size()))
@@ -224,7 +223,7 @@ void GUI::ShowVisibilitySettingsUI()
                     ImGui::Separator();
 
                     // List properties with visibility toggles
-                    ShaderInfo& selectedShader = shaders[m_selectedShaderForProps];
+                    ShaderInfo& selectedShader = *shaders[m_selectedShaderForProps];
                     auto& properties = selectedShader.GetProperties();
 
                     ImGui::Text("Toggle visibility for each property:");
@@ -279,8 +278,8 @@ void GUI::ShowShaderManagementUI()
     {
         if (strlen(m_newShaderPathBuffer) > 0 && strlen(m_newShaderNameBuffer) > 0)
         {
-            ShaderInfo* loaded = collection->LoadShader(m_newShaderPathBuffer, m_newShaderNameBuffer);
-            if (loaded)
+            std::weak_ptr<ShaderInfo> loaded = collection->Load(m_newShaderPathBuffer, m_newShaderNameBuffer);
+            if (std::shared_ptr<ShaderInfo> loadedShared = loaded.lock())
             {
                 memset(m_newShaderPathBuffer, 0, sizeof(m_newShaderPathBuffer));
                 memset(m_newShaderNameBuffer, 0, sizeof(m_newShaderNameBuffer));
@@ -300,18 +299,18 @@ void GUI::ShowShaderManagementUI()
         
         if (ImGui::Button("X"))
         {
-            shaderToRemove = shaders[i].Name();
+            shaderToRemove = shaders[i]->Name();
         }
         ImGui::SameLine();
         
-        bool enabled = shaders[i].Enabled();
+        bool enabled = shaders[i]->Enabled();
         if (ImGui::Checkbox("##enabled", &enabled))
         {
-            shaders[i].Enabled(enabled);
+            shaders[i]->Enabled(enabled);
         }
         ImGui::SameLine();
         
-        ImGui::Text("%s", shaders[i].Name().c_str());
+        ImGui::Text("%s", shaders[i]->Name().c_str());
         
         ImGui::PopID();
     }
@@ -336,19 +335,19 @@ void GUI::ShowEnabledShadersUI()
         return;
     }
 
-    for (ShaderInfo& shaderInfo : collection->GetShaders())
+    for (std::shared_ptr<ShaderInfo>& shaderInfo : collection->GetShaders())
     {
-        bool enabled = shaderInfo.Enabled();
-        if (ImGui::Checkbox(shaderInfo.Name().c_str(), &enabled))
+        bool enabled = shaderInfo->Enabled();
+        if (ImGui::Checkbox(shaderInfo->Name().c_str(), &enabled))
         {
-            shaderInfo.Enabled(enabled);
+            shaderInfo->Enabled(enabled);
         }
 
         if (enabled)
         {
             ImGui::Indent();
             
-            std::vector<ShaderProperty*> visibleProps = shaderInfo.GetVisibleProperties();
+            std::vector<ShaderProperty*> visibleProps = shaderInfo->GetVisibleProperties();
             for (ShaderProperty* prop : visibleProps)
             {
                 ImGui::PushID(prop->name.c_str());
@@ -365,13 +364,13 @@ void GUI::ShowEnabledShadersUI()
                         ImGui::Checkbox(prop->name.c_str(), &prop->value.b);
                         break;
                     case ShaderProperty::VEC2:
-                        ImGui::DragFloat2(prop->name.c_str(), prop->value.vec2, 0.01f);
+                        ImGui::DragFloat2(prop->name.c_str(), &prop->value.vec2[0], 0.01f);
                         break;
                     case ShaderProperty::VEC3:
-                        ImGui::DragFloat3(prop->name.c_str(), prop->value.vec3, 0.01f);
+                        ImGui::DragFloat3(prop->name.c_str(), &prop->value.vec3[0], 0.01f);
                         break;
                     case ShaderProperty::VEC4:
-                        ImGui::DragFloat4(prop->name.c_str(), prop->value.vec4, 0.01f);
+                        ImGui::DragFloat4(prop->name.c_str(), &prop->value.vec4[0], 0.01f);
                         break;
                 }
                 

@@ -191,9 +191,9 @@ struct ShaderProperty
         int i;          ///< Integer value
         float f;        ///< Float value
         bool b;         ///< Boolean value
-        float vec2[2];  ///< 2D vector value
-        float vec3[3];  ///< 3D vector value
-        float vec4[4];  ///< 4D vector value
+        glm::vec2 vec2;  ///< 2D vector value
+        glm::vec3 vec3;  ///< 3D vector value
+        glm::vec4 vec4;  ///< 4D vector value
     } value;
 
     /** @brief OpenGL uniform location */
@@ -274,7 +274,7 @@ private:
     std::vector<ShaderProperty> m_properties;
     
     /** @brief Pointer to the underlying compute shader */
-    ComputeShader* m_shader;
+    std::unique_ptr<ComputeShader> m_shader;
     
     /** @brief Whether this shader is enabled for rendering */
     bool m_enabled;
@@ -375,7 +375,7 @@ class ShaderInfoCollection
 {
 private:
     /** @brief Collection of managed shaders */
-    std::vector<ShaderInfo> m_shaders;
+    std::vector<std::shared_ptr<ShaderInfo>> m_shaders;
     
     /** @brief Singleton instance pointer */
     static inline std::shared_ptr<ShaderInfoCollection> m_selfPtr;
@@ -384,6 +384,14 @@ private:
      * @brief Private constructor for singleton pattern
      */
     ShaderInfoCollection();
+
+    /**
+     * @brief Load and add a new shader from file at runtime
+     * @param _path Path to the shader file
+     * @param _name Display name for the shader
+     * @return Pointer to the new ShaderInfo, or nullptr on failure
+     */
+    std::weak_ptr<ShaderInfo> LoadShader(const std::string& _path, const std::string& _name);
 
 public:
     /** @brief Destructor */
@@ -405,15 +413,7 @@ public:
      * @brief Add a shader to the collection
      * @param _shader ShaderInfo to add
      */
-    void AddShader(ShaderInfo _shader);
-
-    /**
-     * @brief Load and add a new shader from file at runtime
-     * @param _path Path to the shader file
-     * @param _name Display name for the shader
-     * @return Pointer to the new ShaderInfo, or nullptr on failure
-     */
-    ShaderInfo* LoadShader(const std::string& _path, const std::string& _name);
+    void AddShader(std::shared_ptr<ShaderInfo> _shader);
 
     /**
      * @brief Remove a shader from the collection by name
@@ -434,7 +434,7 @@ public:
      * @param _name Name of the shader to find
      * @return Pointer to the shader, or nullptr if not found
      */
-    ShaderInfo* GetShader(const std::string& _name);
+    std::weak_ptr<ShaderInfo> GetShader(const std::string& _name);
 
     /**
      * @brief Refresh visibility for all properties in all shaders
@@ -462,7 +462,7 @@ public:
      * @param _name Display name for the shader
      * @return Pointer to the new ShaderInfo, or nullptr on failure
      */
-    static ShaderInfo* LoadShaderStatic(const std::string& _path, const std::string& _name);
+    static std::weak_ptr<ShaderInfo> Load(const std::string& _path, const std::string& _name);
 
     /**
      * @brief Static method to remove a shader by name
@@ -485,7 +485,7 @@ public:
      * @brief Get reference to the vector of shaders
      * @return Reference to the shaders vector
      */
-    std::vector<ShaderInfo>& GetShaders();
+    std::vector<std::shared_ptr<ShaderInfo>>& GetShaders();
 
     /**
      * @brief Get the number of shaders in the collection

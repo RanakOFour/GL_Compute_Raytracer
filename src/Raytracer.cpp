@@ -43,25 +43,20 @@ Raytracer::Raytracer(glm::ivec2 _renderSize, GLuint _mainTextureLoc)
 {
     BuildRenderDataBuffers();
 
-    ComputeShader* l_objIntersectComp = new ComputeShader("resources/shaders/RTPipeline/Intersections/Intersections.comp");
-    ComputeShader* l_shadowComp = new ComputeShader("resources/shaders/RTPipeline/Shadows/MonteCarloShadow.comp");
-    ComputeShader* l_pbrShadeComp = new ComputeShader("resources/shaders/RTPipeline/Shading/PBRShading.comp");
-    ComputeShader* l_lightIntersectComp = new ComputeShader("resources/shaders/RTPipeline/Intersections/LightDetection.comp");
-
     ShaderInfoCollection::Init();
-    ShaderInfoCollection::LogShader(l_objIntersectComp, "Object Intersection");
-    ShaderInfoCollection::LogShader(l_shadowComp, "Shadows");
-    ShaderInfoCollection::LogShader(l_pbrShadeComp, "PBR Shading");
-    ShaderInfoCollection::LogShader(l_lightIntersectComp, "Light Detection");
+    ShaderInfoCollection::Load("resources/shaders/RTPipeline/Intersections/Intersections.comp", "Object Intersection");
+    ShaderInfoCollection::Load("resources/shaders/RTPipeline/Shadows/MCStratified.comp", "Shadows");
+    ShaderInfoCollection::Load("resources/shaders/RTPipeline/Shading/PBRShading.comp", "PBR Shading");
+    ShaderInfoCollection::Load("resources/shaders/RTPipeline/Intersections/LightDetection.comp", "Light Detection");
 
-    m_shaders = &ShaderInfoCollection::Init()->GetShaders();
+    m_shaders = &ShaderInfoCollection::Get()->GetShaders();
 
     // Everything is bound here once as the bindings do not change
 }
 
 Raytracer::~Raytracer()
 {
-    glDeleteTextures(5, &m_gBuffers[0]);
+    glDeleteTextures(GBUFFERCOUNT, &m_gBuffers[0]);
     glDeleteBuffers(1, &m_triangleSSBO);
     glDeleteBuffers(1, &m_materialSSBO);
 
@@ -88,40 +83,76 @@ void Raytracer::Trace(float _deltaTime)
 
     for(int i = 0; i < m_shaders->size(); i++)
     {
-        l_currentShader = &m_shaders->at(i);
+        l_currentShader = m_shaders->at(i).get();
         if(l_currentShader->Enabled() == false)
             continue;
 
         printf("Executing shader: %s\n", l_currentShader->Name().c_str());
-        
-        ComputeShader* shader = l_currentShader->Shader();
-        shader->use();
 
-        // Set camera uniforms (current and last frame)
-        m_camera.UpdateShader(*shader);
+        ComputeShader* l_shader = l_currentShader->Shader();
+        l_shader->use();
 
-        // Set resolution and aspect ratio
-        shader->SetUniform("u_resolution", glm::vec2(m_renderSize));
-        shader->SetUniform("u_aspect", (float)m_renderSize.x / (float)m_renderSize.y);
-
-        // Set frame count
-        shader->SetUniform("u_frameCount", m_frameCount);
-
-        // Set light uniforms
-        shader->SetUniform("u_lightCount", (int)m_lights.size());
-        for (int j = 0; j < m_lights.size() && j < 10; j++)
+        // Set property values (if needed)
+        std::vector<ShaderProperty>& l_properties = l_currentShader->GetProperties();
+        for (int p = 0; p < l_properties.size(); p++)
         {
-            std::string prefix = "u_lights[" + std::to_string(j) + "].";
-            shader->SetUniform(prefix + "position", m_lights[j].position);
-            shader->SetUniform(prefix + "colour", m_lights[j].color);
-            shader->SetUniform(prefix + "intensity", m_lights[j].intensity);
-            shader->SetUniform(prefix + "radius", m_lights[j].radius);
-            shader->SetUniform(prefix + "cornerA", m_lights[j].cornerA);
-            shader->SetUniform(prefix + "cornerB", m_lights[j].cornerB);
-        }
+            if (l_properties[p].name == "u_deltaTime")
+            {
+                l_properties[p].value.f = _deltaTime;
+                l_shader->SetUniform("u_deltaTime", l_properties[p].value.f);
+            }
+            else if(l_properties[p].name == "u_time")
+            {
+                l_properties[p].value.f = _deltaTime * m_frameCount;
+                l_shader->SetUniform("u_time", l_properties[p].value.f);
+            }
+            else if(l_properties[p].name == "u_resolution")
+            {
+                l_properties[p].value.vec2 = glm::vec2(m_renderSize);
+                l_shader->SetUniform("u_resolution", l_properties[p].value.vec2);
+            }
+            else if(l_properties[p].name == "u_aspect")
+            {
+                l_properties[p].value.f = (float)m_renderSize.x / (float)m_renderSize.y;
+                l_shader->SetUniform("u_aspect", l_properties[p].value.f);
+            }
+            else if(l_properties[p].name == "u_frameCount")
+            {
+                l_properties[p].value.i = m_frameCount;
+                l_shader->SetUniform("u_frameCount", l_properties[p].value.i);
+            }
+            else if(l_properties[p].name == "u_lightCount")
+            {
+                l_properties[p].value.i = (int)m_lights.size();
+                l_shader->SetUniform("u_lightCount", l_properties[p].value.i);
 
-        // Set camera position (for shaders that use u_cameraPos instead of u_camera.position)
-        shader->SetUniform("u_cameraPos", m_camera.Position());
+                for (int j = 0; j < m_lights.size() && j < 10; j++)
+                {
+                    std::string prefix = "u_lights[" + std::to_string(j) + "].";
+                    l_shader->SetUniform(prefix + "position", m_lights[j].position);
+                    l_shader->SetUniform(prefix + "colour", m_lights[j].color);
+                    l_shader->SetUniform(prefix + "intensity", m_lights[j].intensity);
+                    l_shader->SetUniform(prefix + "radius", m_lights[j].radius);
+                    l_shader->SetUniform(prefix + "cornerA", m_lights[j].cornerA);
+                    l_shader->SetUniform(prefix + "cornerB", m_lights[j].cornerB);
+                }
+            }
+            else if(l_properties[p].name.substr(0, 8) == "u_camera")
+            {
+                if(l_properties[p].name == "u_cameraPos")
+                {
+                    l_properties[p].value.vec3 = m_camera.Position();
+                    l_shader->SetUniform("u_camera.position", m_camera.Position());
+                    continue;
+                }
+
+                m_camera.ExportState(l_currentShader);
+            }
+            else if(l_properties[p].name.substr(0, 15) == "u_lastFrameCamera")
+            {
+                m_camera.ExportLastFrameState(l_currentShader);
+            }
+        }
 
         // Set user-editable properties (non-read-only ones)
         l_currentShader->UpdateShader();

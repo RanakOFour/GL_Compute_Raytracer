@@ -63,7 +63,7 @@ private:
     Camera m_camera;
 
     /** @brief Collection of compute shaders used in the pipeline */
-    std::vector<ShaderInfo>* m_shaders;
+    std::vector<std::shared_ptr<ShaderInfo>>* m_shaders;
     
     /** @brief G-buffer texture handles for deferred rendering */
     std::vector<GLuint> m_gBuffers;
@@ -86,6 +86,9 @@ private:
     /** @brief Current frame counter for temporal effects */
     int m_frameCount;
 
+    /**
+     * @brief Setup G-buffers and other GPU resources
+     */
     inline void BuildRenderDataBuffers();
 
 public:
