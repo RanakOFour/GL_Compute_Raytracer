@@ -121,6 +121,7 @@ int main(int argc, char* argv[])
 					{
 						HandleKBUpInput(l_inputMap, l_event.key);
 					}
+					break;
 
 				case SDL_MOUSEMOTION:
 					if (SDL_GetRelativeMouseMode())
@@ -228,6 +229,6 @@ void HandleKBUpInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent)
 
 void HandleMouseInput(Input& _inputMap, SDL_MouseMotionEvent& _mouseEvent)
 {
-	_inputMap.deltaMouseX += glm::radians((float)-_mouseEvent.xrel);
-	_inputMap.deltaMouseY += glm::radians((float)-_mouseEvent.yrel);
+	_inputMap.deltaMouseX = glm::radians((float)-_mouseEvent.xrel);
+	_inputMap.deltaMouseY = glm::radians((float)-_mouseEvent.yrel);
 };
