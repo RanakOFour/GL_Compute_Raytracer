@@ -311,6 +311,20 @@ glm::ivec2 Window::ScreenSize()
     return m_screenSize;
 }
 
+void Window::ChangeRenderSize()
+{
+	glBindTexture(GL_TEXTURE_2D, m_screenTexture);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_renderSize.x, m_renderSize.y, 0, GL_RGBA, GL_FLOAT, 0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+glm::ivec2* Window::RenderSize()
+{
+	return &m_renderSize;
+}
+
 GLuint Window::GetScreenTexture()
 {
     return m_screenTexture;

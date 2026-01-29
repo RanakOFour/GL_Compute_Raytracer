@@ -1,11 +1,15 @@
 #include "Raytracer/Raytracer.h"
 #include "Shader/ShaderInfo.h"
+#include "Window.h"
 
 #include <chrono>
 
 void Raytracer::BuildRenderDataBuffers()
 {
-    glBindImageTexture(0, m_mainTextureLoc, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+    std::shared_ptr<Window> l_windowPtr = m_windowPtr.lock();
+    glm::ivec2* l_renderSize = l_windowPtr->RenderSize();
+
+    glBindImageTexture(0, l_windowPtr->GetScreenTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
 
     //Create texture buffers on GPU
     glGenTextures(GBUFFERCOUNT, &m_gBuffers[0]);
@@ -13,7 +17,7 @@ void Raytracer::BuildRenderDataBuffers()
     for (int i = 0; i < GBUFFERCOUNT; i++)
     {
         glBindTexture(GL_TEXTURE_2D, m_gBuffers[i]);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_renderSize.x, m_renderSize.y, 0, GL_RGBA, GL_FLOAT, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, l_renderSize->x, l_renderSize->y, 0, GL_RGBA, GL_FLOAT, 0);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -26,15 +30,14 @@ void Raytracer::BuildRenderDataBuffers()
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Raytracer::Raytracer(glm::ivec2 _renderSize, GLuint _mainTextureLoc)
-: m_mainTextureLoc(_mainTextureLoc)
-, m_renderSize(_renderSize)
+Raytracer::Raytracer(std::weak_ptr<Window> _windowPtr)
+: m_windowPtr(_windowPtr)
 , m_BVH()
 , m_tris(nullptr)
 , m_mats(nullptr)
 , m_textures(nullptr)
 , m_lights()
-, m_camera(_renderSize)
+, m_camera(*_windowPtr.lock()->RenderSize())
 , m_gBuffers(GBUFFERCOUNT)
 , m_triangleSSBO(-1)
 , m_materialSSBO(-1)
@@ -80,7 +83,10 @@ void Raytracer::Trace(float _deltaTime)
     glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(Material) * m_mats->size(), &(m_mats->at(0)));
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-    glm::vec2 l_workGroups(ceil(m_renderSize.x / 8), ceil(m_renderSize.y / 4));
+    std::shared_ptr<Window> l_windowPtr = m_windowPtr.lock();
+    glm::ivec2* l_renderSize = l_windowPtr->RenderSize();
+
+    glm::vec2 l_workGroups(ceil(l_renderSize->x / 8), ceil(l_renderSize->y / 4));
     ShaderInfo* l_currentShader;
     bool l_cameraUpdated = false;
     bool l_lastFrameCameraUpdated = false;
@@ -120,12 +126,12 @@ void Raytracer::Trace(float _deltaTime)
             }
             else if(l_properties[p].name == "u_resolution")
             {
-                l_properties[p].value.vec2 = glm::vec2(m_renderSize);
+                l_properties[p].value.vec2 = *l_renderSize;
                 l_shader->SetUniform("u_resolution", l_properties[p].value.vec2);
             }
             else if(l_properties[p].name == "u_aspect")
             {
-                l_properties[p].value.f = (float)m_renderSize.x / (float)m_renderSize.y;
+                l_properties[p].value.f = (float)l_renderSize->x / (float)l_renderSize->y;
                 l_shader->SetUniform("u_aspect", l_properties[p].value.f);
             }
             else if(l_properties[p].name == "u_frameCount")

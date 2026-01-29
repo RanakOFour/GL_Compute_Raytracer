@@ -24,9 +24,9 @@ int main(int argc, char* argv[])
 	// Set window size
 	glm::ivec2 l_winSize(1000, 800);
 
-	Window l_window(l_winSize, l_winSize);
-	Raytracer l_raytracer(l_winSize, l_window.GetScreenTexture());
-	GUI l_gui(&l_raytracer);
+	std::shared_ptr<Window> l_window = std::make_shared<Window>(l_winSize, l_winSize);
+	std::shared_ptr<Raytracer> l_raytracer = std::make_shared<Raytracer>(l_window);
+	GUI l_gui(l_raytracer, l_window);
 
 	// Create curuthers model, texture and mat
 	Model l_curuthersModel("./resources/objects/curuthers.obj");
@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 	l_light.cornerA = glm::vec3(0.0, -1.0, 0.0);
 	l_light.cornerB = glm::vec3(0.5, 0.5, 0.5);
 	
-	l_raytracer.AddLight(l_light);
+	l_raytracer->AddLight(l_light);
 
 	// All the triangles for the scene are pulled into one vector
 	std::vector<Triangle> l_tris = l_curuthersModel.GetTriangles(glm::vec3(0.0f));
@@ -77,13 +77,13 @@ int main(int argc, char* argv[])
 	l_textures.push_back(l_modelTexture);
 
 	// Hook rt to data
-	l_raytracer.SetMaterials(&l_materials);
-	l_raytracer.SetTextures(&l_textures);
-	l_raytracer.SetTris(&l_tris);
+	l_raytracer->SetMaterials(&l_materials);
+	l_raytracer->SetTextures(&l_textures);
+	l_raytracer->SetTris(&l_tris);
 
 	// The camera needs to be updated by Input data, so it is done here
 	Input l_inputMap;
-	Camera& l_rtCam = l_raytracer.GetCamera();
+	Camera& l_rtCam = l_raytracer->GetCamera();
 	l_rtCam.Position(glm::vec3(-15.0f, 4.7f, 4.0f));
 	l_rtCam.Rotate(glm::radians(-60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	l_rtCam.Rotate(glm::radians(-40.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -150,7 +150,7 @@ int main(int argc, char* argv[])
 
 		auto time1 = std::chrono::high_resolution_clock::now();
 
-		l_raytracer.Trace(l_deltaTime);
+		l_raytracer->Trace(l_deltaTime);
 
 		auto time2 = std::chrono::high_resolution_clock::now();
 
@@ -161,7 +161,7 @@ int main(int argc, char* argv[])
 
 		l_gui.ShowUI(l_deltaTime);
 
-		l_window.Show();
+		l_window->Show();
 
 		std::cout << std::endl;
 	}

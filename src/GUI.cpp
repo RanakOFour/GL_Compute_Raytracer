@@ -5,8 +5,9 @@
 
 #include "GUI.h"
 
-GUI::GUI(Raytracer* _rt) 
+GUI::GUI(std::weak_ptr<Raytracer> _rt, std::weak_ptr<Window> _window) 
 : m_rt(_rt)
+, m_window(_window)
 , m_selectedLight(0)
 , m_selectedMaterial(0)
 , m_selectedShaderForProps(0)
@@ -31,6 +32,7 @@ void GUI::ShowUI(float _deltaTime)
     ShowEnabledShadersUI();
     ShowVisibilitySettingsUI();
     ShowShaderManagementUI();
+    ShowWindowSettingsUI();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -39,7 +41,7 @@ void GUI::ShowUI(float _deltaTime)
 void GUI::ShowCameraInfoUI()
 {
     ImGui::Begin("Camera Info");
-    Camera& cam = m_rt->GetCamera();
+    Camera& cam = m_rt.lock()->GetCamera();
     glm::vec3 pos = cam.Position();
     glm::vec3 fwd = cam.Forward();
     glm::vec3 right = cam.Right();
@@ -57,12 +59,14 @@ void GUI::ShowSceneSettingsUI()
 {
     ImGui::Begin("Scene Settings");
 
+    std::shared_ptr<Raytracer> l_rtPtr = m_rt.lock();
+
     if (ImGui::BeginTabBar("SceneSettingsTabBar"))
     {
         // Lights Tab
         if (ImGui::BeginTabItem("Lights"))
         {
-            std::vector<Light>& lights = m_rt->GetLights();
+            std::vector<Light>& lights = l_rtPtr->GetLights();
             int lightCount = static_cast<int>(lights.size());
 
             if (lightCount > 0)
@@ -99,7 +103,7 @@ void GUI::ShowSceneSettingsUI()
         // Materials Tab
         if (ImGui::BeginTabItem("Materials"))
         {
-            std::vector<Material>& materials = m_rt->GetMaterials();
+            std::vector<Material>& materials = l_rtPtr->GetMaterials();
             int materialCount = static_cast<int>(materials.size());
 
             if (materialCount > 0)
@@ -379,6 +383,26 @@ void GUI::ShowEnabledShadersUI()
             
             ImGui::Unindent();
         }
+    }
+
+    ImGui::End();
+}
+
+void GUI::ShowWindowSettingsUI()
+{
+    ImGui::Begin("Window Settings");
+
+    std::shared_ptr<Window> l_windowPtr = m_window.lock();
+    glm::ivec2* renderSize = l_windowPtr->RenderSize();
+
+    if(ImGui::InputInt2("Render Resolution", &renderSize->x))
+    {
+        if(renderSize->x < 1) renderSize->x = 1;
+        if(renderSize->y < 1) renderSize->y = 1;
+        l_windowPtr->ChangeRenderSize();
+        
+        std::shared_ptr<Raytracer> l_rtPtr = m_rt.lock();
+        l_rtPtr->BuildRenderDataBuffers();
     }
 
     ImGui::End();

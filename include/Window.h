@@ -86,6 +86,14 @@ public:
      */
     glm::ivec2 ScreenSize();
 
+    void ChangeRenderSize();
+    
+    /**
+     * @brief Get pointer to the render size
+     * @return Pointer to render size (width, height)
+     */
+    glm::ivec2* RenderSize();
+
     /**
      * @brief Get the screen texture ID for raytracer output
      * @return OpenGL texture ID

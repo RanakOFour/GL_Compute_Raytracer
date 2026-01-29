@@ -27,6 +27,7 @@
 
 class GUI;
 class Camera;
+class Window;
 
 /**
  * @class Raytracer
@@ -76,11 +77,7 @@ private:
     /** @brief SSBO for material data on GPU */
     GLuint m_materialSSBO;
 
-    /** @brief Texture unit location for the main output texture */
-    GLuint m_mainTextureLoc;
-
-    /** @brief Render resolution (width, height) */
-    glm::ivec2 m_renderSize;
+    std::weak_ptr<Window> m_windowPtr;
 
     /** @brief Flag indicating if the raytracer has been properly initialized */
     bool m_setup;
@@ -88,21 +85,21 @@ private:
     /** @brief Current frame counter for temporal effects */
     int m_frameCount;
 
-    /**
-     * @brief Setup G-buffers and other GPU resources
-     */
-    inline void BuildRenderDataBuffers();
-
 public:
     /**
      * @brief Construct a new Raytracer
      * @param _screenSize Render resolution (width, height)
      * @param _mainTextureLoc Texture unit for the output image
      */
-    Raytracer(glm::ivec2 _screenSize, GLuint _mainTextureLoc);
+    Raytracer(std::weak_ptr<Window> _windowPtr);
     
     /** @brief Destructor - releases GPU resources */
     ~Raytracer();
+
+    /**
+     * @brief Setup G-buffers and other GPU resources
+     */
+    inline void BuildRenderDataBuffers();
 
     /**
      * @brief Execute a frame of raytracing

@@ -13,6 +13,8 @@
 #include "Raytracer/Raytracer.h"
 #include "Shader/ShaderInfo.h"
 
+#include "Window.h"
+
 #include "IMGUI/imgui.h"
 #include "IMGUI/imgui_impl_sdl.h"
 #include "IMGUI/imgui_impl_opengl3.h"
@@ -31,7 +33,9 @@ class GUI
 {
 private:
     /** @brief Pointer to the raytracer instance */
-    Raytracer* m_rt;
+    std::weak_ptr<Raytracer> m_rt;
+
+    std::weak_ptr<Window> m_window;
     
     /** @brief Currently selected light index in the UI */
     int m_selectedLight;
@@ -55,8 +59,9 @@ public:
     /**
      * @brief Construct a new GUI object
      * @param _rt Pointer to the raytracer instance to control
+     * @param _window Pointer to the window instance to control
      */
-    GUI(Raytracer* _rt);
+    GUI(std::weak_ptr<Raytracer> _rt, std::weak_ptr<Window> _window);
 
     /** @brief Destructor */
     ~GUI();
@@ -106,6 +111,8 @@ public:
      * editable properties for each enabled shader's visible uniforms.
      */
     void ShowEnabledShadersUI();
+
+    void ShowWindowSettingsUI();
 };
 
 #endif
