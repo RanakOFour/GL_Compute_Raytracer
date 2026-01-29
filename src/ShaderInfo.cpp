@@ -466,8 +466,7 @@ std::shared_ptr<ShaderInfoCollection> ShaderInfoCollection::Init()
 {
     if (!m_selfPtr)
     {
-        ShaderInfoCollection* l_instance = new ShaderInfoCollection();
-        m_selfPtr.reset(l_instance);
+        m_selfPtr = std::shared_ptr<ShaderInfoCollection>(new ShaderInfoCollection());
     }
     else
     {

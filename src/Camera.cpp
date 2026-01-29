@@ -68,47 +68,80 @@ void Camera::UpdateShader(ComputeShader& _shader)
 void Camera::ExportState(ShaderInfo* _shaderInfo)
 {
     ShaderProperty* posProp = _shaderInfo->GetProperty("u_camera.position");
-    posProp->value.vec3 = m_Position;
-    _shaderInfo->Shader()->SetUniform("u_camera.position", m_Position);
 
-    ShaderProperty* fwdProp = _shaderInfo->GetProperty("u_camera.forward");
-    fwdProp->value.vec3 = m_Forward;
-    _shaderInfo->Shader()->SetUniform("u_camera.forward", m_Forward);
+    if(posProp)
+    {
+        posProp->value.vec3 = m_Position;
+        _shaderInfo->Shader()->SetUniform("u_camera.position", m_Position);
+    }
 
-    ShaderProperty* rightProp = _shaderInfo->GetProperty("u_camera.right");
-    rightProp->value.vec3 = m_Right;
-    _shaderInfo->Shader()->SetUniform("u_camera.right", m_Right);
+    posProp = _shaderInfo->GetProperty("u_camera.forward");
 
-    ShaderProperty* upProp = _shaderInfo->GetProperty("u_camera.up");
-    upProp->value.vec3 = m_Up;
-    _shaderInfo->Shader()->SetUniform("u_camera.up", m_Up);
+    if(posProp)
+    {
+        posProp->value.vec3 = m_Forward;
+        _shaderInfo->Shader()->SetUniform("u_camera.forward", m_Forward);
+    }
 
-    ShaderProperty* fovProp = _shaderInfo->GetProperty("u_camera.fov");
-    fovProp->value.f = m_fov;
-    _shaderInfo->Shader()->SetUniform("u_camera.fov", m_fov);
+    posProp = _shaderInfo->GetProperty("u_camera.right");
+    if(posProp)
+    {
+        posProp->value.vec3 = m_Right;
+        _shaderInfo->Shader()->SetUniform("u_camera.right", m_Right);
+    }
+
+    posProp = _shaderInfo->GetProperty("u_camera.up");
+    if(posProp)
+    {
+        posProp->value.vec3 = m_Up;
+        _shaderInfo->Shader()->SetUniform("u_camera.up", m_Up);
+    }
+
+    posProp = _shaderInfo->GetProperty("u_camera.fov");
+    if(posProp)
+    {
+        posProp->value.f = m_fov;
+        _shaderInfo->Shader()->SetUniform("u_camera.fov", m_fov);
+    }
 }
 
 void Camera::ExportLastFrameState(ShaderInfo* _shaderInfo)
 {
     ShaderProperty* posProp = _shaderInfo->GetProperty("u_lastFrameCamera.position");
-    posProp->value.vec3 = m_LastPosition;
-    _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.position", m_LastPosition);
 
-    ShaderProperty* fwdProp = _shaderInfo->GetProperty("u_lastFrameCamera.forward");
-    fwdProp->value.vec3 = m_LastForward;
-    _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.forward", m_LastForward);
+    if(posProp)
+    {
+        posProp->value.vec3 = m_LastPosition;
+        _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.position", m_LastPosition);
+    }
 
-    ShaderProperty* rightProp = _shaderInfo->GetProperty("u_lastFrameCamera.right");
-    rightProp->value.vec3 = m_LastRight;
-    _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.right", m_LastRight);
+    posProp = _shaderInfo->GetProperty("u_lastFrameCamera.forward");
+    if(posProp)
+    {
+        posProp->value.vec3 = m_LastForward;
+        _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.forward", m_LastForward);
+    }
 
-    ShaderProperty* upProp = _shaderInfo->GetProperty("u_lastFrameCamera.up");
-    upProp->value.vec3 = m_LastUp;
-    _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.up", m_LastUp);
+    posProp = _shaderInfo->GetProperty("u_lastFrameCamera.right");
+    if(posProp)
+    {
+        posProp->value.vec3 = m_LastRight;
+        _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.right", m_LastRight);
+    }
 
-    ShaderProperty* fovProp = _shaderInfo->GetProperty("u_lastFrameCamera.fov");
-    fovProp->value.f = m_LastFov;
-    _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.fov", m_LastFov);
+    posProp = _shaderInfo->GetProperty("u_lastFrameCamera.up");
+    if(posProp)
+    {
+        posProp->value.vec3 = m_LastUp;
+        _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.up", m_LastUp);
+    }
+
+    posProp = _shaderInfo->GetProperty("u_lastFrameCamera.fov");
+    if(posProp)
+    {
+        posProp->value.f = m_LastFov;
+        _shaderInfo->Shader()->SetUniform("u_lastFrameCamera.fov", m_LastFov);
+    }
 }
 
 void Camera::Rotate(float _angle, glm::vec3 _axis)

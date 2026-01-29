@@ -25,7 +25,13 @@ layout(std430, binding = 10) readonly buffer b_Materials
 #define MAX_TEXTURES 10
 layout(binding = 11) uniform sampler2D u_materialTextures[MAX_TEXTURES];
 
-uniform vec3 u_cameraPos;
+struct Camera
+{
+    vec3 position;
+};
+
+uniform Camera u_camera;
+
 struct Light
 {
     vec3 position;
@@ -127,7 +133,7 @@ void main()
     }
 
     vec3 l_normal = normalize(imageLoad(triangleNormals, l_pixelCoords).rgb);
-    vec3 V = normalize(u_cameraPos - l_position);
+    vec3 V = normalize(u_camera.position - l_position);
 
     vec3 F0 = mix(vec3(0.04), l_mat.albedo, l_mat.metallic);
     vec3 Lo = vec3(0.0f);

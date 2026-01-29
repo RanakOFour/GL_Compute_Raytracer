@@ -79,7 +79,7 @@ uniform Light u_lights[MAX_LIGHTS];
 uniform int u_lightCount;
 
 uniform int u_frameCount;
-uniform int u_sampleCount;
+uniform int u_sampleCount = 16;
 
 struct Ray  { vec3 origin; vec3 direction; };
 

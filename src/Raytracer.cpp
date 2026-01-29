@@ -74,15 +74,27 @@ void Raytracer::Trace(float _deltaTime)
         m_setup = true;
     }
 
+    auto l_time1 = std::chrono::high_resolution_clock::now();
+
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_materialSSBO);
     glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(Material) * m_mats->size(), &(m_mats->at(0)));
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
     glm::vec2 l_workGroups(ceil(m_renderSize.x / 8), ceil(m_renderSize.y / 4));
     ShaderInfo* l_currentShader;
+    bool l_cameraUpdated = false;
+    bool l_lastFrameCameraUpdated = false;
+
+    auto l_time2 = std::chrono::high_resolution_clock::now();
+    std::chrono::microseconds l_timeElapsed =
+        std::chrono::duration_cast<std::chrono::microseconds>(l_time2 - l_time1);
+
+    printf("DT for Setup: %.3f ms\n", l_timeElapsed.count() * 0.001f);
 
     for(int i = 0; i < m_shaders->size(); i++)
     {
+        l_time1 = std::chrono::high_resolution_clock::now();
+
         l_currentShader = m_shaders->at(i).get();
         if(l_currentShader->Enabled() == false)
             continue;
@@ -137,19 +149,14 @@ void Raytracer::Trace(float _deltaTime)
                     l_shader->SetUniform(prefix + "cornerB", m_lights[j].cornerB);
                 }
             }
-            else if(l_properties[p].name.substr(0, 8) == "u_camera")
+            else if(!l_cameraUpdated && l_properties[p].name.substr(0, 8) == "u_camera")
             {
-                if(l_properties[p].name == "u_cameraPos")
-                {
-                    l_properties[p].value.vec3 = m_camera.Position();
-                    l_shader->SetUniform("u_camera.position", m_camera.Position());
-                    continue;
-                }
-
+                l_cameraUpdated = true;
                 m_camera.ExportState(l_currentShader);
             }
-            else if(l_properties[p].name.substr(0, 15) == "u_lastFrameCamera")
+            else if(!l_lastFrameCameraUpdated && l_properties[p].name.substr(0, 17) == "u_lastFrameCamera")
             {
+                l_lastFrameCameraUpdated = true;
                 m_camera.ExportLastFrameState(l_currentShader);
             }
         }
@@ -159,6 +166,16 @@ void Raytracer::Trace(float _deltaTime)
 
         glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
         glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
+        l_cameraUpdated = false;
+        l_lastFrameCameraUpdated = false;
+
+        l_time2 = std::chrono::high_resolution_clock::now();
+
+		l_timeElapsed =
+			std::chrono::duration_cast<std::chrono::microseconds>(l_time2 - l_time1);
+
+		printf("DT for shader: %.3f ms\n", l_timeElapsed.count() * 0.001f);
     }
 
     // Store current camera state for next frame's u_lastFrameCamera
