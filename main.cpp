@@ -1,7 +1,9 @@
 #include "Window.h"
-#include "Raytracer/Raytracer.h"
 #include "GUI.h"
 #include "Input.h"
+
+#include "Raytracer/Raytracer.h"
+
 #include "Datastructs/Texture.h"
 #include "Datastructs/Model.h"
 #include "Datastructs/Light.h"
@@ -198,24 +200,6 @@ void HandleKBDownInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent)
 			_inputMap.up = -1;
 			break;
 
-		case SDLK_j:
-			_inputMap.deltaMouseX += 0.05;
-			break;
-
-		case SDLK_l:
-			_inputMap.deltaMouseX += -0.05;
-			break;
-
-
-		case SDLK_i:
-			_inputMap.deltaMouseY += 0.05;
-			break;
-
-
-		case SDLK_k:
-			_inputMap.deltaMouseY += -0.05;
-			break;
-
 		case SDLK_ESCAPE:
 			SDL_SetRelativeMouseMode(SDL_FALSE);
 			break;
@@ -244,6 +228,6 @@ void HandleKBUpInput(Input& _inputMap, SDL_KeyboardEvent& _keyEvent)
 
 void HandleMouseInput(Input& _inputMap, SDL_MouseMotionEvent& _mouseEvent)
 {
-	_inputMap.deltaMouseX += glm::radians((float)-_mouseEvent.xrel) * 3.0f;
-	_inputMap.deltaMouseY += glm::radians((float)-_mouseEvent.yrel) * 3.0f;
+	_inputMap.deltaMouseX += glm::radians((float)-_mouseEvent.xrel);
+	_inputMap.deltaMouseY += glm::radians((float)-_mouseEvent.yrel);
 };
