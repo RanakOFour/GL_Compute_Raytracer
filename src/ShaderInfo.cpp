@@ -3,7 +3,7 @@
  * @brief Implementation of shader info management classes
  */
 
-#include "ShaderInfo.h"
+#include "Shader/ShaderInfo.h"
 #include <cstdio>
 
 //=============================================================================

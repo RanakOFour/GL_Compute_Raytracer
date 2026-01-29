@@ -11,8 +11,8 @@
 #define CAMERA_H
 
 #include "GLM/ext.hpp"
-#include "ShaderInfo.h"
-#include "ComputeShader.h"
+#include "Shader/ShaderInfo.h"
+#include "Shader/ComputeShader.h"
 #include "Input.h"
 
 /**

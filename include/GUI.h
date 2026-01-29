@@ -10,8 +10,8 @@
 #ifndef GUI_H
 #define GUI_H
 
-#include "Raytracer.h"
-#include "ShaderInfo.h"
+#include "Raytracer/Raytracer.h"
+#include "Shader/ShaderInfo.h"
 
 #include "IMGUI/imgui.h"
 #include "IMGUI/imgui_impl_sdl.h"

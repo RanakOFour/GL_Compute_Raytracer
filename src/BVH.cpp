@@ -1,4 +1,4 @@
-#include "BVH.h"
+#include "Raytracer/BVH.h"
 
 void BVH::BuildBHV(std::vector<Triangle>* _tris)
 {

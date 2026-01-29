@@ -1,5 +1,5 @@
 #include "Window.h"
-#include "Raytracer.h"
+#include "Raytracer/Raytracer.h"
 #include "GUI.h"
 #include "Input.h"
 #include "Datastructs/Texture.h"

@@ -12,14 +12,16 @@
 
 #include "GLM/ext.hpp"
 
-#include "Camera.h"
-#include "BVH.h"
+#include "Raytracer/BVH.h"
+#include "Raytracer/BufferIndexes.h"
+
+#include "Datastructs/Camera.h"
 #include "Datastructs/Triangle.h"
 #include "Datastructs/Material.h"
 #include "Datastructs/Texture.h"
 #include "Datastructs/Light.h"
-#include "ShaderInfo.h"
-#include "BufferIndexes.h"
+
+#include "Shader/ShaderInfo.h"
 
 #include <vector>
 

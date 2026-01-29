@@ -17,7 +17,7 @@
 #include "GLM/glm.hpp"
 
 #include "Datastructs/Triangle.h"
-#include "AABB.h"
+#include "Datastructs/AABB.h"
 
 /**
  * @class BVH

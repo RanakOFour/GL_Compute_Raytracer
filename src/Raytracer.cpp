@@ -1,5 +1,5 @@
-#include "Raytracer.h"
-#include "ShaderInfo.h"
+#include "Raytracer/Raytracer.h"
+#include "Shader/ShaderInfo.h"
 
 #include <chrono>
 

@@ -3,7 +3,7 @@
  * @brief Implementation of the Camera class
  */
 
-#include "Camera.h"
+#include "Datastructs/Camera.h"
 
 Camera::Camera(glm::vec2 _resolution)
 : m_Resolution(_resolution)
