@@ -13,7 +13,6 @@
 #include "GLM/ext.hpp"
 
 #include "Raytracer/BVH.h"
-#include "Raytracer/BufferIndexes.h"
 
 #include "Datastructs/Camera.h"
 #include "Datastructs/Triangle.h"
@@ -22,6 +21,7 @@
 #include "Datastructs/Light.h"
 
 #include "Shader/ShaderInfo.h"
+#include "ShaderStorageBuffer.h"
 
 #include <vector>
 
@@ -44,24 +44,6 @@ private:
     /** @brief Bounding Volume Hierarchy for ray acceleration */
     BVH m_BVH;
 
-    /**
-     * @name Scene Data Pointers
-     * @brief External scene data (allows hooking raytracer to different data sources)
-     * @{
-     */
-    /** @brief Pointer to triangle geometry data */
-    std::vector<Triangle>* m_tris;
-    
-    /** @brief Pointer to material data */
-    std::vector<Material>* m_mats;
-    
-    /** @brief Pointer to texture data */
-    std::vector<Texture>* m_textures;
-    /** @} */
-
-    /** @brief Scene lights managed by the raytracer */
-    std::vector<Light> m_lights;
-
     /** @brief Scene camera for view generation */
     Camera m_camera;
 
@@ -71,11 +53,7 @@ private:
     /** @brief G-buffer texture handles for deferred rendering */
     std::vector<GLuint> m_gBuffers;
 
-    /** @brief SSBO for triangle data on GPU */
-    GLuint m_triangleSSBO;
-    
-    /** @brief SSBO for material data on GPU */
-    GLuint m_materialSSBO;
+    std::vector<std::shared_ptr<IShaderStorageBuffer>> m_ssbos;
 
     std::weak_ptr<Window> m_windowPtr;
 
@@ -84,6 +62,8 @@ private:
 
     /** @brief Current frame counter for temporal effects */
     int m_frameCount;
+
+    inline void BuildRenderDataBuffers();
 
 public:
     /**
@@ -99,7 +79,7 @@ public:
     /**
      * @brief Setup G-buffers and other GPU resources
      */
-    inline void BuildRenderDataBuffers();
+    void RebuildGBuffers();
 
     /**
      * @brief Execute a frame of raytracing
@@ -110,61 +90,17 @@ public:
      */
     void Trace(float _time);
 
-    /**
-     * @brief Set the triangle geometry source
-     * @param _tris Pointer to triangle vector
-     */
-    void SetTris(std::vector<Triangle>* _tris);
+    void AddSSBO(std::shared_ptr<IShaderStorageBuffer> _ssbo);
+    void GetSSBO(int l_ssboID);
     
-    /**
-     * @brief Set the materials source
-     * @param _mat Pointer to material vector
-     */
-    void SetMaterials(std::vector<Material>* _mat);
-    
-    /**
-     * @brief Set the textures source
-     * @param _tex Pointer to texture vector
-     */
-    void SetTextures(std::vector<Texture>* _tex);
-    
-    /**
-     * @brief Add a light to the scene
-     * @param _light Light to add
-     */
-    void AddLight(Light _light);
-    
-    /**
-     * @brief Get a light by index
-     * @param index Light index
-     * @return Pointer to the light, or nullptr if invalid index
-     */
-    Light* GetLight(int index);
-
-    /**
-     * @brief Get a material by index
-     * @param _index Material index
-     * @return Pointer to the material, or nullptr if invalid index
-     */
-    Material* GetMaterial(int _index);
+    void BuildBVH(std::vector<Triangle>* _tris);
+    void BuildBVH(int l_ssboID);
 
     /**
      * @brief Get reference to the camera
      * @return Reference to the camera object
      */
     Camera& GetCamera() { return m_camera; }
-
-    /**
-     * @brief Get reference to the lights vector
-     * @return Reference to the lights vector
-     */
-    std::vector<Light>& GetLights() { return m_lights; }
-
-    /**
-     * @brief Get reference to the materials vector
-     * @return Reference to the materials vector (from external pointer)
-     */
-    std::vector<Material>& GetMaterials() { return *m_mats; }
 };
 
 #endif

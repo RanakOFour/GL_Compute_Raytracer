@@ -12,6 +12,10 @@
 
 #include "Raytracer/Raytracer.h"
 #include "Shader/ShaderInfo.h"
+#include "ShaderStorageBuffer.h"
+
+#include "Datastructs/Light.h"
+#include "Datastructs/Material.h"
 
 #include "Window.h"
 
@@ -36,6 +40,12 @@ private:
     std::weak_ptr<Raytracer> m_rt;
 
     std::weak_ptr<Window> m_window;
+
+    /** @brief Pointer to the light SSBO */
+    std::weak_ptr<ShaderStorageBuffer<Light>> m_lightSSBO;
+
+    /** @brief Pointer to the material SSBO */
+    std::weak_ptr<ShaderStorageBuffer<Material>> m_materialSSBO;
     
     /** @brief Currently selected light index in the UI */
     int m_selectedLight;
@@ -60,8 +70,13 @@ public:
      * @brief Construct a new GUI object
      * @param _rt Pointer to the raytracer instance to control
      * @param _window Pointer to the window instance to control
+     * @param _lightSSBO Pointer to the light SSBO
+     * @param _materialSSBO Pointer to the material SSBO
      */
-    GUI(std::weak_ptr<Raytracer> _rt, std::weak_ptr<Window> _window);
+    GUI(std::weak_ptr<Raytracer> _rt, 
+        std::weak_ptr<Window> _window,
+        std::weak_ptr<ShaderStorageBuffer<Light>> _lightSSBO,
+        std::weak_ptr<ShaderStorageBuffer<Material>> _materialSSBO);
 
     /** @brief Destructor */
     ~GUI();

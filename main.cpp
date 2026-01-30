@@ -4,6 +4,9 @@
 
 #include "Raytracer/Raytracer.h"
 
+#include "Raytracer/BufferBindPoints.h"
+#include "ShaderStorageBuffer.h"
+
 #include "Datastructs/Texture.h"
 #include "Datastructs/Model.h"
 #include "Datastructs/Light.h"
@@ -28,7 +31,29 @@ int main(int argc, char* argv[])
 
 	std::shared_ptr<Window> l_window = std::make_shared<Window>(l_winSize, l_winSize);
 	std::shared_ptr<Raytracer> l_raytracer = std::make_shared<Raytracer>(l_window);
-	GUI l_gui(l_raytracer, l_window);
+
+	std::shared_ptr<ShaderStorageBuffer<Triangle>> l_triangleSSBO =
+		std::make_shared<ShaderStorageBuffer<Triangle>>();
+	l_triangleSSBO->BindLocation(TRIANGLE_DATA);
+	l_raytracer->AddSSBO(l_triangleSSBO);
+
+	std::shared_ptr<ShaderStorageBuffer<Material>> l_materialSSBO =
+		std::make_shared<ShaderStorageBuffer<Material>>();
+	l_materialSSBO->BindLocation(MATERIALS);
+	l_raytracer->AddSSBO(l_materialSSBO);
+
+	std::shared_ptr<ShaderStorageBuffer<Texture>> l_matTexSSBO =
+		std::make_shared<ShaderStorageBuffer<Texture>>();
+	l_matTexSSBO->BindLocation(TEXTURES);
+	l_raytracer->AddSSBO(l_matTexSSBO);
+
+	std::shared_ptr<ShaderStorageBuffer<Light>> l_lightSSBO =
+		std::make_shared<ShaderStorageBuffer<Light>>();
+	l_lightSSBO->BindLocation(LIGHTS);
+	l_raytracer->AddSSBO(l_lightSSBO);
+
+	// Create GUI with SSBO references
+	GUI l_gui(l_raytracer, l_window, l_lightSSBO, l_materialSSBO);
 
 	// Create curuthers model, texture and mat
 	Model l_curuthersModel("./resources/objects/curuthers.obj");
@@ -44,13 +69,11 @@ int main(int argc, char* argv[])
 
 	Light l_light;
 	l_light.position = glm::vec3(2.5f, 4.5f, 5.0f);
-	l_light.color = glm::vec3(1.0f);
+	l_light.colour = glm::vec3(1.0f);
 	l_light.intensity = 15.0f;
 	l_light.radius = 2.0f;
-	l_light.cornerA = glm::vec3(0.0, -1.0, 0.0);
-	l_light.cornerB = glm::vec3(0.5, 0.5, 0.5);
 	
-	l_raytracer->AddLight(l_light);
+	l_lightSSBO->AddData(l_light);
 
 	// All the triangles for the scene are pulled into one vector
 	std::vector<Triangle> l_tris = l_curuthersModel.GetTriangles(glm::vec3(0.0f));
@@ -72,16 +95,15 @@ int main(int argc, char* argv[])
 
 	l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
 
-	std::vector<Texture> l_textures;
-	std::vector<Material> l_materials;
+	for(int i = 0; i < l_tris.size(); i++)
+	{
+		l_triangleSSBO->AddData(l_tris[i]);
+	}
 
-	l_materials.push_back(l_matCuruthers);
-	l_textures.push_back(l_modelTexture);
+	l_materialSSBO->AddData(l_matCuruthers);
+	l_matTexSSBO->AddData(l_modelTexture);
 
-	// Hook rt to data
-	l_raytracer->SetMaterials(&l_materials);
-	l_raytracer->SetTextures(&l_textures);
-	l_raytracer->SetTris(&l_tris);
+	l_raytracer->BuildBVH(l_triangleSSBO->GetData());
 
 	// The camera needs to be updated by Input data, so it is done here
 	Input l_inputMap;
@@ -160,7 +182,7 @@ int main(int argc, char* argv[])
 		std::chrono::microseconds l_timeElapsed =
 			std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1);
 
-		std::cout << "DeltaTime: " << l_timeElapsed.count() / 1000.0f << " ms" << std::endl;
+		std::cout << "DeltaTime: " << l_timeElapsed.count() * 0.001f << " ms" << std::endl;
 
 		l_gui.ShowUI(l_deltaTime);
 

@@ -5,9 +5,14 @@
 
 #include "GUI.h"
 
-GUI::GUI(std::weak_ptr<Raytracer> _rt, std::weak_ptr<Window> _window) 
+GUI::GUI(std::weak_ptr<Raytracer> _rt, 
+         std::weak_ptr<Window> _window,
+         std::weak_ptr<ShaderStorageBuffer<Light>> _lightSSBO,
+         std::weak_ptr<ShaderStorageBuffer<Material>> _materialSSBO) 
 : m_rt(_rt)
 , m_window(_window)
+, m_lightSSBO(_lightSSBO)
+, m_materialSSBO(_materialSSBO)
 , m_selectedLight(0)
 , m_selectedMaterial(0)
 , m_selectedShaderForProps(0)
@@ -59,15 +64,23 @@ void GUI::ShowSceneSettingsUI()
 {
     ImGui::Begin("Scene Settings");
 
-    std::shared_ptr<Raytracer> l_rtPtr = m_rt.lock();
+    std::shared_ptr<ShaderStorageBuffer<Light>> l_lightSSBOPtr = m_lightSSBO.lock();
+    std::shared_ptr<ShaderStorageBuffer<Material>> l_materialSSBOPtr = m_materialSSBO.lock();
 
     if (ImGui::BeginTabBar("SceneSettingsTabBar"))
     {
         // Lights Tab
         if (ImGui::BeginTabItem("Lights"))
         {
-            std::vector<Light>& lights = l_rtPtr->GetLights();
-            int lightCount = static_cast<int>(lights.size());
+            if (!l_lightSSBOPtr)
+            {
+                ImGui::Text("Light SSBO not available.");
+                ImGui::EndTabItem();
+            }
+            else
+            {
+            std::vector<Light>* lights = l_lightSSBOPtr->GetData();
+            int lightCount = static_cast<int>(lights->size());
 
             if (lightCount > 0)
             {
@@ -86,11 +99,17 @@ void GUI::ShowSceneSettingsUI()
                 ImGui::Combo("Select Light", &m_selectedLight, lightNames.data(), lightCount);
                 ImGui::Separator();
 
-                Light& light = lights[m_selectedLight];
-                ImGui::DragFloat3("Position", &light.position.x, 0.1f);
-                ImGui::ColorEdit3("Color", &light.color.x);
-                ImGui::DragFloat("Intensity", &light.intensity, 0.01f, 0.0f, 100.0f);
-                ImGui::DragFloat("Radius", &light.radius, 0.01f, 0.0f, 10.0f);
+                Light& light = (*lights)[m_selectedLight];
+                bool lightChanged = false;
+                lightChanged |= ImGui::DragFloat3("Position", &light.position.x, 0.1f);
+                lightChanged |= ImGui::ColorEdit3("Color", &light.colour.x);
+                lightChanged |= ImGui::DragFloat("Intensity", &light.intensity, 0.01f, 0.0f, 100.0f);
+                lightChanged |= ImGui::DragFloat("Radius", &light.radius, 0.01f, 0.0f, 10.0f);
+                
+                if (lightChanged)
+                {
+                    l_lightSSBOPtr->SetDirty(m_selectedLight);
+                }
             }
             else
             {
@@ -98,13 +117,21 @@ void GUI::ShowSceneSettingsUI()
             }
 
             ImGui::EndTabItem();
+            }
         }
 
         // Materials Tab
         if (ImGui::BeginTabItem("Materials"))
         {
-            std::vector<Material>& materials = l_rtPtr->GetMaterials();
-            int materialCount = static_cast<int>(materials.size());
+            if (!l_materialSSBOPtr)
+            {
+                ImGui::Text("Material SSBO not available.");
+                ImGui::EndTabItem();
+            }
+            else
+            {
+            std::vector<Material>* materials = l_materialSSBOPtr->GetData();
+            int materialCount = static_cast<int>(materials->size());
 
             if (materialCount > 0)
             {
@@ -123,11 +150,18 @@ void GUI::ShowSceneSettingsUI()
                 ImGui::Combo("Select Material", &m_selectedMaterial, materialNames.data(), materialCount);
                 ImGui::Separator();
 
-                Material& mat = materials[m_selectedMaterial];
-                ImGui::ColorEdit3("Albedo", &mat.albedo.x);
-                ImGui::DragFloat("Roughness", &mat.roughness, 0.01f, 0.0f, 1.0f);
-                ImGui::DragFloat("Metallic", &mat.metallic, 0.01f, 0.0f, 1.0f);
-                ImGui::DragFloat("Ambient Occlusion", &mat.ambientOcclusion, 0.01f, 0.0f, 1.0f);
+                Material& mat = (*materials)[m_selectedMaterial];
+                bool materialChanged = false;
+
+                materialChanged |= ImGui::ColorEdit3("Albedo", &mat.albedo.x);
+                materialChanged |= ImGui::DragFloat("Roughness", &mat.roughness, 0.01f, 0.0f, 1.0f);
+                materialChanged |= ImGui::DragFloat("Metallic", &mat.metallic, 0.01f, 0.0f, 1.0f);
+                materialChanged |= ImGui::DragFloat("Ambient Occlusion", &mat.ambientOcclusion, 0.01f, 0.0f, 1.0f);
+
+                if (materialChanged)
+                {
+                    l_materialSSBOPtr->SetDirty(m_selectedMaterial);
+                }
             }
             else
             {
@@ -135,6 +169,7 @@ void GUI::ShowSceneSettingsUI()
             }
 
             ImGui::EndTabItem();
+            }
         }
 
         ImGui::EndTabBar();

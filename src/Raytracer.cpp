@@ -1,4 +1,5 @@
 #include "Raytracer/Raytracer.h"
+#include "Raytracer/BufferBindPoints.h"
 #include "Shader/ShaderInfo.h"
 #include "Window.h"
 
@@ -33,14 +34,9 @@ void Raytracer::BuildRenderDataBuffers()
 Raytracer::Raytracer(std::weak_ptr<Window> _windowPtr)
 : m_windowPtr(_windowPtr)
 , m_BVH()
-, m_tris(nullptr)
-, m_mats(nullptr)
-, m_textures(nullptr)
-, m_lights()
 , m_camera(*_windowPtr.lock()->RenderSize())
 , m_gBuffers(GBUFFERCOUNT)
-, m_triangleSSBO(-1)
-, m_materialSSBO(-1)
+, m_ssbos()
 , m_setup(false)
 , m_frameCount(0)
 {
@@ -48,7 +44,7 @@ Raytracer::Raytracer(std::weak_ptr<Window> _windowPtr)
 
     ShaderInfoCollection::Init();
     ShaderInfoCollection::Load("resources/shaders/RTPipeline/Intersections/Intersections.comp", "Object Intersection");
-    ShaderInfoCollection::Load("resources/shaders/RTPipeline/Shadows/MCStratified.comp", "Shadow Pass");  // Add this
+    ShaderInfoCollection::Load("resources/shaders/RTPipeline/Shadows/MCStratified.comp", "Shadow Pass");
     ShaderInfoCollection::Load("resources/shaders/RTPipeline/Shading/PBRShading.comp", "PBR Shading");
     ShaderInfoCollection::Load("resources/shaders/RTPipeline/Intersections/LightDetection.comp", "Light Detection");
 
@@ -60,28 +56,35 @@ Raytracer::Raytracer(std::weak_ptr<Window> _windowPtr)
 Raytracer::~Raytracer()
 {
     glDeleteTextures(GBUFFERCOUNT, &m_gBuffers[0]);
-    glDeleteBuffers(1, &m_triangleSSBO);
-    glDeleteBuffers(1, &m_materialSSBO);
+}
 
-    // The pointers don't need to be deleted because their lifetimes are handled by other objects
+void Raytracer::RebuildGBuffers()
+{
+    BuildRenderDataBuffers();
 }
 
 void Raytracer::Trace(float _deltaTime)
 {
+    // Always update GPU data first (uploads any new/changed data)
+    for(int i = 0; i < m_ssbos.size(); i++)
+    {
+        m_ssbos[i]->UpdateGPUData();
+    }
+
+    // Bind buffers only once after they have data
     if (!m_setup)
     {
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, TRIANGLE_DATA, m_triangleSSBO);
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, BVH_NODES, m_BVH.GetNodeSSBO());
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, BVH_INDICES, m_BVH.GetIndexSSBO());
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, MATERIALS, m_materialSSBO);
+        for(int i = 0; i < m_ssbos.size(); i++)
+        {
+            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, m_ssbos[i]->BindLocation(), m_ssbos[i]->GetSSBOID());
+        }
         m_setup = true;
     }
 
-    auto l_time1 = std::chrono::high_resolution_clock::now();
+    // Ensure buffer updates are visible to shaders
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_materialSSBO);
-    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(Material) * m_mats->size(), &(m_mats->at(0)));
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    auto l_time1 = std::chrono::high_resolution_clock::now();
 
     std::shared_ptr<Window> l_windowPtr = m_windowPtr.lock();
     glm::ivec2* l_renderSize = l_windowPtr->RenderSize();
@@ -96,6 +99,8 @@ void Raytracer::Trace(float _deltaTime)
         std::chrono::duration_cast<std::chrono::microseconds>(l_time2 - l_time1);
 
     printf("DT for Setup: %.3f ms\n", l_timeElapsed.count() * 0.001f);
+
+    float l_totalTime = l_timeElapsed.count() * 0.001f;
 
     for(int i = 0; i < m_shaders->size(); i++)
     {
@@ -139,22 +144,6 @@ void Raytracer::Trace(float _deltaTime)
                 l_properties[p].value.i = m_frameCount;
                 l_shader->SetUniform("u_frameCount", l_properties[p].value.i);
             }
-            else if(l_properties[p].name == "u_lightCount")
-            {
-                l_properties[p].value.i = (int)m_lights.size();
-                l_shader->SetUniform("u_lightCount", l_properties[p].value.i);
-
-                for (int j = 0; j < m_lights.size() && j < 10; j++)
-                {
-                    std::string prefix = "u_lights[" + std::to_string(j) + "].";
-                    l_shader->SetUniform(prefix + "position", m_lights[j].position);
-                    l_shader->SetUniform(prefix + "colour", m_lights[j].color);
-                    l_shader->SetUniform(prefix + "intensity", m_lights[j].intensity);
-                    l_shader->SetUniform(prefix + "radius", m_lights[j].radius);
-                    l_shader->SetUniform(prefix + "cornerA", m_lights[j].cornerA);
-                    l_shader->SetUniform(prefix + "cornerB", m_lights[j].cornerB);
-                }
-            }
             else if(!l_cameraUpdated && l_properties[p].name.substr(0, 8) == "u_camera")
             {
                 l_cameraUpdated = true;
@@ -182,68 +171,31 @@ void Raytracer::Trace(float _deltaTime)
 			std::chrono::duration_cast<std::chrono::microseconds>(l_time2 - l_time1);
 
 		printf("DT for shader: %.3f ms\n", l_timeElapsed.count() * 0.001f);
+        l_totalTime += l_timeElapsed.count() * 0.001f;
     }
 
     // Store current camera state for next frame's u_lastFrameCamera
     m_camera.StoreLastFrameState();
 
     m_frameCount++;
+
+    printf("Total frame DT: %.3f ms\n", l_totalTime);
 }
 
-void Raytracer::SetTris(std::vector<Triangle>* _tris)
+void Raytracer::AddSSBO(std::shared_ptr<IShaderStorageBuffer> _ssbo)
 {
-    m_tris = _tris;
-    Triangle t = m_tris->at(0);
+    m_ssbos.push_back(_ssbo);
+}
 
+void Raytracer::BuildBVH(std::vector<Triangle>* _tris)
+{
     m_BVH.BuildBHV(_tris);
-
-    if (m_triangleSSBO == -1)
-    {
-        glGenBuffers(1, &m_triangleSSBO);
-    }
-
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_triangleSSBO);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Triangle) * m_tris->size(), &(m_tris->at(0)), GL_DYNAMIC_READ);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
 }
 
-void Raytracer::SetMaterials(std::vector<Material>* _mat)
+void Raytracer::BuildBVH(int l_ssboID)
 {
-    m_mats = _mat;
+    std::shared_ptr<ShaderStorageBuffer<Triangle>> l_triangleSSBO = std::dynamic_pointer_cast<ShaderStorageBuffer<Triangle>>(m_ssbos[l_ssboID]);
+    std::vector<Triangle>* l_tris = l_triangleSSBO->GetData();
 
-    if (m_materialSSBO == -1)
-    {
-        glGenBuffers(1, &m_materialSSBO);
-    }
-
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_materialSSBO);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Material) * m_mats->size(), &(m_mats->at(0)), GL_DYNAMIC_READ);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-}
-
-void Raytracer::SetTextures(std::vector<Texture>* _tex)
-{
-    m_textures = _tex;
-
-    for (int i = 0; i < m_textures->size(); i++)
-    {
-        glActiveTexture(GL_TEXTURE0 + BufferIndices::TEXTURES + i);
-        glBindTexture(GL_TEXTURE_2D, m_textures->at(i).GetID());
-    }
-}
-
-void Raytracer::AddLight(Light _light)
-{
-    m_lights.push_back(_light);
-}
-
-Light* Raytracer::GetLight(int _index)
-{
-    return &(m_lights[_index]);
-}
-
-Material* Raytracer::GetMaterial(int _index)
-{
-    return &(m_mats->at(_index));
+    m_BVH.BuildBHV(l_tris);
 }

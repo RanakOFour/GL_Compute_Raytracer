@@ -12,12 +12,9 @@ uniform Camera u_camera;
 struct Light
 {
     vec3 position;
+    float intensity;
     vec3 colour;
-
     float radius;
-
-    vec3 cornerA;
-    vec3 cornerB;
 };
 
 uniform Light u_lights[MAX_LIGHTS];

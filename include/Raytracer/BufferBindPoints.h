@@ -12,6 +12,7 @@
 
 /** @brief Number of G-buffers used in deferred rendering passes */
 #define GBUFFERCOUNT 6
+#define SSBOCOUNT 6
 
 /**
  * @enum BufferIndices
@@ -20,7 +21,8 @@
  * Defines the binding points for image units, SSBOs, and texture units
  * used by the raytracer's compute shaders.
  */
-enum BufferIndices
+
+enum BufferBindPoints
 {
     /** @brief Output render target image */
     OUTPUT_IMAGE,
@@ -65,15 +67,12 @@ enum BufferIndices
     
     /** @brief Material data SSBO */
     MATERIALS,
-    /** @} */
 
-    /**
-     * @name Texture Binding Locations
-     * @brief Binding points for texture units
-     * @{
-     */
-    /** @brief Texture array binding location */
-    TEXTURES
+    /** @brief Texture data SSBO */
+    TEXTURES,
+
+    /** @brief Light data SSBO */
+    LIGHTS
     /** @} */
 };
 

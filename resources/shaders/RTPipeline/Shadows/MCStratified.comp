@@ -60,23 +60,18 @@ layout(std430, binding = 9) readonly buffer b_bvhTriangleId
     int bvhTriIdxs[];
 };
 
-#define MAX_LIGHTS 10
 struct Light
 {
     vec3 position;
     vec3 colour;
-    float intensity;
-
-    // Values for sphere light
     float radius;
-
-    // Values for Square area light
-    vec3 cornerA;
-    vec3 cornerB;
+    float intensity;
 };
 
-uniform Light u_lights[MAX_LIGHTS];
-uniform int u_lightCount;
+layout(std430, binding = 12) readonly buffer b_LightData
+{
+    Light u_lights[];
+};
 
 uniform int u_frameCount;
 uniform int u_sampleCount = 16;
@@ -186,25 +181,6 @@ vec3 StratifiedSampleSphere(inout uint _seed, vec3 _center, float _radius, int _
     
     vec3 dir = vec3(cos(phi) * sinTheta, sin(phi) * sinTheta, cosTheta);
     return _center + dir * _radius;
-}
-
-vec3 StratifiedSamplePlane(inout uint _seed, vec3 _corner, vec3 _edge1, vec3 _edge2, int _currentSample)
-{
-    // How many stratums we split the sphere into
-    int l_gridSize = int(sqrt(float(u_sampleCount)));
-    
-    // Calculate which stratum we are in
-    int l_stratumX = _currentSample % l_gridSize;
-    int l_stratumY = _currentSample / l_gridSize;
-    
-    // Random position within the stratum to use
-    float l_jitterU = RandomFloat(_seed);
-    float l_jitterV = RandomFloat(_seed);
-    
-    float u = (float(l_stratumX) + l_jitterU) / float(l_gridSize);
-    float v = (float(l_stratumY) + l_jitterV) / float(l_gridSize);
-
-    return _corner + (u * _edge1) + (v * _edge2);
 }
 
 bool TriangleIntersect(inout RaycastResult _result, Ray _ray, Triangle _tri, int _index)
@@ -375,7 +351,9 @@ void main()
 
     vec3 l_totalLight = vec3(0.0f);
 
-    for(int i = 0; i < u_lightCount; i++)
+    int l_lightCount = u_lights.length();
+
+    for(int i = 0; i < l_lightCount; i++)
     {
         vec3 l_lightContribution = vec3(0.0f);
 
@@ -384,19 +362,7 @@ void main()
         {
             for(int k = 0; k < l_sqrtSamples; k++)
             {
-                vec3 l_randomPoint = vec3(0.0f);
-
-                if(u_lights[i].radius > 0.0)
-                {
-                    l_randomPoint = StratifiedSampleSphere(l_rngState, u_lights[i].position, u_lights[i].radius, j + k);
-                }
-                else
-                {
-                    l_randomPoint = StratifiedSamplePlane(l_rngState, u_lights[i].position,
-                                                          u_lights[i].cornerA - u_lights[i].position,
-                                                          u_lights[i].cornerB - u_lights[i].position,
-                                                          j + k);
-                }
+                vec3 l_randomPoint = StratifiedSampleSphere(l_rngState, u_lights[i].position, u_lights[i].radius, j + k);
 
                 vec3 l_lightDir = l_randomPoint - b_hitLocation;
                 float l_lightDistance = length(l_lightDir);
@@ -423,7 +389,7 @@ void main()
         l_totalLight += l_lightContribution;
     }
 
-    l_totalLight /= u_lightCount;
+    l_totalLight /= l_lightCount;
 
     int b_totalSampleCount = int(imageLoad(shadowBuffer, l_pixelCoords).w);
 

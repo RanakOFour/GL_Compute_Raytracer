@@ -23,26 +23,14 @@ struct Light
     /** @brief World-space position of the light */
     glm::vec3 position;
     
-    /** @brief Light color (RGB) */
-    glm::vec3 color;
-    
     /** @brief Light intensity multiplier */
     float intensity;
+    
+    /** @brief Light color (RGB) */
+    glm::vec3 colour;
 
     /** @brief Radius for sphere lights (soft shadows) */
     float radius;
-
-    /**
-     * @name Area Light Data
-     * @brief Corner positions for rectangular area lights
-     * @{
-     */
-    /** @brief First corner of area light rectangle */
-    glm::vec3 cornerA;
-    
-    /** @brief Second corner of area light rectangle */
-    glm::vec3 cornerB;
-    /** @} */
 };
 
 #endif
