@@ -36,6 +36,7 @@ protected:
     
     /** @brief OpenGL texture object ID */
     GLuint m_id;
+    GLuint64 m_handle;
 
 public:
     /**
@@ -90,6 +91,8 @@ public:
      * @return Texture object ID (uploads data if dirty)
      */
     GLuint GetID();
+
+    GLuint64 GetTexHandle();
 };
 
 #endif

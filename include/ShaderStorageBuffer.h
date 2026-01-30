@@ -23,7 +23,7 @@ class ShaderStorageBuffer : public IShaderStorageBuffer
     GLuint m_ssboID;
     std::vector<bool> m_dirtyFlags;
     std::vector<T> m_data;
-    size_t m_allocatedSize; // Track the currently allocated size on GPU
+    size_t m_allocatedSize;
 
     public:
     ShaderStorageBuffer()

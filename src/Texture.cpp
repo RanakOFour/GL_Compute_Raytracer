@@ -81,6 +81,16 @@ GLuint Texture::GetID()
 	return m_id;
 }
 
+GLuint64 Texture::GetTexHandle()
+{
+	if(m_handle == -1)
+	{
+		m_handle = glGetTextureHandleARB(GetID());
+	}
+
+	return m_handle;
+}
+
 void Texture::Size(glm::ivec2 _size)
 {
 	m_size = _size;
@@ -148,3 +158,4 @@ const glm::vec4 Texture::Pixel(glm::ivec2 _position)
 
 	return glm::vec4(colStart[0], colStart[1], colStart[2], colStart[3]);
 }
+

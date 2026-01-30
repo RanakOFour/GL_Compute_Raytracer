@@ -45,6 +45,7 @@ Raytracer::Raytracer(std::weak_ptr<Window> _windowPtr)
     ShaderInfoCollection::Init();
     ShaderInfoCollection::Load("resources/shaders/RTPipeline/Intersections/Intersections.comp", "Object Intersection");
     ShaderInfoCollection::Load("resources/shaders/RTPipeline/Shadows/MCStratified.comp", "Shadow Pass");
+    ShaderInfoCollection::Load("resources/shaders/RTPipeline/Shading/PBRShading.comp", "PBR Pass");
 
     m_shaders = &ShaderInfoCollection::Get()->GetShaders();
 
