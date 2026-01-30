@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.20)
 
-set(CMAKE_C_COMPILER gcc)
-set(CMAKE_CXX_COMPILER g++)
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)
 
 set(CXX_STANDARD 20)
 

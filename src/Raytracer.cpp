@@ -81,6 +81,12 @@ void Raytracer::Trace(float _deltaTime)
 
     auto l_time1 = std::chrono::high_resolution_clock::now();
 
+    // Always update GPU data first (uploads any new/changed data)
+    for(int i = 0; i < m_ssbos.size(); i++)
+    {
+        m_ssbos[i]->UpdateGPUData();
+    }
+
     std::shared_ptr<Window> l_windowPtr = m_windowPtr.lock();
     glm::ivec2* l_renderSize = l_windowPtr->RenderSize();
 
@@ -109,12 +115,6 @@ void Raytracer::Trace(float _deltaTime)
 
         ComputeShader* l_shader = l_currentShader->Shader();
         l_shader->use();
-
-        // Always update GPU data first (uploads any new/changed data)
-        for(int i = 0; i < m_ssbos.size(); i++)
-        {
-            m_ssbos[i]->UpdateGPUData();
-        }
 
         // Set property values (if needed)
         std::vector<ShaderProperty>& l_properties = l_currentShader->GetProperties();

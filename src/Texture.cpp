@@ -10,11 +10,12 @@
 #include "stb_image.h"
 
 
-Texture::Texture(const std::string& _path) :
-	m_dirty(true),
-	m_data(),
-	m_size(0, 0),
-	m_id(0)
+Texture::Texture(const std::string& _path)
+: m_dirty(true)
+, m_data()
+, m_size(0, 0)
+, m_id(-1)
+, m_handle(-1)
 {
 	stbi_set_flip_vertically_on_load(true);
 
@@ -59,7 +60,7 @@ GLuint Texture::GetID()
 {
 	if (m_dirty)
 	{
-		if (!m_id)
+		if (m_id == -1)
 		{
 			glGenTextures(1, &m_id);
 		}
@@ -94,6 +95,7 @@ GLuint64 Texture::GetTexHandle()
 	if(m_handle == -1)
 	{
 		m_handle = glGetTextureHandleARB(GetID());
+		printf("Created handle %u for texture %u", m_handle, m_id);
 		glMakeTextureHandleResidentARB(m_handle);
 	}
 

@@ -8,7 +8,6 @@ layout(rgba32f, binding = 1) uniform image2D hitLocations;
 struct Camera { vec3 position; vec3 forward; vec3 right; vec3 up; float fov; };
 uniform Camera u_camera;
 
-#define MAX_LIGHTS 10
 struct Light
 {
     vec3 position;
@@ -17,8 +16,10 @@ struct Light
     float radius;
 };
 
-uniform Light u_lights[MAX_LIGHTS];
-uniform int u_lightCount;
+layout(std430, binding = 12) readonly buffer b_LightData
+{
+    Light u_lights[];
+};
 
 uniform vec2 u_resolution;
 
@@ -57,53 +58,6 @@ float IntersectSphere(Ray _ray, vec3 _spherePos, float _radius)
     return l_distance;
 }
 
-
-float IntersectQuad(Ray _ray, vec3 _v0, vec3 _v1, vec3 _v2) 
-{
-    vec3 _v3 = _v0 + (_v2 - _v1);
-    
-    vec3 l_edge1 = _v1 - _v0;
-    vec3 l_edge2 = _v3 - _v0;
-    
-    vec3 l_normal = normalize(cross(l_edge1, l_edge2));
-    
-    float l_denom = dot(l_normal, _ray.direction);
-    if (abs(l_denom) < 1e-6)
-    {
-        return 1e30f;
-    }
-    
-    vec3 l_rayToCorner = _ray.origin - _v0;
-    float l_distance = -dot(l_normal, l_rayToCorner) / l_denom;
-    
-    if (l_distance < 0.0)
-    {
-        return 1e30f;
-    }
-    
-    vec3 l_point = _ray.origin + _ray.direction * l_distance;
-    
-    vec3 l_localPoint = l_point - _v0;
-    
-    float dot00 = dot(l_edge1, l_edge1);
-    float dot01 = dot(l_edge1, l_edge2);
-    float dot02 = dot(l_edge1, l_localPoint);
-    float dot11 = dot(l_edge2, l_edge2);
-    float dot12 = dot(l_edge2, l_localPoint);
-    
-    // Calculate barycentric coordinates to determine if the ray is in the quad
-    float invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
-    float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-    float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-    
-    if (u >= 0.0 && u <= 1.0 && v >= 0.0 && v <= 1.0)
-    {
-        return l_distance;
-    }
-    
-    return 1e30f;
-}
-
 void main()
 {
     ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
@@ -135,30 +89,17 @@ void main()
     float l_currentDistance = 1e30f;
     vec3 l_normal = vec3(0.0f);
 
-    for(int i = 0; i < u_lightCount; i++)
+    int l_lightCount = u_lights.length();
+
+    for(int i = 0; i < l_lightCount; i++)
     {
-        if(u_lights[i].radius > 0.0f)
-        {
-            l_currentDistance = IntersectSphere(l_ray, u_lights[i].position, u_lights[i].radius);
-        }
-        else
-        {
-            l_currentDistance = IntersectQuad(l_ray, u_lights[i].position, u_lights[i].cornerA, u_lights[i].cornerB);
-        }
+        l_currentDistance = IntersectSphere(l_ray, u_lights[i].position, u_lights[i].radius);
 
         if(l_currentDistance < l_closestHitDistance)
         {
             l_closestHitDistance = l_currentDistance;
 
-            if(u_lights[i].radius > 0.0)
-            {
-                l_normal = normalize((l_ray.origin + l_ray.direction * l_closestHitDistance) - u_lights[i].position);
-            }
-            else
-            {
-                l_normal = normalize(cross(u_lights[i].cornerA - u_lights[i].position,
-                                           u_lights[i].cornerB - u_lights[i].position));
-            }
+            l_normal = normalize((l_ray.origin + l_ray.direction * l_closestHitDistance) - u_lights[i].position);
 
             l_hitLightIdx = i;
         }

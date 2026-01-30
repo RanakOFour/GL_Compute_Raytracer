@@ -17,12 +17,10 @@ class TextureCollection : public ShaderStorageBuffer<GLuint64>
     TextureCollection();
     ~TextureCollection();
 
-    virtual void UpdateGPUData() override;
-
-    void AddTexture(Texture& _tex);
+    int AddTexture(std::string _path);
     void RemoveTexture(int _id);
 
-    Texture& GetTexture(int _id);
+    Texture* GetTexture(int _id);
     std::vector<Texture>& GetTextures();
 };
 

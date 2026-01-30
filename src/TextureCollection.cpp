@@ -12,54 +12,13 @@ TextureCollection::~TextureCollection()
     
 }
 
-void TextureCollection::UpdateGPUData()
+int TextureCollection::AddTexture(std::string _path)
 {
-    if (m_data.empty())
-            return;
+    m_textures.push_back(Texture(_path));
+    AddData(m_textures.back().GetTexHandle());
+    printf("Added texture %u to TextureCollection\n", m_textures.back().GetID());
 
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_ssboID);
-
-    // size_t requiredSize = sizeof(GLuint64) * m_data.size();
-
-    // // If buffer needs to grow or was never allocated, reallocate entire buffer
-    // if (requiredSize > m_allocatedSize)
-    // {
-    //     glBufferData(GL_SHADER_STORAGE_BUFFER, requiredSize, m_data.data(), GL_DYNAMIC_STORAGE_BIT);
-    //     m_allocatedSize = requiredSize;
-        
-    //     // Mark all as clean since we just uploaded everything
-    //     for (size_t i = 0; i < m_dirtyFlags.size(); i++)
-    //     {
-    //         m_dirtyFlags[i] = false;
-    //     }
-    // }
-    // else
-    // {
-    //     // Only update dirty elements
-    //     for (size_t i = 0; i < m_data.size(); i++)
-    //     {
-    //         if (m_dirtyFlags[i])
-    //         {
-    //             glBufferSubData(GL_SHADER_STORAGE_BUFFER, sizeof(GLuint64) * i, sizeof(GLuint64), &(m_data[i]));
-    //             m_dirtyFlags[i] = false;
-    //         }
-    //     }
-    // }
-
-    glBufferStorage(GL_SHADER_STORAGE_BUFFER, sizeof(GLuint64) * m_data.size(), m_data.data(), GL_DYNAMIC_STORAGE_BIT);
-
-    for(int i = 0; i < m_data.size(); i++)
-    {
-        glMakeTextureHandleResidentARB(m_data[i]);
-    }
-
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-}
-
-void TextureCollection::AddTexture(Texture& _tex)
-{
-    m_textures.push_back(_tex);
-    AddData(_tex.GetTexHandle());
+    return m_textures.size();
 }
 
 void TextureCollection::RemoveTexture(int _id)
@@ -68,9 +27,9 @@ void TextureCollection::RemoveTexture(int _id)
     RemoveData(_id);
 }
 
-Texture& TextureCollection::GetTexture(int _id)
+Texture* TextureCollection::GetTexture(int _id)
 {
-    return m_textures[_id];
+    return &m_textures[_id];
 }
 
 std::vector<Texture>& TextureCollection::GetTextures()

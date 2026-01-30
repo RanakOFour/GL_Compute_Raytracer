@@ -8,7 +8,6 @@
 #include "ShaderStorageBuffer.h"
 #include "TextureCollection.h"
 
-#include "Datastructs/Texture.h"
 #include "Datastructs/Model.h"
 #include "Datastructs/Light.h"
 
@@ -58,7 +57,7 @@ int main(int argc, char* argv[])
 
 	// Create curuthers model, texture and mat
 	Model l_curuthersModel("./resources/objects/curuthers.obj");
-	Texture l_modelTexture = Texture("./resources/textures/Whiskers_diffuse.png");
+	int l_curuthersTexID = l_matTexCollection->AddTexture("./resources/textures/Whiskers_diffuse.png");
 	Material l_matCuruthers;
 	l_matCuruthers.albedo = glm::vec3(1.0f);
 	l_matCuruthers.metallic = 0.0f;
@@ -102,7 +101,6 @@ int main(int argc, char* argv[])
 	}
 
 	l_materialSSBO->AddData(l_matCuruthers);
-	l_matTexCollection->AddTexture(l_modelTexture);
 
 	l_raytracer->BuildBVH(l_triangleSSBO->GetData());
 
@@ -174,20 +172,21 @@ int main(int argc, char* argv[])
 
 		l_rtCam.Update(l_inputMap, l_deltaTime);
 
+		printf("Starting frame time capture\n");
 		auto time1 = std::chrono::high_resolution_clock::now();
 
 		l_raytracer->Trace(l_deltaTime);
+
+		l_gui.ShowUI(l_deltaTime);
+
+		l_window->Show();
 
 		auto time2 = std::chrono::high_resolution_clock::now();
 
 		std::chrono::microseconds l_timeElapsed =
 			std::chrono::duration_cast<std::chrono::microseconds>(time2 - time1);
 
-		std::cout << "DeltaTime: " << l_timeElapsed.count() * 0.001f << " ms" << std::endl;
-
-		l_gui.ShowUI(l_deltaTime);
-
-		l_window->Show();
+		printf("DeltaTime: %.3f ms\n\n", l_timeElapsed.count() * 0.001f);
 
 		std::cout << std::endl;
 	}
