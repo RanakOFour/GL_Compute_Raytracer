@@ -45,8 +45,6 @@ Raytracer::Raytracer(std::weak_ptr<Window> _windowPtr)
     ShaderInfoCollection::Init();
     ShaderInfoCollection::Load("resources/shaders/RTPipeline/Intersections/Intersections.comp", "Object Intersection");
     ShaderInfoCollection::Load("resources/shaders/RTPipeline/Shadows/MCStratified.comp", "Shadow Pass");
-    ShaderInfoCollection::Load("resources/shaders/RTPipeline/Shading/PBRShading.comp", "PBR Shading");
-    ShaderInfoCollection::Load("resources/shaders/RTPipeline/Intersections/LightDetection.comp", "Light Detection");
 
     m_shaders = &ShaderInfoCollection::Get()->GetShaders();
 
@@ -74,6 +72,8 @@ void Raytracer::Trace(float _deltaTime)
     // Bind buffers only once after they have data
     if (!m_setup)
     {
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, BVH_NODES, m_BVH.GetNodeSSBO());
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, BVH_INDICES, m_BVH.GetIndexSSBO());
         for(int i = 0; i < m_ssbos.size(); i++)
         {
             glBindBufferBase(GL_SHADER_STORAGE_BUFFER, m_ssbos[i]->BindLocation(), m_ssbos[i]->GetSSBOID());

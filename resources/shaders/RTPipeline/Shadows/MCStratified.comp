@@ -63,9 +63,9 @@ layout(std430, binding = 9) readonly buffer b_bvhTriangleId
 struct Light
 {
     vec3 position;
+    float intensity;
     vec3 colour;
     float radius;
-    float intensity;
 };
 
 layout(std430, binding = 12) readonly buffer b_LightData
