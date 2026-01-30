@@ -12,8 +12,8 @@
 
 #include "Raytracer/Raytracer.h"
 #include "Shader/ShaderInfo.h"
-#include "ShaderStorageBuffer.h"
 
+#include "Datastructs/ShaderStorageBuffer.h"
 #include "Datastructs/Light.h"
 #include "Datastructs/Material.h"
 

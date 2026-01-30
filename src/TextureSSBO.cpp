@@ -1,18 +1,18 @@
-#include "TextureCollection.h"
+#include "Datastructs/TextureSSBO.h"
 
-TextureCollection::TextureCollection()
+TextureSSBO::TextureSSBO()
 : ShaderStorageBuffer()
 , m_textures()
 {
     
 }
 
-TextureCollection::~TextureCollection()
+TextureSSBO::~TextureSSBO()
 {
     
 }
 
-int TextureCollection::AddTexture(std::string _path)
+int TextureSSBO::AddTexture(std::string _path)
 {
     m_textures.push_back(Texture(_path));
     AddData(m_textures.back().GetTexHandle());
@@ -21,18 +21,18 @@ int TextureCollection::AddTexture(std::string _path)
     return m_textures.size();
 }
 
-void TextureCollection::RemoveTexture(int _id)
+void TextureSSBO::RemoveTexture(int _id)
 {
     m_textures.erase(m_textures.begin() + _id);
     RemoveData(_id);
 }
 
-Texture* TextureCollection::GetTexture(int _id)
+Texture* TextureSSBO::GetTexture(int _id)
 {
     return &m_textures[_id];
 }
 
-std::vector<Texture>& TextureCollection::GetTextures()
+std::vector<Texture>& TextureSSBO::GetTextures()
 {
     return m_textures;
 }
