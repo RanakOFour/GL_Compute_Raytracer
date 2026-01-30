@@ -64,12 +64,6 @@ void Raytracer::RebuildGBuffers()
 
 void Raytracer::Trace(float _deltaTime)
 {
-    // Always update GPU data first (uploads any new/changed data)
-    for(int i = 0; i < m_ssbos.size(); i++)
-    {
-        m_ssbos[i]->UpdateGPUData();
-    }
-
     // Bind buffers only once after they have data
     if (!m_setup)
     {
@@ -115,6 +109,12 @@ void Raytracer::Trace(float _deltaTime)
 
         ComputeShader* l_shader = l_currentShader->Shader();
         l_shader->use();
+
+        // Always update GPU data first (uploads any new/changed data)
+        for(int i = 0; i < m_ssbos.size(); i++)
+        {
+            m_ssbos[i]->UpdateGPUData();
+        }
 
         // Set property values (if needed)
         std::vector<ShaderProperty>& l_properties = l_currentShader->GetProperties();

@@ -6,6 +6,7 @@
 
 #include "Raytracer/BufferBindPoints.h"
 #include "ShaderStorageBuffer.h"
+#include "TextureCollection.h"
 
 #include "Datastructs/Texture.h"
 #include "Datastructs/Model.h"
@@ -42,10 +43,10 @@ int main(int argc, char* argv[])
 	l_materialSSBO->BindLocation(MATERIALS);
 	l_raytracer->AddSSBO(l_materialSSBO);
 
-	std::shared_ptr<ShaderStorageBuffer<Texture>> l_matTexSSBO =
-		std::make_shared<ShaderStorageBuffer<Texture>>();
-	l_matTexSSBO->BindLocation(TEXTURES);
-	l_raytracer->AddSSBO(l_matTexSSBO);
+	std::shared_ptr<TextureCollection> l_matTexCollection =
+		std::make_shared<TextureCollection>();
+	l_matTexCollection->BindLocation(TEXTURES);
+	l_raytracer->AddSSBO(l_matTexCollection);
 
 	std::shared_ptr<ShaderStorageBuffer<Light>> l_lightSSBO =
 		std::make_shared<ShaderStorageBuffer<Light>>();
@@ -101,7 +102,7 @@ int main(int argc, char* argv[])
 	}
 
 	l_materialSSBO->AddData(l_matCuruthers);
-	l_matTexSSBO->AddData(l_modelTexture);
+	l_matTexCollection->AddTexture(l_modelTexture);
 
 	l_raytracer->BuildBVH(l_triangleSSBO->GetData());
 

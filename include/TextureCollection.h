@@ -3,19 +3,21 @@
 
 #include "GL/glew.h"
 #include "Datastructs/Texture.h"
+#include "ShaderStorageBuffer.h"
+
+#include <memory>
 #include <vector>
 
-class TextureCollection
+class TextureCollection : public ShaderStorageBuffer<GLuint64>
 {
     private:
-    unsigned int m_maxTextures;
     std::vector<Texture> m_textures;
-
-    GLuint m_texturesBufferID;
 
     public:
     TextureCollection();
     ~TextureCollection();
+
+    virtual void UpdateGPUData() override;
 
     void AddTexture(Texture& _tex);
     void RemoveTexture(int _id);

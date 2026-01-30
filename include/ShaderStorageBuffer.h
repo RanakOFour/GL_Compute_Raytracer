@@ -18,7 +18,7 @@ class IShaderStorageBuffer
 template<typename T>
 class ShaderStorageBuffer : public IShaderStorageBuffer
 {
-    private:
+    protected:
     int m_bindLocation;
     GLuint m_ssboID;
     std::vector<bool> m_dirtyFlags;
@@ -69,7 +69,7 @@ class ShaderStorageBuffer : public IShaderStorageBuffer
         }
     };
 
-    void UpdateGPUData()
+    virtual void UpdateGPUData()
     {
         if (m_data.empty())
             return;

@@ -44,7 +44,15 @@ Texture::Texture(glm::ivec2 _size) :
 Texture::~Texture()
 {
 	// delete data in vbo
-	glDeleteTextures(1, &m_id);
+	if(m_handle > -1)
+	{
+		glMakeTextureHandleNonResidentARB(m_handle);
+	}
+
+	if(m_id > -1)
+	{
+		glDeleteTextures(1, &m_id);
+	}
 }
 
 GLuint Texture::GetID()
@@ -86,6 +94,7 @@ GLuint64 Texture::GetTexHandle()
 	if(m_handle == -1)
 	{
 		m_handle = glGetTextureHandleARB(GetID());
+		glMakeTextureHandleResidentARB(m_handle);
 	}
 
 	return m_handle;
