@@ -18,7 +18,7 @@ int TextureSSBO::AddTexture(std::string _path)
     AddData(m_textures.back().GetTexHandle());
     printf("Added texture %u to TextureCollection\n", m_textures.back().GetID());
 
-    return m_textures.size();
+    return m_textures.size() - 1;
 }
 
 void TextureSSBO::RemoveTexture(int _id)

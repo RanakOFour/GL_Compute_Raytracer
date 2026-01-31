@@ -16,9 +16,13 @@ struct Triangle
 {
     // Vertex positions
     vec3 a;
+    vec3 aNorm;
     vec3 b;
+    vec3 bNorm;
     vec3 c;
-    vec3 normal;
+    vec3 cNorm;
+
+    vec3 faceNorm;
 
     // UV Coordinates for each vertex
     vec2 uvA;

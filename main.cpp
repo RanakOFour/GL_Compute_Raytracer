@@ -54,6 +54,7 @@ int main(int argc, char* argv[])
 	// Create GUI with SSBO references
 	GUI l_gui(l_raytracer, l_window, l_lightSSBO, l_materialSSBO);
 
+
 	// Create curuthers model, texture and mat
 	Model l_curuthersModel("./resources/objects/curuthers.obj");
 	int l_curuthersTexID = l_matTexCollection->AddTexture("./resources/textures/Whiskers_diffuse.png");
@@ -63,8 +64,14 @@ int main(int argc, char* argv[])
 	l_matCuruthers.roughness = 0.0f;
 	l_matCuruthers.ambientOcclusion = 1.0f;
 
+	l_curuthersModel.SetTextureID(l_curuthersTexID);
+	l_curuthersModel.SetMaterialID(0);
+
 	// Create floor model and mat
 	Model l_cubeModel("./resources/objects/cube.obj");
+	int l_floorTexID = l_matTexCollection->AddTexture("./resources/textures/floor.jpg");
+	l_cubeModel.SetTextureID(l_floorTexID);
+	l_cubeModel.SetMaterialID(-1);
 
 	Light l_light;
 	l_light.position = glm::vec3(2.5f, 4.5f, 5.0f);
@@ -74,23 +81,11 @@ int main(int argc, char* argv[])
 	
 	l_lightSSBO->AddData(l_light);
 
-	// All the triangles for the scene are pulled into one vector
-	std::vector<Triangle> l_tris = l_curuthersModel.GetTriangles(glm::vec3(0.0f));
+	l_materialSSBO->AddData(l_matCuruthers);
 
-	for (int i = 0; i < l_tris.size(); i++)
-	{
-		l_tris[i].textureId = 0;
-		l_tris[i].materialId = 0;
-	}
-
+	std::vector<Triangle> l_tris = l_curuthersModel.GetTriangles(glm::vec3(0.0f, 1.5f, 0.0f));
 	std::vector<Triangle> l_cornelBoxTris = l_cubeModel.GetTriangles(glm::vec3(0.0f, -2.3f, 0.0f),
 																 glm::vec3(10.0f, 0.1f, 10.0f));
-
-	for (int i = 0; i < l_cornelBoxTris.size(); i++)
-	{
-		l_cornelBoxTris[i].textureId = -1;
-		l_cornelBoxTris[i].materialId = -1;
-	}
 
 	l_tris.insert(l_tris.end(), l_cornelBoxTris.begin(), l_cornelBoxTris.end());
 
@@ -98,8 +93,6 @@ int main(int argc, char* argv[])
 	{
 		l_triangleSSBO->AddData(l_tris[i]);
 	}
-
-	l_materialSSBO->AddData(l_matCuruthers);
 
 	l_raytracer->BuildBVH(l_triangleSSBO->GetData());
 

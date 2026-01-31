@@ -22,56 +22,6 @@
 #include <vector>
 
 /**
- * @struct Vertex
- * @brief A single vertex with position, texture coordinate, and normal
- */
-struct Vertex
-{
-    /**
-     * @brief Default constructor - initializes all values to zero
-     */
-    Vertex();
-
-    /** @brief 3D position of the vertex */
-    glm::vec3 position;
-    
-    /** @brief 2D texture coordinate */
-    glm::vec2 texcoord;
-    
-    /** @brief Vertex normal vector */
-    glm::vec3 normal;
-};
-  
-/**
- * @struct Face
- * @brief A triangular face composed of three vertices
- */
-struct Face
-{
-    /** @brief First vertex of the triangle */
-    Vertex a;
-    
-    /** @brief Second vertex of the triangle */
-    Vertex b;
-    
-    /** @brief Third vertex of the triangle */
-    Vertex c;
-    
-    /** @brief Face normal vector */
-    glm::vec3 normal;
-
-    /**
-     * @brief Calculate the face normal from vertex positions
-     */
-    inline void CalculateNormal()
-    {
-        glm::vec3 ac = c.position - a.position;
-        glm::vec3 ab = b.position - a.position;
-        normal = glm::cross(ac, ab);
-    };
-};
-
-/**
  * @class Model
  * @brief Loads and stores 3D model data from OBJ files
  * 
@@ -83,7 +33,9 @@ class Model
 {
 private:
     /** @brief Collection of faces making up the model */
-    std::vector<Face> m_faces;
+    std::vector<Triangle> m_triangles;
+    int m_textureId;
+    int m_materialId;
 
     /**
      * @brief Split a string by whitespace characters
@@ -131,11 +83,15 @@ public:
     /** @brief Virtual destructor */
     virtual ~Model();
 
-    /**
-     * @brief Get reference to the face list
-     * @return Reference to the internal face vector
-     */
-    std::vector<Face>& GetFaces();
+    inline void SetTextureID(int _id)
+    {
+        m_materialId = _id;
+    };
+
+    inline void SetMaterialID(int _id)
+    {
+        m_textureId = _id;
+    };
 
     /**
      * @brief Get the total vertex count
@@ -144,12 +100,10 @@ public:
     GLsizei GetVertexCount() const;
     
     /**
-     * @brief Convert model faces to Triangle format for raytracing
-     * @param _position World position offset for the model
-     * @param _scale Scale factor for the model
+     * @brief Return reference to list of Triangles
      * @return Vector of Triangle structures
      */
-    std::vector<Triangle> GetTriangles(glm::vec3 _position, glm::vec3 _scale);
+    std::vector<Triangle> GetTriangles(glm::vec3 _pos, glm::vec3 _scale);
 };
 
 #include <stdexcept>
@@ -160,6 +114,9 @@ inline Model::Model()
 
 inline Model::Model(const std::string& _path)
 {
+    m_materialId = -1;
+    m_textureId = -1;
+
     std::vector<glm::vec3> L_positions;
     std::vector<glm::vec2> L_tcs;
     std::vector<glm::vec3> L_normals;
@@ -206,27 +163,27 @@ inline Model::Model(const std::string& _path)
         }
         else if(L_tokens.at(0) == "f" && L_tokens.size() >= 4)
         {
-            Face f;
+            Triangle t;
             std::vector<std::string> sub;
             SplitString(L_tokens.at(1), '/', sub);
-            if(sub.size() >= 1) f.a.position = L_positions.at(atoi(sub.at(0).c_str()) - 1);
-            if(sub.size() >= 2) f.a.texcoord = L_tcs.at(atoi(sub.at(1).c_str()) - 1);
-            if(sub.size() >= 3) f.a.normal = L_normals.at(atoi(sub.at(2).c_str()) - 1);
+            if(sub.size() >= 1) t.a = L_positions.at(atoi(sub.at(0).c_str()) - 1);
+            if(sub.size() >= 2) t.uvA = L_tcs.at(atoi(sub.at(1).c_str()) - 1);
+            if(sub.size() >= 3) t.aNormal = L_normals.at(atoi(sub.at(2).c_str()) - 1);
 
             for(size_t ti = 2; ti + 1 < L_tokens.size(); ti++)
             {
                 SplitString(L_tokens.at(ti), '/', sub);
-                if(sub.size() >= 1) f.b.position = L_positions.at(atoi(sub.at(0).c_str()) - 1);
-                if(sub.size() >= 2) f.b.texcoord = L_tcs.at(atoi(sub.at(1).c_str()) - 1);
-                if(sub.size() >= 3) f.b.normal = L_normals.at(atoi(sub.at(2).c_str()) - 1);
+                if(sub.size() >= 1) t.b = L_positions.at(atoi(sub.at(0).c_str()) - 1);
+                if(sub.size() >= 2) t.uvB = L_tcs.at(atoi(sub.at(1).c_str()) - 1);
+                if(sub.size() >= 3) t.bNormal = L_normals.at(atoi(sub.at(2).c_str()) - 1);
 
                 SplitString(L_tokens.at(ti + 1), '/', sub);
-                if(sub.size() >= 1) f.c.position = L_positions.at(atoi(sub.at(0).c_str()) - 1);
-                if(sub.size() >= 2) f.c.texcoord = L_tcs.at(atoi(sub.at(1).c_str()) - 1);
-                if(sub.size() >= 3) f.c.normal = L_normals.at(atoi(sub.at(2).c_str()) - 1);
+                if(sub.size() >= 1) t.c = L_positions.at(atoi(sub.at(0).c_str()) - 1);
+                if(sub.size() >= 2) t.uvC = L_tcs.at(atoi(sub.at(1).c_str()) - 1);
+                if(sub.size() >= 3) t.cNormal = L_normals.at(atoi(sub.at(2).c_str()) - 1);
 
-                f.CalculateNormal();
-                m_faces.push_back(f);
+                CalculateNormal(t);
+                m_triangles.push_back(t);
             }
         }
     }
@@ -237,12 +194,12 @@ inline Model::~Model()
 }
 
 inline Model::Model(const Model& _copy)
-    : m_faces(_copy.m_faces)
+    : m_triangles(_copy.m_triangles)
 { }
 
 inline Model& Model::operator=(const Model& _assign)
 {
-    m_faces = _assign.m_faces;
+    m_triangles = _assign.m_triangles;
     return *this;
 }
 
@@ -304,43 +261,44 @@ inline void Model::SplitString(const std::string& _input, char _splitter,
     }
 }
 
-inline std::vector<Face>& Model::GetFaces()
-{
-    return m_faces;
-}
-
 inline std::vector<Triangle> Model::GetTriangles(glm::vec3 _position = glm::vec3(0.0f),
                                                  glm::vec3 _scale = glm::vec3(1.0f))
 {
     std::vector<Triangle> l_triangles;
-
-    for(size_t fi = 0; fi < m_faces.size(); ++fi)
+    
+    Triangle* l_currentTriangle = &m_triangles[0];
+    int i = 0;
+    do
     {
         Triangle newTri;
-        newTri.a = (m_faces[fi].a.position * _scale) + _position;
-        newTri.b = (m_faces[fi].b.position * _scale) + _position;
-        newTri.c = (m_faces[fi].c.position * _scale) + _position;
+        newTri.a = (l_currentTriangle->a * _scale) + _position;
+        newTri.b = (l_currentTriangle->b * _scale) + _position;
+        newTri.c = (l_currentTriangle->c * _scale) + _position;
         
-        newTri.uvA = m_faces[fi].a.texcoord;
-        newTri.uvB = m_faces[fi].b.texcoord;
-        newTri.uvC = m_faces[fi].c.texcoord;
+        newTri.uvA = l_currentTriangle->uvA;
+        newTri.uvB = l_currentTriangle->uvB;
+        newTri.uvC = l_currentTriangle->uvC;
+
+        newTri.aNormal = l_currentTriangle->aNormal;
+        newTri.bNormal = l_currentTriangle->bNormal;
+        newTri.cNormal = l_currentTriangle->cNormal;
+
+        newTri.materialId = m_materialId;
+        newTri.textureId = m_textureId;
 
         CalculateNormal(newTri);
         l_triangles.push_back(newTri);
-    }
+
+        l_currentTriangle++;
+        i++;
+    } while(i < m_triangles.size());
 
     return l_triangles;
 }
 
 inline GLsizei Model::GetVertexCount() const
 {
-    return (GLsizei)m_faces.size() * 3;
+    return (GLsizei)m_triangles.size() * 3;
 }
-
-inline Vertex::Vertex()
-    : position(0, 0, 0)
-    , texcoord(0, 0)
-    , normal(0, 0, 0)
-{ }
 
 #endif

@@ -26,19 +26,34 @@ struct Triangle
     glm::vec3 a;
     /** @brief Padding for 16-byte alignment */
     float _padding_a;
+
+    /** @brief First vertex normal */
+    glm::vec3 aNormal;
+    /** @brief Padding for 16-byte alignment */
+    float _padding_an;
     
     /** @brief Second vertex position */
     glm::vec3 b;
     /** @brief Padding for 16-byte alignment */
     float _padding_b;
     
+    /** @brief Second vertex normal */
+    glm::vec3 bNormal;
+    /** @brief Padding for 16-byte alignment */
+    float _padding_bn;
+
     /** @brief Third vertex position */
     glm::vec3 c;
     /** @brief Padding for 16-byte alignment */
     float _padding_c;
     
+    /** @brief Third vertex normal */
+    glm::vec3 cNormal;
+    /** @brief Padding for 16-byte alignment */
+    float _padding_cn;
+
     /** @brief Face normal vector */
-    glm::vec3 normal;
+    glm::vec3 faceNormal;
     /** @brief Padding for 16-byte alignment */
     float _padding_n;
 
@@ -66,7 +81,7 @@ inline void CalculateNormal(Triangle& _tri)
 {
     glm::vec3 edge1 = _tri.c - _tri.a;
     glm::vec3 edge2 = _tri.b - _tri.a;
-    _tri.normal = glm::normalize(glm::cross(edge1, edge2));
+    _tri.faceNormal = glm::normalize(glm::cross(edge1, edge2));
 };
 
 /**

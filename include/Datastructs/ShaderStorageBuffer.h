@@ -54,11 +54,18 @@ class ShaderStorageBuffer : public IShaderStorageBuffer
         }
     };
 
-    void AddData(const T& data)
+    void AddData(const T& _data)
     {
-        m_data.push_back(data);
+        m_data.push_back(_data);
         m_dirtyFlags.push_back(true);
     };
+
+    void AddData(std::vector<T>& _dataVector)
+    {
+        m_data.insert(m_data.end(), _dataVector.begin(), _dataVector.end());
+        std::vector<bool> l_values = std::vector<bool>(_dataVector.size(), true);
+        m_dirtyFlags.insert(m_dirtyFlags.end(), l_values.begin(), l_values.end());
+    }
 
     void RemoveData(int index)
     {

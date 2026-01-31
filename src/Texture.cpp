@@ -95,7 +95,7 @@ GLuint64 Texture::GetTexHandle()
 	if(m_handle == -1)
 	{
 		m_handle = glGetTextureHandleARB(GetID());
-		printf("Created handle %u for texture %u", m_handle, m_id);
+		printf("Created handle %u for texture %u\n", m_handle, m_id);
 		glMakeTextureHandleResidentARB(m_handle);
 	}
 
