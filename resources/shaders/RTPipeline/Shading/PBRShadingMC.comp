@@ -1,4 +1,6 @@
 #version 430 core
+#extension GL_ARB_bindless_texture: require
+#extension GL_ARB_gpu_shader_int64 : require
 
 // Combined PBR Shading with Monte Carlo Stratified Shadow Sampling
 // This shader integrates physically-based rendering with stratified shadow ray tracing
@@ -29,7 +31,10 @@ layout(std430, binding = 10) readonly buffer b_Materials
 };
 
 #define MAX_TEXTURES 10
-layout(binding = 11) uniform sampler2D u_materialTextures[MAX_TEXTURES];
+layout(binding = 11) readonly buffer b_texSamplers
+{
+    uint64_t materialTextures[];
+};
 
 struct Triangle
 {
@@ -390,9 +395,6 @@ bool IsInShadow(inout RaycastResult _result, vec3 _origin, vec3 _direction, floa
     return false;
 }
 
-// ============================================================================
-// Main Shader
-// ============================================================================
 void main()
 {
     ivec2 l_pixelCoords = ivec2(gl_GlobalInvocationID.xy);
@@ -421,7 +423,7 @@ void main()
     vec3 l_texColour = vec3(1.0);
     if (l_texId > -1)
     {
-        l_texColour = texture(u_materialTextures[l_texId], l_texUVs).rgb;
+        l_texColour = texture(sampler2D(materialTextures[l_texId]), l_texUVs).rgb;
     }
 
     Material l_mat;
