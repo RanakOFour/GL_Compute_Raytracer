@@ -162,6 +162,7 @@ void Raytracer::Trace(float _deltaTime)
         l_currentShader->UpdateShader();
 
         glDispatchCompute(l_workGroups.x, l_workGroups.y, 1);
+
         glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
         l_cameraUpdated = false;

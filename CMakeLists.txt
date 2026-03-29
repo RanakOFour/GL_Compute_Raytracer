@@ -12,10 +12,9 @@ add_executable (GLTracer "main.cpp")
 add_subdirectory(src)
 add_subdirectory(external)
 
-
 target_include_directories(GLTracer PUBLIC include)
 
-target_include_directories(GLTracer SYSTEM PUBLIC external/IMGUI external)
+target_include_directories(GLTracer SYSTEM PUBLIC external/imgui extern/SDL external)
 
 target_link_directories(GLTracer PUBLIC ${PROJECT_SOURCE_DIR}/lib)
 

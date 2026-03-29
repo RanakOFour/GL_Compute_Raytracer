@@ -85,12 +85,12 @@ public:
 
     inline void SetTextureID(int _id)
     {
-        m_materialId = _id;
+        m_textureId = _id;
     };
 
     inline void SetMaterialID(int _id)
     {
-        m_textureId = _id;
+        m_materialId = _id;
     };
 
     /**

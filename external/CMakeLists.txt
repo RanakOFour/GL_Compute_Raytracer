@@ -1,1 +1,1 @@
-add_subdirectory(IMGUI)
+add_subdirectory(imgui)

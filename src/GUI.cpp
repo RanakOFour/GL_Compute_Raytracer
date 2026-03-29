@@ -5,6 +5,11 @@
 
 #include "GUI.h"
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_sdl2.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include "imgui/misc/cpp/imgui_stdlib.h"
+
 GUI::GUI(std::weak_ptr<Raytracer> _rt, 
          std::weak_ptr<Window> _window,
          std::weak_ptr<ShaderStorageBuffer<Light>> _lightSSBO,
@@ -88,15 +93,14 @@ void GUI::ShowSceneSettingsUI()
                     m_selectedLight = lightCount - 1;
 
                 // Light selector
-                std::vector<const char*> lightNames;
+                std::vector<const char*> l_lightNames;
                 for (int i = 0; i < lightCount; ++i)
                 {
-                    static char nameBuf[32];
-                    snprintf(nameBuf, sizeof(nameBuf), "Light %d", i);
-                    lightNames.push_back(nameBuf);
+                    std::string name = "Light " + std::to_string(i);
+                    l_lightNames.push_back(name.c_str());
                 }
 
-                ImGui::Combo("Select Light", &m_selectedLight, lightNames.data(), lightCount);
+                ImGui::Combo("Select Light", &m_selectedLight, l_lightNames.data(), lightCount);
                 ImGui::Separator();
 
                 Light& light = (*lights)[m_selectedLight];
@@ -142,9 +146,8 @@ void GUI::ShowSceneSettingsUI()
                 std::vector<const char*> materialNames;
                 for (int i = 0; i < materialCount; ++i)
                 {
-                    static char nameBuf[32];
-                    snprintf(nameBuf, sizeof(nameBuf), "Material %d", i);
-                    materialNames.push_back(nameBuf);
+                    std::string name = "Material " + std::to_string(i);
+                    materialNames.push_back(name.c_str());
                 }
 
                 ImGui::Combo("Select Material", &m_selectedMaterial, materialNames.data(), materialCount);
