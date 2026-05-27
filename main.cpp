@@ -26,7 +26,7 @@ inline void HandleMouseInput(Input& _inputMap, SDL_MouseMotionEvent& _mouseEvent
 int main(int argc, char* argv[])
 {
 	// Set window size
-	glm::ivec2 l_winSize(1000, 800);
+	glm::ivec2 l_winSize(1920, 1080);
 
 	std::shared_ptr<Window> l_window = std::make_shared<Window>(l_winSize, l_winSize);
 	std::shared_ptr<Raytracer> l_raytracer = std::make_shared<Raytracer>(l_window);
