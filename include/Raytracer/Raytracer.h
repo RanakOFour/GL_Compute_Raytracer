@@ -63,7 +63,7 @@ private:
     /** @brief Current frame counter for temporal effects */
     int m_frameCount;
 
-    inline void BuildRenderDataBuffers();
+    void BuildRenderDataBuffers();
 
 public:
     /**

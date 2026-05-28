@@ -93,7 +93,7 @@ public:
      * Shows current camera position, direction vectors, and FOV.
      * All values are read-only display.
      */
-    void ShowCameraInfoUI();
+    void ShowCameraInfo();
 
     /**
      * @brief Display the scene settings window with Lights and Materials tabs
@@ -101,7 +101,7 @@ public:
      * Provides a tabbed interface for editing light properties (position, color,
      * intensity, radius) and material properties (color, roughness, metallic, etc.)
      */
-    void ShowSceneSettingsUI();
+    void ShowSceneSettings();
 
     /**
      * @brief Display the visibility settings window with tabs for prefix and property control
@@ -109,7 +109,7 @@ public:
      * Tab 1: Manage hidden uniform prefixes (add/remove prefixes that hide uniforms from GUI)
      * Tab 2: Per-property visibility toggle for individual shader properties
      */
-    void ShowVisibilitySettingsUI();
+    void ShowShaderPropertySettings();
 
     /**
      * @brief Display the shader management window
@@ -117,7 +117,7 @@ public:
      * Allows loading new shaders from file paths and removing existing shaders.
      * Shows list of currently loaded shaders with remove buttons.
      */
-    void ShowShaderManagementUI();
+    void ShowShaderManagement();
 
     /**
      * @brief Display the enabled shaders window
@@ -125,9 +125,7 @@ public:
      * Shows checkboxes to enable/disable each shader and displays
      * editable properties for each enabled shader's visible uniforms.
      */
-    void ShowEnabledShadersUI();
-
-    void ShowWindowSettingsUI();
+    void ShowEnabledShaders();
 };
 
 #endif

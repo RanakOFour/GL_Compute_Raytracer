@@ -9,6 +9,7 @@
 #include "imgui/imgui_impl_sdl2.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/misc/cpp/imgui_stdlib.h"
+#include <memory>
 
 GUI::GUI(std::weak_ptr<Raytracer> _rt, 
          std::weak_ptr<Window> _window,
@@ -37,20 +38,42 @@ void GUI::ShowUI(float _deltaTime)
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
-    ShowCameraInfoUI();
-    ShowSceneSettingsUI();
-    ShowEnabledShadersUI();
-    ShowVisibilitySettingsUI();
-    ShowShaderManagementUI();
-    ShowWindowSettingsUI();
+    if(ImGui::Begin("Settings"))
+    {
+        if(ImGui::BeginTabBar("##categories"))
+        {
+            ShowCameraInfo();
+            ShowSceneSettings();
+            ShowShaderManagement();
+            ShowShaderPropertySettings();
+        }
+
+        ImGui::EndTabBar();
+    }
+    ImGui::End();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void GUI::ShowCameraInfoUI()
+void GUI::ShowCameraInfo()
 {
-    ImGui::Begin("Camera Info");
+    if (!ImGui::BeginTabItem("Camera Info"))
+        return;
+
+    std::shared_ptr<Window> l_windowPtr = m_window.lock();
+    glm::ivec2* renderSize = l_windowPtr->RenderSize();
+
+    if(ImGui::InputInt2("Render Resolution", &renderSize->x))
+    {
+        if(renderSize->x < 1) renderSize->x = 1;
+        if(renderSize->y < 1) renderSize->y = 1;
+        l_windowPtr->ChangeRenderSize();
+        
+        std::shared_ptr<Raytracer> l_rtPtr = m_rt.lock();
+        l_rtPtr->BuildRenderDataBuffers();
+    }
+
     Camera& cam = m_rt.lock()->GetCamera();
     glm::vec3 pos = cam.Position();
     glm::vec3 fwd = cam.Forward();
@@ -62,12 +85,13 @@ void GUI::ShowCameraInfoUI()
     ImGui::Text("Orientation: (%.3f, %.3f, %.3f, %.3f)", cam.Rotation().x, cam.Rotation().y, cam.Rotation().z, cam.Rotation().w);
     ImGui::Text("Delta Time: %.3f ms @ %.1f FPS", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-    ImGui::End();
+    ImGui::EndTabItem();
 }
 
-void GUI::ShowSceneSettingsUI()
+void GUI::ShowSceneSettings()
 {
-    ImGui::Begin("Scene Settings");
+    if (!ImGui::BeginTabItem("Objects"))
+        return;
 
     std::shared_ptr<ShaderStorageBuffer<Light>> l_lightSSBOPtr = m_lightSSBO.lock();
     std::shared_ptr<ShaderStorageBuffer<Material>> l_materialSSBOPtr = m_materialSSBO.lock();
@@ -178,12 +202,13 @@ void GUI::ShowSceneSettingsUI()
         ImGui::EndTabBar();
     }
 
-    ImGui::End();
+    ImGui::EndTabItem();
 }
 
-void GUI::ShowVisibilitySettingsUI()
+void GUI::ShowShaderPropertySettings()
 {
-    ImGui::Begin("Visibility Settings");
+    if (!ImGui::BeginTabItem("Properties"))
+        return;
 
     if (ImGui::BeginTabBar("VisibilityTabBar"))
     {
@@ -269,15 +294,15 @@ void GUI::ShowVisibilitySettingsUI()
                     auto& properties = selectedShader.GetProperties();
 
                     ImGui::Text("Toggle visibility for each property:");
-                    for (ShaderProperty& prop : properties)
+                    for (ShaderProperty& l_prop : properties)
                     {
-                        bool visible = prop.visible;
-                        if (ImGui::Checkbox(prop.name.c_str(), &visible))
+                        bool visible = l_prop.visible;
+                        if (ImGui::Checkbox(l_prop.name.c_str(), &visible))
                         {
-                            prop.SetVisible(visible);
+                            l_prop.SetVisible(visible);
                         }
                         ImGui::SameLine();
-                        ImGui::TextDisabled("(%s)", prop.Type().c_str());
+                        ImGui::TextDisabled("(%s)", l_prop.Type().c_str());
                     }
                 }
                 else
@@ -296,18 +321,19 @@ void GUI::ShowVisibilitySettingsUI()
         ImGui::EndTabBar();
     }
 
-    ImGui::End();
+    ImGui::EndTabItem();
 }
 
-void GUI::ShowShaderManagementUI()
+void GUI::ShowShaderManagement()
 {
-    ImGui::Begin("Shader Management");
+    if (!ImGui::BeginTabItem("Shaders"))
+        return;
 
     auto collection = ShaderInfoCollection::Get();
     if (!collection)
     {
         ImGui::Text("ShaderInfoCollection not initialized.");
-        ImGui::End();
+        ImGui::EndTabItem();
         return;
     }
 
@@ -320,8 +346,8 @@ void GUI::ShowShaderManagementUI()
     {
         if (strlen(m_newShaderPathBuffer) > 0 && strlen(m_newShaderNameBuffer) > 0)
         {
-            std::weak_ptr<ShaderInfo> loaded = collection->Load(m_newShaderPathBuffer, m_newShaderNameBuffer);
-            if (std::shared_ptr<ShaderInfo> loadedShared = loaded.lock())
+            auto l_loaded = collection->Load(m_newShaderPathBuffer, m_newShaderNameBuffer).lock();
+            if (l_loaded)
             {
                 memset(m_newShaderPathBuffer, 0, sizeof(m_newShaderPathBuffer));
                 memset(m_newShaderNameBuffer, 0, sizeof(m_newShaderNameBuffer));
@@ -362,57 +388,58 @@ void GUI::ShowShaderManagementUI()
         collection->RemoveShader(shaderToRemove);
     }
 
-    ImGui::End();
+    ImGui::EndTabItem();
 }
 
-void GUI::ShowEnabledShadersUI()
+void GUI::ShowEnabledShaders()
 {
-    ImGui::Begin("Enabled Shaders");
+    if (!ImGui::BeginTabItem("Shaders"))
+        return;
 
-    std::shared_ptr<ShaderInfoCollection> collection = ShaderInfoCollection::Get();
-    if (!collection)
+    std::shared_ptr<ShaderInfoCollection> l_collection = ShaderInfoCollection::Get();
+    if (!l_collection)
     {
         ImGui::Text("ShaderInfoCollection not initialized.");
-        ImGui::End();
+        ImGui::EndTabItem();
         return;
     }
 
-    for (std::shared_ptr<ShaderInfo>& shaderInfo : collection->GetShaders())
+    for (std::shared_ptr<ShaderInfo>& l_shaderInfo : l_collection->GetShaders())
     {
-        bool enabled = shaderInfo->Enabled();
-        if (ImGui::Checkbox(shaderInfo->Name().c_str(), &enabled))
+        bool l_enabled = l_shaderInfo->Enabled();
+        if (ImGui::Checkbox(l_shaderInfo->Name().c_str(), &l_enabled))
         {
-            shaderInfo->Enabled(enabled);
+            l_shaderInfo->Enabled(l_enabled);
         }
 
-        if (enabled)
+        if (l_enabled)
         {
             ImGui::Indent();
             
-            std::vector<ShaderProperty*> visibleProps = shaderInfo->GetVisibleProperties();
-            for (ShaderProperty* prop : visibleProps)
+            std::vector<ShaderProperty*> l_visibleProps = l_shaderInfo->GetVisibleProperties();
+            for (ShaderProperty* l_prop : l_visibleProps)
             {
-                ImGui::PushID(prop->name.c_str());
+                ImGui::PushID(l_prop->name.c_str());
                 
-                switch (prop->type)
+                switch (l_prop->type)
                 {
                     case ShaderProperty::INT:
-                        ImGui::DragInt(prop->name.c_str(), &prop->value.i);
+                        ImGui::DragInt(l_prop->name.c_str(), &l_prop->value.i);
                         break;
                     case ShaderProperty::FLOAT:
-                        ImGui::DragFloat(prop->name.c_str(), &prop->value.f, 0.01f);
+                        ImGui::DragFloat(l_prop->name.c_str(), &l_prop->value.f, 0.01f);
                         break;
                     case ShaderProperty::BOOL:
-                        ImGui::Checkbox(prop->name.c_str(), &prop->value.b);
+                        ImGui::Checkbox(l_prop->name.c_str(), &l_prop->value.b);
                         break;
                     case ShaderProperty::VEC2:
-                        ImGui::DragFloat2(prop->name.c_str(), &prop->value.vec2[0], 0.01f);
+                        ImGui::DragFloat2(l_prop->name.c_str(), &l_prop->value.vec2[0], 0.01f);
                         break;
                     case ShaderProperty::VEC3:
-                        ImGui::DragFloat3(prop->name.c_str(), &prop->value.vec3[0], 0.01f);
+                        ImGui::DragFloat3(l_prop->name.c_str(), &l_prop->value.vec3[0], 0.01f);
                         break;
                     case ShaderProperty::VEC4:
-                        ImGui::DragFloat4(prop->name.c_str(), &prop->value.vec4[0], 0.01f);
+                        ImGui::DragFloat4(l_prop->name.c_str(), &l_prop->value.vec4[0], 0.01f);
                         break;
                 }
                 
@@ -423,25 +450,5 @@ void GUI::ShowEnabledShadersUI()
         }
     }
 
-    ImGui::End();
-}
-
-void GUI::ShowWindowSettingsUI()
-{
-    ImGui::Begin("Window Settings");
-
-    std::shared_ptr<Window> l_windowPtr = m_window.lock();
-    glm::ivec2* renderSize = l_windowPtr->RenderSize();
-
-    if(ImGui::InputInt2("Render Resolution", &renderSize->x))
-    {
-        if(renderSize->x < 1) renderSize->x = 1;
-        if(renderSize->y < 1) renderSize->y = 1;
-        l_windowPtr->ChangeRenderSize();
-        
-        std::shared_ptr<Raytracer> l_rtPtr = m_rt.lock();
-        l_rtPtr->BuildRenderDataBuffers();
-    }
-
-    ImGui::End();
+    ImGui::EndTabItem();
 }

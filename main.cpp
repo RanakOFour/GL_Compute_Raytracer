@@ -16,6 +16,7 @@
 #include "imgui/imgui_impl_sdl2.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+#include <memory>
 #include <vector>
 #include <chrono>
 
@@ -28,31 +29,35 @@ int main(int argc, char* argv[])
 	// Set window size
 	glm::ivec2 l_winSize(1920, 1080);
 
-	std::shared_ptr<Window> l_window = std::make_shared<Window>(l_winSize, l_winSize);
-	std::shared_ptr<Raytracer> l_raytracer = std::make_shared<Raytracer>(l_window);
+	Window l_window(l_winSize, l_winSize);
+	std::shared_ptr<Window> l_windowPtr = std::shared_ptr<Window>();
+
+	l_windowPtr.reset(&l_window);
+	Raytracer l_raytracer(l_windowPtr);
 
 	std::shared_ptr<ShaderStorageBuffer<Triangle>> l_triangleSSBO =
 		std::make_shared<ShaderStorageBuffer<Triangle>>();
 	l_triangleSSBO->BindLocation(TRIANGLE_DATA);
-	l_raytracer->AddSSBO(l_triangleSSBO);
+	l_raytracer.AddSSBO(l_triangleSSBO);
 
 	std::shared_ptr<ShaderStorageBuffer<Material>> l_materialSSBO =
 		std::make_shared<ShaderStorageBuffer<Material>>();
 	l_materialSSBO->BindLocation(MATERIALS);
-	l_raytracer->AddSSBO(l_materialSSBO);
+	l_raytracer.AddSSBO(l_materialSSBO);
 
 	std::shared_ptr<TextureSSBO> l_matTexCollection =
 		std::make_shared<TextureSSBO>();
 	l_matTexCollection->BindLocation(TEXTURES);
-	l_raytracer->AddSSBO(l_matTexCollection);
+	l_raytracer.AddSSBO(l_matTexCollection);
 
 	std::shared_ptr<ShaderStorageBuffer<Light>> l_lightSSBO =
 		std::make_shared<ShaderStorageBuffer<Light>>();
 	l_lightSSBO->BindLocation(LIGHTS);
-	l_raytracer->AddSSBO(l_lightSSBO);
+	l_raytracer.AddSSBO(l_lightSSBO);
 
+	std::shared_ptr<Raytracer> l_rtPtr(&l_raytracer);
 	// Create GUI with SSBO references
-	GUI l_gui(l_raytracer, l_window, l_lightSSBO, l_materialSSBO);
+	GUI l_gui(l_rtPtr, l_windowPtr, l_lightSSBO, l_materialSSBO);
 
 
 	// Create curuthers model, texture and mat
@@ -94,11 +99,11 @@ int main(int argc, char* argv[])
 		l_triangleSSBO->AddData(l_tris[i]);
 	}
 
-	l_raytracer->BuildBVH(l_triangleSSBO->GetData());
+	l_raytracer.BuildBVH(l_triangleSSBO->GetData());
 
 	// The camera needs to be updated by Input data, so it is done here
 	Input l_inputMap;
-	Camera& l_rtCam = l_raytracer->GetCamera();
+	Camera& l_rtCam = l_raytracer.GetCamera();
 	l_rtCam.Position(glm::vec3(-15.0f, 4.7f, 4.0f));
 	l_rtCam.Rotate(glm::radians(-60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	l_rtCam.Rotate(glm::radians(-40.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -167,11 +172,11 @@ int main(int argc, char* argv[])
 		printf("Starting frame time capture\n");
 		auto time1 = std::chrono::high_resolution_clock::now();
 
-		l_raytracer->Trace(l_deltaTime);
+		l_raytracer.Trace(l_deltaTime);
 
 		l_gui.ShowUI(l_deltaTime);
 
-		l_window->Show();
+		l_window.Show();
 
 		auto time2 = std::chrono::high_resolution_clock::now();
 
