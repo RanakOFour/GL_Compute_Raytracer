@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram id="OE9D3wA5DGOfEw1pnoTS" name="Page-1">
-    <mxGraphModel dx="16175" dy="2603" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="15085" dy="1867" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1836,7 +1836,7 @@
         <mxCell id="GrbH02cZIPZJ_3aAqcVc-371" parent="GrbH02cZIPZJ_3aAqcVc-344" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="TextureBuffer&amp;lt;T&amp;gt;" vertex="1">
           <mxGeometry height="164" width="227" x="398" y="454" as="geometry" />
         </mxCell>
-        <mxCell id="GrbH02cZIPZJ_3aAqcVc-372" parent="GrbH02cZIPZJ_3aAqcVc-371" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;div&gt;- id : uint&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; r, rg, rgb, rga as 32f&lt;/div&gt;&lt;div&gt;- size : T (Intended float, vec2, 3 or 4)&lt;/div&gt;" vertex="1">
+        <mxCell id="GrbH02cZIPZJ_3aAqcVc-372" parent="GrbH02cZIPZJ_3aAqcVc-371" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;div&gt;- id : uint&lt;/div&gt;&lt;div&gt;- size : T (Intended vec2, 3 or 4)&lt;/div&gt;" vertex="1">
           <mxGeometry height="36" width="227" y="26" as="geometry" />
         </mxCell>
         <mxCell id="GrbH02cZIPZJ_3aAqcVc-373" parent="GrbH02cZIPZJ_3aAqcVc-371" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
